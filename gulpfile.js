@@ -13,18 +13,6 @@ gulp.task('mocha', function() {
         .on('error', gutil.log);
 });
 
-gulp.task('mocha-specific', function() {
-    return gulp.src(['test/background/metaServiceTest.js'], { read: false })
-        .pipe(mocha({ reporter: 'list'}))
-        .on('error', gutil.log);
-});
-
-gulp.task('mocha-message-bus', function() {
-    return gulp.src(['test/messageBus.js'], { read: false })
-        .pipe(mocha({ reporter: 'list'}))
-        .on('error', gutil.log);
-});
-
 gulp.task('watch-mocha', function() {
     gulp.watch(['src/js/**', 'src/test/**'], ['mocha']);
 });

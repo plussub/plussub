@@ -1,6 +1,6 @@
 {
-  "name": "grunt_chrome_srt",
-  "description": "Chrome SRT build script",
+  "name": "srtplayer",
+  "description": "srtplayer build script",
   "author": "Stefan Breitenstein",
   "dependencies": {
     "babel": "^6.3.26",
