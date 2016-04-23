@@ -42,3 +42,10 @@
 .selectize-control.loading::before {
     opacity: 0.4;
 }
+
+.openSubtitle{
+    font-size: 10px;
+    line-height: 1.5;
+    float: right;
+    margin-right: 20px;
+}

@@ -29,4 +29,9 @@ $(document).ready(function () {
             currentTime.val(hoursPart + ':' + minutesPart + ':' + secondsPart);
         }
     });
+    
+    document.querySelector('#openSubtitleLink').addEventListener('click',(e)=>{
+        e.preventDefault();
+        chrome.tabs.create({url:e.target.getAttribute('href')});
+    });
 });
