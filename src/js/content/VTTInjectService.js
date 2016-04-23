@@ -13,10 +13,32 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
 
         var cues, video, track,vttSettings;
 
+
+        var currentDelayedTime=0;
+
+
+        META_CHANNEL.subscribe({
+            topic: "user.play.offsetTime",
+            callback: (delayedTime)=>{
+                if(currentDelayedTime === delayedTime){
+                    return;
+                }
+
+                if(cues){
+                    cues.forEach(cue=>{
+                        cue.startTime +=((delayedTime-currentDelayedTime)/1000);
+                        cue.endTime += ((delayedTime-currentDelayedTime)/1000);
+                    });
+                }
+                currentDelayedTime = delayedTime;
+            }
+        });
+
         META_CHANNEL.subscribe({
             topic: "option.position",
             callback: (_vttSettings)=>vttSettings = _vttSettings
         });
+
 
 
         META_CHANNEL.subscribe({
@@ -24,7 +46,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
             callback: (parsedSubtitle)=> {
                 if (parsedSubtitle) {
                     cues = JSON.parse(parsedSubtitle).map((srt)=> {
-                        var vtt = new VTTCue(srt.from / 1000, srt.to / 1000, "<c.srtPlayer>"+srt.text+"</c.srtPlayer>");
+                        var vtt = new VTTCue((srt.from+currentDelayedTime) / 1000, (srt.to+currentDelayedTime) / 1000, "<c.srtPlayer>"+srt.text+"</c.srtPlayer>");
                         Object.assign(vtt,vttSettings);
                         return vtt;
                     });
@@ -50,6 +72,11 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
                     track.mode='disabled';
                 }
             }
+        });
+
+        BACKEND_SERVICE_CHANNEL.publish({
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
+            data: 'user.play.offsetTime'
         });
 
         BACKEND_SERVICE_CHANNEL.publish({
