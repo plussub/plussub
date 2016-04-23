@@ -4,25 +4,25 @@ $(document).ready(function () {
     var META_WRITE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
     var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
 
-    var offsetCheckbox = document.querySelector('#offsetCheckbox');
-    META_CHANNEL.subscribe({
-        topic: 'user.play.offsetTimeEnabled',
-        callback: (data)=>offsetCheckbox.checked = data
-    });
-    offsetCheckbox.addEventListener('click', ()=> META_WRITE_CHANNEL.publish({
-        topic: 'user.play.offsetTimeEnabled',
-        data: offsetCheckbox.checked
-    }));
-
     var offsetTime = document.querySelector('#offsetTime');
+    var oldValue=0;
     META_CHANNEL.subscribe({
         topic: 'user.play.offsetTime',
-        callback: (data)=>offsetTime.value = data
+        callback: (data)=>{
+            if(parseInt(offsetTime.value,10)!== data){
+                offsetTime.value=data;
+                oldValue=data;
+            }
+        }
     });
-    $( offsetTime ).keyup(()=> META_WRITE_CHANNEL.publish({
-        topic: 'user.play.offsetTime',
-        data: parseInt(offsetTime.value,10)
-    }));
+    $( offsetTime ).keyup(()=> {
+        if(oldValue !== parseInt(offsetTime.value, 10)){
+            META_WRITE_CHANNEL.publish({
+                topic: 'user.play.offsetTime',
+                data: parseInt(offsetTime.value, 10)
+            });
+        }
+    });
 
     var powerBtn = document.querySelector('#power');
     META_CHANNEL.subscribe({
