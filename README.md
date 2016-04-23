@@ -5,9 +5,6 @@ Run tests:
 npm install
 gulp mocha
 
-to load subtitles from opensubtitles, you must deposit your credentials in:
-src/js/background/credential.js
-
 install local build:
 adressbar: chrome://extensions/
 activate Developer mode
