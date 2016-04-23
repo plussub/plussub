@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 	compress: {
 		main: {
 			options: {
-			  archive: 'srtplayer.zip'
+			  archive: 'plussub.zip'
 			},
 			files: [
 			  {src: ['src/**'], dest: '/'} // includes files in path and its subdirs

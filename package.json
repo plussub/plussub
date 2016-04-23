@@ -1,6 +1,6 @@
 {
-  "name": "srtplayer",
-  "description": "srtplayer build script",
+  "name": "+Sub",
+  "description": "+Sub build script",
   "author": "Stefan Breitenstein",
   "dependencies": {
     "babel": "^6.3.26",
