@@ -1,12 +1,12 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     jshint: {
-      files: ['srtchrome/**/*.js'],
+      files: ['src/**/*.js'],
       options: {
         globals: {
           jQuery: true
         },
-		ignores:['srtchrome/components/**'],
+		ignores:['src/components/**'],
 		reporter: require('jshint-stylish'),
 		force: true,
 		"-W099": true,
@@ -29,10 +29,10 @@ module.exports = function(grunt) {
 	compress: {
 		main: {
 			options: {
-			  archive: 'srtchrome.zip'
+			  archive: 'srtplayer.zip'
 			},
 			files: [
-			  {src: ['srtchrome/**'], dest: '/'} // includes files in path and its subdirs
+			  {src: ['src/**'], dest: '/'} // includes files in path and its subdirs
 			]
 		  }
 	}

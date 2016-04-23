@@ -1,11 +1,11 @@
 var expect = require('chai').expect;
 var requirejs = require('requirejs');
 var sinon = require('sinon');
-var messageBus = require('../../srtchrome/js/MessageBus.js');
+var messageBus = require('../../src/js/MessageBus.js');
 var $ = require('jquery')(require("jsdom").jsdom().defaultView);
-var root = require('../../srtchrome/js/background/movie/MovieService.js');
+var root = require('../../src/js/background/movie/MovieService.js');
 root.srtPlayer.LogService = require('./../LogServiceForTest.js').srtPlayer.LogServiceForTest();
-var ServiceDescriptor = require('../../srtchrome/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+var ServiceDescriptor = require('../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 
 
 describe('MovieService', ()=> {

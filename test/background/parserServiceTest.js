@@ -1,10 +1,10 @@
 var expect = require('chai').expect;
 var requirejs = require('requirejs');
-var messageBus = require('../../srtchrome/js/MessageBus.js');
-var root = require('../../srtchrome/js/background/parser/ParserService.js');
+var messageBus = require('../../src/js/MessageBus.js');
+var root = require('../../src/js/background/parser/ParserService.js');
 root.srtPlayer.SRTParser = require('./mock/SrtParserMock.js').srtMock.SRTParserMock;
 root.srtPlayer.LogService =  require('./../LogServiceForTest.js').srtPlayer.LogServiceForTest();
-var ServiceDescriptor = require('../../srtchrome/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+var ServiceDescriptor = require('../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 
 
 describe('ParserService', ()=> {

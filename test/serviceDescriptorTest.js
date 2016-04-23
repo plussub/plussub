@@ -11,7 +11,7 @@ describe('Service Descriptor', ()=> {
 
     var serviceDescriptor;
     beforeEach(()=> {
-        serviceDescriptor = require('../srtchrome/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+        serviceDescriptor = require('../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
     });
 
     it('should full subscriber topic', ()=> {

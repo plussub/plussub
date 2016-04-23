@@ -3,7 +3,7 @@
  */
 var expect = require('chai').expect;
 var requirejs = require('requirejs');
-var root = require('../../srtchrome/js/background/parser/SrtParser.js');
+var root = require('../../src/js/background/parser/SrtParser.js');
 root.srtPlayer.LogService = require('./../LogServiceForTest.js').srtPlayer.LogServiceForTest();
 
 describe('SRTParser', ()=> {

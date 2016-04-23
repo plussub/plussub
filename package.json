@@ -13,10 +13,13 @@
     "grunt-contrib-jshint": "0.6.x",
     "grunt-contrib-watch": "0.5.x",
     "grunt-update-json": "x",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^2.2.0",
     "jquery": "^2.2.1",
     "jsdom": "^8.0.4",
     "jshint-stylish": "x",
     "mocha": "^2.4.5",
+    "requirejs": "^2.2.0",
     "sinon": "^1.17.3"
   },
   "engine": "node >= 0.10"

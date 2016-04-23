@@ -5,7 +5,7 @@ var srtPlayer = srtPlayer || {};
 
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    var messagingConst = require('../srtchrome/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    var messagingConst = require('../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 }
 
 

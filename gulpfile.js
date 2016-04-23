@@ -26,5 +26,5 @@ gulp.task('mocha-message-bus', function() {
 });
 
 gulp.task('watch-mocha', function() {
-    gulp.watch(['srtchrome/js/**', 'srtchrome/test/**'], ['mocha']);
+    gulp.watch(['src/js/**', 'src/test/**'], ['mocha']);
 });
