@@ -1,11 +1,14 @@
 # srtplayer
-Chrome Extension. Add subtitle to HTML &lt;video>
+is a chrome extension which adds subtitle to HTML &lt;video>
 
-Run tests:
-npm install
-gulp mocha
+## Quickstart
 
-install local build:
-adressbar: chrome://extensions/
-activate Developer mode
-Load unpacked extension... -> select src folder from srtplayer
+### install local build in chrome
+- type chrome://extensions/ into the adressbar
+- activate developer mode
+- Load unpacked extension...
+- select src-folder from srtplayer project
+
+##  Run tests:
+- npm install
+- gulp mocha
