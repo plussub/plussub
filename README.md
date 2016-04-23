@@ -7,7 +7,7 @@ is a chrome extension which adds subtitle to HTML &lt;video>
 - type chrome://extensions/ into the adressbar
 - activate developer mode
 - Load unpacked extension...
-- select src-folder from srtplayer project
+- select src-folder from plussub project
 
 ## Run tests:
 - npm install
