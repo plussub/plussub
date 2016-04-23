@@ -1,0 +1,65 @@
+.css {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+#header.fs{
+    display:none;
+}
+
+#outer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#outer.fs {
+    align-items: flex-start;
+}
+#inner{
+    width:600px;
+}
+#inner.fs{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+}
+
+#editCSS {
+    display: block;
+    background: #333;
+    color: white;
+    white-space: pre;
+    width: 600px;
+    height: 465px;
+    font-family: Monaco, Mono-Space, serif;
+    line-height: 1.8;
+    overflow-y: auto;
+}
+
+#editCSS.fs{
+    display: none;
+}
+
+
+.newRow {
+    display: flex;
+    padding-top: 20px;
+    justify-content: center;
+}
+
+#Save{
+    margin-right:75px;
+}
+
+#Reset{
+    margin-left:75px;
+}
+
+#exampleText{
+    margin-right: 40px;
+    margin-left: 40px;
+}

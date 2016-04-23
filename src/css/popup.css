@@ -1,0 +1,44 @@
+.movieInfoContainer {
+    margin-top: 10px;
+    width: 50%;
+    float: left;
+}
+
+.imdbPosterContainer {
+    width: 50%;
+    float: right;
+}
+
+.imdbPoster {
+    height: 150px;
+    overflow: hidden;
+}
+
+.clear {
+    clear: both;
+}
+
+.movieInfoContainer {
+    width: 50%;
+}
+
+.selectize-control::before {
+    -moz-transition: opacity 0.2s;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+    content: ' ';
+    z-index: 2;
+    position: absolute;
+    display: block;
+    top: 50%;
+    right: 34px;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 0;
+    background: url(../icons/spinner.gif);
+    background-size: 16px 16px;
+    opacity: 0;
+}
+.selectize-control.loading::before {
+    opacity: 0.4;
+}

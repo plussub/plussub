@@ -1,0 +1,5 @@
+{
+  "directory": "srtchrome/components",
+  "analytics": false,
+  "timeout": 120000
+}

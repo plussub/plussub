@@ -1,0 +1,23 @@
+{
+  "name": "grunt_chrome_srt",
+  "description": "Chrome SRT build script",
+  "author": "Stefan Breitenstein",
+  "dependencies": {
+    "babel": "^6.3.26",
+    "babel-plugin-transform-object-assign": "^6.3.13",
+    "babel-preset-es2015": "^6.3.13",
+    "chai": "^3.5.0",
+    "es6-promise": "^3.1.2",
+    "grunt": "0.x.x",
+    "grunt-contrib-compress": "x",
+    "grunt-contrib-jshint": "0.6.x",
+    "grunt-contrib-watch": "0.5.x",
+    "grunt-update-json": "x",
+    "jquery": "^2.2.1",
+    "jsdom": "^8.0.4",
+    "jshint-stylish": "x",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3"
+  },
+  "engine": "node >= 0.10"
+}

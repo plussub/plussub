@@ -1,0 +1,21 @@
+{
+  "name": "chrome ext",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "srtchrome/js/ext/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.2",
+    "jquery-timer": "*",
+    "jquery-xmlrpc": "~0.4.3",
+    "jquery": "~2.1.3",
+    "selectize": "~0.12.0"
+  }
+}

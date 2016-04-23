@@ -1,0 +1,121 @@
+<!-- Copyright (c) 2012 The Chromium Authors. All rights reserved. Use of this source code is governed by a BSD-style license that can be found in the LICENSE file. Brian Kennish <bkennish@chromium.org>
+An option page for configuring notifications.
+-->
+<!doctype html>
+<html style="min-width:410px; max-width:410px;">
+<head>
+    <link rel="import" href="popup-base.html">
+</head>
+<body>
+<div class="container-fluid" style="width: 400px !important;">
+    <div class="row">
+        <p/>
+    </div>
+    <div class="row">
+        <p/>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" data-toggle="tooltip" data-placement="bottom" title="Current videotime">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon">Current time</span>
+                <input type="text" id="currentTime" class="form-control" placeholder="00:00:00">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <p/>
+    </div>
+    <div class="row" style="displaY:none">
+        <div class="col-xs-12" data-toggle="tooltip" data-placement="bottom"
+             title="Shifts subtitle to the given milliseconds. Accepts - as sign.">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon WhenPowerOff">Offset</span>
+                <input type="text" id="offsetTime" class="form-control disabledWhenPowerOff" placeholder="Milliseconds">
+                <span class="input-group-addon"><input type="checkbox" id="offsetCheckbox" class="disabledWhenPowerOff"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <p/>
+    </div>
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs " role="tablist">
+            <li role="presentation" class="active"><a href="#viaInput" aria-controls="viaInput" role="tab"
+                                                      data-toggle="tab">Search Title</a></li>
+            <li role="presentation"><a href="#viaFile" aria-controls="viaFile" role="tab" data-toggle="tab">File</a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="row">
+                <p/>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="viaFile">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <button id="srtInputDelegate" type="button" class="btn btn-default WhenPowerOff"
+                                data-toggle="tooltip" data-placement="top" title="Loads a subtitle file from disk">
+                            <span class="glyphicon glyphicon-open"></span> Load<strong> .SRT</strong> from filesystem
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane active" id="viaInput">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="control-group">
+                            <select id="movieSelect" placeholder="Select a movie"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="control-group">
+                            <select id="languageSelect" placeholder="Select a language"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="control-group">
+                            <select id="subtitleSelect" placeholder="Select a subtitle"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <p/>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <span id="currentLoadedInfo" class="label label-info WhenPowerOff" role="button">-</span>
+            <button id="eject" type="button" class="btn btn-default btn-xs WhenPowerOff" data-toggle="tooltip" data-placement="top" title="Remove the current subtitle">
+                <span class="glyphicon glyphicon-eject"></span> Eject
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <p/>
+    </div>
+    <div class="row">
+        <div class="col-xs-9" style="display:none">
+            <button id="option" type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Open option page">
+                <span class="glyphicon glyphicon-wrench"></span> Options
+            </button>
+        </div>
+        <div class="col-xs-1">
+            <button id="power" type="button" class="btn btn-default btn-xs active" data-toggle="tooltip" data-placement="top" title="Disable/Enable the plugin">
+                <span class="glyphicon glyphicon-off"><span id="power_span"> ON</span></span>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <p/>
+    </div>
+</div>
+<input id="srtInput" type="file" style="position:absolute; top:-100px"/>
+</body>
+</html>

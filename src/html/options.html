@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head><title>.SRT Player Options</title>
+    <link rel="stylesheet" href="../css/option.css"/>
+    <link rel="import" href="base.html"/>
+    <script type="text/javascript" src="../js/option/OptionBridge.js"></script>
+
+
+</head>
+<body>
+<script src="../js/option/beautify-css.js"></script>
+<script src="../js/option/options.js"></script>
+
+<div id="header">
+    <h1> Options </h1>
+
+    <div class="css">
+        <h2>Subtitle CSS</h2>
+        <h2>Subtitle Position</h2>
+        <h2>Preview</h2>
+    </div>
+</div>
+
+<div id="outer">
+    <style id="editCSS" contenteditable>
+    </style>
+    <div>
+        <label for="line">Line position</label>
+        <input type="range" id="line" min="-16" max="16" step="1" value="0">
+        <label for="position">Horizontal position</label>
+        <input type="range" id="position" min="0" max="100" step="1" value="50">
+        <label for="size">Size</label>
+        <input type="range" id="size" min="0" max="100" step="1" value="100">
+
+        <label for="alignmentContainer">Alignment</label><br>
+        <span id="alignmentContainer">
+            <input id="alignmentStart" type="radio" name="alignment" value="start" required>
+            <label for="alignmentStart">Start</label>
+            <input id="alignmentMiddle" type="radio" name="alignment" value="middle">
+            <label for="alignmentMiddle">Middle</label>
+            <input id="alignmentEnd" type="radio" name="alignment" value="end">
+            <label for="alignmentEnd">End</label>
+            <input id="alignmentLeft" type="radio" name="alignment" value="left">
+            <label for="alignmentLeft">Left</label>
+            <input id="alignmentRight" type="radio" name="alignment" value="right">
+            <label for="alignmentRight">Right</label>
+        </span>
+        <br>
+
+        <label for="verticalContainer">Vertical</label><br>
+        <span id="verticalContainer">
+            <input id="notVertical" type="radio" name="vertical" value required>
+            <label for="notVertical">Not vertical</label>
+            <input id="lrVertical" type="radio" name="vertical" value="lr">
+            <label for="lrVertical">Left->Right</label>
+            <input id="rlVertical" type="radio" name="vertical" value="rl">
+            <label for="rlVertical">Right->Left</label>
+        </span>
+    </div>
+    <div id="inner">
+        <video preload="auto" width="100%" height="100%" loop autoplay controls muted>
+            <source src="../video/optionmovie.mp4" type="video/mp4">
+        </video>
+    </div>
+</div>
+<div class="newRow">
+    <input id="exampleText" type="text" class="form-control" placeholder="">
+</div>
+<div class="newRow">
+    <button id="Save" type="button" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom"
+            title="Save settings">
+        <span class="glyphicon glyphicon-floppy-saved"></span> Save
+    </button>
+    <button id="TidyUp" type="button" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom"
+            title="Tidy up">
+        <span class="glyphicon glyphicon-align-left"></span> Tidy up
+    </button>
+    <button id="Reset" type="button" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom"
+            title="Reset settings to default">
+        <span class="glyphicon glyphicon-floppy-remove"></span> Reset
+    </button>
+</div>
+</body>
+</html>
