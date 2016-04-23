@@ -45,11 +45,11 @@ module.exports = function(grunt) {
   
   var fs = require('fs');
   grunt.registerTask('update-chrome-extension-manifest', function() {
-		var manifest = require('./srtchrome/manifest.json');
+		var manifest = require('./src/manifest.json');
 		grunt.log.ok('Old version: '+manifest.version);
 		manifest.version=""+(parseFloat(manifest.version)+0.01);
 		grunt.log.ok('New version: '+manifest.version);
-	    fs.writeFileSync('./srtchrome/manifest.json', JSON.stringify(manifest,null,2));
+	    fs.writeFileSync('./src/manifest.json', JSON.stringify(manifest,null,2));
   });
   
   grunt.registerTask('default', ['update-chrome-extension-manifest','compress']);
