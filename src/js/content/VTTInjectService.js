@@ -35,6 +35,23 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
         });
 
         META_CHANNEL.subscribe({
+            topic: "user.play.offsetTime",
+            callback: (delayedTime)=>{
+                if(currentDelayedTime === delayedTime){
+                    return;
+                }
+
+                if(cues){
+                    cues.forEach(cue=>{
+                        cue.startTime +=((delayedTime-currentDelayedTime)/1000);
+                        cue.endTime += ((delayedTime-currentDelayedTime)/1000);
+                    });
+                }
+                currentDelayedTime = delayedTime;
+            }
+        });
+
+        META_CHANNEL.subscribe({
             topic: "option.position",
             callback: (_vttSettings)=>vttSettings = _vttSettings
         });
@@ -98,6 +115,17 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
             }
         });
 
+        BACKEND_SERVICE_CHANNEL.subscribe({
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
+            callback:()=>{
+                if(cues){
+                    cues.forEach(cue=>{
+                        cue.startTime = 0;
+                        cue.endTime = 0;
+                    });
+                }
+            }
+        });
 
 
         function addVttToVid() {
