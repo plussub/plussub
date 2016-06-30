@@ -13,4 +13,3 @@ ga('create', 'UA-59648258-1', 'auto');
 ga('set', 'checkProtocolTask', function () {
 });
 ga('require', 'displayfeatures');
-ga('send', 'pageview', '/popup.html');

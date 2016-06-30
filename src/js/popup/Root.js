@@ -34,4 +34,6 @@ $(document).ready(function () {
         e.preventDefault();
         chrome.tabs.create({url:e.target.getAttribute('href')});
     });
+
+    ga('send', 'pageview', '/popup.html');
 });

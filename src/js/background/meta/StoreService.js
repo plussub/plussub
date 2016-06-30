@@ -8,14 +8,18 @@ if (typeof exports !== 'undefined') {
 }
 srtPlayer.StoreService = srtPlayer.StoreService || (()=> {
 
+
+
         var schemas = [];
         schemas[0] = (db) => db.createObjectStore('srtStore', {keyPath: 'store'});
 
-        var request = window.indexedDB.open("srtStore", 1);
+        var currentVersion = parseInt(chrome.runtime.getManifest().version.replace(".",""));
+        var request = window.indexedDB.open("srtStore", currentVersion);
         request.onupgradeneeded = function (event) {
             var db = event.target.result;
-            for (var i = event.oldVersion; i < event.newVersion; i++) {
-                schemas[i](db);
+            if (event.oldVersion < event.newVersion) {
+                db.deleteObjectStore("srtStore");
+                db.createObjectStore('srtStore', {keyPath: 'store'})
             }
         };
 

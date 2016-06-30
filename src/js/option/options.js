@@ -72,6 +72,10 @@ $(document).ready(function () {
         }
     });
 
+    META_CHANNEL.subscribe({
+        topic: "option.errorReport",
+        callback:(result)=>document.querySelector("#errorReportChkbox").checked=result
+    });
 
     SERVICE_CHANNEL.publish({
         topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
@@ -83,6 +87,10 @@ $(document).ready(function () {
         data: 'option.position'
     });
 
+    SERVICE_CHANNEL.publish({
+        topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
+        data: 'option.errorReport'
+    });
 
     var save = document.querySelector('#Save');
     save.addEventListener('click', ()=> {
@@ -107,6 +115,11 @@ $(document).ready(function () {
         META_WRITE_CHANNEL.publish({
             topic: "option.position",
             data: position
+        });
+
+        META_WRITE_CHANNEL.publish({
+            topic: "option.errorReport",
+            data: document.querySelectorAll('#errorReportChkbox:checked').length > 0
         });
     });
 

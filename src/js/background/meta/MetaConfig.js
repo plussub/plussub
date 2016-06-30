@@ -55,7 +55,8 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                         size: 100,
                         align: "middle",
                         vertical: undefined
-                    }
+                    },
+                    errorReport:true
                 }
             }
         };
