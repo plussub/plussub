@@ -18,7 +18,11 @@ srtPlayer.StoreService = srtPlayer.StoreService || (()=> {
         request.onupgradeneeded = function (event) {
             var db = event.target.result;
             if (event.oldVersion < event.newVersion) {
-                db.deleteObjectStore("srtStore");
+                try {
+                    db.deleteObjectStore("srtStore");
+                }catch (e) {
+                    console.log("init");
+                }
                 db.createObjectStore('srtStore', {keyPath: 'store'})
             }
         };
