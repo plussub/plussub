@@ -16,6 +16,7 @@ $(document).ready(function () {
         render: srtPlayer.PopupInputSelectionRenderer.movie,
         loadingClass: 'loading',
         onChange: function (metadata) {
+            console.log(metadata);
             if (metadata === '') {
                 return;
             }
@@ -46,6 +47,11 @@ $(document).ready(function () {
     var initMovie = {
         topic: 'subtitle.metadata.movie',
         callback: (metadata)=> {
+            if(!metadata){
+                selectizeMovie.clearOptions();
+                return;
+            }
+
             var valueField = JSON.stringify(metadata);
             selectizeMovie.addOption(Object.assign({}, metadata, {valueField: valueField}));
             selectizeMovie.addItem(valueField);
@@ -128,6 +134,11 @@ $(document).ready(function () {
     var initSubtitle = {
         topic: 'subtitle.metadata.subtitle',
         callback: (metadata)=> {
+            if(!metadata){
+                selectizeSubtitle.clearOptions();
+                return;
+            }
+
             var valueField = JSON.stringify(metadata);
             selectizeSubtitle.addOption(Object.assign({}, metadata, {valueField: valueField}));
             selectizeSubtitle.addItem(valueField);
