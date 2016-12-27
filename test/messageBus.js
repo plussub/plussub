@@ -119,4 +119,34 @@ describe('Messageservice', ()=> {
 
     });
 
+    it('subscribe only once', (done)=> {
+        var testChannel = messageBus.channel('testChannel');
+        var testData = {
+            test: 12
+        };
+
+        var counter=0;
+        testChannel.subscribe({
+            topic: 'test.topic',
+            callback: (data,envelope)=>{
+                ++counter;
+                setTimeout(()=>done(),500);
+                if(counter==2){
+                    assert(true !== true, 'should not happen');
+                }
+            },
+            once:true
+        });
+
+        testChannel.publish({
+            topic: 'test.topic',
+            data:testData
+        });
+        testChannel.publish({
+            topic: 'test.topic',
+            data:testData
+        });
+
+    });
+
 });

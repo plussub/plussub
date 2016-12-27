@@ -37,14 +37,17 @@
 
                 channel.subscriber.push({
                     topic: subDef.topic,
-                    callback: subDef.callback
+                    callback: subDef.callback,
+                    once:subDef.once ? subDef.once : false
                 });
+
                 if(typeof messageBus !== 'undefined' && messageBus.hook){
                     messageBus.hook.subscribe(Object.assign({}, subDef, {channel: requestedChannel}));
                 }
 
                 return subDef;
             },
+
             unsubscribe: (subDef)=>{
                 var channel = allChannels.find(channel => channel.name === requestedChannel);
                 channel.subscriber = channel.subscriber
@@ -61,8 +64,12 @@
                 if (!channel) {
                     return;
                 }
+
                 channel.subscriber.filter((currentSub)=> currentSub.topic === pubDef.topic).forEach(sub=> {
                     sub.callback(pubDef.data,envelope);
+                    if(sub.once){
+                        getChannel(requestedChannel).unsubscribe(sub)
+                    }
                 });
 
                 return pubDef;
