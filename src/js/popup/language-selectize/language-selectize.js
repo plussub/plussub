@@ -18,10 +18,13 @@ Polymer({
     ready: function () {
         this.async(() => {
             this.$.languageSelection.load(iso639LanguageList);
+
             this.metaSubscribeOnce({
                 topic: 'subtitle.language',
                 callback: (language) => {
-                    this.$.languageSelection.addItem(JSON.stringify(language));
+                    var languageAsString = JSON.stringify(language);
+                    this.$.languageSelection.addOption(Object.assign({}, language, {valueField: languageAsString}));
+                    this.$.languageSelection.addItem(languageAsString);
                 }
             });
 

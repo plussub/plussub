@@ -1,0 +1,16 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="subtitle-option">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <div class="SelectMovieTitle"><h3><strong> {{item.movieTitle}} </strong></h3>
+            <div><strong> Subtitle Language:</strong>{{item.subtitleLanguage}}</div>
+            <div><strong> Subtitle Rating:</strong>{{item.subtitleRating}}</div>
+        </div>
+    </template>
+    <script src="subtitle-option.js"></script>
+</dom-module>
