@@ -41,15 +41,15 @@ Polymer({
 
         this.metaSubscribeOnce({
             topic: 'subtitle.metadata.movie',
-            callback: (data) => {
-                if (!data) {
+            callback: (movieMeta) => {
+                if (!movieMeta) {
                     this.$.movieSelection.clearOptions();
                     return;
                 }
 
-                var valueField = JSON.stringify(data);
-                this.$.movieSelection.addOption(Object.assign({}, data, {valueField: valueField}));
-                this.$.movieSelection.addItem(valueField);
+                var movieMetaAsString = JSON.stringify(movieMeta);
+                this.$.movieSelection.addOption(Object.assign({}, movieMeta, {valueField: movieMetaAsString}));
+                this.$.movieSelection.addItem(movieMetaAsString);
             }
         });
 
@@ -60,9 +60,9 @@ Polymer({
     },
 
 
-    _currentSelectedChanged: function (data) {
+    _currentSelectedChanged: function (movieMeta) {
         "use strict";
-        if (!data || Object.keys(data).length===0) {
+        if (!movieMeta || Object.keys(movieMeta).length===0) {
             //todo do not delete all subtitle information (e.g language)
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
@@ -73,7 +73,7 @@ Polymer({
         //notify
         this.metaPublish({
             topic: 'subtitle.metadata.movie',
-            data: data
+            data: movieMeta
         });
 
         // console.log('todo but not here: selectizeSubtitle.clearOptions()');

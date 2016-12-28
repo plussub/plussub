@@ -9,7 +9,7 @@ An option page for configuring notifications.
     <link rel="import" href="../js/popup/app/plussub-app.html">
     <link rel="import" href="../js/popup/movie-selectize/movie-selectize.html">
     <link rel="import" href="../js/popup/language-selectize/language-selectize.html">
-    <link rel="import" href="../js/popup/selectize-wrapper/selectize-wrapper.html">
+    <link rel="import" href="../js/popup/subtitle-selectize/subtitle-selectize.html">
 
 </head>
 <body>
@@ -70,30 +70,7 @@ An option page for configuring notifications.
 
                 <movie-selectize id="movieSelectize"></movie-selectize>
                 <language-selectize id="languageSelectize"></language-selectize>
-
-                <selectize-wrapper id="subtitleSelection" placeholder="select a subtitle" field="valueField" label-field="movieTitle" search-field="movieTitle" sort-field='[{ "field": "rating" }, {"direction":"desc"}]' renderer="subtitle-option">
-                </selectize-wrapper>
-                <!--<div class="row">-->
-                    <!--<div class="col-sm-12">-->
-                        <!--<div class="control-group">-->
-                            <!--<select id="movieSelect" placeholder="Select a movie"></select>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="row">-->
-                    <!--<div class="col-sm-12">-->
-                        <!--<div class="control-group">-->
-                            <!--<select id="languageSelect" placeholder="Select a language"></select>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="row">-->
-                    <!--<div class="col-sm-12">-->
-                        <!--<div class="control-group">-->
-                            <!--<select id="subtitleSelect" placeholder="Select a subtitle"></select>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+                <subtitle-selectize id="subtitleSelection"></subtitle-selectize>
             </div>
         </div>
     </div>

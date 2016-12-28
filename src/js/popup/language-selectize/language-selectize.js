@@ -20,8 +20,8 @@ Polymer({
             this.$.languageSelection.load(iso639LanguageList);
             this.metaSubscribeOnce({
                 topic: 'subtitle.language',
-                callback: (data) => {
-                    this.$.languageSelection.addItem(JSON.stringify(data));
+                callback: (language) => {
+                    this.$.languageSelection.addItem(JSON.stringify(language));
                 }
             });
 
@@ -32,10 +32,10 @@ Polymer({
         });
     },
 
-    _currentSelectedChanged: function (data) {
+    _currentSelectedChanged: function (language) {
         "use strict";
 
-        if (!data || Object.keys(data).length===0) {
+        if (!language || Object.keys(language).length===0) {
             //todo do not delete all subtitle information (e.g selected movie)
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
@@ -46,7 +46,7 @@ Polymer({
 
         this.metaPublish({
             topic: 'subtitle.language',
-            data:data
+            data:language
         });
     }
 });
