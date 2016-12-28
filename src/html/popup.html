@@ -5,10 +5,10 @@ An option page for configuring notifications.
 <html style="min-width:410px; max-width:410px;">
 <head>
 
-    <script src="../js/popup/Init.js"></script>
     <link rel="import" href="popup-base.html">
     <link rel="import" href="../js/popup/app/plussub-app.html">
     <link rel="import" href="../js/popup/movie-selectize/movie-selectize.html">
+    <link rel="import" href="../js/popup/language-selectize/language-selectize.html">
     <link rel="import" href="../js/popup/selectize-wrapper/selectize-wrapper.html">
 
 </head>
@@ -69,8 +69,7 @@ An option page for configuring notifications.
             <div role="tabpanel" class="tab-pane active" id="viaInput">
 
                 <movie-selectize id="movieSelectize"></movie-selectize>
-                <selectize-wrapper id="language" placeholder="select a language" value-field="iso639" label-field="iso639Name" search-field="iso639Name" renderer="language-option">
-                </selectize-wrapper>
+                <language-selectize id="languageSelectize"></language-selectize>
 
                 <selectize-wrapper id="subtitleSelection" placeholder="select a subtitle" field="valueField" label-field="movieTitle" search-field="movieTitle" sort-field='[{ "field": "rating" }, {"direction":"desc"}]' renderer="subtitle-option">
                 </selectize-wrapper>

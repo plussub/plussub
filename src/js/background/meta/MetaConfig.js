@@ -37,7 +37,11 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                     parsedSubtitle: '',
                     isParsed: false,
                     title: '',
-                    language: 'eng',
+                    language: {
+                        iso639:'eng',
+                        iso639Name:'English',
+                        iso639_2:'en'
+                    },
                     metadata: {
                         movie: '',
                         subtitle: ''

@@ -31,6 +31,11 @@ Polymer({
             type: Array,
             value: () => []
         },
+
+        maxOptions:{
+            type:Number,
+            value:1000
+        },
         //end selecitze 1:1 mapping
 
 
@@ -69,9 +74,11 @@ Polymer({
                 placeholder: this.placeholder,
                 highlight: false,
                 persist: false,
-                maxOptions: 20,
+                maxOptions: this.maxOptions,
                 loadThrottle: 1000,
-                render: {option: (item) => Object.assign(document.createElement(this.renderer), {item: item})},
+                render: {
+                    option: (item) => Object.assign(document.createElement(this.renderer), {item: item})
+                },
                 loadingClass: 'loading',
                 onChange: (data) => {
                     data = data === '' ? {} : data;
@@ -98,8 +105,10 @@ Polymer({
     },
 
     clearCurrentSelection:function(){
-        "use strict";
         this.selectize.clear();
-    }
+    },
 
+    load:function(values){
+        this.selectize.load((fn)=>fn(values));
+    }
 });
