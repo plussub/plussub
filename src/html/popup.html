@@ -4,7 +4,13 @@ An option page for configuring notifications.
 <!doctype html>
 <html style="min-width:410px; max-width:410px;">
 <head>
+
+    <script src="../js/popup/Init.js"></script>
     <link rel="import" href="popup-base.html">
+    <link rel="import" href="../js/popup/app/plussub-app.html">
+    <link rel="import" href="../js/popup/movie-selectize/movie-selectize.html">
+    <link rel="import" href="../js/popup/selectize-wrapper/selectize-wrapper.html">
+
 </head>
 <body>
 <div class="container-fluid" style="width: 400px !important;">
@@ -61,27 +67,34 @@ An option page for configuring notifications.
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane active" id="viaInput">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="control-group">
-                            <select id="movieSelect" placeholder="Select a movie"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="control-group">
-                            <select id="languageSelect" placeholder="Select a language"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="control-group">
-                            <select id="subtitleSelect" placeholder="Select a subtitle"></select>
-                        </div>
-                    </div>
-                </div>
+
+                <movie-selectize id="movieSelectize"></movie-selectize>
+                <selectize-wrapper id="language" placeholder="select a language" value-field="iso639" label-field="iso639Name" search-field="iso639Name" renderer="language-option">
+                </selectize-wrapper>
+
+                <selectize-wrapper id="subtitleSelection" placeholder="select a subtitle" field="valueField" label-field="movieTitle" search-field="movieTitle" sort-field='[{ "field": "rating" }, {"direction":"desc"}]' renderer="subtitle-option">
+                </selectize-wrapper>
+                <!--<div class="row">-->
+                    <!--<div class="col-sm-12">-->
+                        <!--<div class="control-group">-->
+                            <!--<select id="movieSelect" placeholder="Select a movie"></select>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="row">-->
+                    <!--<div class="col-sm-12">-->
+                        <!--<div class="control-group">-->
+                            <!--<select id="languageSelect" placeholder="Select a language"></select>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="row">-->
+                    <!--<div class="col-sm-12">-->
+                        <!--<div class="control-group">-->
+                            <!--<select id="subtitleSelect" placeholder="Select a subtitle"></select>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
             </div>
         </div>
     </div>

@@ -1,0 +1,26 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="movie-option">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <div class="SelectMovieTitle"><h3><strong>{{item.Title}}</strong></h3>
+            <div class="movieInfoContainer">
+                <div><strong> Year:</strong>{{item.Year}}</div>
+                <div><strong> IMDB Rating:</strong>{{item.imdbRating}}</div>
+                <div><strong> Genre: </strong>{{item.Genre}}</div>
+                <div><strong> Country:</strong>{{item.Country}}</div>
+            </div>
+            <div class="imdbPosterContainer">
+                <object class="imdbPoster img-thumbnail" data="{{item.Poster}}" type="image/png">
+                    <img class="imdbPoster img-thumbnail" src="../icons/posterError.png"/>
+                </object>
+            </div>
+            <div class="clear "></div>
+        </div>
+    </template>
+    <script src="movie-option.js"></script>
+</dom-module>

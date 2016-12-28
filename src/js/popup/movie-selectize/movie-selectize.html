@@ -1,0 +1,10 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="./movie-option.html">
+<link rel="import" href="../selectize-wrapper/selectize-wrapper.html">
+<dom-module id="movie-selectize">
+    <template>
+        <selectize-wrapper id="movieSelection" placeholder="select a movie" value-field="valueField" label-field="Title" search-field="Title" renderer="movie-option" load-fn="[[_computeLoadFn()]]" current-selected="{{currentSelected}}">
+        </selectize-wrapper>
+    </template>
+    <script src="movie-selectize.js"></script>
+</dom-module>
