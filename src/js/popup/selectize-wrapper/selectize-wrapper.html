@@ -1,4 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="selectize-import.html">
 <link rel="import" href="../movie-selectize/movie-option.html">
 
@@ -8,8 +10,37 @@
             :host {
                 display: block;
             }
+
+            #label{
+                font-size:75%;
+                color:var(--paper-blue-grey-500)
+            }
+
+            #container{
+                display:flex;
+            }
+
+            #selectizeContainer{
+                flex-grow: 1;
+            }
+
+            paper-fab.clear {
+                --paper-fab-background: var(--paper-blue-grey-500);
+                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+                --paper-fab-mini:{
+                    transform:scale(0.5,0.5) translateY(-10px);
+                }
+            }
+
+
         </style>
-        <select id="selectize"></select>
+        <span id="label">[[placeholder]]</span>
+        <div id="container">
+            <div id="selectizeContainer">
+                <select id="selectize"></select>
+            </div>
+            <paper-fab mini icon="clear" title="clear" class="clear" on-tap="clearCurrentSelection"></paper-fab>
+        </div>
     </template>
     <script src="selectize-wrapper.js"></script>
 

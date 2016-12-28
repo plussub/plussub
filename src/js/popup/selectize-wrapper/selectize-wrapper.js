@@ -77,7 +77,7 @@ Polymer({
                     data = data === '' ? {} : data;
                     this.set('currentSelected', typeof data === 'string' ? JSON.parse(data) : data);
                 },
-                load: this.loadFn
+                load: this.loadFn !== null ? this.loadFn.bind(this.parentNode) : null
             });
 
             this.selectize = $(this.$.selectize)[0].selectize;
@@ -95,6 +95,11 @@ Polymer({
 
     clearOptions: function () {
         this.selectize.clearOptions();
+    },
+
+    clearCurrentSelection:function(){
+        "use strict";
+        this.selectize.clear();
     }
 
 });
