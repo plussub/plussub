@@ -22,12 +22,14 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
                 $.xmlrpc({
                     url: 'http://api.opensubtitles.org/xml-rpc',
                     methodName: 'LogIn',
-                    params: [credential.username, credential.password, 'en', 'OSTestUserAgent'],
+                    params: [credential.username, credential.password, 'en', 'OSTestUserAgentTemp'],
                     success: function (response, status, jqXHR) {
                         resolve(response[0].token);
                     },
                     error: function (jqXHR, status, error) {
                         console2.error(error);
+                        console2.error(status);
+
                         reject(error);
                     }
                 }, {}, window);
@@ -38,7 +40,6 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
             if(data.imdbid.startsWith('tt')){
                 data.imdbid=data.imdbid.slice(2);
             }
-
             login().then((token) =>
                 new Promise((resolve, reject)=>
                     $.xmlrpc({
@@ -46,7 +47,6 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
                         methodName: 'SearchSubtitles',
                         params: [token, [{'sublanguageid': data.iso639, 'imdbid': data.imdbid}]],
                         success: function (response, status, jqXHR) {
-                            console2.log(response[0].data);
                             resolve(response[0].data);
                         },
                         error: function (jqXHR, status, error) {
@@ -69,9 +69,9 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
                 )
             ).then((result)=>
                 SERVICE_CHANNEL.publish({
-                    topic: SERVICE_CONST.PUB.SEARCH_RESULT,
-                    data: result
-                })
+                        topic: SERVICE_CONST.PUB.SEARCH_RESULT,
+                        data: result
+                    })
             );
         }
 
