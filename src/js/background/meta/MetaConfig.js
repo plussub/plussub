@@ -29,25 +29,43 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 }
             },
 
+            selected_movie:{
+                current:{},
+                fallback:{
+                    store:'selected_movie',
+                    fallback:{}
+                }
+            },
 
-            subtitle: {
-                current: {},
+            selected_subtitle_language:{
+                current:{},
                 fallback: {
-                    store: 'subtitle',
+                    store:'selected_subtitle_language',
+                    iso639: 'eng',
+                    iso639Name: 'English',
+                    iso639_2: 'en'
+                }
+            },
+
+            selected_subtitle:{
+                current:{},
+                fallback: {
+                    store:'selected_subtitle',
+                    movie: '',
+                    subtitle: ''
+                }
+            },
+
+            parsed_subtitle:{
+                current:{},
+                fallback: {
+                    store:'parsed_subtitle',
                     parsedSubtitle: '',
                     isParsed: false,
                     title: '',
-                    language: {
-                        iso639:'eng',
-                        iso639Name:'English',
-                        iso639_2:'en'
-                    },
-                    metadata: {
-                        movie: '',
-                        subtitle: ''
-                    }
                 }
             },
+
             option: {
                 current: {},
                 fallback: {

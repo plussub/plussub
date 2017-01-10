@@ -113,7 +113,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
         return {
             get: {
                 user: allReadyPromises.then(()=>config.user.current),
-                subtitle: allReadyPromises.then(()=>config.subtitle.current),
+                // subtitle: allReadyPromises.then(()=>config.subtitle.current),
                 option: allReadyPromises.then(()=>config.option.current)
             }
         };
