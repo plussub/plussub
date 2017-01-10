@@ -17,10 +17,9 @@ MetaChannelBehavior = (function () {
             }
 
             this.metaSubscriptions.forEach((entry) => {
-
                 var sub = {
                     topic: entry.topic,
-                    callback: this[entry.callback]
+                    callback: this[entry.callback].bind(this)
                 };
 
                 this.metaSubscribe(sub);
@@ -51,7 +50,7 @@ MetaChannelBehavior = (function () {
             "use strict";
             META_CHANNEL.subscribe({
                 topic: sub.topic,
-                callback: (result) => sub.callback(result),
+                callback: (result) => sub.callback(result)
             });
         },
 
@@ -59,7 +58,7 @@ MetaChannelBehavior = (function () {
             "use strict";
             META_WRITE_CHANNEL.subscribe({
                 topic: sub.topic,
-                callback: (result) => sub.callback(result),
+                callback: (result) => sub.callback(result)
             });
         }
 

@@ -104,6 +104,10 @@ Polymer({
         this.selectize.clearOptions();
     },
 
+    clear : function(silent){
+        this.selectize.clear(silent)
+    },
+
     clearCurrentSelection:function(){
         this.selectize.clear();
     },

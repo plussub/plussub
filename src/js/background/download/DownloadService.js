@@ -64,8 +64,6 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
                         idSubtitleFile: entry.IDSubtitleFile,
                         subtitleRating: entry.SubRating
                     })
-                ).map(entry =>
-                    Object.assign(entry, {valueField: JSON.stringify(entry)})
                 )
             ).then((result)=>
                 SERVICE_CHANNEL.publish({

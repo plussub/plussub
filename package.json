@@ -22,5 +22,10 @@
     "requirejs": "^2.2.0",
     "sinon": "^1.17.3"
   },
-  "engine": "node >= 0.10"
+  "engine": "node >= 0.10",
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "gulp": "^3.9.1"
+  }
 }

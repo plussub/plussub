@@ -48,10 +48,17 @@ Polymer({
                 data: 'subtitle.metadata.subtitle'
             });
 
-            //TODO clear prev. todo map value field
             this.serviceSubscribe({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.DOWNLOAD.PUB.SEARCH_RESULT,
-                callback: (result) => this.$.subtitleSelection.load(result)
+                callback: (result) => {
+                    this.$.subtitleSelection.clearOptions();
+
+                    if(!Array.isArray(result)){
+                        return;
+                    }
+                    var _result = result.map(entry =>  Object.assign(entry, {valueField: JSON.stringify(entry)}));
+                    this.$.subtitleSelection.load(_result)
+                }
             });
         });
     },

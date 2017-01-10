@@ -15,6 +15,14 @@ ServiceChannelBehavior = (function () {
             });
         },
 
+        serviceSubscribe: function (sub) {
+            "use strict";
+            SERVICE_CHANNEL.subscribe({
+                topic: sub.topic,
+                callback: (result) => sub.callback(result),
+            });
+        },
+
         serviceSubscribeOnce: function (sub) {
             "use strict";
             SERVICE_CHANNEL.subscribe({
