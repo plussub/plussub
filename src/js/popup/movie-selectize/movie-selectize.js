@@ -40,7 +40,7 @@ Polymer({
     ready: function () {
 
         this.metaSubscribeOnce({
-            topic: 'subtitle.metadata.movie',
+            topic: 'selected_movie',
             callback: (movieMeta) => {
                 if (!movieMeta) {
                     this.$.movieSelection.clearOptions();
@@ -55,7 +55,7 @@ Polymer({
 
         this.servicePublish({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
-            data: 'subtitle.metadata.movie'
+            data: 'selected_movie'
         });
     },
 
@@ -63,20 +63,16 @@ Polymer({
     _currentSelectedChanged: function (movieMeta) {
         "use strict";
         if (!movieMeta || Object.keys(movieMeta).length===0) {
-            //todo do not delete all subtitle information (e.g language)
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
-                data: 'subtitle'
+                data: 'selected_movie'
             });
             return;
         }
         //notify
         this.metaPublish({
-            topic: 'subtitle.metadata.movie',
+            topic: 'selected_movie',
             data: movieMeta
         });
-
-        // console.log('todo but not here: selectizeSubtitle.clearOptions()');
-        // selectizeSubtitle.clearOptions();
     }
 });
