@@ -59,13 +59,13 @@ Polymer({
                         return;
                     }
 
-                    var _result = result.map(entry =>  Object.assign(entry, {valueField: JSON.stringify(entry)}));
-                    console.log(this.currentSelected);
                     if(this.currentSelected
-                        && this.currentSelected.idSubtitleFile === _result[0].idSubtitleFile
-                        && this.currentSelected.subtitleLanguage === _result[0].subtitleLanguage) {
+                        && this.currentSelected.idSubtitleFile === result[0].idSubtitleFile
+                        && this.currentSelected.subtitleLanguage === result[0].subtitleLanguage) {
                         return;
                     }
+
+                    var _result = result.map(entry =>  Object.assign(entry, {valueField: JSON.stringify(entry)}));
 
                     this.$.subtitleSelection.clearOptions();
                     this.$.subtitleSelection.load(_result);
