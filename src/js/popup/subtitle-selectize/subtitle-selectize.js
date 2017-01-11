@@ -22,12 +22,12 @@ Polymer({
     },
     metaSubscriptions: [
         {
-            topic: "subtitle.metadata.movie",
+            topic: "selected_movie.entry",
             callback: "movieChanged",
             notifyWhenWriteOnChannel: true
         },
         {
-            topic: "subtitle.language",
+            topic: "selected_subtitle_language.entry",
             callback: "languageChanged",
             notifyWhenWriteOnChannel: true
         }
@@ -37,36 +37,56 @@ Polymer({
     ready: function () {
         this.async(() => {
             this.metaSubscribeOnce({
-                topic: 'subtitle.metadata.subtitle',
-                callback: (data) => {
-                    this.$.subtitleSelection.addItem(JSON.stringify(data));
+                topic: 'selected_subtitle.entry',
+                callback: (subtitleMeta) => {
+
+                    var subtitleMetaAsString = JSON.stringify(subtitleMeta);
+                    this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
+                    this.$.subtitleSelection.addItem(subtitleMetaAsString);
                 }
             });
 
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
-                data: 'subtitle.metadata.subtitle'
+                data: 'selected_subtitle.entry'
             });
 
             this.serviceSubscribe({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.DOWNLOAD.PUB.SEARCH_RESULT,
                 callback: (result) => {
-                    this.$.subtitleSelection.clearOptions();
+                    var oldCurrentSelected = this.currentSelected;
 
-                    if(!Array.isArray(result)){
+                    this.$.subtitleSelection.clearOptions();
+                    if(!Array.isArray(result)||result.length===0){
                         return;
                     }
+
                     var _result = result.map(entry =>  Object.assign(entry, {valueField: JSON.stringify(entry)}));
-                    this.$.subtitleSelection.load(_result)
+                    this.$.subtitleSelection.load(_result);
+
+                    //selection did not change, take old selection
+                    var select = oldCurrentSelected.idSubtitleFile === _result[0].idSubtitleFile ? oldCurrentSelected : _result[0];
+                    this.$.subtitleSelection.addItem(select.valueField);
                 }
             });
         });
     },
 
-    //todo store stuff
-    _currentSelectedChanged: function (data) {
+    _currentSelectedChanged: function (subtitle) {
         "use strict";
-        console.log(data);
+        if (!subtitle || Object.keys(subtitle).length===0) {
+            this.servicePublish({
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
+                data: 'selected_subtitle'
+            });
+            return;
+        }
+
+        //notify
+        this.metaPublish({
+            topic: 'selected_subtitle.entry',
+            data: subtitle
+        });
     },
 
     movieChanged: function (movieMeta) {

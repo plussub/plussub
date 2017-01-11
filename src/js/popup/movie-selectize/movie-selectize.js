@@ -40,8 +40,9 @@ Polymer({
     ready: function () {
 
         this.metaSubscribeOnce({
-            topic: 'selected_movie',
+            topic: 'selected_movie.entry',
             callback: (movieMeta) => {
+
                 if (!movieMeta) {
                     this.$.movieSelection.clearOptions();
                     return;
@@ -55,23 +56,24 @@ Polymer({
 
         this.servicePublish({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
-            data: 'selected_movie'
+            data: 'selected_movie.entry'
         });
     },
 
 
     _currentSelectedChanged: function (movieMeta) {
         "use strict";
-        if (!movieMeta || Object.keys(movieMeta).length===0) {
+        if (!movieMeta || Object.keys(movieMeta).length === 0) {
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
                 data: 'selected_movie'
             });
             return;
         }
+
         //notify
         this.metaPublish({
-            topic: 'selected_movie',
+            topic: 'selected_movie.entry',
             data: movieMeta
         });
     }
