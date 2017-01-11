@@ -54,19 +54,22 @@ Polymer({
             this.serviceSubscribe({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.DOWNLOAD.PUB.SEARCH_RESULT,
                 callback: (result) => {
-                    var oldCurrentSelected = this.currentSelected;
-
-                    this.$.subtitleSelection.clearOptions();
                     if(!Array.isArray(result)||result.length===0){
+                        this.$.subtitleSelection.clearOptions();
                         return;
                     }
 
                     var _result = result.map(entry =>  Object.assign(entry, {valueField: JSON.stringify(entry)}));
-                    this.$.subtitleSelection.load(_result);
+                    console.log(this.currentSelected);
+                    if(this.currentSelected
+                        && this.currentSelected.idSubtitleFile === _result[0].idSubtitleFile
+                        && this.currentSelected.subtitleLanguage === _result[0].subtitleLanguage) {
+                        return;
+                    }
 
-                    //selection did not change, take old selection
-                    var select = oldCurrentSelected.idSubtitleFile === _result[0].idSubtitleFile ? oldCurrentSelected : _result[0];
-                    this.$.subtitleSelection.addItem(select.valueField);
+                    this.$.subtitleSelection.clearOptions();
+                    this.$.subtitleSelection.load(_result);
+                    this.$.subtitleSelection.addItem(_result[0].valueField);
                 }
             });
         });
