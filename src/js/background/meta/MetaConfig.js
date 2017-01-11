@@ -33,7 +33,7 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 current:{},
                 fallback:{
                     store:'selected_movie',
-                    fallback:{}
+                    entry:undefined
                 }
             },
 
@@ -41,9 +41,11 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 current:{},
                 fallback: {
                     store:'selected_subtitle_language',
-                    iso639: 'eng',
-                    iso639Name: 'English',
-                    iso639_2: 'en'
+                    entry: {
+                        iso639: 'eng',
+                        iso639Name: 'English',
+                        iso639_2: 'en'
+                    }
                 }
             },
 
@@ -51,8 +53,7 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 current:{},
                 fallback: {
                     store:'selected_subtitle',
-                    movie: '',
-                    subtitle: ''
+                    entry:undefined
                 }
             },
 
@@ -80,6 +81,14 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                     },
                     errorReport:true
                 }
-            }
+            },
+
+            subtitle:{
+                current:{},
+                fallback:{
+                    store:'subtitle'
+                }
+            },
+
         };
     })();

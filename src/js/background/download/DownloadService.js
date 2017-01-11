@@ -37,6 +37,11 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
         }
 
         function search(data) {
+            if(!data.imdbid){
+                console2.log("imdbid does not exist");
+                return;
+            }
+
             if(data.imdbid.startsWith('tt')){
                 data.imdbid=data.imdbid.slice(2);
             }

@@ -13,7 +13,7 @@ if (typeof exports !== 'undefined') {
 /*USE DYNAMIC META CHANNEL */
 
 
-srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus, config = srtPlayer.MetaConfig)=> {
+srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus, config = srtPlayer.MetaConfig) => {
 
         var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.NAME);
         var BACKEND_SERVICE = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
@@ -24,7 +24,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
         function merge(obj1, obj2) {
             for (var p in obj2) {
-                obj1[p] = (typeof obj2[p] === 'object' && typeof obj1[p]==='object') ? merge(obj1[p], obj2[p]) : obj2[p]
+                obj1[p] = (typeof obj2[p] === 'object' && typeof obj1[p] === 'object') ? merge(obj1[p], obj2[p]) : obj2[p]
             }
             return obj1;
         }
@@ -39,7 +39,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
                     topic: path + '.' + key,
                     callback: (data, envelope) => {
                         var pathWithoutRootTopic = envelope.topic.replace(init.root + '.', '').split('.');
-                        var newEntry = pathWithoutRootTopic.reduce((p, c, i, a)=> {
+                        var newEntry = pathWithoutRootTopic.reduce((p, c, i, a) => {
                             var last = p;
                             while (Object.keys(last).length > 0) {
                                 last = last[Object.keys(last)[0]];
@@ -57,14 +57,14 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             });
         }
 
-        var allReadyPromises = topics.map((topic)=>
+        var allReadyPromises = topics.map((topic) =>
             srtPlayer.StoreService.find(topic)
-                .then(result => typeof result !== 'undefined' ? result :JSON.parse(JSON.stringify(config[topic].fallback)))
-                .then((result)=> config[topic].current = result)
+                .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[topic].fallback)))
+                .then((result) => config[topic].current = result)
         );
 
         var allReadyPromises = Promise.all(allReadyPromises).then(values => {
-            values.forEach(result=>
+            values.forEach(result =>
                 setAllSubscriberFor(result, result.store, {
                     data: result,
                     root: result.store
@@ -73,7 +73,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
         });
 
-        allReadyPromises.then(()=>BACKEND_SERVICE.publish({topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY}));
+        allReadyPromises.then(() => BACKEND_SERVICE.publish({topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY}));
 
         function publish(current, path) {
             Object.keys(current).forEach(key => {
@@ -89,32 +89,38 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
         BACKEND_SERVICE.subscribe({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH_ALL,
-            callback: (topic)=>publish(config[topic].current, config[topic].fallback.store)
+            callback: (topic) => {
+                console2.log(topic);
+                publish(config[topic].current, config[topic].fallback.store)
+            }
         });
 
         BACKEND_SERVICE.subscribe({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
-            callback:  (topic)=>srtPlayer.StoreService.update(config[topic].fallback)
-                         .then(()=>merge(config[topic].current,config[topic].fallback))
-                         .then((x)=>publish(config[topic].current, config[topic].fallback.store))
-             });
+            callback: (topic) => {
+                console2.log(topic);
+                srtPlayer.StoreService.update(config[topic].fallback)
+                    .then(() => merge(config[topic].current, config[topic].fallback))
+                    .then((x) => publish(config[topic].current, config[topic].fallback.store));
+            }
+        });
 
         BACKEND_SERVICE.subscribe({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
-            callback: (topic)=>{
+            callback: (topic) => {
                 var topicPath = topic.split('.');
                 META_CHANNEL.publish({
                     topic: topic,
-                    data: topicPath.slice(1).reduce((p,c)=>p[c],config[topicPath[0]].current)
+                    data: topicPath.slice(1).reduce((p, c) => p[c], config[topicPath[0]].current)
                 });
             }
         });
-        
+
         return {
             get: {
-                user: allReadyPromises.then(()=>config.user.current),
+                user: allReadyPromises.then(() => config.user.current),
                 // subtitle: allReadyPromises.then(()=>config.subtitle.current),
-                option: allReadyPromises.then(()=>config.option.current)
+                option: allReadyPromises.then(() => config.option.current)
             }
         };
     });
