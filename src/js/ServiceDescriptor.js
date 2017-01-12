@@ -47,7 +47,8 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
                     _SUB: {
                         PUBLISH:'.publish',
                         PUBLISH_ALL: '.publishAll',
-                        RESET: '.reset'
+                        RESET: '.reset',
+                        FULL_TOPIC_RESET: '.fullTopicReset'
                     },
                     _PUB: {
                         READY: '.ready'

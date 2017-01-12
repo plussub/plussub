@@ -48,6 +48,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
                             return p;
                         }, {});
                         merge(init.data, newEntry);
+
                         srtPlayer.StoreService.update(init.data).then(x => META_CHANNEL.publish({
                             topic: path + '.' + key,
                             data: data
@@ -106,13 +107,27 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
         });
 
         BACKEND_SERVICE.subscribe({
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.HARD_RESET,
+            callback: (topic) => {
+                console2.log(topic);
+                srtPlayer.StoreService.update(config[topic].fallback)
+                    .then(() => config[topic].current = config[topic].fallback)
+                    .then(() => publish(config[topic].fallback, config[topic].fallback.store));
+            }
+        });
+
+        BACKEND_SERVICE.subscribe({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
             callback: (topic) => {
                 var topicPath = topic.split('.');
-                META_CHANNEL.publish({
-                    topic: topic,
-                    data: topicPath.slice(1).reduce((p, c) => p[c], config[topicPath[0]].current)
-                });
+                var rootTopic = topicPath[0];
+                srtPlayer.StoreService.find(rootTopic)
+                    .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[rootTopic].fallback)))
+                    .then((result) => config[rootTopic].current = result)
+                    .then(() =>  META_CHANNEL.publish({
+                        topic: topic,
+                        data: topicPath.slice(1).reduce((p, c) => p[c], config[rootTopic].current)
+                    }));
             }
         });
 

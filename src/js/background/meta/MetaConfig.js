@@ -33,7 +33,7 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 current:{},
                 fallback:{
                     store:'selected_movie',
-                    entry:undefined
+                    entry:{}
                 }
             },
 
@@ -53,7 +53,7 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 current:{},
                 fallback: {
                     store:'selected_subtitle',
-                    entry:undefined
+                    entry:{}
                 }
             },
 

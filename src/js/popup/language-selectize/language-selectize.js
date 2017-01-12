@@ -40,7 +40,7 @@ Polymer({
 
         if (!language || Object.keys(language).length===0) {
             this.servicePublish({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.FULL_TOPIC_RESET,
                 data: 'selected_subtitle_language'
             });
             return;

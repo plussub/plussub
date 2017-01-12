@@ -40,6 +40,11 @@ Polymer({
                 topic: 'selected_subtitle.entry',
                 callback: (subtitleMeta) => {
 
+                    if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
+                        this.$.subtitleSelection.clearOptions();
+                        return;
+                    }
+
                     var subtitleMetaAsString = JSON.stringify(subtitleMeta);
                     this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
                     this.$.subtitleSelection.addItem(subtitleMetaAsString);
@@ -79,7 +84,7 @@ Polymer({
         "use strict";
         if (!subtitle || Object.keys(subtitle).length===0) {
             this.servicePublish({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.FULL_TOPIC_RESET,
                 data: 'selected_subtitle'
             });
             return;
@@ -103,9 +108,13 @@ Polymer({
     },
 
     _refreshItems: function () {
+        console.log("pre refresh sub");
+
         this.debounce('_subtitle_refresh', () => {
-            if (!this._currentLanguage || Object.keys(this._currentLanguage).length === 0 || !this._currentMovie || Object.keys(this._currentMovie).length === 0) {
-                console.log("whoops");
+            if (!this._currentLanguage
+                || Object.keys(this._currentLanguage).length === 0
+                || !this._currentMovie
+                || Object.keys(this._currentMovie).length === 0) {
                 return;
             }
 
