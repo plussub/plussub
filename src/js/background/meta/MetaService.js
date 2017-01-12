@@ -58,28 +58,23 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             });
         }
 
+        var findOrFallback = (rootTopic) => {
+            "use strict";
+            return srtPlayer.StoreService.find(rootTopic)
+                .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[rootTopic].fallback)));
+        };
 
-        // var find =
 
-
-        var allReadyPromises = topics.map((topic) =>
-            srtPlayer.StoreService.find(topic)
-                .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[topic].fallback)))
-                .then((result) => config[topic].current = result)
-        );
-
-        var allReadyPromises = Promise.all(allReadyPromises).then(values => {
+        var allReadyPromises = Promise.all( topics.map(findOrFallback)).then(values => {
             values.forEach(result =>
                 setAllSubscriberFor(result, result.store, {
                     data: result,
                     root: result.store
                 })
             );
-
         });
-        allReadyPromises.then(() => BACKEND_SERVICE.publish({topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY}));
 
-        //BACKEND_SERVICE.publish({topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY});
+        allReadyPromises.then(() => BACKEND_SERVICE.publish({topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY}));
 
         function publish(current, path) {
             Object.keys(current).forEach(key => {
@@ -93,12 +88,6 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             });
         }
 
-
-        var findOrFallback = (rootTopic) => {
-            "use strict";
-            return srtPlayer.StoreService.find(rootTopic)
-                .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[rootTopic].fallback)));
-        };
 
         BACKEND_SERVICE.subscribe({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH_ALL,
