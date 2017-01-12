@@ -118,7 +118,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             callback: (topic) => {
                 console2.log("full topic rest: "+topic);
                 srtPlayer.StoreService.update(config[topic].fallback)
-                    .then(() => publish(config[topic].fallback, config[topic].fallback.store));
+                    .then(() => findOrFallback(topic).then((result)=>publish(result, config[topic].fallback.store)));
             }
         });
 

@@ -21,11 +21,22 @@
     "use strict";
 
 
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+    }
+
     var allChannels = [];
 
     function getChannel(requestedChannel) {
         return {
             subscribe: (subDef)=> {
+
                 var channel = allChannels.find(channel => channel.name === requestedChannel);
                 if (!channel) {
                     channel = {
@@ -35,10 +46,13 @@
                     allChannels.push(channel);
                 }
 
+                Object.assign(subDef,{guid:guid()});
+
                 channel.subscriber.push({
                     topic: subDef.topic,
                     callback: subDef.callback,
-                    once:subDef.once ? subDef.once : false
+                    once:subDef.once ? subDef.once : false,
+                    guid:subDef.guid
                 });
 
                 if(typeof messageBus !== 'undefined' && messageBus.hook){
@@ -50,8 +64,7 @@
 
             unsubscribe: (subDef)=>{
                 var channel = allChannels.find(channel => channel.name === requestedChannel);
-                channel.subscriber = channel.subscriber
-                    .filter(_subDef => _subDef.topic !== subDef.topic || _subDef.callback.toString() !== subDef.callback.toString());
+                channel.subscriber = channel.subscriber.filter((_subDef) => _subDef.guid!==subDef.guid)
 
             },
             publish: (pubDef)=> {
