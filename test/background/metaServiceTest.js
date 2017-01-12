@@ -181,7 +181,7 @@ describe('MetaService', ()=> {
     it('publish all should notify all subscriber (subtitle)', (done)=> {
         "use strict";
         META_CHANNEL.subscribe({
-            topic: 'subtitle.parsedSubtitle',
+            topic: 'parsed_subtitle.parsedSubtitle',
             callback: (d)=> {
                 expect(d).is.equal('');
                 done();
@@ -192,7 +192,7 @@ describe('MetaService', ()=> {
             topic: ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY,
             callback: (d)=> SERVICE_CHANNEL.publish({
                 topic: ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH_ALL,
-                data: 'subtitle'
+                data: 'parsed_subtitle'
             })
         });
     });
@@ -201,7 +201,7 @@ describe('MetaService', ()=> {
         "use strict";
 
         META_CHANNEL.subscribe({
-            topic: 'subtitle.parsedSubtitle',
+            topic: 'parsed_subtitle.parsedSubtitle',
             callback: (data) => {
                 expect(data).to.equal('parsedStuff');
                 done();
@@ -211,7 +211,7 @@ describe('MetaService', ()=> {
             topic: ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY,
             callback: ()=> {
                 META_WRITE_CHANNEL.publish({
-                    topic: 'subtitle.parsedSubtitle',
+                    topic: 'parsed_subtitle.parsedSubtitle',
                     data: 'parsedStuff'
                 });
             }
