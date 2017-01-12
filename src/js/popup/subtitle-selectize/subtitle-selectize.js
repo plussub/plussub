@@ -108,7 +108,6 @@ Polymer({
     },
 
     _refreshItems: function () {
-        console.log("pre refresh sub");
 
         this.debounce('_subtitle_refresh', () => {
             if (!this._currentLanguage

@@ -23,17 +23,6 @@ describe('MetaService', ()=> {
 
     });
 
-    it('default values', (done)=> {
-        metaService.get.user.then(settings => {
-            expect(settings.standby).to.equal(false);
-
-            var play = settings.play;
-            expect(play.offsetTime).to.equal(0);
-            expect(play.offsetTimeEnabled).to.equal(true);
-            done();
-        });
-    });
-
     it('publish should notify all subscriber', (done)=>{
         "use strict";
         META_CHANNEL.subscribe({
@@ -62,33 +51,6 @@ describe('MetaService', ()=> {
         });
     });
 
-    it('MetaWriteChannel should reflect to the attributes', (done)=> {
-        "use strict";
-        metaService.get.user.then(settings => {
-
-            expect(settings.standby).to.equal(false);
-            META_WRITE_CHANNEL.publish({
-                topic: 'user.standby',
-                data: true
-            });
-            expect(settings.standby).to.equal(true);
-
-            expect(settings.play.offsetTime).to.equal(0);
-            META_WRITE_CHANNEL.publish({
-                topic: 'user.play.offsetTime',
-                data: 22
-            });
-            expect(settings.play.offsetTime).to.equal(22);
-
-            expect(settings.test.deep.prop).to.equal('testTxt');
-            META_WRITE_CHANNEL.publish({
-                topic: 'user.test.deep.prop',
-                data: 'testChange'
-            });
-            expect(settings.test.deep.prop).to.equal('testChange');
-            done();
-        });
-    });
 
 
     it('MetaWriteChannel should publish the updated value to the MetaChannel', (done)=> {

@@ -58,6 +58,10 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             });
         }
 
+
+        // var find =
+
+
         var allReadyPromises = topics.map((topic) =>
             srtPlayer.StoreService.find(topic)
                 .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[topic].fallback)))
@@ -73,8 +77,9 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             );
 
         });
-
         allReadyPromises.then(() => BACKEND_SERVICE.publish({topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY}));
+
+        //BACKEND_SERVICE.publish({topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY});
 
         function publish(current, path) {
             Object.keys(current).forEach(key => {
@@ -88,56 +93,61 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             });
         }
 
+
+        var findOrFallback = (rootTopic) => {
+            "use strict";
+            return srtPlayer.StoreService.find(rootTopic)
+                .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[rootTopic].fallback)));
+        };
+
         BACKEND_SERVICE.subscribe({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH_ALL,
             callback: (topic) => {
-                console2.log(topic);
-                publish(config[topic].current, config[topic].fallback.store)
+                console2.log("publish all: "+topic);
+                findOrFallback(topic).then((result)=>publish(result, config[topic].fallback.store));
             }
         });
+
+
 
         BACKEND_SERVICE.subscribe({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
             callback: (topic) => {
-                console2.log(topic);
-                srtPlayer.StoreService.update(config[topic].fallback)
-                    .then(() => merge(config[topic].current, config[topic].fallback))
-                    .then((x) => publish(config[topic].current, config[topic].fallback.store));
+                console2.log("reset topic: " + topic);
+
+                srtPlayer.StoreService.update(config[topic].fallback).then(() => {
+                    findOrFallback(topic).then((update) => {
+                        publish(update, config[topic].fallback.store);
+                    });
+                });
             }
         });
 
+
         BACKEND_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.HARD_RESET,
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.FULL_TOPIC_RESET,
             callback: (topic) => {
-                console2.log(topic);
+                console2.log("full topic rest: "+topic);
                 srtPlayer.StoreService.update(config[topic].fallback)
-                    .then(() => config[topic].current = config[topic].fallback)
                     .then(() => publish(config[topic].fallback, config[topic].fallback.store));
             }
         });
+
 
         BACKEND_SERVICE.subscribe({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
             callback: (topic) => {
                 var topicPath = topic.split('.');
                 var rootTopic = topicPath[0];
-                srtPlayer.StoreService.find(rootTopic)
-                    .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[rootTopic].fallback)))
-                    .then((result) => config[rootTopic].current = result)
-                    .then(() =>  META_CHANNEL.publish({
+                findOrFallback(rootTopic).then((result) =>
+                    META_CHANNEL.publish({
                         topic: topic,
-                        data: topicPath.slice(1).reduce((p, c) => p[c], config[rootTopic].current)
-                    }));
+                        data: topicPath.slice(1).reduce((p, c) => p[c], result)
+                    })
+                );
             }
         });
 
-        return {
-            get: {
-                user: allReadyPromises.then(() => config.user.current),
-                // subtitle: allReadyPromises.then(()=>config.subtitle.current),
-                option: allReadyPromises.then(() => config.option.current)
-            }
-        };
     });
 
 //instant service does not correct initialize messageBus (in testfiles)
