@@ -114,6 +114,7 @@ Polymer({
                 || Object.keys(this._currentLanguage).length === 0
                 || !this._currentMovie
                 || Object.keys(this._currentMovie).length === 0) {
+                this.$.subtitleSelection.clearOptions();
                 return;
             }
 
