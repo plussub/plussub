@@ -55,8 +55,8 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
                     }
                 },
 
-                MOVIE: {
-                    NAME: 'movieService',
+                MOVIE_INFORMATION: {
+                    NAME: 'movieInformationService',
                     _SUB: {
                         SEARCH: '.search'
                     },
@@ -65,8 +65,8 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
                     }
                 },
 
-                DOWNLOAD: {
-                    NAME: 'downloadService',
+                SUBTITLE_PROVIDER: {
+                    NAME: 'subtitleProvider',
                     _SUB: {
                         SEARCH: '.search',
                         DOWNLOAD: '.download'

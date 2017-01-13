@@ -27,12 +27,12 @@ Polymer({
         this.$.movieSelection.clearOptions();
 
         this.servicePublish({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE.SUB.SEARCH,
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
             data: query
         });
 
         this.serviceSubscribeOnce({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE.PUB.SEARCH_RESULT,
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
             callback: fn
         });
     },

@@ -1,10 +1,10 @@
 var srtPlayer = srtPlayer || {};
 
-srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
+srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
         "use strict";
 
         var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
-        var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.DOWNLOAD;
+        var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER;
         var console2 = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
         SERVICE_CHANNEL.subscribe({
@@ -109,5 +109,5 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
 
 //instant service does not correct initialize messageBus (in testfiles)
 if (typeof exports === 'undefined' && typeof srtPlayer.DownloadService === 'function') {
-    srtPlayer.DownloadService = srtPlayer.DownloadService($,credential.opensubtitle);
+    srtPlayer.subtitleProvider = srtPlayer.subtitleProvider($,credential.opensubtitle);
 }

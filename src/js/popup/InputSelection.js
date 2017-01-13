@@ -31,12 +31,12 @@ $(document).ready(function () {
             this.clearOptions();
 
             SERVICE_CHANNEL.publish({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE.SUB.SEARCH,
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
                 data: query
             });
 
             SERVICE_CHANNEL.subscribe({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE.PUB.SEARCH_RESULT,
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
                 callback: (result)=>callback(result)
             });
         }

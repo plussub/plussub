@@ -34,7 +34,7 @@
       "js/background/meta/MetaService.js",
       "js/background/parser/SrtParser.js",
       "js/background/parser/ParserService.js",
-      "js/background/movie/MovieService.js",
+      "js/background/movie_information/MovieInformationService.js",
       "js/background/subtitle_provider/SubtitleProvider.js",
       "js/background/subtitle_provider/Uint8ArrayConverter.js"
     ],

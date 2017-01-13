@@ -5,10 +5,10 @@ if (typeof exports !== 'undefined') {
     srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 }
 
-srtPlayer.MovieService = srtPlayer.MovieService || (($, messageBusLocal = messageBus)=> {
+srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, messageBusLocal = messageBus)=> {
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
-        var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE;
+        var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE_INFORMATION;
         var console2 = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
 
@@ -87,5 +87,5 @@ srtPlayer.MovieService = srtPlayer.MovieService || (($, messageBusLocal = messag
 
 //instant service does not correct initialize messageBus (in testfiles)
 if (typeof exports === 'undefined' && typeof srtPlayer.MovieService === 'function') {
-    srtPlayer.MovieService = srtPlayer.MovieService($);
+    srtPlayer.MovieInformationService = srtPlayer.MovieInformationService($);
 }
