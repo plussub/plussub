@@ -93,9 +93,9 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
                     }
                 }, {}, window)
             )).then(result=>{
-                var gunzipData = new Zlib.Gunzip(srtPlayer.convertUtils.stringToUint8Array(atob(result)));
+                var gunzipData = new Zlib.Gunzip(srtPlayer.Uint8ArrayConverter.fromString(atob(result)));
                 var decompressedData = gunzipData.decompress();
-                return srtPlayer.convertUtils.utf8ArrayToString(decompressedData);
+                return srtPlayer.Uint8ArrayConverter.toString(decompressedData);
             }).then(result=>
                 SERVICE_CHANNEL.publish({
                     topic: SERVICE_CONST.PUB.DOWNLOAD_RESULT,

@@ -1,16 +1,16 @@
 var srtPlayer = srtPlayer || {};
 
-srtPlayer.convertUtils = srtPlayer.convertUtils || (()=> {
+srtPlayer.Uint8ArrayConverter = srtPlayer.Uint8ArrayConverter || (()=> {
 
         return {
-            stringToUint8Array: (input)=> {
+            fromString: (input)=> {
                 var uint = new Uint8Array(input.length);
                 for (var i = 0, j = input.length; i < j; ++i) {
                     uint[i] = input.charCodeAt(i);
                 }
                 return uint;
             },
-            utf8ArrayToString: (input)=> {
+            toString: (input)=> {
                 var out, i, len, c;
                 var char2, char3;
 

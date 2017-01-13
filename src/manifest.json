@@ -35,8 +35,8 @@
       "js/background/parser/SrtParser.js",
       "js/background/parser/ParserService.js",
       "js/background/movie/MovieService.js",
-      "js/background/download/DownloadService.js",
-      "js/background/download/convertUtil.js"
+      "js/background/subtitle_provider/SubtitleProvider.js",
+      "js/background/subtitle_provider/Uint8ArrayConverter.js"
     ],
     "persistent": false
   },
