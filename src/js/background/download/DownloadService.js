@@ -22,7 +22,7 @@ srtPlayer.DownloadService = srtPlayer.DownloadService || (($,credential)=> {
                 $.xmlrpc({
                     url: 'http://api.opensubtitles.org/xml-rpc',
                     methodName: 'LogIn',
-                    params: [credential.username, credential.password, 'en', 'OSTestUserAgentTemp'],
+                    params: [credential.username, credential.password, 'en', 'PlusSub'],
                     success: function (response, status, jqXHR) {
                         resolve(response[0].token);
                     },
