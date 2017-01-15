@@ -11,7 +11,6 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE_INFORMATION;
         var console2 = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
-
         SERVICE_CHANNEL.subscribe({
             topic: SERVICE_CONST.SUB.SEARCH,
             callback: loadData
@@ -86,6 +85,6 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
     });
 
 //instant service does not correct initialize messageBus (in testfiles)
-if (typeof exports === 'undefined' && typeof srtPlayer.MovieService === 'function') {
+if (typeof exports === 'undefined' && typeof srtPlayer.MovieInformationService === 'function') {
     srtPlayer.MovieInformationService = srtPlayer.MovieInformationService($);
 }

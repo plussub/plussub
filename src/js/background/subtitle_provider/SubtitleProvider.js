@@ -108,6 +108,6 @@ srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
     });
 
 //instant service does not correct initialize messageBus (in testfiles)
-if (typeof exports === 'undefined' && typeof srtPlayer.DownloadService === 'function') {
+if (typeof exports === 'undefined' && typeof srtPlayer.subtitleProvider === 'function') {
     srtPlayer.subtitleProvider = srtPlayer.subtitleProvider($,credential.opensubtitle);
 }
