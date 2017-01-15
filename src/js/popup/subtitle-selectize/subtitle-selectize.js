@@ -57,7 +57,7 @@ Polymer({
             });
 
             this.serviceSubscribe({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.DOWNLOAD.PUB.SEARCH_RESULT,
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
                 callback: (result) => {
                     if(!Array.isArray(result)||result.length===0){
                         this.$.subtitleSelection.clearOptions();
@@ -119,7 +119,7 @@ Polymer({
             }
 
             this.servicePublish({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.DOWNLOAD.SUB.SEARCH,
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
                 data: {
                     imdbid: this._currentMovie.imdbID,
                     iso639: this._currentLanguage.iso639

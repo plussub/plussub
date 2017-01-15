@@ -16,7 +16,7 @@ describe('Service Descriptor', ()=> {
 
     it('should full subscriber topic', ()=> {
         expect(serviceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH).to.equal('metaService.publish');
-        expect(serviceDescriptor.BACKEND_SERVICE.DOWNLOAD.SUB.SEARCH).to.equal('downloadService.search');
+        expect(serviceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH).to.equal('subtitleProvider.search');
     });
 
     it('should full publisher topic', ()=> {

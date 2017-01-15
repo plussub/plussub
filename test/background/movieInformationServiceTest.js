@@ -115,7 +115,7 @@ describe('MovieInformationService', ()=> {
         });
 
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE.SUB.SEARCH,
+            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
             data: 'Batman'
         });
     });
