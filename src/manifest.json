@@ -36,7 +36,8 @@
       "js/background/parser/ParserService.js",
       "js/background/movie_information/MovieInformationService.js",
       "js/background/subtitle_provider/SubtitleProvider.js",
-      "js/background/subtitle_provider/Uint8ArrayConverter.js"
+      "js/background/subtitle_provider/Uint8ArrayConverter.js",
+      "js/background/auto_subtitle_download/AutoSubtitleDownloadService.js"
     ],
     "persistent": false
   },
