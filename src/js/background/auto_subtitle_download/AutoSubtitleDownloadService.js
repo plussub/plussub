@@ -17,7 +17,6 @@ srtPlayer.AutoSubtitleDownloadService = srtPlayer.AutoSubtitleDownloadService ||
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.PUB.DOWNLOAD_RESULT,
             callback: (srt)=> {
                 "use strict";
-                console.warn(srt);
                 SERVICE_CHANNEL.publish({
                     topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.SUB.PARSE,
                     data: {
