@@ -1,4 +1,3 @@
-<style is="custom-style">
 /*
  * PolymerThemes v1.0.3
  * Homepage: https://polymerthemes.com
@@ -52,7 +51,7 @@ paper-button.link, paper-button.btn-link, paper-button[link] { text-decoration: 
 paper-button[raised] { color: #444444; }
 paper-button[disabled] { color: #313238 !important; background: #afb1b9 !important; }
 
-paper-icon-button.primary, paper-icon-button.btn-primary, paper-icon-button[primary] { color: #e4e40b; }
+paper-icon-button.primary, paper-icon-button.btn-primary, paper-icon-button[primary] { color: #373b50; }
 paper-icon-button.primary:hover, paper-icon-button.btn-primary:hover, paper-icon-button[primary]:hover { background-color: #ebebee; background-color: rgba(55, 59, 80, 0.2); border-radius: 50%; }
 paper-icon-button.secondary, paper-icon-button.btn-secondary, paper-icon-button[secondary] { color: #90a4ae; }
 paper-icon-button.secondary:hover, paper-icon-button.btn-secondary:hover, paper-icon-button[secondary]:hover { background-color: #f4f6f7; background-color: rgba(144, 164, 174, 0.2); border-radius: 50%; }
@@ -84,5 +83,3 @@ paper-fab[disabled] { color: #313238 !important; background: #afb1b9 !important;
 section.hero paper-menu, section[hero] paper-menu { --paper-menu-background-color: #f2f7fa; }
 
 paper-tabs { background-color: #373b50; color: #ffffff; }
-
-</style>
