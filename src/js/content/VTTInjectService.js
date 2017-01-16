@@ -59,7 +59,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
 
 
         META_CHANNEL.subscribe({
-            topic: 'subtitle.parsedSubtitle',
+            topic: 'parsed_subtitle.parsedSubtitle',
             callback: (parsedSubtitle)=> {
                 if (parsedSubtitle) {
                     cues = JSON.parse(parsedSubtitle).map((srt)=> {
@@ -74,7 +74,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
         });
 
         META_CHANNEL.subscribe({
-            topic: 'subtitle.isParsed',
+            topic: 'parsed_subtitle.isParsed',
             callback: (isParsed)=> {
                 if (!isParsed && track) {
                     track.mode='disabled';
@@ -103,7 +103,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
 
         BACKEND_SERVICE_CHANNEL.publish({
             topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
-            data: 'subtitle.parsedSubtitle'
+            data: 'parsed_subtitle.parsedSubtitle'
         });
 
 

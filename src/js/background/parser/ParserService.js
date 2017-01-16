@@ -10,7 +10,7 @@ if (typeof exports !== 'undefined') {
 
 
 srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = messageBus)=> {
-        var console = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.NAME);
+      //  var console = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.NAME);
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
@@ -22,16 +22,17 @@ srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = message
                     console.error("unknown subtitle type: %s", data.type);
                     throw 'unknown type';
                 }
+                console.log('try parse');
                 var result = srtPlayer.SRTParser().parse(data.raw);
                 console.log('subtitle parsed');
 
                 META_WRITE_CHANNEL.publish({
-                    topic: 'subtitle.parsedSubtitle',
+                    topic: 'parsed_subtitle.parsedSubtitle',
                     data:JSON.stringify(result)
                 });
 
                 META_WRITE_CHANNEL.publish({
-                    topic: 'subtitle.isParsed',
+                    topic: 'parsed_subtitle.isParsed',
                     data:true
                 });
             }
