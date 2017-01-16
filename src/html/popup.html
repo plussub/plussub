@@ -6,10 +6,11 @@ An option page for configuring notifications.
 <head>
 
     <link rel="import" href="popup-base.html">
-    <link rel="import" href="../js/popup/app/plussub-app.html">
     <link rel="import" href="../js/popup/movie-selectize/movie-selectize.html">
     <link rel="import" href="../js/popup/language-selectize/language-selectize.html">
     <link rel="import" href="../js/popup/subtitle-selectize/subtitle-selectize.html">
+    <link rel="import" href="../js/popup/subtitle-file-selection/subtitle-file-selection.html">
+    <link rel="import" href="theme.html">
 
 </head>
 <body>
@@ -59,6 +60,7 @@ An option page for configuring notifications.
             <div role="tabpanel" class="tab-pane" id="viaFile">
                 <div class="row">
                     <div class="col-sm-4">
+                        <subtitle-file-selection></subtitle-file-selection>
                         <button id="srtInputDelegate" type="button" class="btn btn-default WhenPowerOff"
                                 data-toggle="tooltip" data-placement="top" title="Loads a subtitle file from disk">
                             <span class="glyphicon glyphicon-open"></span> Load<strong> .SRT</strong> from filesystem
@@ -77,29 +79,29 @@ An option page for configuring notifications.
     <div class="row">
         <p class="openSubtitle">Subtitle downloads powered by <a id="openSubtitleLink" href="http://www.opensubtitles.org">www.OpenSubtitles.org</a></p>
     </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <span id="currentLoadedInfo" class="label label-info WhenPowerOff" role="button">-</span>
-            <button id="eject" type="button" class="btn btn-default btn-xs WhenPowerOff" data-toggle="tooltip" data-placement="top" title="Remove the current subtitle">
-                <span class="glyphicon glyphicon-eject"></span> Eject
-            </button>
-        </div>
-    </div>
-    <div class="row">
-        <p/>
-    </div>
-    <div class="row">
-        <div class="col-xs-9" style="display:none">
-            <button id="option" type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Open option page">
-                <span class="glyphicon glyphicon-wrench"></span> Options
-            </button>
-        </div>
-        <div class="col-xs-1">
-            <button id="power" type="button" class="btn btn-default btn-xs active" data-toggle="tooltip" data-placement="top" title="Disable/Enable the plugin">
-                <span class="glyphicon glyphicon-off"><span id="power_span"> ON</span></span>
-            </button>
-        </div>
-    </div>
+    <!--<div class="row">-->
+        <!--<div class="col-xs-12">-->
+            <!--<span id="currentLoadedInfo" class="label label-info WhenPowerOff" role="button">-</span>-->
+            <!--<button id="eject" type="button" class="btn btn-default btn-xs WhenPowerOff" data-toggle="tooltip" data-placement="top" title="Remove the current subtitle">-->
+                <!--<span class="glyphicon glyphicon-eject"></span> Eject-->
+            <!--</button>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<p/>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="col-xs-9" style="display:none">-->
+            <!--<button id="option" type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Open option page">-->
+                <!--<span class="glyphicon glyphicon-wrench"></span> Options-->
+            <!--</button>-->
+        <!--</div>-->
+        <!--<div class="col-xs-1">-->
+            <!--<button id="power" type="button" class="btn btn-default btn-xs active" data-toggle="tooltip" data-placement="top" title="Disable/Enable the plugin">-->
+                <!--<span class="glyphicon glyphicon-off"><span id="power_span"> ON</span></span>-->
+            <!--</button>-->
+        <!--</div>-->
+    <!--</div>-->
     <div class="row">
         <p/>
     </div>
