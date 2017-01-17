@@ -60,26 +60,17 @@ An option page for configuring notifications.
                 <p/>
             </div>
             <div role="tabpanel" class="tab-pane" id="viaFile">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <subtitle-file-selection></subtitle-file-selection>
-                        <button id="srtInputDelegate" type="button" class="btn btn-default WhenPowerOff"
-                                data-toggle="tooltip" data-placement="top" title="Loads a subtitle file from disk">
-                            <span class="glyphicon glyphicon-open"></span> Load<strong> .SRT</strong> from filesystem
-                        </button>
-                    </div>
-                </div>
+                <subtitle-file-selection></subtitle-file-selection>
             </div>
             <div role="tabpanel" class="tab-pane active" id="viaInput">
 
                 <movie-selectize id="movieSelectize"></movie-selectize>
                 <language-selectize id="languageSelectize"></language-selectize>
                 <subtitle-selectize id="subtitleSelection"></subtitle-selectize>
+
+                <p class="openSubtitle">Subtitle downloads powered by <a id="openSubtitleLink" href="http://www.opensubtitles.org">www.OpenSubtitles.org</a></p>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <p class="openSubtitle">Subtitle downloads powered by <a id="openSubtitleLink" href="http://www.opensubtitles.org">www.OpenSubtitles.org</a></p>
     </div>
     <!--<div class="row">-->
         <!--<div class="col-xs-12">-->
@@ -108,7 +99,6 @@ An option page for configuring notifications.
         <p/>
     </div>
 </div>
-<input id="srtInput" type="file" style="position:absolute; top:-100px"/>
 </plussub-app>
 </body>
 </html>
