@@ -1,1 +1,8 @@
-paper-fab[mini]{transform:var(--default-fab-size); }
+paper-fab[mini] {
+    transform: var(--default-fab-size);
+}
+
+label {
+    font-size: 75%;
+    color:var(--primary-text-color);
+}
