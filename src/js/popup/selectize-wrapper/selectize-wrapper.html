@@ -5,6 +5,8 @@
 
 
 <dom-module id="selectize-wrapper">
+    <link rel="import" href="../../../css/theme.css" type="css">
+    <link rel="import" href="../../../css/extended-theme.css" type="css">
     <template>
         <style>
             :host {
@@ -23,12 +25,6 @@
                 flex-grow: 1;
             }
 
-            paper-fab.clear {
-                --paper-fab-mini:{
-                    transform:var(--default-fab-size);
-                };
-            }
-
 
         </style>
         <span id="label">[[placeholder]]</span>
@@ -36,7 +32,7 @@
             <div id="selectizeContainer">
                 <select id="selectize"></select>
             </div>
-            <paper-fab mini icon="clear" title="clear" class="clear" on-tap="clearCurrentSelection"></paper-fab>
+            <paper-fab mini icon="clear" title="clear" on-tap="clearCurrentSelection"></paper-fab>
         </div>
     </template>
     <script src="selectize-wrapper.js"></script>
