@@ -64,6 +64,7 @@ Polymer({
     _currentSelectedChanged: function (movieMeta) {
         "use strict";
         if (!movieMeta || Object.keys(movieMeta).length === 0) {
+            this.$.movieSelection.clearOptions();
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.FULL_TOPIC_RESET,
                 data: 'selected_movie'

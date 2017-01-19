@@ -101,7 +101,9 @@ Polymer({
     },
 
     clearOptions: function () {
-        this.selectize.clearOptions();
+        if(this.selectize && this.selectize.clearOptions) {
+            this.selectize.clearOptions();
+        }
     },
 
     clear : function(silent){

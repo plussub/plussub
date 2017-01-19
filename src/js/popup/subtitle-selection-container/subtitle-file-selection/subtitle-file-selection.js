@@ -1,7 +1,7 @@
 
 Polymer({
     is: 'subtitle-file-selection',
-    behaviors: [ServiceChannelBehavior],
+    behaviors: [ServiceChannelBehavior,SubtitleSelectionBehavior],
 
     reset:function(){
         var form = document.createElement('form');
@@ -14,10 +14,15 @@ Polymer({
 
         var reader = new FileReader();
         reader.readAsText(this.$.fileInput.inputElement.files[0]);
-        reader.onload = (file)=> {
+        reader.onload = (file) => {
 
             var filename =this.$.fileInput.inputElement.files[0].name;
             console.warn(this.$.fileInput.inputElement.files[0]);
+
+            this.fire('refreshSubtitle', {
+                selectionType:this
+            });
+
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.SUB.PARSE,
                 data: {

@@ -4,9 +4,13 @@
 
 Polymer({
     is: 'subtitle-selection-container',
+    listeners: {
+        "refreshSubtitle": "onRefreshSubtitle"
+    },
 
-    ready: function () {
-
-        console.log(this.querySelector('subtitle-selectize'));
+    onRefreshSubtitle: function (event, data) {
+        [...this.querySelectorAll(".subtitle-selection-element")]
+            .filter((selection) => selection !== data.selectionType)
+            .forEach((notActualSelection) => notActualSelection.reset());
     }
 });
