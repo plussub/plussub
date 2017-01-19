@@ -1,0 +1,14 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="movie-selectize/movie-selectize.html">
+<link rel="import" href="language-selectize/language-selectize.html">
+<link rel="import" href="subtitle-selectize/subtitle-selectize.html">
+
+<dom-module id="movie-portal-selection">
+    <template>
+        <movie-selectize id="movieSelectize"></movie-selectize>
+        <language-selectize id="languageSelectize"></language-selectize>
+        <subtitle-selectize id="subtitleSelection"></subtitle-selectize>
+        <p class="openSubtitle">Subtitle downloads powered by <a id="openSubtitleLink" href="http://www.opensubtitles.org">www.OpenSubtitles.org</a></p>
+    </template>
+    <script src="movie-portal-selection.js"></script>
+</dom-module>

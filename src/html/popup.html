@@ -7,10 +7,10 @@ An option page for configuring notifications.
 
     <link rel="import" href="popup-base.html">
     <link rel="import" href="../js/popup/plussub-app/plussub-app.html">
-    <link rel="import" href="../js/popup/movie-selectize/movie-selectize.html">
-    <link rel="import" href="../js/popup/language-selectize/language-selectize.html">
-    <link rel="import" href="../js/popup/subtitle-selectize/subtitle-selectize.html">
-    <link rel="import" href="../js/popup/subtitle-file-selection/subtitle-file-selection.html">
+    <link rel="import" href="../js/popup/subtitle-selection-container/subtitle-selection-container.html">
+    <link rel="import" href="../js/popup/subtitle-selection-container/subtitle-file-selection/subtitle-file-selection.html">
+    <link rel="import" href="../js/popup/subtitle-selection-container/movie-portal-selection/movie-portal-selection.html">
+
     <link rel="import" href="extended-theme.html">
 
 </head>
@@ -59,17 +59,16 @@ An option page for configuring notifications.
             <div class="row">
                 <p/>
             </div>
-            <div role="tabpanel" class="tab-pane" id="viaFile">
-                <subtitle-file-selection></subtitle-file-selection>
-            </div>
-            <div role="tabpanel" class="tab-pane active" id="viaInput">
 
-                <movie-selectize id="movieSelectize"></movie-selectize>
-                <language-selectize id="languageSelectize"></language-selectize>
-                <subtitle-selectize id="subtitleSelection"></subtitle-selectize>
+            <subtitle-selection-container>
 
-                <p class="openSubtitle">Subtitle downloads powered by <a id="openSubtitleLink" href="http://www.opensubtitles.org">www.OpenSubtitles.org</a></p>
-            </div>
+                <div role="tabpanel" class="tab-pane active" id="viaInput">
+                    <movie-portal-selection></movie-portal-selection>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="viaFile">
+                    <subtitle-file-selection></subtitle-file-selection>
+                </div>
+            </subtitle-selection-container>
         </div>
     </div>
     <!--<div class="row">-->
