@@ -11,10 +11,19 @@
 
             .SelectSubtitleMeta{
                 display:flex;
-                justify-content: space-around;
+                justify-content: flex-start;
+            }
+
+            .SelectSubtitleMeta div{
+                margin-right:15px;‚
+            }
+
+            h1{
+                font-size:150%;
+                margin-bottom:0px;
             }
         </style>
-        <h3>{{item.movieTitle}}</h3>
+        <h1>{{item.movieTitle}}</h1>
         <div class="SelectSubtitleMeta">
             <div>
                 <label for="language">Subtitle Language:</label>
