@@ -1,15 +1,29 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 
 <dom-module id="subtitle-option">
+    <link rel="import" href="../../../../../css/theme.css" type="css">
+    <link rel="import" href="../../../../../css/extended-theme.css" type="css">
     <template>
         <style>
             :host {
                 display: block;
             }
+
+            .SelectSubtitleMeta{
+                display:flex;
+                justify-content: space-around;
+            }
         </style>
-        <div class="SelectMovieTitle"><h3><strong> {{item.movieTitle}} </strong></h3>
-            <div><strong> Subtitle Language:</strong>{{item.subtitleLanguage}}</div>
-            <div><strong> Subtitle Rating:</strong>{{item.subtitleRating}}</div>
+        <h3>{{item.movieTitle}}</h3>
+        <div class="SelectSubtitleMeta">
+            <div>
+                <label for="language">Subtitle Language:</label>
+                <div id="language">{{item.subtitleLanguage}}</div>
+            </div>
+            <div>
+                <label for="rating">Subtitle Rating:</label>
+                <div id="rating">{{item.subtitleRating}}</div>
+            </div>
         </div>
     </template>
     <script src="subtitle-option.js"></script>

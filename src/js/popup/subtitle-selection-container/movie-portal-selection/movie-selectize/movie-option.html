@@ -1,26 +1,56 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 
 <dom-module id="movie-option">
+    <link rel="import" href="../../../../../css/theme.css" type="css">
+    <link rel="import" href="../../../../../css/extended-theme.css" type="css">
     <template>
         <style>
             :host {
-                display: block;
+                display: flex;
             }
+
+            h1{
+                font-size:2em;
+            }
+
+            .SelectMovieTitle {
+                flex-shrink: 0;
+                flex-basis: 55%;
+            }
+
+            .poster {
+                align-self: center;
+                max-width: 40%;
+                padding: 4px;
+                line-height: 1.42857143;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            .SelectMovieMeta div{
+                margin-bottom:10px;
+            }
+
+
         </style>
-        <div class="SelectMovieTitle"><h3><strong>{{item.Title}}</strong></h3>
-            <div class="movieInfoContainer">
-                <div><strong> Year:</strong>{{item.Year}}</div>
-                <div><strong> IMDB Rating:</strong>{{item.imdbRating}}</div>
-                <div><strong> Genre: </strong>{{item.Genre}}</div>
-                <div><strong> Country:</strong>{{item.Country}}</div>
+        <div class="SelectMovieTitle">
+            <h1>{{item.Title}}</h1>
+            <div class="SelectMovieMeta">
+                <label for="year">Year:</label>
+                <div id="year">{{item.Year}}</div>
+                <label for="rating"> IMDB Rating:</label>
+                <div id="rating">{{item.imdbRating}}</div>
+                <label for="genre"> Genre: </label>
+                <div id="genre">{{item.Genre}}</div>
+                <label for="country"> Country:</label>
+                <div id="country">{{item.Country}}</div>
             </div>
-            <div class="imdbPosterContainer">
-                <object class="imdbPoster img-thumbnail" data="{{item.Poster}}" type="image/png">
-                    <img class="imdbPoster img-thumbnail" src="../icons/posterError.png"/>
-                </object>
-            </div>
-            <div class="clear "></div>
         </div>
+
+        <object class="poster" data="{{item.Poster}}" type="image/png">
+            <img class="poster" src="../../../../../icons/posterError.png"/>
+        </object>
     </template>
     <script src="movie-option.js"></script>
 </dom-module>

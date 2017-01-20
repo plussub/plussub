@@ -9,7 +9,7 @@ Polymer({
     },
 
     onRefreshSubtitle: function (event, data) {
-        [...this.querySelectorAll(".subtitle-selection-element")]
+        Array.from(this.querySelectorAll(".subtitle-selection-element"))
             .filter((selection) => selection !== data.selectionType)
             .forEach((notActualSelection) => notActualSelection.reset());
     }

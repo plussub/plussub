@@ -3,5 +3,5 @@
  */
 
 Polymer({
-    is: 'plussub-app',
+    is: 'plussub-app'
 });

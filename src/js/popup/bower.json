@@ -5,6 +5,8 @@
     "polymer": "Polymer/polymer#^1.7.0",
     "paper-fab": "PolymerElements/paper-fab#~1.2.1",
     "iron-icons": "PolymerElements/iron-icons#~1.2.0",
-    "paper-input": "PolymerElements/paper-input#^1.1.22"
+    "paper-input": "PolymerElements/paper-input#^1.1.22",
+    "paper-tabs": "PolymerElements/paper-tabs#^1.7.0",
+    "iron-pages": "PolymerElements/iron-pages#^1.0.8"
   }
 }

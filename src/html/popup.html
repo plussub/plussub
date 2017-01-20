@@ -5,98 +5,94 @@ An option page for configuring notifications.
 <html style="min-width:410px; max-width:410px;">
 <head>
 
+    <link rel="stylesheet" href="../css/selectize.css"/>
     <link rel="import" href="popup-base.html">
     <link rel="import" href="../js/popup/plussub-app/plussub-app.html">
+    <link rel="import" href="../js/popup/bower_components/paper-tabs/paper-tabs.html">
+    <link rel="import" href="../js/popup/bower_components/paper-tabs/paper-tab.html">
+    <link rel="import" href="../js/popup/bower_components/iron-pages/iron-pages.html">
+
     <link rel="import" href="../js/popup/subtitle-selection-container/subtitle-selection-container.html">
     <link rel="import" href="../js/popup/subtitle-selection-container/subtitle-file-selection/subtitle-file-selection.html">
     <link rel="import" href="../js/popup/subtitle-selection-container/movie-portal-selection/movie-portal-selection.html">
+    <link rel="import" href="../js/popup/subtitle-selection-container/current-loaded-subtitle-info/current-loaded-subtitle-info.html">
 
     <link rel="import" href="extended-theme.html">
 
 </head>
 <body>
 <plussub-app>
-<div class="container-fluid" style="width: 400px !important;">
-    <div class="row">
-        <p/>
-    </div>
-    <div class="row">
-        <p/>
-    </div>
-    <div class="row">
-        <div class="col-xs-12" data-toggle="tooltip" data-placement="bottom" title="Current videotime">
-            <div class="input-group input-group-sm">
-                <span class="input-group-addon">Current time</span>
-                <input type="text" id="currentTime" class="form-control" placeholder="00:00:00">
+    <div class="container-fluid" style="width: 400px !important;">
+        <div class="row">
+            <p/>
+        </div>
+        <div class="row">
+            <p/>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" data-toggle="tooltip" data-placement="bottom" title="Current videotime">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Current time</span>
+                    <input type="text" id="currentTime" class="form-control" placeholder="00:00:00">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <p/>
-    </div>
-    <div class="row">
-        <div class="col-xs-12" data-toggle="tooltip" data-placement="bottom"
-             title="Shifts subtitle to the given milliseconds. Accepts - as sign.">
-            <div class="input-group input-group-sm">
-                <span class="input-group-addon WhenPowerOff">Offset</span>
-                <input type="text" id="offsetTime" class="form-control disabledWhenPowerOff" placeholder="Milliseconds">
+        <div class="row">
+            <p/>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" data-toggle="tooltip" data-placement="bottom"
+                 title="Shifts subtitle to the given milliseconds. Accepts - as sign.">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon WhenPowerOff">Offset</span>
+                    <input type="text" id="offsetTime" class="form-control disabledWhenPowerOff"
+                           placeholder="Milliseconds">
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <p/>
-    </div>
-    <div role="tabpanel">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs " role="tablist">
-            <li role="presentation" class="active"><a href="#viaInput" aria-controls="viaInput" role="tab"
-                                                      data-toggle="tab">Search Title</a></li>
-            <li role="presentation"><a href="#viaFile" aria-controls="viaFile" role="tab" data-toggle="tab">File</a>
-            </li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div class="row">
-                <p/>
-            </div>
 
-            <subtitle-selection-container>
-                <div role="tabpanel" class="tab-pane active" id="viaInput">
+        <subtitle-selection-container style="display:flex; flex-direction: column;">
+            <template is="dom-bind" id="scope">
+                <paper-tabs selected="{{selected}}">
+                    <paper-tab>Movie Portal</paper-tab>
+                    <paper-tab>File</paper-tab>
+                </paper-tabs>
+                <iron-pages selected="{{selected}}">
                     <movie-portal-selection></movie-portal-selection>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="viaFile">
-                    <subtitle-file-selection></subtitle-file-selection>
-                </div>
-            </subtitle-selection-container>
-        </div>
-    </div>
-    <!--<div class="row">-->
+                    <subtitle-file-selection style="height:100%"></subtitle-file-selection>
+                </iron-pages>
+                <current-loaded-subtitle-info></current-loaded-subtitle-info>
+            </template>
+            <script src="../js/popup/init/subtitleSelection.js"></script>
+        </subtitle-selection-container>
+
+        <!--<div class="row">-->
         <!--<div class="col-xs-12">-->
-            <!--<span id="currentLoadedInfo" class="label label-info WhenPowerOff" role="button">-</span>-->
-            <!--<button id="eject" type="button" class="btn btn-default btn-xs WhenPowerOff" data-toggle="tooltip" data-placement="top" title="Remove the current subtitle">-->
-                <!--<span class="glyphicon glyphicon-eject"></span> Eject-->
-            <!--</button>-->
+        <!--<span id="currentLoadedInfo" class="label label-info WhenPowerOff" role="button">-</span>-->
+        <!--<button id="eject" type="button" class="btn btn-default btn-xs WhenPowerOff" data-toggle="tooltip" data-placement="top" title="Remove the current subtitle">-->
+        <!--<span class="glyphicon glyphicon-eject"></span> Eject-->
+        <!--</button>-->
         <!--</div>-->
-    <!--</div>-->
-    <!--<div class="row">-->
+        <!--</div>-->
+        <!--<div class="row">-->
         <!--<p/>-->
-    <!--</div>-->
-    <!--<div class="row">-->
+        <!--</div>-->
+        <!--<div class="row">-->
         <!--<div class="col-xs-9" style="display:none">-->
-            <!--<button id="option" type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Open option page">-->
-                <!--<span class="glyphicon glyphicon-wrench"></span> Options-->
-            <!--</button>-->
+        <!--<button id="option" type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Open option page">-->
+        <!--<span class="glyphicon glyphicon-wrench"></span> Options-->
+        <!--</button>-->
         <!--</div>-->
         <!--<div class="col-xs-1">-->
-            <!--<button id="power" type="button" class="btn btn-default btn-xs active" data-toggle="tooltip" data-placement="top" title="Disable/Enable the plugin">-->
-                <!--<span class="glyphicon glyphicon-off"><span id="power_span"> ON</span></span>-->
-            <!--</button>-->
+        <!--<button id="power" type="button" class="btn btn-default btn-xs active" data-toggle="tooltip" data-placement="top" title="Disable/Enable the plugin">-->
+        <!--<span class="glyphicon glyphicon-off"><span id="power_span"> ON</span></span>-->
+        <!--</button>-->
         <!--</div>-->
-    <!--</div>-->
-    <div class="row">
-        <p/>
+        <!--</div>-->
+        <div class="row">
+            <p/>
+        </div>
     </div>
-</div>
 </plussub-app>
 </body>
 </html>
