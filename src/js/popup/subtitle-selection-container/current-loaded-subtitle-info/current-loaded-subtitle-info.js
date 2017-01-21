@@ -6,11 +6,11 @@ Polymer({
     properties:{
         title:{
             type:String,
-            value:'Pulp fiction.srt'
+            value:'-'
         },
         type:{
             type:String,
-            value:'File'
+            value:''
         }
     },
     listeners: {
@@ -20,8 +20,7 @@ Polymer({
 
     },
     onRefreshSubtitle:function(event,data){
-        console.log(data);
-
-       // this.type=data.selectionTypeSimpleName;
+        this.type=data.selectionElement ? data.selectionElement.simpleName : '';
+        this.title=data.title ? data.title : '-';
     }
 });

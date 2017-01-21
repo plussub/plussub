@@ -5,13 +5,18 @@
 Polymer({
     is: 'movie-portal-selection',
     behaviors: [SubtitleSelectionBehavior],
+    properties:{
+      simpleName:{
+          type:String,
+          value:'Movie Portal Selection'
+      }
+    },
     listeners:{
         "refreshSubtitle":"onRefreshSubtitle"
     },
-
     //retargeting selectionType
     onRefreshSubtitle:function(event,data){
-        Object.assign(data,{selectionType:this});
+        Object.assign(data,{selectionElement:this});
     },
 
     reset(){

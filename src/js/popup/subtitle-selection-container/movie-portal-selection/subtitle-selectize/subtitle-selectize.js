@@ -120,7 +120,8 @@ Polymer({
             }
 
             this.fire('refreshSubtitle',  {
-               selectionType:this
+                selectionElement:this,
+                title: this._currentMovie.Title
             });
 
             this.servicePublish({

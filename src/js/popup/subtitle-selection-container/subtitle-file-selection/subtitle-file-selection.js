@@ -1,6 +1,12 @@
 
 Polymer({
     is: 'subtitle-file-selection',
+    properties:{
+        simpleName:{
+            type:String,
+            value:'File Selection'
+        }
+    },
     behaviors: [ServiceChannelBehavior,SubtitleSelectionBehavior],
 
     reset:function(){
@@ -20,7 +26,8 @@ Polymer({
             console.warn(this.$.fileInput.inputElement.files[0]);
 
             this.fire('refreshSubtitle', {
-                selectionType:this
+                selectionElement:this,
+                title:filename
             });
 
             this.servicePublish({
@@ -30,26 +37,6 @@ Polymer({
                     raw: reader.result
                 }
             });
-
-            // SERVICE_CHANNEL.publish({
-            //     topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
-            //     data: 'subtitle'
-            // });
-            // //workaround, race condition with meta.sub.reset
-            // setTimeout(()=> {
-            //     SERVICE_CHANNEL.publish({
-            //         topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.SUB.PARSE,
-            //         data: {
-            //             type: 'srt',
-            //             raw: reader.result
-            //         }
-            //     });
-            //
-            //     META_WRITE_CHANNEL.publish({
-            //         topic: 'subtitle.title',
-            //         data: filename
-            //     });
-            // },300);
         };
     }
 });
