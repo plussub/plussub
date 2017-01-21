@@ -5,12 +5,18 @@
 Polymer({
     is: 'subtitle-selection-container',
     listeners: {
-        "refreshSubtitle": "onRefreshSubtitle"
+        "refreshSubtitle": "onRefreshSubtitle",
+        "resetAllSubtitleSelections":"onResetAllSubtitleSelections"
     },
 
     onRefreshSubtitle: function (event, data) {
         Array.from(this.querySelectorAll(".subtitle-selection-element"))
             .filter((selection) => selection !== data.selectionElement)
             .forEach((notActualSelection) => notActualSelection.reset());
+    },
+
+    onResetAllSubtitleSelections:function(){
+        Array.from(this.querySelectorAll(".subtitle-selection-element"))
+            .forEach((selectionElement)=>selectionElement.reset());
     }
 });

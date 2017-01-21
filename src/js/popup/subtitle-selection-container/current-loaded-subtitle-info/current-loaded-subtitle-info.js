@@ -37,5 +37,9 @@ Polymer({
         this.currentSelectionElement = null;
         this.type = '';
         this.title = '-';
+    },
+
+    onEject:function(){
+        this.fire('resetAllSubtitleSelections');
     }
 });
