@@ -12,10 +12,10 @@ Polymer({
       }
     },
     listeners:{
-        "refreshSubtitle":"onRefreshSubtitle"
+        "refreshSubtitle":"retargetingSelectionElement",
+        "resetSubtitle":"retargetingSelectionElement"
     },
-    //retargeting selectionType
-    onRefreshSubtitle:function(event,data){
+    retargetingSelectionElement:function(event,data){
         Object.assign(data,{selectionElement:this});
     },
 

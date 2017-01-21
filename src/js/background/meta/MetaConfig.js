@@ -57,6 +57,14 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 }
             },
 
+            selected_subtitle_file:{
+                current:{},
+                fallback: {
+                    store:'selected_subtitle_file',
+                    entry:{}
+                }
+            },
+
             parsed_subtitle:{
                 current:{},
                 fallback: {
