@@ -1,11 +1,48 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-
+<link rel="import" href="../../bower_components/paper-expansion-panel/paper-expansion-panel.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <dom-module id="current-loaded-subtitle-info">
+    <link rel="import" href="../../../../css/theme.css" type="css">
+    <link rel="import" href="../../../../css/extended-theme.css" type="css">
     <template>
-        <h3>Current loaded subtitle:</h3>
-        <label for="title"></label><span id="title">[[title]]</span>
-        <label for="type"></label> <span id="type">[[type]]</span>
-        <div>Eject</div>
+        <style>
+            :host {
+                display: block;
+            }
+
+
+            paper-expansion-panel {
+                --paper-expansion-panel-content: {
+                    display: flex;
+                };
+            }
+
+            paper-fab[mini] {
+                transform: var(--fab-size-for-exapansion-panel);
+            }
+
+            div{
+                margin-right:15px;
+            }
+
+        </style>
+
+        <content></content>
+        <paper-expansion-panel header="Current loaded" summary="[[title]]" opened>
+            <div>
+                <label for="title">Title</label>
+                <span id="title">[[title]]</span>
+            </div>
+            <div>
+                <label for="type">Type</label>
+                <span id="type">[[type]]</span>
+            </div>
+            <div>
+                <paper-fab mini icon="eject" title="clear" on-tap="clearCurrentSelection"></paper-fab>
+            </div>
+        </paper-expansion-panel>
     </template>
+
+
     <script src="current-loaded-subtitle-info.js"></script>
 </dom-module>

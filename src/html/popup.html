@@ -53,15 +53,16 @@ An option page for configuring notifications.
 
         <subtitle-selection-container style="display:flex; flex-direction: column;">
             <template is="dom-bind" id="scope">
-                <paper-tabs selected="{{selected}}">
-                    <paper-tab>Movie Portal</paper-tab>
-                    <paper-tab>File</paper-tab>
-                </paper-tabs>
-                <iron-pages selected="{{selected}}">
-                    <movie-portal-selection></movie-portal-selection>
-                    <subtitle-file-selection style="height:100%"></subtitle-file-selection>
-                </iron-pages>
-                <current-loaded-subtitle-info></current-loaded-subtitle-info>
+                <current-loaded-subtitle-info>
+                    <paper-tabs selected="{{selected}}">
+                        <paper-tab>Movie Portal</paper-tab>
+                        <paper-tab>File</paper-tab>
+                    </paper-tabs>
+                    <iron-pages selected="{{selected}}">
+                        <movie-portal-selection></movie-portal-selection>
+                        <subtitle-file-selection style="height:100%"></subtitle-file-selection>
+                    </iron-pages>
+                </current-loaded-subtitle-info>
             </template>
             <script src="../js/popup/init/subtitleSelection.js"></script>
         </subtitle-selection-container>

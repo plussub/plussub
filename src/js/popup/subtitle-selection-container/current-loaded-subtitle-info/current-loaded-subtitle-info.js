@@ -4,9 +4,13 @@
 Polymer({
     is: "current-loaded-subtitle-info",
     properties:{
+        title:{
+            type:String,
+            value:'Pulp fiction.srt'
+        },
         type:{
             type:String,
-            value:'-'
+            value:'File'
         }
     },
     listeners: {
@@ -18,6 +22,6 @@ Polymer({
     onRefreshSubtitle:function(event,data){
         console.log(data);
 
-        this.type=data.selectionTypeSimpleName;
+       // this.type=data.selectionTypeSimpleName;
     }
 });

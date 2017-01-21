@@ -9,18 +9,19 @@
     <link rel="import" href="../../../../css/extended-theme.css" type="css">
     <template>
         <style>
-            span{
+            #tribute{
                 float:right;
-                font-size:75%;‚
+                font-size:75%;
             }
         </style>
         <movie-selectize id="movieSelectize"></movie-selectize>
         <language-selectize id="languageSelectize"></language-selectize>
         <subtitle-selectize id="subtitleSelectize"></subtitle-selectize>
-        <span>
+        <div id="tribute">
             <label for="openSubtitleLink">Subtitle downloads powered by</label>
             <a id="openSubtitleLink" href="http://www.opensubtitles.org">www.OpenSubtitles.org</a>
-        </span>
+        </div>
+        <div>&nbsp;</div>
     </template>
     <script src="movie-portal-selection.js"></script>
 </dom-module>

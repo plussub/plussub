@@ -7,6 +7,7 @@
     "iron-icons": "PolymerElements/iron-icons#~1.2.0",
     "paper-input": "PolymerElements/paper-input#^1.1.22",
     "paper-tabs": "PolymerElements/paper-tabs#^1.7.0",
-    "iron-pages": "PolymerElements/iron-pages#^1.0.8"
+    "iron-pages": "PolymerElements/iron-pages#^1.0.8",
+    "paper-expansion-panel": "Collaborne/paper-expansion-panel#^1.0.0"
   }
 }

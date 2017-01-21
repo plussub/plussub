@@ -6,3 +6,19 @@ label {
     font-size: 75%;
     color:var(--primary-text-color);
 }
+
+paper-expansion-panel {
+
+    --paper-expansion-panel-header: {
+        font-family: 'Oxygen', sans-serif;
+        font-size: 75%;
+        color: var(--primary-text-color);
+        font-weight: bold;
+    };
+
+    --paper-expansion-panel-summary : {
+        font-size:100%;
+        font-weight:normal;
+    };
+
+}
