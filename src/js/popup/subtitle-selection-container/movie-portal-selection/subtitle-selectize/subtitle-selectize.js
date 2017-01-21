@@ -83,6 +83,10 @@ Polymer({
     _currentSelectedChanged: function (subtitle) {
         "use strict";
         if (!subtitle || Object.keys(subtitle).length===0) {
+            this.fire('resetSubtitle',{
+                selectionElement: this
+            });
+
             this.$.subtitleSelection.clearOptions();
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.FULL_TOPIC_RESET,
@@ -115,10 +119,6 @@ Polymer({
                 || Object.keys(this._currentLanguage).length === 0
                 || !this._currentMovie
                 || Object.keys(this._currentMovie).length === 0) {
-
-                this.fire('resetSubtitle',{
-                    selectionElement: this
-                });
 
                 this.$.subtitleSelection.clearOptions();
                 return;
