@@ -3,5 +3,8 @@
  */
 
 Polymer({
-   is:"misc-options"
+   is:"misc-options",
+    ready:function(){
+
+    }
 });

@@ -86,10 +86,11 @@ Polymer({
             });
 
             this.$.subtitleSelection.clearOptions();
-            this.servicePublish({
+            //racecondition, triggered when subtitle-selectize is not ready
+            this.async(()=>  this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.FULL_TOPIC_RESET,
                 data: 'selected_subtitle'
-            });
+            }));
             return;
         }
 
