@@ -10,7 +10,7 @@ ServiceChannelBehavior = (function () {
 
         ready: function () {
             "use strict";
-            if (!this.serviceSubscriptionsserviceSubscriptions) {
+            if (!this.serviceSubscriptions) {
                 return;
             }
 
