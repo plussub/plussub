@@ -5,22 +5,26 @@
 Polymer({
     is: 'movie-portal-selection',
     behaviors: [SubtitleSelectionBehavior],
-    properties:{
-      simpleName:{
-          type:String,
-          value:'Movie Portal Selection'
-      }
+    properties: {
+        simpleName: {
+            type: String,
+            value: 'Movie Portal Selection'
+        }
     },
-    listeners:{
-        "refreshSubtitle":"retargetingSelectionElement",
-        "resetSubtitle":"retargetingSelectionElement"
+    listeners: {
+        "refreshSubtitle": "retargetingSelectionElement",
+        "resetSubtitle": "retargetingSelectionElement"
     },
-    retargetingSelectionElement:function(event,data){
-        Object.assign(data,{selectionElement:this});
+    retargetingSelectionElement: function (event, data) {
+        Object.assign(data, {selectionElement: this});
+    },
+
+    openOpenSubtitle: function () {
+        chrome.tabs.create({url: this.$.openSubtitleLink.href});
     },
 
     reset(){
-        this.$.movieSelectize.currentSelected=null;
-        this.$.subtitleSelectize.currentSelected=null;
+        this.$.movieSelectize.currentSelected = null;
+        this.$.subtitleSelectize.currentSelected = null;
     }
 });
