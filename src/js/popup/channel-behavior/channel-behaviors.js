@@ -105,16 +105,12 @@ ServiceChannelBehavior = (function () {
 
         ready: function () {
             "use strict";
-
-
-            console.log(this);
-            var subscriptions = this.serviceSubscriptions ? this.serviceSubscriptions : [];
-
+            
             this.servicePublish = BaseChannelBehavior.createPublishFor(SERVICE_CHANNEL);
             this.serviceSubscribe = BaseChannelBehavior.createSubscribeFor(SERVICE_CHANNEL);
             this.serviceSubscribeOnce = BaseChannelBehavior.createSubscribeOnceFor(SERVICE_CHANNEL);
 
-            BaseChannelBehavior.initSubscriptions(subscriptions,
+            BaseChannelBehavior.initSubscriptions( this.serviceSubscriptions ,
                 this.serviceSubscribe,
                 this);
         }
