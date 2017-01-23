@@ -6,16 +6,24 @@ An option page for configuring notifications.
 <head>
 
     <link rel="stylesheet" href="../css/selectize.css"/>
-    <link rel="import" href="popup-base.html">
+
+    <link rel="import" href="base.html"/>
+    <script type="text/javascript" src="../js/ga.js"></script>
+    <script type="text/javascript" src="../js/GALogger.js"></script>
+    <script type="text/javascript" src="../js/popup/PopupBridge.js"></script>
+
     <link rel="import" href="../js/popup/plussub-app/plussub-app.html">
     <link rel="import" href="../js/popup/bower_components/paper-tabs/paper-tabs.html">
     <link rel="import" href="../js/popup/bower_components/paper-tabs/paper-tab.html">
     <link rel="import" href="../js/popup/bower_components/iron-pages/iron-pages.html">
+    <link rel="import" href="../js/popup/bower_components/paper-button/paper-button.html">
 
+    <link rel="import" href="../js/popup/subtitle-time-info-and-setting/subtitle-time-info-and-setting.html">
     <link rel="import" href="../js/popup/subtitle-selection-container/subtitle-selection-container.html">
     <link rel="import" href="../js/popup/subtitle-selection-container/subtitle-file-selection/subtitle-file-selection.html">
     <link rel="import" href="../js/popup/subtitle-selection-container/movie-portal-selection/movie-portal-selection.html">
     <link rel="import" href="../js/popup/subtitle-selection-container/current-loaded-subtitle-info/current-loaded-subtitle-info.html">
+    <link rel="import" href="../js/popup/misc-options/misc-options.html">
 
     <link rel="import" href="extended-theme.html">
 
@@ -29,27 +37,9 @@ An option page for configuring notifications.
         <div class="row">
             <p/>
         </div>
-        <div class="row">
-            <div class="col-xs-12" data-toggle="tooltip" data-placement="bottom" title="Current videotime">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Current time</span>
-                    <input type="text" id="currentTime" class="form-control" placeholder="00:00:00">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <p/>
-        </div>
-        <div class="row">
-            <div class="col-xs-12" data-toggle="tooltip" data-placement="bottom"
-                 title="Shifts subtitle to the given milliseconds. Accepts - as sign.">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-addon WhenPowerOff">Offset</span>
-                    <input type="text" id="offsetTime" class="form-control disabledWhenPowerOff"
-                           placeholder="Milliseconds">
-                </div>
-            </div>
-        </div>
+
+        <subtitle-time-info-and-setting>
+        </subtitle-time-info-and-setting>
 
         <subtitle-selection-container style="display:flex; flex-direction: column;">
             <template is="dom-bind" id="scope">
@@ -67,29 +57,8 @@ An option page for configuring notifications.
             <script src="../js/popup/init/subtitleSelection.js"></script>
         </subtitle-selection-container>
 
-        <!--<div class="row">-->
-        <!--<div class="col-xs-12">-->
-        <!--<span id="currentLoadedInfo" class="label label-info WhenPowerOff" role="button">-</span>-->
-        <!--<button id="eject" type="button" class="btn btn-default btn-xs WhenPowerOff" data-toggle="tooltip" data-placement="top" title="Remove the current subtitle">-->
-        <!--<span class="glyphicon glyphicon-eject"></span> Eject-->
-        <!--</button>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="row">-->
-        <!--<p/>-->
-        <!--</div>-->
-        <!--<div class="row">-->
-        <!--<div class="col-xs-9" style="display:none">-->
-        <!--<button id="option" type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Open option page">-->
-        <!--<span class="glyphicon glyphicon-wrench"></span> Options-->
-        <!--</button>-->
-        <!--</div>-->
-        <!--<div class="col-xs-1">-->
-        <!--<button id="power" type="button" class="btn btn-default btn-xs active" data-toggle="tooltip" data-placement="top" title="Disable/Enable the plugin">-->
-        <!--<span class="glyphicon glyphicon-off"><span id="power_span"> ON</span></span>-->
-        <!--</button>-->
-        <!--</div>-->
-        <!--</div>-->
+        <misc-options></misc-options>
+
         <div class="row">
             <p/>
         </div>
