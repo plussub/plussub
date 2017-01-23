@@ -4,7 +4,7 @@
 Polymer({
 
     is: 'movie-selectize',
-    behaviors: [ServiceChannelBehavior, MetaChannelBehavior],
+    behaviors: [ServiceChannelBehavior, MetaChannelBehavior,ChannelBasedInitializeBehavior],
     properties: {
         currentSelected: {
             type: Object,
@@ -37,27 +37,20 @@ Polymer({
         });
     },
 
-    ready: function () {
+    channelBasedInit : {
+        type:MetaChannelBehavior,
+        topic:"selected_movie.entry",
+    },
 
-        this.metaSubscribeOnce({
-            topic: 'selected_movie.entry',
-            callback: (movieMeta) => {
+    _channelBasedInitCallback : function(movieMeta){
+        if (!movieMeta || Object.keys(movieMeta).length===0) {
+            this.$.movieSelection.clearOptions();
+            return;
+        }
 
-                if (!movieMeta || Object.keys(movieMeta).length===0) {
-                    this.$.movieSelection.clearOptions();
-                    return;
-                }
-
-                var movieMetaAsString = JSON.stringify(movieMeta);
-                this.$.movieSelection.addOption(Object.assign({}, movieMeta, {valueField: movieMetaAsString}));
-                this.$.movieSelection.addItem(movieMetaAsString);
-            }
-        });
-
-        this.servicePublish({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
-            data: 'selected_movie.entry'
-        });
+        var movieMetaAsString = JSON.stringify(movieMeta);
+        this.$.movieSelection.addOption(Object.assign({}, movieMeta, {valueField: movieMetaAsString}));
+        this.$.movieSelection.addItem(movieMetaAsString);
     },
 
 

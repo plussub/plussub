@@ -7,6 +7,23 @@ ServiceChannelBehavior = (function () {
 
     var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
     return {
+
+        ready: function () {
+            "use strict";
+            if (!this.serviceSubscriptionsserviceSubscriptions) {
+                return;
+            }
+
+            this.serviceSubscriptions.forEach((entry) => {
+                var sub = {
+                    topic: entry.topic,
+                    callback: this[entry.callback].bind(this)
+                };
+
+                this.serviceSubscribe(sub);
+            });
+        },
+
         servicePublish: function (pub) {
             "use strict";
             SERVICE_CHANNEL.publish({

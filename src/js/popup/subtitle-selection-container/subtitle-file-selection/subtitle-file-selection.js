@@ -6,31 +6,25 @@ Polymer({
             value: 'File Selection'
         }
     },
-    behaviors: [ServiceChannelBehavior,MetaChannelBehavior, SubtitleSelectionBehavior],
+    behaviors: [ServiceChannelBehavior,MetaChannelBehavior,ChannelBasedInitializeBehavior, SubtitleSelectionBehavior],
 
-    ready: function () {
-        this.metaSubscribeOnce({
-            topic: 'selected_subtitle_file.entry',
-            callback: (fileMeta) => {
-
-                if (!fileMeta || Object.keys(fileMeta).length === 0) {
-                    this.reset();
-                    return;
-                }
-
-                this.fire('refreshSubtitle', {
-                    selectionElement: this,
-                    title: fileMeta.filename
-                });
-            }
-        });
-
-        this.servicePublish({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
-            data: 'selected_subtitle_file.entry'
-        });
+    channelBasedInit : {
+        type:MetaChannelBehavior,
+        topic:"selected_subtitle_file.entry",
     },
 
+    _channelBasedInitCallback:function(fileMeta){
+        if (!fileMeta || Object.keys(fileMeta).length === 0) {
+            this.reset();
+            return;
+        }
+
+        this.fire('refreshSubtitle', {
+            selectionElement: this,
+            title: fileMeta.filename
+        });
+    },
+    
     reset: function () {
         var form = document.createElement('form');
         Polymer.dom(form).appendChild(this.$.fileInput);

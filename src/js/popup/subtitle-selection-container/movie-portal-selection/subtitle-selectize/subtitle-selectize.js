@@ -4,7 +4,7 @@
 Polymer({
 
     is: 'subtitle-selectize',
-    behaviors: [ServiceChannelBehavior, MetaChannelBehavior],
+    behaviors: [ServiceChannelBehavior, MetaChannelBehavior,ChannelBasedInitializeBehavior],
     properties: {
         currentSelected: {
             type: Object,
@@ -33,51 +33,49 @@ Polymer({
         }
     ],
 
+    serviceSubscriptions:[
+        {
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
+            callback: 'updateSubtitles'
+        }
+    ],
 
-    ready: function () {
-        this.async(() => {
-            this.metaSubscribeOnce({
-                topic: 'selected_subtitle.entry',
-                callback: (subtitleMeta) => {
+    channelBasedInit : {
+        type:MetaChannelBehavior,
+        topic:"selected_subtitle.entry",
+    },
 
-                    if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
-                        this.$.subtitleSelection.clearOptions();
-                        return;
-                    }
 
-                    var subtitleMetaAsString = JSON.stringify(subtitleMeta);
-                    this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
-                    this.$.subtitleSelection.addItem(subtitleMetaAsString);
-                }
-            });
+    _channelBasedInitCallback:function(subtitleMeta){
 
-            this.servicePublish({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
-                data: 'selected_subtitle.entry'
-            });
+        if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
+            this.$.subtitleSelection.clearOptions();
+            return;
+        }
 
-            this.serviceSubscribe({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
-                callback: (result) => {
-                    if(!Array.isArray(result)||result.length===0){
-                        this.$.subtitleSelection.clearOptions();
-                        return;
-                    }
+        var subtitleMetaAsString = JSON.stringify(subtitleMeta);
+        this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
+        this.$.subtitleSelection.addItem(subtitleMetaAsString);
+    },
 
-                    if(this.currentSelected
-                        && this.currentSelected.idSubtitleFile === result[0].idSubtitleFile
-                        && this.currentSelected.subtitleLanguage === result[0].subtitleLanguage) {
-                        return;
-                    }
+    updateSubtitles:function(result){
+        if(!Array.isArray(result)||result.length===0){
 
-                    var _result = result.map(entry =>  Object.assign(entry, {valueField: JSON.stringify(entry)}));
+            this.$.subtitleSelection.clearOptions();
+            return;
+        }
 
-                    this.$.subtitleSelection.clearOptions();
-                    this.$.subtitleSelection.load(_result);
-                    this.$.subtitleSelection.addItem(_result[0].valueField);
-                }
-            });
-        });
+        if(this.currentSelected
+            && this.currentSelected.idSubtitleFile === result[0].idSubtitleFile
+            && this.currentSelected.subtitleLanguage === result[0].subtitleLanguage) {
+            return;
+        }
+
+        var _result = result.map(entry =>  Object.assign(entry, {valueField: JSON.stringify(entry)}));
+
+        this.$.subtitleSelection.clearOptions();
+        this.$.subtitleSelection.load(_result);
+        this.$.subtitleSelection.addItem(_result[0].valueField);
     },
 
     _currentSelectedChanged: function (subtitle) {
@@ -136,8 +134,6 @@ Polymer({
                     iso639: this._currentLanguage.iso639
                 }
             });
-
-
 
         }, 300);
     }
