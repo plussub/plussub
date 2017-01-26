@@ -1,12 +1,31 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../channel-behavior/channel-behaviors.html">
+<link rel="import" href="../channel-behavior/channel-based-initialize-behavior.html">
+<link rel="import" href="moment.html">
 
 <dom-module id="subtitle-time-info-and-setting">
     <link rel="import" href="../../../css/theme.css" type="css">
     <link rel="import" href="../../../css/extended-theme.css" type="css">
     <template>
-        <paper-input id="currentTime" label="Current time in Video" value="00:00:00"></paper-input>
-        <paper-input id="offsetTime" label="Subtitle offset time in milliseconds" value="0"></paper-input>
+        <style>
+            #currentTime {
+
+                --paper-input-container-disabled:{
+                    opacity: 1;
+                };
+
+                --paper-input-container-label:{
+                    color:var(--primary-text-color);
+                };
+            }
+        </style>
+        <paper-input id="current" label="Current time in video" value="00:00:00" auto-validate allowed-pattern="[]"
+                     disabled></paper-input>
+        <paper-input id="delay" label="Subtitle delay in milliseconds" value="{{delayedSubtitle}}" auto-validate
+                     allowed-pattern="[0-9]">
+            <paper-fab mini suffix on-tap="clear" icon="clear" alt="clear" title="clear"><paper-fab>
+        </paper-input>
     </template>
     <script src="subtitle-time-info-and-setting.js"></script>
 </dom-module>

@@ -3,8 +3,12 @@
  */
 
 Polymer({
-   is:"misc-options",
-    ready:function(){
-
+    is: "misc-options",
+    openOptionPage: function () {
+        chrome.tabs.create({
+            url: chrome.tabs.create({
+                url: "html/options.html"
+            })
+        });
     }
 });

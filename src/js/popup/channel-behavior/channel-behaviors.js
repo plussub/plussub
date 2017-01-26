@@ -57,12 +57,14 @@ ContentServiceChannelBehavior = (function () {
     return {
 
         ready: function () {
+            var subscriptions = this.contentServiceSubscriptions ? this.contentServiceSubscriptions : [];
 
             this.contentServiceSubscribe = BaseChannelBehavior.createSubscribeFor(CONTENT_SERVICE_CHANNEL);
             "use strict";
-            BaseChannelBehavior.initSubscriptions(this.contentServiceSubscriptions,
+            BaseChannelBehavior.initSubscriptions(subscriptions,
                 this.contentServiceSubscribe,
                 this);
+
         }
 
     };
@@ -105,7 +107,7 @@ ServiceChannelBehavior = (function () {
 
         ready: function () {
             "use strict";
-            
+
             this.servicePublish = BaseChannelBehavior.createPublishFor(SERVICE_CHANNEL);
             this.serviceSubscribe = BaseChannelBehavior.createSubscribeFor(SERVICE_CHANNEL);
             this.serviceSubscribeOnce = BaseChannelBehavior.createSubscribeOnceFor(SERVICE_CHANNEL);
