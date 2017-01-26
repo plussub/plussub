@@ -10,37 +10,33 @@
                 display: block;
             }
 
-
-            paper-expansion-panel {
-                --paper-expansion-panel-content: {
-                    display: flex;
-                    justify-content: space-between;
-                };
-                --paper-expansion-panel-header: {
-                    margin-right: -15px;
-                };
-            }
-
             paper-fab[mini] {
                 transform: var(--fab-size-for-exapansion-panel);
+            }
+
+            #expansion-panel-container{
+                  background-color: var(--default-primary-color);
             }
 
         </style>
 
         <content></content>
-        <paper-expansion-panel header="Current loaded" summary="[[title]]">
-            <div>
-                <label for="title">Title</label>
-                <span id="title">[[title]]</span>
-            </div>
-            <div>
-                <label for="type">Type</label>
-                <span id="type">[[type]]</span>
-            </div>
-            <div>
-                <paper-fab mini icon="eject" title="clear" on-tap="onEject"></paper-fab>
-            </div>
-        </paper-expansion-panel>
+
+        <div id="expansion-panel-container">
+            <paper-expansion-panel header="Current loaded" summary="[[title]]" primary>
+                <div style="margin-top:15px;">
+                    <label for="title">Title</label>
+                    <span id="title">[[title]]</span>
+                </div>
+                <div style="margin-top:15px;">
+                    <label for="type">Type</label>
+                    <span id="type">[[type]]</span>
+                </div>
+                <div style="margin-top:15px;">
+                    <paper-fab mini icon="eject" title="clear" on-tap="onEject"></paper-fab>
+                </div>
+            </paper-expansion-panel>
+        </div>
     </template>
 
 
