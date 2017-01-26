@@ -5,8 +5,10 @@
     <link rel="import" href="../../../css/theme.css" type="css">
     <link rel="import" href="../../../css/extended-theme.css" type="css">
     <template>
-        <paper-button raised on-tap="openOptionPage">Open Option</paper-button>
-        <paper-button toggles raised>On/OFF</paper-button>
+        <div style="float:right">
+        <paper-button raised on-tap="openOptionPage" primary>Open Option</paper-button>
+        <paper-button toggles raised primary>On/OFF</paper-button>
+        </div>
     </template>
     <script src="misc-options.js"></script>
 </dom-module>

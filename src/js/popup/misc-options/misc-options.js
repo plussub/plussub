@@ -6,9 +6,7 @@ Polymer({
     is: "misc-options",
     openOptionPage: function () {
         chrome.tabs.create({
-            url: chrome.tabs.create({
-                url: "html/options.html"
-            })
+            url: "html/options.html"
         });
     }
 });
