@@ -10,6 +10,7 @@
     "iron-pages": "PolymerElements/iron-pages#^1.0.8",
     "paper-expansion-panel": "Collaborne/paper-expansion-panel#^1.0.0",
     "paper-button": "PolymerElements/paper-button#^1.0.14",
-    "moment": "^2.17.1"
+    "moment": "^2.17.1",
+    "paper-radio-group": "PolymerElements/paper-radio-group#^1.2.1"
   }
 }

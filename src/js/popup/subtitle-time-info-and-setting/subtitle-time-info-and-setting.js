@@ -6,10 +6,10 @@ Polymer({
     is: "subtitle-time-info-and-setting",
     behaviors: [ServiceChannelBehavior, MetaChannelBehavior, ContentServiceChannelBehavior, ChannelBasedInitializeBehavior],
     properties: {
-        delayedSubtitle: {
+        delay: {
             type: Number,
             value: 0,
-            observer: '_delayedSubtitleChanged'
+            observer: '_delayChanged'
         },
         isInit: {
             type: Boolean,
@@ -27,13 +27,15 @@ Polymer({
             callback: "onVideoTimeUpdate"
         }
     ],
-    _channelBasedInitCallback: function (delayedSubtitle) {
-        this.delayedSubtitle = delayedSubtitle;
+    _channelBasedInitCallback: function (delay) {
+        this.$.scheduling.selected=delay>=0? "behind" :"ahead";
+        this.delay = Math.abs(delay);
         this.isInit = true;
     },
 
     onVideoTimeUpdate: function (time) {
         var currentVideoPoint = moment.duration(time);
+
 
         this.$.current.value = this._normalize(currentVideoPoint.hours())
             + ':'
@@ -43,22 +45,25 @@ Polymer({
     },
 
     clear:function(){
-      this.delayedSubtitle=0;
+      this.delay=0;
     },
 
     _normalize: function (unit) {
         return unit < 10 ? "0" + unit : unit.toString();
     },
 
-    _delayedSubtitleChanged: function (newVal) {
+    _delayChanged: function (newVal) {
         if (!this.isInit) {
             return;
         }
-        this.debounce('_offsetChanged', () =>
-            this.metaPublish({
-                topic: 'user.play.offsetTime',
-                data: parseInt(newVal, 10)
-            })
+        this.debounce('_offsetChanged', () => {
+
+                var multi = this.$.scheduling.selected === 'behind' ? 1 : -1;
+                this.metaPublish({
+                    topic: 'user.play.offsetTime',
+                    data: multi * parseInt(newVal, 10)
+                });
+            }
         );
     }
 });
