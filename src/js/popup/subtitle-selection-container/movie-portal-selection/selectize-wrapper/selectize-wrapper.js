@@ -32,9 +32,9 @@ Polymer({
             value: () => []
         },
 
-        maxOptions:{
-            type:Number,
-            value:1000
+        maxOptions: {
+            type: Number,
+            value: 1000
         },
         //end selecitze 1:1 mapping
 
@@ -101,20 +101,27 @@ Polymer({
     },
 
     clearOptions: function () {
-        if(this.selectize && this.selectize.clearOptions) {
+        if (this.selectize && this.selectize.clearOptions) {
             this.selectize.clearOptions();
         }
     },
 
-    clear : function(silent){
+    clear: function (silent) {
         this.selectize.clear(silent)
     },
 
-    clearCurrentSelection:function(){
+    clearCurrentSelection: function () {
         this.selectize.clear();
     },
 
-    load:function(values){
-        this.selectize.load((fn)=>fn(values));
+    setValue: function (val) {
+        this.selectize.setValue(val);
+    },
+    setTextboxValue: function (val) {
+        this.selectize.setTextboxValue(val);
+    },
+
+    load: function (values) {
+        this.selectize.load((fn) => fn(values));
     }
 });

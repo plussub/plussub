@@ -29,6 +29,7 @@
       "js/ChannelLogService.js",
       "js/background/credential/credential.js",
       "js/background/bridge/BackgroundBridge.js",
+      "js/background/version/VersionService.js",
       "js/background/meta/StoreService.js",
       "js/background/meta/MetaConfig.js",
       "js/background/meta/MetaService.js",

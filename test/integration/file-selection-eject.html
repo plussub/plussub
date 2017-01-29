@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+   <script>
+       window.indexedDB.deleteDatabase("srtStore");
+   </script>
+    <link rel="stylesheet" href="../../src/css/selectize.css"/>
+    <script src="fakeVersionService.js"></script>
+    <link rel="import" href="../../src/html/base.html"/>
+    <link rel="import" href="backend.html">
+    <script src="./bower_components/web-component-tester/browser.js"></script>
+    <link rel="import" href="../../src/js/popup/plussub-app/plussub-app.html">
+</head>
+<body>
+<plussub-app id="fixture"></plussub-app>
+<script>
+    suite('try', function() {
+        test('is awesomest', function() {
+//
+//            console.log(document.querySelector("#fixture")
+//                .querySelector("subtitle-selection-container")
+//                .querySelector("movie-portal-selection");
+        });
+    });
+</script>
+</body>
+</html>

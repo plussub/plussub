@@ -4,8 +4,9 @@
 var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor').srtPlayer.ServiceDescriptor;
+    srtPlayer.VersionService = require('./../Version/VersionService').srtPlayer.VersionService;
 }
+
 srtPlayer.StoreService = srtPlayer.StoreService || (()=> {
 
 
@@ -13,7 +14,7 @@ srtPlayer.StoreService = srtPlayer.StoreService || (()=> {
         var schemas = [];
         schemas[0] = (db) => db.createObjectStore('srtStore', {keyPath: 'store'});
 
-        var currentVersion = parseInt(chrome.runtime.getManifest().version.replace(".",""));
+        var currentVersion = srtPlayer.VersionService.getVersion();
         var request = window.indexedDB.open("srtStore", currentVersion);
         request.onupgradeneeded = function (event) {
             var db = event.target.result;
