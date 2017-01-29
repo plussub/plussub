@@ -4,9 +4,10 @@
 
 Polymer({
     is: 'subtitle-selection-container',
+    behaviors: [ServiceChannelBehavior],
     listeners: {
         "refreshSubtitle": "onRefreshSubtitle",
-        "resetAllSubtitleSelections":"onResetAllSubtitleSelections"
+        "resetAllSubtitleSelections": "onResetAllSubtitleSelections"
     },
 
     onRefreshSubtitle: function (event, data) {
@@ -15,8 +16,13 @@ Polymer({
             .forEach((notActualSelection) => notActualSelection.reset());
     },
 
-    onResetAllSubtitleSelections:function(){
+    onResetAllSubtitleSelections: function () {
         Array.from(this.querySelectorAll(".subtitle-selection-element"))
-            .forEach((selectionElement)=>selectionElement.reset());
+            .forEach((selectionElement) => selectionElement.reset());
+
+        this.servicePublish({
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.SUB.RESET,
+            data:{}
+        });
     }
 });

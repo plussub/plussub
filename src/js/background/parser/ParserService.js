@@ -9,31 +9,40 @@ if (typeof exports !== 'undefined') {
 }
 
 
-srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = messageBus)=> {
-      //  var console = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.NAME);
+srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = messageBus) => {
+        //  var console = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.NAME);
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER;
         SERVICE_CHANNEL.subscribe({
             topic: SERVICE_CONST.SUB.PARSE,
-            callback: (data)=> {
+            callback: (data) => {
                 if (data.type !== 'srt') {
                     console.error("unknown subtitle type: %s", data.type);
                     throw 'unknown type';
                 }
-                console.log('try parse');
                 var result = srtPlayer.SRTParser().parse(data.raw);
-                console.log('subtitle parsed');
 
                 META_WRITE_CHANNEL.publish({
                     topic: 'parsed_subtitle.parsedSubtitle',
-                    data:JSON.stringify(result)
+                    data: JSON.stringify(result)
                 });
 
                 META_WRITE_CHANNEL.publish({
                     topic: 'parsed_subtitle.isParsed',
-                    data:true
+                    data: true
+                });
+            }
+        });
+
+
+        SERVICE_CHANNEL.subscribe({
+            topic: SERVICE_CONST.SUB.RESET,
+            callback: () => {
+                SERVICE_CHANNEL.publish({
+                    topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.FULL_TOPIC_RESET,
+                    data: 'parsed_subtitle'
                 });
             }
         });

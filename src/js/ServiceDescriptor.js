@@ -80,7 +80,8 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
                 PARSER: {
                     NAME: 'parserService',
                     _SUB: {
-                        PARSE: '.parse'
+                        PARSE: '.parse',
+                        RESET: '.reset'
                     }
                 }
             },

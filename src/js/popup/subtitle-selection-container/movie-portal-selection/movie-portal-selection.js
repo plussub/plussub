@@ -23,7 +23,7 @@ Polymer({
         chrome.tabs.create({url: this.$.openSubtitleLink.href});
     },
 
-    reset(){
+    reset:function(){
         this.$.movieSelectize.currentSelected = null;
         this.$.subtitleSelectize.currentSelected = null;
     }
