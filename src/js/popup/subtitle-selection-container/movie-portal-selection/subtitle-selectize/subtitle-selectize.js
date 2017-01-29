@@ -94,6 +94,12 @@ Polymer({
             return;
         }
 
+
+        this.fire('refreshSubtitle',  {
+            selectionElement:this,
+            title: this._currentMovie.Title
+        });
+
         //notify
         this.metaPublish({
             topic: 'selected_subtitle.entry',
@@ -122,11 +128,6 @@ Polymer({
                 this.$.subtitleSelection.clearOptions();
                 return;
             }
-
-            this.fire('refreshSubtitle',  {
-                selectionElement:this,
-                title: this._currentMovie.Title
-            });
 
             this.servicePublish({
                 topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
