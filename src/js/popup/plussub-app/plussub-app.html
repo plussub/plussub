@@ -1,9 +1,53 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../subtitle-time-info-and-setting/subtitle-time-info-and-setting.html">
+<link rel="import" href="../subtitle-selection-container/subtitle-selection-container.html">
+<link rel="import" href="../subtitle-selection-container/subtitle-file-selection/subtitle-file-selection.html">
+<link rel="import" href="../subtitle-selection-container/movie-portal-selection/movie-portal-selection.html">
+<link rel="import" href="../subtitle-selection-container/current-loaded-subtitle-info/current-loaded-subtitle-info.html">
+<link rel="import" href="../misc-options/misc-options.html">
+
+<link rel="import" href="../../../html/extended-theme.html">
+
 
 <dom-module id="plussub-app">
     <link rel="import" href="../../../css/theme.css" type="css">
     <template>
-        <content></content>
+        <div class="container-fluid" style="width: 400px !important;">
+            <div class="row"><p/></div>
+            <div class="row"><p/></div>
+
+            <subtitle-time-info-and-setting></subtitle-time-info-and-setting>
+
+            <subtitle-selection-container style="display:flex; flex-direction: column;">
+                <template is="dom-bind" id="scope">
+                    <current-loaded-subtitle-info>
+                        <paper-tabs selected="{{selected}}">
+                            <paper-tab>Movie Portal</paper-tab>
+                            <paper-tab>File</paper-tab>
+                        </paper-tabs>
+                        <iron-pages selected="{{selected}}">
+                            <movie-portal-selection></movie-portal-selection>
+                            <subtitle-file-selection style="height:100%"></subtitle-file-selection>
+                        </iron-pages>
+                    </current-loaded-subtitle-info>
+                </template>
+                <script src="initSubtitleSelection.js"></script>
+            </subtitle-selection-container>
+
+            <div class="row"><p/></div>
+            <div class="row"><p/></div>
+
+            <misc-options></misc-options>
+
+            <div class="row"><p/></div>
+            <div class="row"><p/></div>
+            <div class="row"><p/></div>
+        </div>
     </template>
     <script src="plussub-app.js"></script>
 </dom-module>
