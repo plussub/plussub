@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script>
+        window.indexedDB.deleteDatabase("srtStore");
+    </script>
+    <link rel="stylesheet" href="../../src/css/selectize.css"/>
+    <script src="fakeVersionService.js"></script>
+    <link rel="import" href="../../src/html/base.html"/>
+    <link rel="import" href="backend.html">
+    <script src="./bower_components/web-component-tester/browser.js"></script>
+    <link rel="import" href="../../src/js/popup/plussub-app/plussub-app.html">
+</head>
+<body>
+<plussub-app id="fixture"></plussub-app>
+<script>
+    suite('try', function () {
+
+        var openConnection;
+        setup(function (done) {
+            done();
+        });
+
+        test('should write the given selection into the database', function (done) {
+
+            this.timeout(35000);
+
+            document.querySelector('movie-selectize selectize-wrapper').onSearchChange("pulp fiction");
+
+            setTimeout(() => {
+                var options = document.querySelector('movie-selectize selectize-wrapper').getWrapped().options;
+                var firstOption = options[Object.keys(options)[0]];
+                document.querySelector('movie-selectize selectize-wrapper').addItem(firstOption.valueField);
+
+                setTimeout(() => {
+                    var selectedMovie = srtPlayer.StoreService.find('selected_movie').then((result) => {
+                        expect(result.entry.Title).to.equal('Pulp Fiction');
+                        expect(result.entry.Director).to.equal('Quentin Tarantino');
+                    });
+
+
+                    setTimeout(() => {
+                        var selectedSubtitle = srtPlayer.StoreService.find('selected_subtitle').then((result) => {
+                            expect(result.entry.movieTitle).to.equal('Pulp Fiction');
+                            expect(result.entry.subtitleLanguage).to.equal('English');
+                        });
+                        Promise.all([selectedMovie, selectedSubtitle]).then(() => done());
+                    }, 12000);
+
+
+                }, 1000);
+            }, 2500);
+
+
+        });
+
+
+    });
+</script>
+</body>
+</html>

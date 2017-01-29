@@ -20,9 +20,11 @@ Polymer({
 
     load: function (query, fn) {
         "use strict";
+
         if (!query.length) {
             return fn();
         }
+
 
         this.$.movieSelection.clearOptions();
 

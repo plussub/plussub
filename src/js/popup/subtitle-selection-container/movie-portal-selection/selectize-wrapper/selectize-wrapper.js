@@ -114,14 +114,36 @@ Polymer({
         this.selectize.clear();
     },
 
-    setValue: function (val) {
-        this.selectize.setValue(val);
+    refreshOptions: function (triggerDropdown) {
+        this.selectize.refreshOptions(triggerDropdown);
     },
+
+    setValue: function (val, silent) {
+        this.selectize.setValue(val, silent);
+    },
+
     setTextboxValue: function (val) {
         this.selectize.setTextboxValue(val);
     },
 
+    trigger: function (event) {
+        this.selectize.trigger(event);
+    },
+
+    onSearchChange: function (searchValue) {
+        this.selectize.setTextboxValue(searchValue);
+        this.selectize.onSearchChange(searchValue);
+    },
+
     load: function (values) {
         this.selectize.load((fn) => fn(values));
+    },
+
+    getOptions: function () {
+        this.selectize.options;
+    },
+
+    getWrapped: function () {
+        return this.selectize;
     }
 });
