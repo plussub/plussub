@@ -49,13 +49,18 @@
 
         });
 
-//        test('remove current selection should clear the current subtitle', function (done) {
-//
-//            TestUtil.triggerRemoveMoviePortalSelected();
-//            done();
-//
-//        });
-        //todo: filter srt-files in opensubtitle download
+        test('remove current selection should clear the current subtitle', function (done) {
+
+            TestUtil.triggerRemoveMoviePortalSelected();
+            var clearParsedSubtitle = TestUtil.pollDbUntilResult('parsed_subtitle',TestUtil.dbPollConditions.clearParsedSubtitle()).then((result)=>{
+               console.log(result);
+                var actualParsedSubtitle = JSON.parse(result.parsedSubtitle);
+                expect(actualParsedSubtitle).to.be.empty;
+            });
+
+            Promise.all([clearParsedSubtitle]).then(() => done());
+        });
+
             //todo: testsuite einrichten
         //todo: testcases: load+remove portal-selection
         //todo: testcase: load + remove current selection info

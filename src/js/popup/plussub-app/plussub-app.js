@@ -3,5 +3,13 @@
  */
 
 Polymer({
-    is: 'plussub-app'
+    is: 'plussub-app',
+    openOptionPage: function () {
+        chrome.tabs.create({
+            url: "html/options.html"
+        });
+    },
+    reset:function(){
+        document.querySelector("subtitle-selection-container").onResetAllSubtitleSelections();
+    }
 });

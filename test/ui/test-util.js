@@ -6,11 +6,13 @@ var TestUtil = TestUtil || (function () {
 
         var entryCondition = (result) => result && result.entry && Object.keys(result.entry).length > 0;
         var parsedSubtitleCondition = (result) => result && result.isParsed;
+        var clearParsedSubtitle = (result) => result && result.isParsed;
 
 
         return {
             dbPollConditions: {
                 parsedSubtitle: parsedSubtitleCondition,
+                clearParsedSubtitle: clearParsedSubtitle,
                 entry: entryCondition
             },
             /**

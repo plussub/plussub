@@ -34,6 +34,7 @@ Polymer({
             this.currentSelectionElement != data.selectionElement) {
             return;
         }
+
         this.currentSelectionElement = null;
         this.type = '';
         this.title = '-';

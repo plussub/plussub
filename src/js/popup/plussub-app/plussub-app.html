@@ -3,13 +3,13 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <link rel="import" href="../subtitle-time-info-and-setting/subtitle-time-info-and-setting.html">
 <link rel="import" href="../subtitle-selection-container/subtitle-selection-container.html">
 <link rel="import" href="../subtitle-selection-container/subtitle-file-selection/subtitle-file-selection.html">
 <link rel="import" href="../subtitle-selection-container/movie-portal-selection/movie-portal-selection.html">
 <link rel="import" href="../subtitle-selection-container/current-loaded-subtitle-info/current-loaded-subtitle-info.html">
-<link rel="import" href="../misc-options/misc-options.html">
 
 <link rel="import" href="../../../html/extended-theme.html">
 
@@ -42,8 +42,10 @@
             <div class="row"><p/></div>
             <div class="row"><p/></div>
 
-            <misc-options></misc-options>
-
+            <div style="display:flex; justify-content: space-around;">
+            <paper-button raised on-tap="openOptionPage" primary>Open Option</paper-button>
+            <paper-fab mini icon="eject" on-tap="reset"></paper-fab>
+            </div>
             <div class="row"><p/></div>
             <div class="row"><p/></div>
             <div class="row"><p/></div>
