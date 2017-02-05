@@ -31,15 +31,6 @@ srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = message
                     data: JSON.stringify(result)
                 });
 
-                console.log("data:raw"+data.raw);
-
-                console.log("subscribe"+JSON.stringify(result));
-                META_CHANNEL.subscribe({
-                    topic: 'parsed_subtitle.parsedSubtitle',
-                    once:true,
-                    callback:(result)=>console.log(result)
-                });
-
                 META_WRITE_CHANNEL.publish({
                     topic: 'parsed_subtitle.isParsed',
                     data: true

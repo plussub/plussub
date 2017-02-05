@@ -31,7 +31,6 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
                     methodName: 'LogIn',
                     params: [username,password, 'en', 'PlusSub'],
                     success: function (response, status, jqXHR) {
-                        console.log("asdf");
                         resolve(response[0].token);
                     },
                     error: function (jqXHR, status, error) {
@@ -50,7 +49,6 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
          * @param data
          */
         function search(data) {
-            console.log("searchh!");
             if(!data.imdbid){
                 console.log("imdbid does not exist");
                 return;
@@ -66,7 +64,6 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
                         methodName: 'SearchSubtitles',
                         params: [token, [{'sublanguageid': data.iso639, 'imdbid': data.imdbid}]],
                         success: function (response, status, jqXHR) {
-                            console.log(response[0]);
                             resolve(response[0].data);
                         },
                         error: function (jqXHR, status, error) {
@@ -75,6 +72,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
                         }
                     }, {}, window)
                 )
+            ).then(allMatchedSubtitles => allMatchedSubtitles.filter(entry => entry.SubFormat === 'srt')
             ).then((data=[]) =>
                 data.map(entry =>
                     Object.assign({}, {

@@ -35,8 +35,8 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
                     createOmdbInformationFrom(createImbdInformationFrom(response));
                 },
                 error: function (e) {
-                    console.error("imdb error");
-                    console.error(e);
+                    console.log("imdb error");
+                    console.log(e);
                 }
             });
         }
@@ -66,7 +66,6 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
                                 data.Poster = '../icons/posterError.png';
                             }
                             data.valueField = JSON.stringify(data);
-                            console.log(data);
                             resolve(data);
                         },
                         error: function (e) {
@@ -74,9 +73,9 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
                             console.log(e);
 
                             var fallback ={
-                                Poster:'../icons/posterError.png',
                                 Title:rawImdb.title,
-                                imdbID:rawImdb.id
+                                imdbID:rawImdb.id,
+                                Poster: '../icons/posterError.png'
                             };
                             fallback.valueField = JSON.stringify(fallback);
                             resolve(fallback);
