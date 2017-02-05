@@ -14,6 +14,8 @@ srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = message
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
+        var META_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
+
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER;
         SERVICE_CHANNEL.subscribe({
             topic: SERVICE_CONST.SUB.PARSE,
@@ -27,6 +29,15 @@ srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = message
                 META_WRITE_CHANNEL.publish({
                     topic: 'parsed_subtitle.parsedSubtitle',
                     data: JSON.stringify(result)
+                });
+
+                console.log("data:raw"+data.raw);
+
+                console.log("subscribe"+JSON.stringify(result));
+                META_CHANNEL.subscribe({
+                    topic: 'parsed_subtitle.parsedSubtitle',
+                    once:true,
+                    callback:(result)=>console.log(result)
                 });
 
                 META_WRITE_CHANNEL.publish({

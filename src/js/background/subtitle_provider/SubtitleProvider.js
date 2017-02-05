@@ -52,6 +52,7 @@ srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
                         methodName: 'SearchSubtitles',
                         params: [token, [{'sublanguageid': data.iso639, 'imdbid': data.imdbid}]],
                         success: function (response, status, jqXHR) {
+                            console.log(response[0]);
                             resolve(response[0].data);
                         },
                         error: function (jqXHR, status, error) {

@@ -9,7 +9,7 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.MOVIE_INFORMATION;
-        var console2 = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
+        // var console = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
         SERVICE_CHANNEL.subscribe({
             topic: SERVICE_CONST.SUB.SEARCH,
@@ -35,8 +35,8 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
                     createOmdbInformationFrom(createImbdInformationFrom(response));
                 },
                 error: function (e) {
-                    console2.error("imdb error");
-                    console2.error(e);
+                    console.error("imdb error");
+                    console.error(e);
                 }
             });
         }
@@ -52,7 +52,6 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
 
             var maxRequestedImdb = 10;
             var imdbResultPartial = imdbResult.slice(0, imdbResult.length > maxRequestedImdb ? maxRequestedImdb : imdbResult.length);
-
             Promise.all(imdbResultPartial.map((rawImdb)=>
                 new Promise(resolve=>
                     $.ajax({
@@ -67,12 +66,20 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
                                 data.Poster = '../icons/posterError.png';
                             }
                             data.valueField = JSON.stringify(data);
+                            console.log(data.valueValueField);
                             resolve(data);
                         },
                         error: function (e) {
-                            console2.error("omdb error");
-                            console2.error(e);
-                            resolve({});
+                            console.log("omdb error");
+                            console.log(e);
+
+                            var fallback ={
+                                Poster:'../icons/posterError.png',
+                                Title:rawImdb.title,
+                                imdbID:rawImdb.id
+                            };
+                            fallback.valueField = JSON.stringify(fallback);
+                            resolve(fallback);
                         }
                     })
                 )
