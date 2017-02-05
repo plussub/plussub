@@ -66,7 +66,7 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
                 },
 
                 SUBTITLE_PROVIDER: {
-                    NAME: 'subtitleProvider',
+                    NAME: 'SubtitleProvider',
                     _SUB: {
                         SEARCH: '.search',
                         DOWNLOAD: '.download'

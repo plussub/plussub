@@ -11,7 +11,7 @@ describe('Messageservice', ()=> {
 
     var messageBus;
     beforeEach(()=> {
-        messageBus = require('../src/js/MessageBus.js');
+        messageBus = require('../../../src/js/MessageBus.js');
         messageBus.reset();
     });
 

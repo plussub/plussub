@@ -66,7 +66,7 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
                                 data.Poster = '../icons/posterError.png';
                             }
                             data.valueField = JSON.stringify(data);
-                            console.log(data.valueValueField);
+                            console.log(data);
                             resolve(data);
                         },
                         error: function (e) {

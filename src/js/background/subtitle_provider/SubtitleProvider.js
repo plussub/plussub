@@ -1,11 +1,15 @@
 var srtPlayer = srtPlayer || {};
+if (typeof exports !== 'undefined') {
+    exports.srtPlayer = srtPlayer;
+    var messageBus = null;
+    srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+}
 
-srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
-        "use strict";
+srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus)=> {
 
-        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER;
-        var console2 = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
+        // var console = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
         SERVICE_CHANNEL.subscribe({
             topic: SERVICE_CONST.SUB.SEARCH,
@@ -18,17 +22,21 @@ srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
         });
 
         function login() {
+            let username='';
+            let password='';
+
             return new Promise((resolve, reject)=> {
                 $.xmlrpc({
                     url: 'http://api.opensubtitles.org/xml-rpc',
                     methodName: 'LogIn',
-                    params: [credential.username, credential.password, 'en', 'PlusSub'],
+                    params: [username,password, 'en', 'PlusSub'],
                     success: function (response, status, jqXHR) {
+                        console.log("asdf");
                         resolve(response[0].token);
                     },
                     error: function (jqXHR, status, error) {
-                        console2.error(error);
-                        console2.error(status);
+                        console.error(error);
+                        console.error(status);
 
                         reject(error);
                     }
@@ -36,9 +44,15 @@ srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
             });
         }
 
+        /**
+         * data.imdbid -> movie id from imdb
+         * data.iso639 -> language code for subtitle
+         * @param data
+         */
         function search(data) {
+            console.log("searchh!");
             if(!data.imdbid){
-                console2.log("imdbid does not exist");
+                console.log("imdbid does not exist");
                 return;
             }
 
@@ -56,7 +70,7 @@ srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
                             resolve(response[0].data);
                         },
                         error: function (jqXHR, status, error) {
-                            console2.error(status);
+                            console.error(status);
                             reject(status);
                         }
                     }, {}, window)
@@ -89,7 +103,7 @@ srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
                         resolve(response[0].data[0].data);
                     },
                     error: function (jqXHR, status, error) {
-                        console2.error(status);
+                        console.error(status);
                         reject(error);
                     }
                 }, {}, window)
@@ -109,6 +123,6 @@ srtPlayer.subtitleProvider = srtPlayer.subtitleProvider || (($,credential)=> {
     });
 
 //instant service does not correct initialize messageBus (in testfiles)
-if (typeof exports === 'undefined' && typeof srtPlayer.subtitleProvider === 'function') {
-    srtPlayer.subtitleProvider = srtPlayer.subtitleProvider($,credential.opensubtitle);
+if (typeof exports === 'undefined' && typeof srtPlayer.SubtitleProvider === 'function') {
+    srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider($);
 }

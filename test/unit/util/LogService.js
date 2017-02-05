@@ -5,11 +5,11 @@ var srtPlayer = srtPlayer || {};
 
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    var messagingConst = require('../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    var messagingConst = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 }
 
 
-srtPlayer.LogServiceForTest = srtPlayer.LogServiceForTest || (()=> {
+srtPlayer.LogService = srtPlayer.LogService || (()=> {
         "use strict";
 
         var fakeConsole = {

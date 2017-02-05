@@ -1,13 +1,13 @@
 var expect = require('chai').expect;
 var requirejs = require('requirejs');
-var messageBus = require('../../src/js/MessageBus.js');
-var root = require('../../src/js/background/meta/MetaService.js');
-var config = require('../../src/js/background/meta/MetaConfig.js');
+var messageBus = require('../../../src/js/MessageBus.js');
+var root = require('../../../src/js/background/meta/MetaService.js');
+var config = require('../../../src/js/background/meta/MetaConfig.js');
 
-root.srtPlayer.StoreService = require('./mock/StoreMockService.js').srtMock.StoreMockService();
-root.srtPlayer.LogService = require('./../LogServiceForTest.js').srtPlayer.LogServiceForTest();
+root.srtPlayer.StoreService = require('./../mock/StoreMockService.js').srtMock.StoreMockService();
+root.srtPlayer.LogService = require('./../util/LogService.js').srtPlayer.LogService();
 
-var ServiceDescriptor = require('../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 
 describe('MetaService', ()=> {
 

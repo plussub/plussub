@@ -11,12 +11,12 @@ describe('Service Descriptor', ()=> {
 
     var serviceDescriptor;
     beforeEach(()=> {
-        serviceDescriptor = require('../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+        serviceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
     });
 
     it('should full subscriber topic', ()=> {
         expect(serviceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH).to.equal('metaService.publish');
-        expect(serviceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH).to.equal('subtitleProvider.search');
+        expect(serviceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH).to.equal('SubtitleProvider.search');
     });
 
     it('should full publisher topic', ()=> {

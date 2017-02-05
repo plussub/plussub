@@ -7,8 +7,14 @@ var gutil = require('gulp-util');
 var babel = require('babel-core/register');
 
 
-gulp.task('mocha', function() {
-    return gulp.src(['test/**/*.js'], { read: false })
+gulp.task('mocha_unit', function() {
+    return gulp.src(['test/unit/**/*.js'], { read: false })
+        .pipe(mocha({ reporter: 'list'}))
+        .on('error', gutil.log);
+});
+
+gulp.task('mocha_integration', function() {
+    return gulp.src(['test/integration/**/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });
