@@ -20,7 +20,7 @@ describe('ParserService', ()=> {
 
     it('should notify the metaWriteChannel when subtitle was parsed', (done)=> {
         META_WRITE_CHANNEL.subscribe({
-            topic: 'subtitle.parsedSubtitle',
+            topic: 'parsed_subtitle.parsedSubtitle',
             callback: (d)=>{
                 "use strict";
                 expect(JSON.parse(d).length).to.equal(3);
@@ -28,7 +28,7 @@ describe('ParserService', ()=> {
         });
 
         META_WRITE_CHANNEL.subscribe({
-            topic: 'subtitle.isParsed',
+            topic: 'parsed_subtitle.isParsed',
             callback: (d)=>{
                 "use strict";
                 expect(d).to.equal(true);
