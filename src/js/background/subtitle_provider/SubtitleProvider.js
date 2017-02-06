@@ -73,6 +73,12 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
                     }, {}, window)
                 )
             ).then(allMatchedSubtitles => allMatchedSubtitles.filter(entry => entry.SubFormat === 'srt')
+            ).then(srtSubtitles=>srtSubtitles.sort((a,b)=>{
+                    if(parseFloat(a.SubRating)===parseFloat(b.SubRating)){
+                        return 0;
+                    }
+                    return parseFloat(a.SubRating)<parseFloat(b.SubRating)?1:-1
+                })
             ).then((data=[]) =>
                 data.map(entry =>
                     Object.assign({}, {
