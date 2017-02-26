@@ -1,6 +1,6 @@
 {
   "name": "+Sub",
-  "version": "1.99",
+  "version": "2.12",
   "manifest_version": 2,
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
@@ -21,10 +21,8 @@
       "components/jquery-xmlrpc/jquery.xmlrpc.js",
       "components/jquery-timer/jquery.timer.js",
       "components/gunzip/gunzip.min.js",
-      "js/ga.js",
       "js/MessageBus.js",
       "js/ServiceDescriptor.js",
-      "js/GALogger.js",
       "js/LogService.js",
       "js/ChannelLogService.js",
       "js/background/credential/credential.js",
