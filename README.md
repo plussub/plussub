@@ -1,6 +1,8 @@
 # +Sub
 is a chrome extension which adds subtitle to HTML &lt;video>
 
+[![Build Status](https://travis-ci.org/ste-xx/plussub.svg?branch=master)](https://travis-ci.org/ste-xx/plussub)
+
 ## Quickstart
 
 ### Install local build in chrome
