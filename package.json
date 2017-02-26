@@ -2,6 +2,9 @@
   "name": "plussub",
   "description": "+Sub build script",
   "author": "Stefan Breitenstein",
+  "scripts": {
+    "test": "gulp mocha_unit"
+  },
   "dependencies": {
     "babel": "^6.3.26",
     "babel-plugin-transform-object-assign": "^6.3.13",
