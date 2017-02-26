@@ -4,3 +4,8 @@ language: node_js
 node_js:
   - "6"
 script: gulp mocha_unit
+deploy:
+  provider: heroku
+  api_key:
+  secure: $heroku-api-key
+  app: plussub-test
