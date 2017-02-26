@@ -6,6 +6,5 @@ node_js:
 script: gulp mocha_unit
 deploy:
   provider: heroku
-  api_key:
-  secure: $heroku-api-key
+  api_key: $heroku-api-key
   app: plussub-test
