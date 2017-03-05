@@ -11,7 +11,7 @@ var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlaye
 describe('MovieInformationService', ()=> {
 
     var SERVICE_CHANNEL;
-    var parserService;
+    var movieInformationService;
     var ajaxStub;
 
     var DEFAULT_IMDB_RESULT = {
@@ -76,7 +76,7 @@ describe('MovieInformationService', ()=> {
     beforeEach(()=> {
         messageBus.reset();
         SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
-        parserService = root.srtPlayer.MovieInformationService($,messageBus);
+        movieInformationService = root.srtPlayer.MovieInformationService($,messageBus);
         ajaxStub = sinon.stub($, "ajax");
     });
 
