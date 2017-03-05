@@ -4,6 +4,7 @@
 var expect = require('chai').expect;
 var requirejs = require('requirejs');
 var messageBus = require('../../../src/js/MessageBus.js');
+var nodeFetch = require('node-fetch');
 var root = require('../../../src/js/background/subtitle_provider/SubtitleProvider.js');
 var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 
@@ -16,7 +17,7 @@ describe('MovieInformationService', ()=> {
     beforeEach(() => {
         messageBus.reset();
         SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
-        subtitleProvider = root.srtPlayer.SubtitleProvider(null, messageBus);
+        subtitleProvider = root.srtPlayer.SubtitleProvider(null, messageBus,nodeFetch);
     });
 
 

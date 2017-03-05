@@ -13,6 +13,14 @@ gulp.task('mocha_unit', function() {
         .on('error', gutil.log);
 });
 
+
+gulp.task('mocha_specific', function() {
+    return gulp.src(['test/unit/subtitle_provider/*.js'], { read: false })
+        .pipe(mocha({ reporter: 'list'}))
+        .on('error', gutil.log);
+});
+
+
 gulp.task('mocha_integration', function() {
     return gulp.src(['test/integration/**/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))

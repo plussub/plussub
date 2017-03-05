@@ -3,10 +3,9 @@ if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     var messageBus = null;
     srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
-    var fetch = require('node-fetch');
 }
 
-srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus) => {
+srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus, fetch=fetch) => {
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER;
