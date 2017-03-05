@@ -8,7 +8,7 @@ var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlaye
 
 
 
-describe('MovieInformationService', ()=> {
+describe('SubtitleProvider', ()=> {
 
     var SERVICE_CHANNEL;
     var subtitleProvider;
