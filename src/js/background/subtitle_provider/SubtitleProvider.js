@@ -3,9 +3,10 @@ if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     var messageBus = null;
     srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    var fetch = require('node-fetch');
 }
 
-srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus)=> {
+srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus) => {
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER;
@@ -22,14 +23,14 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
         });
 
         function login() {
-            let username='';
-            let password='';
+            let username = '';
+            let password = '';
 
-            return new Promise((resolve, reject)=> {
+            return new Promise((resolve, reject) => {
                 $.xmlrpc({
                     url: 'http://api.opensubtitles.org/xml-rpc',
                     methodName: 'LogIn',
-                    params: [username,password, 'en', 'PlusSub'],
+                    params: [username, password, 'en', 'PlusSub'],
                     success: function (response, status, jqXHR) {
                         resolve(response[0].token);
                     },
@@ -49,56 +50,46 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
          * @param data
          */
         function search(data) {
-            if(!data.imdbid){
+
+            if (!data.imdbid) {
                 console.log("imdbid does not exist");
                 return;
             }
 
-            if(data.imdbid.startsWith('tt')){
-                data.imdbid=data.imdbid.slice(2);
+            if (data.imdbid.startsWith('tt')) {
+                data.imdbid = data.imdbid.slice(2);
             }
-            login().then((token) =>
-                new Promise((resolve, reject)=>
-                    $.xmlrpc({
-                        url: 'http://api.opensubtitles.org/xml-rpc',
-                        methodName: 'SearchSubtitles',
-                        params: [token, [{'sublanguageid': data.iso639, 'imdbid': data.imdbid}]],
-                        success: function (response, status, jqXHR) {
-                            resolve(response[0].data);
-                        },
-                        error: function (jqXHR, status, error) {
-                            console.error(status);
-                            reject(status);
-                        }
-                    }, {}, window)
-                )
-            ).then(allMatchedSubtitles => allMatchedSubtitles.filter(entry => entry.SubFormat === 'srt')
-            ).then(srtSubtitles=>srtSubtitles.sort((a,b)=>{
-                    if(parseFloat(a.SubRating)===parseFloat(b.SubRating)){
-                        return 0;
+
+
+            fetch('https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/subtitle?imdbid=' + data.imdbid + '&iso639LanguageCode=' + data.iso639)
+                .then(function (response) {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ' + response.status);
+                        return;
                     }
-                    return parseFloat(a.SubRating)<parseFloat(b.SubRating)?1:-1
+
+                    // Examine the text in the response
+                    response.json()
+                        .then((data) => data.map(entry =>
+                            Object.assign({}, {
+                                rating: entry.SubRating,
+                                movieTitle: entry.MovieName,
+                                subtitleLanguage: entry.LanguageName,
+                                idSubtitleFile: entry.IDSubtitleFile,
+                                subtitleRating: entry.SubRating
+                            }))
+                        ).then(result => SERVICE_CHANNEL.publish({
+                            topic: SERVICE_CONST.PUB.SEARCH_RESULT,
+                            data: result
+                        }));
                 })
-            ).then((data=[]) =>
-                data.map(entry =>
-                    Object.assign({}, {
-                        rating: entry.SubRating,
-                        movieTitle: entry.MovieName,
-                        subtitleLanguage: entry.LanguageName,
-                        idSubtitleFile: entry.IDSubtitleFile,
-                        subtitleRating: entry.SubRating
-                    })
-                )
-            ).then((result)=>
-                SERVICE_CHANNEL.publish({
-                        topic: SERVICE_CONST.PUB.SEARCH_RESULT,
-                        data: result
-                    })
-            );
+                .catch(function (err) {
+                    console.log('Fetch Error :-S', err);
+                });
         }
 
         function download(idSubtitleFile) {
-            login().then((token) => new Promise((resolve,reject)=>
+            login().then((token) => new Promise((resolve, reject) =>
                 $.xmlrpc({
                     url: 'http://api.opensubtitles.org/xml-rpc',
                     methodName: 'DownloadSubtitles',
@@ -111,11 +102,11 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
                         reject(error);
                     }
                 }, {}, window)
-            )).then(result=>{
+            )).then(result => {
                 var gunzipData = new Zlib.Gunzip(srtPlayer.Uint8ArrayConverter.fromString(atob(result)));
                 var decompressedData = gunzipData.decompress();
                 return srtPlayer.Uint8ArrayConverter.toString(decompressedData);
-            }).then(result=>
+            }).then(result =>
                 SERVICE_CHANNEL.publish({
                     topic: SERVICE_CONST.PUB.DOWNLOAD_RESULT,
                     data: result
