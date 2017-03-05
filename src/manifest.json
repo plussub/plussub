@@ -18,9 +18,7 @@
   "background": {
     "scripts": [
       "components/jquery/dist/jquery.js",
-      "components/jquery-xmlrpc/jquery.xmlrpc.js",
       "components/jquery-timer/jquery.timer.js",
-      "components/gunzip/gunzip.min.js",
       "js/MessageBus.js",
       "js/ServiceDescriptor.js",
       "js/LogService.js",
@@ -34,8 +32,10 @@
       "js/background/parser/SrtParser.js",
       "js/background/parser/ParserService.js",
       "js/background/movie_information/MovieInformationService.js",
+      "js/background/subtitle_provider/pako/pako.js",
+      "js/background/subtitle_provider/pako/pako_deflate.js",
+      "js/background/subtitle_provider/pako/pako_inflate.js",
       "js/background/subtitle_provider/SubtitleProvider.js",
-      "js/background/subtitle_provider/Uint8ArrayConverter.js",
       "js/background/auto_subtitle_download/AutoSubtitleDownloadService.js"
     ],
     "persistent": false

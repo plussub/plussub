@@ -32,7 +32,7 @@ srtPlayer.AutoSubtitleDownloadService = srtPlayer.AutoSubtitleDownloadService ||
             callback:(selectedSubtitle)=>{
                 SERVICE_CHANNEL.publish({
                     topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.DOWNLOAD,
-                    data: selectedSubtitle.idSubtitleFile
+                    data: selectedSubtitle.downloadLink
                 });
             }
         });

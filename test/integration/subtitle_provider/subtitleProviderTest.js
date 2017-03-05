@@ -9,7 +9,7 @@ var root = require('../../../src/js/background/subtitle_provider/SubtitleProvide
 var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 
 
-describe('MovieInformationService', ()=> {
+describe('Subtitle Provider', ()=> {
 
     var SERVICE_CHANNEL;
     var subtitleProvider;
@@ -17,13 +17,13 @@ describe('MovieInformationService', ()=> {
     beforeEach(() => {
         messageBus.reset();
         SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
-        subtitleProvider = root.srtPlayer.SubtitleProvider(null, messageBus,nodeFetch);
+        subtitleProvider = root.srtPlayer.SubtitleProvider(null, messageBus, nodeFetch);
     });
 
 
-    it('should search correct subtitle', function(done) {
+    it('should search correct subtitle', function (done) {
 
-        this.timeout(3000);
+        this.timeout(13000);
 
         SERVICE_CHANNEL.subscribe({
             topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
@@ -39,9 +39,20 @@ describe('MovieInformationService', ()=> {
         SERVICE_CHANNEL.publish({
             topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
             data: {
-                imdbid:"0431308", //P.S. I Love You
-                iso639:"eng"
+                imdbid: "0431308", //P.S. I Love You
+                iso639: "eng"
             }
         });
     });
+    // array buffer not supported in node
+    // it('should download correct subtitle', function (done) {
+    //
+    //     this.timeout(15000);
+    //     setTimeout(()=>done(),12000);
+    //     SERVICE_CHANNEL.publish({
+    //         topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.DOWNLOAD,
+    //         data:"http://dl.opensubtitles.org/en/download/src-api/vrf-e9750b7f/sid-H,ss3bi0urTf7bOhtZYm6QXciu4/filead/154507.gz"
+    //     });
+    //
+    // });
 });

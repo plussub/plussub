@@ -5,7 +5,7 @@ if (typeof exports !== 'undefined') {
     srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
 }
 
-srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus, fetch=fetch) => {
+srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus, fetch = window.fetch) => {
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER;
@@ -21,28 +21,6 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
             callback: download
         });
 
-        function login() {
-            let username = '';
-            let password = '';
-
-            return new Promise((resolve, reject) => {
-                $.xmlrpc({
-                    url: 'http://api.opensubtitles.org/xml-rpc',
-                    methodName: 'LogIn',
-                    params: [username, password, 'en', 'PlusSub'],
-                    success: function (response, status, jqXHR) {
-                        resolve(response[0].token);
-                    },
-                    error: function (jqXHR, status, error) {
-                        console.error(error);
-                        console.error(status);
-
-                        reject(error);
-                    }
-                }, {}, window);
-            });
-        }
-
         /**
          * data.imdbid -> movie id from imdb
          * data.iso639 -> language code for subtitle
@@ -51,11 +29,11 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
         function search(data) {
 
             if (!data.imdbid || !data.iso639) {
-                console.log("invalid search parameter:",data);
+                console.log("invalid search parameter:", data);
                 return;
             }
 
-            fetch('https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/subtitle/'+ data.imdbid + '/'+data.iso639)
+            fetch('https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/subtitle/' + data.imdbid + '/' + data.iso639)
                 .then(function (response) {
                     if (response.status !== 200) {
                         console.log('Invalid Status Code: ' + response.status);
@@ -66,46 +44,40 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
                     response.json()
                         .then((data) => data.map(entry =>
                             Object.assign({}, {
-                                rating: entry.SubRating,
                                 movieTitle: entry.MovieName,
                                 subtitleLanguage: entry.LanguageName,
                                 idSubtitleFile: entry.IDSubtitleFile,
-                                subtitleRating: entry.SubRating
+                                subtitleRating: entry.SubRating,
+                                downloadLink: entry.SubDownloadLink
                             }))
                         ).then(result => SERVICE_CHANNEL.publish({
-                            topic: SERVICE_CONST.PUB.SEARCH_RESULT,
-                            data: result
-                        }));
+                        topic: SERVICE_CONST.PUB.SEARCH_RESULT,
+                        data: result
+                    }));
                 })
                 .catch(function (err) {
                     console.log('Fetch Error', err);
                 });
         }
 
-        function download(idSubtitleFile) {
-            login().then((token) => new Promise((resolve, reject) =>
-                $.xmlrpc({
-                    url: 'http://api.opensubtitles.org/xml-rpc',
-                    methodName: 'DownloadSubtitles',
-                    params: [token, [idSubtitleFile]],
-                    success: function (response, status, jqXHR) {
-                        resolve(response[0].data[0].data);
-                    },
-                    error: function (jqXHR, status, error) {
-                        console.error(status);
-                        reject(error);
-                    }
-                }, {}, window)
-            )).then(result => {
-                var gunzipData = new Zlib.Gunzip(srtPlayer.Uint8ArrayConverter.fromString(atob(result)));
-                var decompressedData = gunzipData.decompress();
-                return srtPlayer.Uint8ArrayConverter.toString(decompressedData);
-            }).then(result =>
-                SERVICE_CHANNEL.publish({
-                    topic: SERVICE_CONST.PUB.DOWNLOAD_RESULT,
-                    data: result
-                })
-            );
+        function download(link) {
+            fetch(link).then(function (response) {
+                if (response.status !== 200) {
+                    console.log('Invalid Status Code: ' + response.status);
+                    return;
+                }
+
+                response.arrayBuffer().then((data) => pako.inflate(new Uint8Array(data), {to: "string"}))
+                    .then(result => {
+                        SERVICE_CHANNEL.publish({
+                            topic: SERVICE_CONST.PUB.DOWNLOAD_RESULT,
+                            data: result
+                        })
+                    })
+                    .catch(function (err) {
+                        console.log('Fetch Error', err);
+                    });
+            });
         }
 
 
