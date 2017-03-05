@@ -51,20 +51,15 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
          */
         function search(data) {
 
-            if (!data.imdbid) {
-                console.log("imdbid does not exist");
+            if (!data.imdbid || !data.iso639) {
+                console.log("invalid search parameter:",data);
                 return;
             }
 
-            if (data.imdbid.startsWith('tt')) {
-                data.imdbid = data.imdbid.slice(2);
-            }
-
-
-            fetch('https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/subtitle?imdbid=' + data.imdbid + '&iso639LanguageCode=' + data.iso639)
+            fetch('https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/subtitle/'+ data.imdbid + '/'+data.iso639)
                 .then(function (response) {
                     if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' + response.status);
+                        console.log('Invalid Status Code: ' + response.status);
                         return;
                     }
 
@@ -84,7 +79,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
                         }));
                 })
                 .catch(function (err) {
-                    console.log('Fetch Error :-S', err);
+                    console.log('Fetch Error', err);
                 });
         }
 
