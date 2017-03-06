@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="import" href="../../../src/html/base.html"/>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+    <link rel="import" href="../../../src/js/popup/notification-service/notification-service.html">
+</head>
+<body>
+<notification-handler id="fixture"></notification-handler>
+<script>
+    suite('notification-service', function () {
+
+        var SERVICE_CHANNEL;
+
+        suiteSetup(function(){
+            messageBus.reset();
+            SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        });
+
+        test('should produce a notification if a message arrive', function (done) {
+
+
+            SERVICE_CHANNEL.publish({
+                topic: srtPlayer.ServiceDescriptor.FRONTEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
+                data: {
+                    level:'warning',
+                    msg:'some message'
+                }
+            });
+            done();
+
+            //check warning
+
+        });
+    });
+</script>
+</body>
+</html>

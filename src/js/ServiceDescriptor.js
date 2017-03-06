@@ -85,6 +85,14 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
                     }
                 }
             },
+            FRONTEND_SERVICE:{
+              NOTIFICATION:{
+                  NAME: 'notificationService',
+                  _SUB: {
+                      NOTIFY: '.notify',
+                  }
+              }
+            },
             CONTENT_SERVICE: {
                 FIND_VIDEO: {
                     NAME: 'findVideoService',
