@@ -61,7 +61,7 @@ paper-icon-button.info, paper-icon-button.btn-info, paper-icon-button[info] { co
 paper-icon-button.info:hover, paper-icon-button.btn-info:hover, paper-icon-button[info]:hover { background-color: #fff8ed; background-color: rgba(255, 183, 77, 0.2); border-radius: 50%; }
 paper-icon-button.warning, paper-icon-button.btn-warning, paper-icon-button[warning] { color: #fadd60; }
 paper-icon-button.warning:hover, paper-icon-button.btn-warning:hover, paper-icon-button[warning]:hover { background-color: #fffcef; background-color: rgba(250, 221, 96, 0.2); border-radius: 50%; }
-paper-toast[warning]{background-color: #fadd60; color: #373b50; }
+paper-toast[type='warning']{background-color: #fadd60; color: #373b50; }
 
 paper-icon-button.error, paper-icon-button.btn-error, paper-icon-button[error] { color: #ff6e40; }
 paper-icon-button.error:hover, paper-icon-button.btn-error:hover, paper-icon-button[error]:hover { background-color: #fff1ec; background-color: rgba(255, 110, 64, 0.2); border-radius: 50%; }
