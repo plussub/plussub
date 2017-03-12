@@ -50,6 +50,22 @@ BaseChannelBehavior = (function () {
     }
 })();
 
+//unified_Factory
+var x_factory = (function(serviceChannelIdentifier,declaredSubscriptionsKey){
+    var CHANNEL = messageBus.channel(serviceChannelIdentifier);
+    return {
+        ready: function () {
+            var subscriptions = this[declaredSubscriptionsKey] ? this[declaredSubscriptionsKey] : [];
+            this[declaredSubscriptionsKey+"subscribe oder so"] = BaseChannelBehavior.createSubscribeFor(CHANNEL);
+            "use strict";
+            BaseChannelBehavior.initSubscriptions(subscriptions,
+                this[declaredSubscriptionsKey+"subscribe oder so"],
+                this);
+
+        }
+
+    };
+});
 
 ContentServiceChannelBehavior = (function () {
 
@@ -64,7 +80,27 @@ ContentServiceChannelBehavior = (function () {
             BaseChannelBehavior.initSubscriptions(subscriptions,
                 this.contentServiceSubscribe,
                 this);
+        }
+    };
+})();
+// refactor to factory method for all xxchannelbehaviors
+//check other behaviors wheater they used togehter. use a unique init behavior for each
+FrontendServiceChannelBehavior = (function () {
 
+    var FRONTEND_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.FRONTEND_SERVICE);
+    return {
+
+        ready: function () {
+            this._initChannelBehavior();
+        },
+
+        _initChannelBehavior:function(){
+            var subscriptions = this.frontendServiceSubscriptions ? this.frontendServiceSubscriptions : [];
+            this.frontendServiceSubscribe = BaseChannelBehavior.createSubscribeFor(FRONTEND_SERVICE_CHANNEL);
+            "use strict";
+            BaseChannelBehavior.initSubscriptions(subscriptions,
+                this.frontendServiceSubscribe,
+                this);
         }
 
     };

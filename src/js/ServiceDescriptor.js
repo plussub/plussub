@@ -32,7 +32,8 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
             META_WRITE: 'metaWrite',
             GENERAL_SERVICE: 'general',
             BACKEND_SERVICE: 'backend',
-            CONTENT_SERVICE: 'content'
+            CONTENT_SERVICE: 'content',
+            FRONTEND_SERVICE: 'frontend'
         };
 
         var definition = {
