@@ -4,7 +4,7 @@
 
 Polymer({
     is: 'subtitle-selection-container',
-    behaviors: [ServiceChannelBehavior],
+    behaviors: [tms.ServiceChannelBehavior],
     listeners: {
         "refreshSubtitle": "onRefreshSubtitle",
         "resetAllSubtitleSelections": "onResetAllSubtitleSelections"

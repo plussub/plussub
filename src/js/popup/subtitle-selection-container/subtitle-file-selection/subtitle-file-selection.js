@@ -6,10 +6,13 @@ Polymer({
             value: 'File Selection'
         }
     },
-    behaviors: [ServiceChannelBehavior,MetaChannelBehavior,ChannelBasedInitializeBehavior, SubtitleSelectionBehavior],
-
+    behaviors: [tms.ServiceChannelBehavior,
+        tms.MetaChannelBehavior,
+        tms.ChannelBasedInitializeBehavior,
+        SubtitleSelectionBehavior
+    ],
     channelBasedInit : {
-        type:MetaChannelBehavior,
+        type:tms.MetaChannelBehavior,
         topic:"selected_subtitle_file.entry",
     },
 

@@ -1,8 +1,17 @@
 /**
  * Created by sonste on 28.12.2016.
  */
+var tms = tms || {}; //trivial message service
 
-BaseChannelBehavior = (function () {
+if (typeof exports !== 'undefined') {
+    var messageBus = require('./../../MessageBus.js');
+
+    var srtPlayer = srtPlayer || {};
+    srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    exports.tms = tms;
+}
+
+tms.BaseChannelBehavior = (function () {
 
 
     return {
@@ -51,7 +60,7 @@ BaseChannelBehavior = (function () {
 })();
 
 //unified_Factory
-var x_factory = (function(serviceChannelIdentifier,declaredSubscriptionsKey){
+tms.Xfactory = (function(serviceChannelIdentifier,declaredSubscriptionsKey){
     var CHANNEL = messageBus.channel(serviceChannelIdentifier);
     return {
         ready: function () {
@@ -67,7 +76,7 @@ var x_factory = (function(serviceChannelIdentifier,declaredSubscriptionsKey){
     };
 });
 
-ContentServiceChannelBehavior = (function () {
+tms.ContentServiceChannelBehavior = (function () {
 
     var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
     return {
@@ -75,9 +84,9 @@ ContentServiceChannelBehavior = (function () {
         ready: function () {
             var subscriptions = this.contentServiceSubscriptions ? this.contentServiceSubscriptions : [];
 
-            this.contentServiceSubscribe = BaseChannelBehavior.createSubscribeFor(CONTENT_SERVICE_CHANNEL);
+            this.contentServiceSubscribe = tms.BaseChannelBehavior.createSubscribeFor(CONTENT_SERVICE_CHANNEL);
             "use strict";
-            BaseChannelBehavior.initSubscriptions(subscriptions,
+            tms.BaseChannelBehavior.initSubscriptions(subscriptions,
                 this.contentServiceSubscribe,
                 this);
         }
@@ -85,7 +94,7 @@ ContentServiceChannelBehavior = (function () {
 })();
 // refactor to factory method for all xxchannelbehaviors
 //check other behaviors wheater they used togehter. use a unique init behavior for each
-FrontendServiceChannelBehavior = (function () {
+tms.FrontendServiceChannelBehavior = (function () {
 
     var FRONTEND_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.FRONTEND_SERVICE);
     return {
@@ -96,9 +105,9 @@ FrontendServiceChannelBehavior = (function () {
 
         _initChannelBehavior:function(){
             var subscriptions = this.frontendServiceSubscriptions ? this.frontendServiceSubscriptions : [];
-            this.frontendServiceSubscribe = BaseChannelBehavior.createSubscribeFor(FRONTEND_SERVICE_CHANNEL);
+            this.frontendServiceSubscribe = tms.BaseChannelBehavior.createSubscribeFor(FRONTEND_SERVICE_CHANNEL);
             "use strict";
-            BaseChannelBehavior.initSubscriptions(subscriptions,
+            tms.BaseChannelBehavior.initSubscriptions(subscriptions,
                 this.frontendServiceSubscribe,
                 this);
         }
@@ -106,7 +115,7 @@ FrontendServiceChannelBehavior = (function () {
     };
 })();
 
-MetaChannelBehavior = (function () {
+tms.MetaChannelBehavior = (function () {
 
     var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
     var META_WRITE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
@@ -118,16 +127,16 @@ MetaChannelBehavior = (function () {
 
             var subscriptions = this.metaSubscriptions ? this.metaSubscriptions : [];
 
-            this.metaPublish = BaseChannelBehavior.createPublishFor(META_WRITE_CHANNEL);
-            this.metaSubscribe = BaseChannelBehavior.createSubscribeFor(META_CHANNEL);
-            this.metaSubscribeOnce = BaseChannelBehavior.createSubscribeOnceFor(META_CHANNEL);
-            this._metaWriteSubscribe = BaseChannelBehavior.createSubscribeFor(META_WRITE_CHANNEL);
+            this.metaPublish = tms.BaseChannelBehavior.createPublishFor(META_WRITE_CHANNEL);
+            this.metaSubscribe = tms.BaseChannelBehavior.createSubscribeFor(META_CHANNEL);
+            this.metaSubscribeOnce = tms.BaseChannelBehavior.createSubscribeOnceFor(META_CHANNEL);
+            this._metaWriteSubscribe = tms.BaseChannelBehavior.createSubscribeFor(META_WRITE_CHANNEL);
 
-            BaseChannelBehavior.initSubscriptions(subscriptions,
+            tms.BaseChannelBehavior.initSubscriptions(subscriptions,
                 this.metaSubscribe,
                 this);
 
-            BaseChannelBehavior.initSubscriptions(subscriptions.filter(entry => entry.notifyWhenWriteOnChannel),
+            tms.BaseChannelBehavior.initSubscriptions(subscriptions.filter(entry => entry.notifyWhenWriteOnChannel),
                 this._metaWriteSubscribe,
                 this);
         }
@@ -136,7 +145,7 @@ MetaChannelBehavior = (function () {
 })();
 
 
-ServiceChannelBehavior = (function () {
+tms.ServiceChannelBehavior = (function () {
 
     var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
     return {
@@ -144,11 +153,11 @@ ServiceChannelBehavior = (function () {
         ready: function () {
             "use strict";
 
-            this.servicePublish = BaseChannelBehavior.createPublishFor(SERVICE_CHANNEL);
-            this.serviceSubscribe = BaseChannelBehavior.createSubscribeFor(SERVICE_CHANNEL);
-            this.serviceSubscribeOnce = BaseChannelBehavior.createSubscribeOnceFor(SERVICE_CHANNEL);
+            this.servicePublish = tms.BaseChannelBehavior.createPublishFor(SERVICE_CHANNEL);
+            this.serviceSubscribe = tms.BaseChannelBehavior.createSubscribeFor(SERVICE_CHANNEL);
+            this.serviceSubscribeOnce = tms.BaseChannelBehavior.createSubscribeOnceFor(SERVICE_CHANNEL);
 
-            BaseChannelBehavior.initSubscriptions( this.serviceSubscriptions ,
+            tms.BaseChannelBehavior.initSubscriptions( this.serviceSubscriptions ,
                 this.serviceSubscribe,
                 this);
         }

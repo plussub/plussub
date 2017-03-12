@@ -4,9 +4,9 @@
 /**
  * Created by sonste on 28.12.2016.
  */
+var tms = tms || {}; //trivial message service
 
-
-ChannelBasedInitializeBehavior = (function () {
+tms.ChannelBasedInitializeBehavior = (function () {
 
     return {
         ready: function () {
@@ -19,7 +19,7 @@ ChannelBasedInitializeBehavior = (function () {
                 throw "channelBasedInitFn is missing";
             }
 
-            if (this.channelBasedInit.type === MetaChannelBehavior) {
+            if (this.channelBasedInit.type === tms.MetaChannelBehavior) {
                 this._initializeWithMetaChannel();
                 return;
             }

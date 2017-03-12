@@ -4,7 +4,7 @@
 Polymer({
 
     is: 'subtitle-selectize',
-    behaviors: [ServiceChannelBehavior, MetaChannelBehavior,ChannelBasedInitializeBehavior],
+    behaviors: [tms.ServiceChannelBehavior, tms.MetaChannelBehavior, tms.ChannelBasedInitializeBehavior],
     properties: {
         currentSelected: {
             type: Object,
@@ -41,7 +41,7 @@ Polymer({
     ],
 
     channelBasedInit : {
-        type:MetaChannelBehavior,
+        type:tms.MetaChannelBehavior,
         topic:"selected_subtitle.entry",
     },
 

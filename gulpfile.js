@@ -15,7 +15,7 @@ gulp.task('mocha_unit', function() {
 
 
 gulp.task('mocha_specific', function() {
-    return gulp.src(['test/unit/subtitle_provider/*.js'], { read: false })
+    return gulp.src(['test/unit/channel-behavior/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });

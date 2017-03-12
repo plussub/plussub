@@ -3,7 +3,7 @@
  */
 Polymer({
     is: "notification-service",
-    behaviors: [FrontendServiceChannelBehavior],
+    behaviors: [tms.FrontendServiceChannelBehavior],
     properties: {
         _placeholderMessage: {
             type: String,

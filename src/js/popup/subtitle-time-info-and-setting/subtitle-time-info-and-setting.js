@@ -4,7 +4,11 @@
 
 Polymer({
     is: "subtitle-time-info-and-setting",
-    behaviors: [ServiceChannelBehavior, MetaChannelBehavior, ContentServiceChannelBehavior, ChannelBasedInitializeBehavior],
+    behaviors: [tms.ServiceChannelBehavior,
+        tms.MetaChannelBehavior,
+        tms.ContentServiceChannelBehavior,
+        tms.ChannelBasedInitializeBehavior
+    ],
     properties: {
         delay: {
             type: Number,
@@ -18,7 +22,7 @@ Polymer({
     },
 
     channelBasedInit: {
-        type: MetaChannelBehavior,
+        type: tms.MetaChannelBehavior,
         topic: "user.play.offsetTime",
     },
     contentServiceSubscriptions: [
