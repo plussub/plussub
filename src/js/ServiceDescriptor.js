@@ -32,8 +32,7 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
             META_WRITE: 'metaWrite',
             GENERAL_SERVICE: 'general',
             BACKEND_SERVICE: 'backend',
-            CONTENT_SERVICE: 'content',
-            FRONTEND_SERVICE: 'frontend'
+            CONTENT_SERVICE: 'content'
         };
 
         var definition = {
@@ -84,15 +83,13 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
                         PARSE: '.parse',
                         RESET: '.reset'
                     }
+                },
+                NOTIFICATION:{
+                    NAME: 'notificationService',
+                    _SUB: {
+                        NOTIFY: '.notify',
+                    }
                 }
-            },
-            FRONTEND_SERVICE:{
-              NOTIFICATION:{
-                  NAME: 'notificationService',
-                  _SUB: {
-                      NOTIFY: '.notify',
-                  }
-              }
             },
             CONTENT_SERVICE: {
                 FIND_VIDEO: {

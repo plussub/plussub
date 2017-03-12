@@ -11,24 +11,24 @@
 <script>
     suite('notification-service', function () {
 
-        var FRONTEND_CHANNEL;
+        var SERVICE_CHANNEL;
 
         setup(function(){
-            FRONTEND_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.FRONTEND_SERVICE);
+            SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
         });
 
         teardown(function(){
             //channel behavior reset
             messageBus.reset();
-            document.querySelector('notification-service')._initChannelBehavior();
+            document.querySelector('notification-service')._initServiceChannelBehavior();
         });
 
         test('should produce a notification if a message arrive', function (done) {
             this.timeout(3000);
             expect(document.querySelector('paper-toast').opened).to.be.false;
 
-            FRONTEND_CHANNEL.publish({
-                topic: srtPlayer.ServiceDescriptor.FRONTEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
+            SERVICE_CHANNEL.publish({
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
                 data: {
                     level:'warning',
                     msg:'some message'
@@ -52,8 +52,8 @@
             this.timeout(3000);
             expect(document.querySelector('paper-toast').opened).to.be.false;
 
-            FRONTEND_CHANNEL.publish({
-                topic: srtPlayer.ServiceDescriptor.FRONTEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
+            SERVICE_CHANNEL.publish({
+                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
                 data: {
                     level:'warning',
                     msg:'some message'

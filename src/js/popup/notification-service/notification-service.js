@@ -3,7 +3,7 @@
  */
 Polymer({
     is: "notification-service",
-    behaviors: [tms.FrontendServiceChannelBehavior],
+    behaviors: [tms.ServiceChannelBehavior],
     properties: {
         _placeholderMessage: {
             type: String,
@@ -21,9 +21,9 @@ Polymer({
     listeners:{
         "iron-overlay-closed":"onToastClose"
     },
-    frontendServiceSubscriptions: [
+    serviceSubscriptions: [
         {
-            topic: srtPlayer.ServiceDescriptor.FRONTEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
+            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
             callback: "onNotify"
         }
     ],

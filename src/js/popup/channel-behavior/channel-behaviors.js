@@ -59,29 +59,16 @@ tms.BaseChannelBehavior = (function () {
     }
 })();
 
-//unified_Factory
-tms.Xfactory = (function(serviceChannelIdentifier,declaredSubscriptionsKey){
-    var CHANNEL = messageBus.channel(serviceChannelIdentifier);
-    return {
-        ready: function () {
-            var subscriptions = this[declaredSubscriptionsKey] ? this[declaredSubscriptionsKey] : [];
-            this[declaredSubscriptionsKey+"subscribe oder so"] = BaseChannelBehavior.createSubscribeFor(CHANNEL);
-            "use strict";
-            BaseChannelBehavior.initSubscriptions(subscriptions,
-                this[declaredSubscriptionsKey+"subscribe oder so"],
-                this);
-
-        }
-
-    };
-});
-
 tms.ContentServiceChannelBehavior = (function () {
 
     var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
     return {
 
         ready: function () {
+            this._initContentServiceChannelBehavior();
+        },
+
+        _initContentServiceChannelBehavior:function(){
             var subscriptions = this.contentServiceSubscriptions ? this.contentServiceSubscriptions : [];
 
             this.contentServiceSubscribe = tms.BaseChannelBehavior.createSubscribeFor(CONTENT_SERVICE_CHANNEL);
@@ -90,28 +77,6 @@ tms.ContentServiceChannelBehavior = (function () {
                 this.contentServiceSubscribe,
                 this);
         }
-    };
-})();
-// refactor to factory method for all xxchannelbehaviors
-//check other behaviors wheater they used togehter. use a unique init behavior for each
-tms.FrontendServiceChannelBehavior = (function () {
-
-    var FRONTEND_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.FRONTEND_SERVICE);
-    return {
-
-        ready: function () {
-            this._initChannelBehavior();
-        },
-
-        _initChannelBehavior:function(){
-            var subscriptions = this.frontendServiceSubscriptions ? this.frontendServiceSubscriptions : [];
-            this.frontendServiceSubscribe = tms.BaseChannelBehavior.createSubscribeFor(FRONTEND_SERVICE_CHANNEL);
-            "use strict";
-            tms.BaseChannelBehavior.initSubscriptions(subscriptions,
-                this.frontendServiceSubscribe,
-                this);
-        }
-
     };
 })();
 
@@ -123,6 +88,10 @@ tms.MetaChannelBehavior = (function () {
     return {
 
         ready: function () {
+           this._initMetaChannelBehavior();
+        },
+
+        _initMetaChannelBehavior:function(){
             "use strict";
 
             var subscriptions = this.metaSubscriptions ? this.metaSubscriptions : [];
@@ -151,6 +120,10 @@ tms.ServiceChannelBehavior = (function () {
     return {
 
         ready: function () {
+            this._initServiceChannelBehavior();
+        },
+
+        _initServiceChannelBehavior:function(){
             "use strict";
 
             this.servicePublish = tms.BaseChannelBehavior.createPublishFor(SERVICE_CHANNEL);
