@@ -14,7 +14,7 @@ srtPlayer.ChannelLogService = srtPlayer.ChannelLogService || (()=> {
         var logChannels = [
             //messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META),
             //messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE),
-            //messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE)
+            //messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE)
         ];
 
         logChannels.forEach(channel=>

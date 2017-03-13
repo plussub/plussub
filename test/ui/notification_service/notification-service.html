@@ -14,7 +14,7 @@
         var SERVICE_CHANNEL;
 
         setup(function(){
-            SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+            SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
         });
 
         teardown(function(){
@@ -28,7 +28,7 @@
             expect(document.querySelector('paper-toast').opened).to.be.false;
 
             SERVICE_CHANNEL.publish({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
+                topic: srtPlayer.ServiceDescriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
                 data: {
                     level:'warning',
                     msg:'some message'
@@ -53,7 +53,7 @@
             expect(document.querySelector('paper-toast').opened).to.be.false;
 
             SERVICE_CHANNEL.publish({
-                topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
+                topic: srtPlayer.ServiceDescriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
                 data: {
                     level:'warning',
                     msg:'some message'

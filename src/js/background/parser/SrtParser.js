@@ -6,7 +6,7 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.SRTParser = srtPlayer.SRTParser || (function () {
 
-        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.NAME);
+        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.SERVICE.PARSER.NAME);
 
         function parse(rawSrt) {
             console2.log("start parsing");

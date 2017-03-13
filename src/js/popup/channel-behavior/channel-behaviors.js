@@ -116,7 +116,7 @@ tms.MetaChannelBehavior = (function () {
 
 tms.ServiceChannelBehavior = (function () {
 
-    var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+    var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
     return {
 
         ready: function () {

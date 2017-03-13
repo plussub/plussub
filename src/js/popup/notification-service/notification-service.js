@@ -23,7 +23,7 @@ Polymer({
     },
     serviceSubscriptions: [
         {
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.NOTIFICATION.SUB.NOTIFY,
+            topic: srtPlayer.ServiceDescriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
             callback: "onNotify"
         }
     ],

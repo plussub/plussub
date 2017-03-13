@@ -15,12 +15,12 @@ describe('Service Descriptor', ()=> {
     });
 
     it('should full subscriber topic', ()=> {
-        expect(serviceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH).to.equal('metaService.publish');
-        expect(serviceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH).to.equal('SubtitleProvider.search');
+        expect(serviceDescriptor.SERVICE.META.SUB.PUBLISH).to.equal('metaService.publish');
+        expect(serviceDescriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH).to.equal('SubtitleProvider.search');
     });
 
     it('should full publisher topic', ()=> {
-        expect(serviceDescriptor.BACKEND_SERVICE.META.PUB.READY).to.equal('metaService.ready');
+        expect(serviceDescriptor.SERVICE.META.PUB.READY).to.equal('metaService.ready');
         expect(serviceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND).to.equal('findVideoService.found');
 
     });

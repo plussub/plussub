@@ -8,7 +8,7 @@ srtPlayer.FindVideoService = srtPlayer.FindVideoService || (() => {
         "use strict";
 
         var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
-        var BACKEND_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
 
         var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
         var SERVICE_CONST = srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO;
@@ -63,8 +63,8 @@ srtPlayer.FindVideoService = srtPlayer.FindVideoService || (() => {
             }
         });
 
-        BACKEND_SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
+        SERVICE_CHANNEL.publish({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
             data: 'user.standby'
         });
 

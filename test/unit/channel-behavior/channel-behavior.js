@@ -35,7 +35,7 @@ describe('Channel Behavior', () => {
         testObject.ready();
 
 
-        var SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        var SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.SERVICE);
         SERVICE_CHANNEL.publish({
             topic: 'Batman',
             data: 'nananana'

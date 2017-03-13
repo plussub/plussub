@@ -15,8 +15,8 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus, config = srtPlayer.MetaConfig) => {
 
-        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.NAME);
-        var BACKEND_SERVICE = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.SERVICE.META.NAME);
+        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
         var META_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
         var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
 
@@ -74,7 +74,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             );
         });
 
-        allReadyPromises.then(() => BACKEND_SERVICE.publish({topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY}));
+        allReadyPromises.then(() => SERVICE_CHANNEL.publish({topic: srtPlayer.ServiceDescriptor.SERVICE.META.PUB.READY}));
 
         function publish(current, path) {
             Object.keys(current).forEach(key => {
@@ -89,8 +89,8 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
         }
 
 
-        BACKEND_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH_ALL,
+        SERVICE_CHANNEL.subscribe({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH_ALL,
             callback: (topic) => {
                 console2.log("publish all: "+topic);
                 findOrFallback(topic).then((result)=>publish(result, config[topic].fallback.store));
@@ -99,8 +99,8 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
 
 
-        BACKEND_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
+        SERVICE_CHANNEL.subscribe({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.RESET,
             callback: (topic) => {
                 console2.log("reset topic: " + topic);
 
@@ -113,8 +113,8 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
         });
 
 
-        BACKEND_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.FULL_TOPIC_RESET,
+        SERVICE_CHANNEL.subscribe({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
             callback: (topic) => {
                 console2.log("full topic rest: "+topic);
                 srtPlayer.StoreService.update(config[topic].fallback)
@@ -123,8 +123,8 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
         });
 
 
-        BACKEND_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
+        SERVICE_CHANNEL.subscribe({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
             callback: (topic) => {
                 var topicPath = topic.split('.');
                 var rootTopic = topicPath[0];

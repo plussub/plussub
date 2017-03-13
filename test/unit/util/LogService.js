@@ -18,7 +18,7 @@ srtPlayer.LogService = srtPlayer.LogService || (()=> {
         };
 
         function getLoggerFor(serviceName){
-            var SERVICE = messagingConst.BACKEND_SERVICE;
+            var SERVICE = messagingConst.SERVICE;
             switch(serviceName){
                 case SERVICE.META.NAME:
                     return fakeConsole;

@@ -7,7 +7,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
         "use strict";
 
 
-        var BACKEND_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
         var CONTENT_SERVICE = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
         var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
 
@@ -91,18 +91,18 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
             }
         });
 
-        BACKEND_SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
+        SERVICE_CHANNEL.publish({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
             data: 'user.play.offsetTime'
         });
 
-        BACKEND_SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
+        SERVICE_CHANNEL.publish({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
             data: 'option.position'
         });
 
-        BACKEND_SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
+        SERVICE_CHANNEL.publish({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
             data: 'parsed_subtitle.parsedSubtitle'
         });
 
@@ -115,8 +115,8 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
             }
         });
 
-        BACKEND_SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
+        SERVICE_CHANNEL.subscribe({
+            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.RESET,
             callback:()=>{
                 if(cues){
                     cues.forEach(cue=>{

@@ -19,7 +19,7 @@ srtPlayer.LogService = srtPlayer.LogService || (()=> {
         };
 
         function getLoggerFor(serviceName){
-            var BACKEND_SERVICE = srtPlayer.ServiceDescriptor.BACKEND_SERVICE;
+            var BACKEND_SERVICE = srtPlayer.ServiceDescriptor.SERVICE;
             var CONTENT_SERVICE = srtPlayer.ServiceDescriptor.CONTENT_SERVICE;
             var GENERAL_SERVICE = srtPlayer.ServiceDescriptor.GENERAL_SERVICE;
 

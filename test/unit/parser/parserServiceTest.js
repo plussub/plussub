@@ -13,7 +13,7 @@ describe('ParserService', ()=> {
     var parserService;
     beforeEach(()=>{
         messageBus.reset();
-        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.SERVICE);
         META_WRITE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.META_WRITE);
         parserService = root.srtPlayer.ParserService(messageBus);
     });
@@ -38,7 +38,7 @@ describe('ParserService', ()=> {
 
 
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.PARSER.SUB.PARSE,
+            topic: root.srtPlayer.ServiceDescriptor.SERVICE.PARSER.SUB.PARSE,
             data:{
                 type:'srt',
                 raw:'rawSrtData'

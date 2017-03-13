@@ -16,7 +16,7 @@ describe('MetaService', ()=> {
 
     beforeEach(()=> {
         messageBus.reset();
-        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.SERVICE);
         META_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.META);
         META_WRITE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.META_WRITE);
         metaService = root.srtPlayer.MetaService(messageBus);
@@ -41,10 +41,10 @@ describe('MetaService', ()=> {
             }
         });
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY,
+            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
             callback: (d)=> {
                 SERVICE_CHANNEL.publish({
-                    topic: ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH_ALL,
+                    topic: ServiceDescriptor.SERVICE.META.SUB.PUBLISH_ALL,
                     data: 'user'
                 });
             }
@@ -71,7 +71,7 @@ describe('MetaService', ()=> {
             }
         });
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY,
+            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
             callback: ()=> {
                 META_WRITE_CHANNEL.publish({
                     topic: 'user.play.offsetTime',
@@ -102,7 +102,7 @@ describe('MetaService', ()=> {
         });
 
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY,
+            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
             callback: ()=> {
                 META_WRITE_CHANNEL.publish({
                     topic: 'user.play.offsetTime',
@@ -110,7 +110,7 @@ describe('MetaService', ()=> {
                 });
 
                 SERVICE_CHANNEL.publish({
-                    topic: ServiceDescriptor.BACKEND_SERVICE.META.SUB.RESET,
+                    topic: ServiceDescriptor.SERVICE.META.SUB.RESET,
                     data: 'user'
                 });
 
@@ -130,10 +130,10 @@ describe('MetaService', ()=> {
         });
 
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY,
+            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
             callback: (d)=> {
                 SERVICE_CHANNEL.publish({
-                    topic: ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH,
+                    topic: ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
                     data: 'user.test.deep.prop'
                 });
             }
@@ -151,9 +151,9 @@ describe('MetaService', ()=> {
         });
 
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY,
+            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
             callback: (d)=> SERVICE_CHANNEL.publish({
-                topic: ServiceDescriptor.BACKEND_SERVICE.META.SUB.PUBLISH_ALL,
+                topic: ServiceDescriptor.SERVICE.META.SUB.PUBLISH_ALL,
                 data: 'parsed_subtitle'
             })
         });
@@ -170,7 +170,7 @@ describe('MetaService', ()=> {
             }
         });
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.BACKEND_SERVICE.META.PUB.READY,
+            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
             callback: ()=> {
                 META_WRITE_CHANNEL.publish({
                     topic: 'parsed_subtitle.parsedSubtitle',

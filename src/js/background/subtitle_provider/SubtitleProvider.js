@@ -7,8 +7,8 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus, fetch = window.fetch) => {
 
-        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
-        var SERVICE_CONST = srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER;
+        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
+        var SERVICE_CONST = srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER;
         // var console = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
         SERVICE_CHANNEL.subscribe({

@@ -137,7 +137,7 @@ describe('SubtitleProvider', ()=> {
 
     beforeEach(()=> {
         messageBus.reset();
-        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.BACKEND_SERVICE);
+        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.SERVICE);
         fakeFetch = fetchMock.sandbox();
         subtitleProvider = root.srtPlayer.SubtitleProvider(null,messageBus,fakeFetch);
     });
@@ -155,7 +155,7 @@ describe('SubtitleProvider', ()=> {
         fakeFetch.mock(BASE_URL+'/'+imdbid+'/'+iso639, DEFAULT_SUBTITLE_SEARCH_RESULT);
 
         SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
+            topic: root.srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
             callback: (result) => {
                 "use strict";
                 expect(result.length).to.be.above(0);
@@ -165,7 +165,7 @@ describe('SubtitleProvider', ()=> {
         });
 
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
+            topic: root.srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
             data: {
                 imdbid:imdbid,
                 iso639:iso639
@@ -182,7 +182,7 @@ describe('SubtitleProvider', ()=> {
         fakeFetch.mock(BASE_URL+'/'+imdbid+'/'+iso639, []);
 
         SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
+            topic: root.srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
             callback: (result) => {
                 "use strict";
                 expect(result.length).to.equal(0);
@@ -191,7 +191,7 @@ describe('SubtitleProvider', ()=> {
         });
 
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
+            topic: root.srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
             data: {
                 imdbid:imdbid,
                 iso639:iso639
@@ -207,7 +207,7 @@ describe('SubtitleProvider', ()=> {
         fakeFetch.mock(BASE_URL+'/'+imdbid+'/'+iso639, 400);
 
         SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
+            topic: root.srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
             callback: (result) => {
                 "use strict";
                 //should never reached, when reached call done multiple times
@@ -216,7 +216,7 @@ describe('SubtitleProvider', ()=> {
         });
 
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.BACKEND_SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
+            topic: root.srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
             data: {
                 imdbid:imdbid,
                 iso639:iso639

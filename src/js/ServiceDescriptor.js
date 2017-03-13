@@ -31,7 +31,7 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
             META: 'meta',
             META_WRITE: 'metaWrite',
             GENERAL_SERVICE: 'general',
-            BACKEND_SERVICE: 'backend',
+            SERVICE: 'backend',
             CONTENT_SERVICE: 'content'
         };
 
@@ -41,7 +41,7 @@ srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
                     NAME: 'channelLogService'
                 }
             },
-            BACKEND_SERVICE: {
+            SERVICE: {
                 META: {
                     NAME: 'metaService',
                     _SUB: {
