@@ -9,8 +9,11 @@ var bower = require('gulp-bower');
 var runSequence = require('run-sequence');
 var cspify = require('cspify');
 var crisper = require('gulp-crisper');
+var del = require('del');
 
-
+gulp.task('clean',function(callback){
+    runSequence('clean-popup',callback);
+});
 
 gulp.task('build', function(callback) {
     runSequence('bower-popup',
@@ -27,9 +30,17 @@ gulp.task('bower-popup',function(){
 
 gulp.task('cspify-popup-components',function(){
     gulp.src('./src/js/popup/bower_components/**/*.html')
-        .pipe(crisper())
+        .pipe(crisper({
+            scriptInHead: false
+        }))
         .pipe(gulp.dest('./src/js/popup/bower_components'));
 });
+
+
+gulp.task('clean-popup',function(){
+    return del('./src/js/popup/bower_components',{force:true});
+});
+
 
 gulp.task('mocha_unit', function() {
     return gulp.src(['test/unit/**/*.js'], { read: false })

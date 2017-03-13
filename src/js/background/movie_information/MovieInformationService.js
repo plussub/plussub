@@ -48,6 +48,9 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
         }
 
         function createImbdInformationFrom(imdbResponse) {
+
+            console.log(imdbResponse);
+
             return Object.keys(imdbResponse).map((k)=>imdbResponse[k]).reduce((p, c)=> {
                 p.push(...c);
                 return p;
