@@ -7,11 +7,11 @@ var srtPlayer = srtPlayer || {};
 srtPlayer.FindVideoService = srtPlayer.FindVideoService || (() => {
         "use strict";
 
-        var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
-        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
+        var META_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META);
+        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
 
-        var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
-        var SERVICE_CONST = srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO;
+        var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
+        var SERVICE_CONST = srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO;
         var console = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
 
@@ -22,7 +22,7 @@ srtPlayer.FindVideoService = srtPlayer.FindVideoService || (() => {
             callback: (isStandby)=> {
                 if (isStandby) {
                     CONTENT_SERVICE_CHANNEL.publish({
-                        topic: srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
+                        topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
                         data: {}
                     });
                     video = null;
@@ -64,7 +64,7 @@ srtPlayer.FindVideoService = srtPlayer.FindVideoService || (() => {
         });
 
         SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             data: 'user.standby'
         });
 

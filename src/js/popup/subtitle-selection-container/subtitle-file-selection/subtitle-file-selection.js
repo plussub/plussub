@@ -35,7 +35,7 @@ Polymer({
         Polymer.dom(this.$.container).appendChild(this.$.fileInput);
 
         this.servicePublish({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
             data: 'selected_subtitle_file'
         });
 
@@ -65,7 +65,7 @@ Polymer({
             });
 
             this.servicePublish({
-                topic: srtPlayer.ServiceDescriptor.SERVICE.PARSER.SUB.PARSE,
+                topic: srtPlayer.Descriptor.SERVICE.PARSER.SUB.PARSE,
                 data: {
                     type: 'srt',
                     raw: reader.result

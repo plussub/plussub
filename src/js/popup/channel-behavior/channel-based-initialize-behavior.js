@@ -39,7 +39,7 @@ tms.ChannelBasedInitializeBehavior = (function () {
             });
 
             this.servicePublish({
-                topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+                topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
                 data: this.channelBasedInit.topic
             });
 

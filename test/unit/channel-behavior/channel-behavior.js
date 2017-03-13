@@ -6,7 +6,7 @@ var nodeFetch = require('node-fetch');
 var requirejs = require('requirejs');
 var messageBus = require('../../../src/js/MessageBus.js');
 var root = require('../../../src/js/popup/channel-behavior/channel-behaviors.js');
-var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+var Descriptor = require('../../../src/js/Descriptor.js').srtPlayer.Descriptor;
 
 
 describe('Channel Behavior', () => {
@@ -35,7 +35,7 @@ describe('Channel Behavior', () => {
         testObject.ready();
 
 
-        var SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.SERVICE);
+        var SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
         SERVICE_CHANNEL.publish({
             topic: 'Batman',
             data: 'nananana'

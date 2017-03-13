@@ -7,7 +7,7 @@ if (typeof exports !== 'undefined') {
     var messageBus = require('./../../MessageBus.js');
 
     var srtPlayer = srtPlayer || {};
-    srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = srtPlayer.Descriptor || require('./../../Descriptor.js').srtPlayer.Descriptor;
     exports.tms = tms;
 }
 
@@ -61,7 +61,7 @@ tms.BaseChannelBehavior = (function () {
 
 tms.ContentServiceChannelBehavior = (function () {
 
-    var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
+    var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
     return {
 
         ready: function () {
@@ -82,8 +82,8 @@ tms.ContentServiceChannelBehavior = (function () {
 
 tms.MetaChannelBehavior = (function () {
 
-    var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
-    var META_WRITE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
+    var META_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META);
+    var META_WRITE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE);
 
     return {
 
@@ -116,7 +116,7 @@ tms.MetaChannelBehavior = (function () {
 
 tms.ServiceChannelBehavior = (function () {
 
-    var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
+    var SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
     return {
 
         ready: function () {

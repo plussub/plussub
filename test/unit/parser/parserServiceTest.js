@@ -4,7 +4,7 @@ var messageBus = require('../../../src/js/MessageBus.js');
 var root = require('../../../src/js/background/parser/ParserService.js');
 root.srtPlayer.SRTParser = require('./../mock/SrtParserMock.js').srtMock.SRTParserMock;
 root.srtPlayer.LogService =  require('./../util/LogService.js').srtPlayer.LogService();
-var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+var Descriptor = require('../../../src/js/Descriptor.js').srtPlayer.Descriptor;
 
 
 describe('ParserService', ()=> {
@@ -13,8 +13,8 @@ describe('ParserService', ()=> {
     var parserService;
     beforeEach(()=>{
         messageBus.reset();
-        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.SERVICE);
-        META_WRITE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.META_WRITE);
+        SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
+        META_WRITE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.META_WRITE);
         parserService = root.srtPlayer.ParserService(messageBus);
     });
 
@@ -38,7 +38,7 @@ describe('ParserService', ()=> {
 
 
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.SERVICE.PARSER.SUB.PARSE,
+            topic: root.srtPlayer.Descriptor.SERVICE.PARSER.SUB.PARSE,
             data:{
                 type:'srt',
                 raw:'rawSrtData'

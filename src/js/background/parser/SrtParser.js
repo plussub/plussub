@@ -1,12 +1,12 @@
 var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = require('./../../Descriptor.js').srtPlayer.Descriptor;
 }
 
 srtPlayer.SRTParser = srtPlayer.SRTParser || (function () {
 
-        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.SERVICE.PARSER.NAME);
+        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.SERVICE.PARSER.NAME);
 
         function parse(rawSrt) {
             console2.log("start parsing");

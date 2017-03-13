@@ -6,13 +6,13 @@ var srtPlayer = srtPlayer || {};
 srtPlayer.VideoMetaService = srtPlayer.VideoMetaService || (() => {
         "use strict";
 
-        var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
-        var SERVICE_CONST = srtPlayer.ServiceDescriptor.CONTENT_SERVICE.VIDEO_META;
-        var console = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.CONTENT_SERVICE.VIDEO_META.NAME);
+        var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
+        var SERVICE_CONST = srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META;
+        var console = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META.NAME);
         var video;
 
         CONTENT_SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
+            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
             callback: (_video)=>{
                 console.log('bind video');
                 if(video){
@@ -33,7 +33,7 @@ srtPlayer.VideoMetaService = srtPlayer.VideoMetaService || (() => {
         });
 
         CONTENT_SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
+            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
             callback: ()=>{
                 console.log('unbind video');
                 if(video){

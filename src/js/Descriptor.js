@@ -6,7 +6,7 @@ if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
 }
 
-srtPlayer.ServiceDescriptor = srtPlayer.ServiceDescriptor || (()=> {
+srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
 
         function addSubscriberAndPublisherToSingletons(definition){
             if(definition._SUB) {

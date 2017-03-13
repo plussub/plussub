@@ -5,18 +5,18 @@ var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     var messageBus = null;
-    srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = require('./../../Descriptor.js').srtPlayer.Descriptor;
 }
 
 
 srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = messageBus) => {
-        //  var console = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.SERVICE.PARSER.NAME);
+        //  var console = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.SERVICE.PARSER.NAME);
 
-        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
-        var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
-        var META_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
+        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE);
+        var META_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META);
 
-        var SERVICE_CONST = srtPlayer.ServiceDescriptor.SERVICE.PARSER;
+        var SERVICE_CONST = srtPlayer.Descriptor.SERVICE.PARSER;
         SERVICE_CHANNEL.subscribe({
             topic: SERVICE_CONST.SUB.PARSE,
             callback: (data) => {
@@ -43,7 +43,7 @@ srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = message
             topic: SERVICE_CONST.SUB.RESET,
             callback: () => {
                 SERVICE_CHANNEL.publish({
-                    topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
+                    topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
                     data: 'parsed_subtitle'
                 });
             }

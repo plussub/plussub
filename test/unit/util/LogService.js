@@ -5,7 +5,7 @@ var srtPlayer = srtPlayer || {};
 
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    var messagingConst = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    var Descriptor = require('../../../src/js/Descriptor.js').srtPlayer.Descriptor;
 }
 
 
@@ -18,7 +18,7 @@ srtPlayer.LogService = srtPlayer.LogService || (()=> {
         };
 
         function getLoggerFor(serviceName){
-            var SERVICE = messagingConst.SERVICE;
+            var SERVICE = Descriptor.SERVICE;
             switch(serviceName){
                 case SERVICE.META.NAME:
                     return fakeConsole;

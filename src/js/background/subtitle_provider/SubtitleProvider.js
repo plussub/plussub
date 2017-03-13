@@ -2,13 +2,13 @@ var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     var messageBus = null;
-    srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = require('./../../Descriptor.js').srtPlayer.Descriptor;
 }
 
 srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus, fetch = window.fetch) => {
 
-        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
-        var SERVICE_CONST = srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER;
+        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        var SERVICE_CONST = srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER;
         // var console = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
         SERVICE_CHANNEL.subscribe({

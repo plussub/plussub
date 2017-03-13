@@ -7,9 +7,9 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
         "use strict";
 
 
-        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
-        var CONTENT_SERVICE = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
-        var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
+        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        var CONTENT_SERVICE = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
+        var META_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META);
 
         var cues, video, track,vttSettings;
 
@@ -83,7 +83,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
         });
 
         CONTENT_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
+            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
             callback: ()=> {
                 if(track){
                     track.mode='disabled';
@@ -92,23 +92,23 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
         });
 
         SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             data: 'user.play.offsetTime'
         });
 
         SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             data: 'option.position'
         });
 
         SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             data: 'parsed_subtitle.parsedSubtitle'
         });
 
 
         CONTENT_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
+            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
             callback: (_video)=> {
                 video = _video;
                 addVttToVid();
@@ -116,7 +116,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
         });
 
         SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.RESET,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.RESET,
             callback:()=>{
                 if(cues){
                     cues.forEach(cue=>{

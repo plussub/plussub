@@ -35,7 +35,7 @@ Polymer({
 
     serviceSubscriptions:[
         {
-            topic: srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
+            topic: srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
             callback: 'updateSubtitles'
         }
     ],
@@ -88,7 +88,7 @@ Polymer({
             this.$.subtitleSelection.clearOptions();
             //racecondition, triggered when subtitle-selectize is not ready
             this.async(()=>  this.servicePublish({
-                topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
+                topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
                 data: 'selected_subtitle'
             }));
             return;
@@ -130,7 +130,7 @@ Polymer({
             }
 
             this.servicePublish({
-                topic: srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
+                topic: srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
                 data: {
                     imdbid: this._currentMovie.imdbID,
                     iso639: this._currentLanguage.iso639

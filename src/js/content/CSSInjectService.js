@@ -3,10 +3,10 @@
  */
 srtPlayer.CSSInjectService = srtPlayer.CSSInjectService || (() => {
         "use strict";
-        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
-        var CONTENT_SERVICE = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.CONTENT_SERVICE);
-        var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
-        var console = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.CONTENT_SERVICE.CSS_INJECT.NAME);
+        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        var CONTENT_SERVICE = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
+        var META_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META);
+        var console = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.CONTENT_SERVICE.CSS_INJECT.NAME);
 
 
         var css,video;
@@ -19,7 +19,7 @@ srtPlayer.CSSInjectService = srtPlayer.CSSInjectService || (() => {
         });
 
         CONTENT_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
+            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
             callback: (_video)=> {
                 video = $(_video);
                 addCustomCss();
@@ -27,7 +27,7 @@ srtPlayer.CSSInjectService = srtPlayer.CSSInjectService || (() => {
         });
 
         CONTENT_SERVICE.subscribe({
-            topic: srtPlayer.ServiceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
+            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
             callback: ()=> {
                 video = null;
                 removeCustomCss();
@@ -36,7 +36,7 @@ srtPlayer.CSSInjectService = srtPlayer.CSSInjectService || (() => {
 
 
         SERVICE_CHANNEL.publish({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             data: 'option.css'
         });
 

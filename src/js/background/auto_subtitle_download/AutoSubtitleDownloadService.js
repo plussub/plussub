@@ -5,20 +5,20 @@ var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     var messageBus = null;
-    srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = require('./../../Descriptor.js').srtPlayer.Descriptor;
 }
 
 srtPlayer.AutoSubtitleDownloadService = srtPlayer.AutoSubtitleDownloadService || ((messageBusLocal = messageBus)=> {
 
-        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
-        var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
+        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE);
 
         SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.PUB.DOWNLOAD_RESULT,
+            topic: srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.PUB.DOWNLOAD_RESULT,
             callback: (srt)=> {
                 "use strict";
                 SERVICE_CHANNEL.publish({
-                    topic: srtPlayer.ServiceDescriptor.SERVICE.PARSER.SUB.PARSE,
+                    topic: srtPlayer.Descriptor.SERVICE.PARSER.SUB.PARSE,
                     data: {
                         type: 'srt',
                         raw: srt
@@ -31,7 +31,7 @@ srtPlayer.AutoSubtitleDownloadService = srtPlayer.AutoSubtitleDownloadService ||
             topic:'selected_subtitle.entry',
             callback:(selectedSubtitle)=>{
                 SERVICE_CHANNEL.publish({
-                    topic: srtPlayer.ServiceDescriptor.SERVICE.SUBTITLE_PROVIDER.SUB.DOWNLOAD,
+                    topic: srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.SUB.DOWNLOAD,
                     data: selectedSubtitle.downloadLink
                 });
             }

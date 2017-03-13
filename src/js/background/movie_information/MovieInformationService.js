@@ -2,13 +2,13 @@ var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     var messageBus = null;
-    srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = require('./../../Descriptor.js').srtPlayer.Descriptor;
 }
 
 srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, messageBusLocal = messageBus)=> {
 
-        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
-        var SERVICE_CONST = srtPlayer.ServiceDescriptor.SERVICE.MOVIE_INFORMATION;
+        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        var SERVICE_CONST = srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION;
         // var console = srtPlayer.LogService.getLoggerFor(SERVICE_CONST.NAME);
 
         SERVICE_CHANNEL.subscribe({
@@ -38,7 +38,7 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || (($, me
                     console.log("imdb error");
                     console.log(e);
                     SERVICE_CHANNEL.publish({
-                       topic: srtPlayer.ServiceDescriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
+                       topic: srtPlayer.Descriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
                         data:{
                            msg:"Sorry something goes wrong."
                         }

@@ -6,7 +6,7 @@ var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     var messageBus = null;
-    srtPlayer.ServiceDescriptor = require('./../../ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = require('./../../Descriptor.js').srtPlayer.Descriptor;
     srtPlayer.MetaConfig = require('./MetaConfig.js').srtPlayer.MetaConfig;
 
 }
@@ -15,10 +15,10 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus, config = srtPlayer.MetaConfig) => {
 
-        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.SERVICE.META.NAME);
-        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
-        var META_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
-        var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
+        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.SERVICE.META.NAME);
+        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        var META_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META);
+        var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE);
 
         var topics = Object.keys(config);
 
@@ -74,7 +74,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             );
         });
 
-        allReadyPromises.then(() => SERVICE_CHANNEL.publish({topic: srtPlayer.ServiceDescriptor.SERVICE.META.PUB.READY}));
+        allReadyPromises.then(() => SERVICE_CHANNEL.publish({topic: srtPlayer.Descriptor.SERVICE.META.PUB.READY}));
 
         function publish(current, path) {
             Object.keys(current).forEach(key => {
@@ -90,7 +90,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
 
         SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH_ALL,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH_ALL,
             callback: (topic) => {
                 console2.log("publish all: "+topic);
                 findOrFallback(topic).then((result)=>publish(result, config[topic].fallback.store));
@@ -100,7 +100,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
 
         SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.RESET,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.RESET,
             callback: (topic) => {
                 console2.log("reset topic: " + topic);
 
@@ -114,7 +114,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
 
         SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
             callback: (topic) => {
                 console2.log("full topic rest: "+topic);
                 srtPlayer.StoreService.update(config[topic].fallback)
@@ -124,7 +124,7 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
 
         SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             callback: (topic) => {
                 var topicPath = topic.split('.');
                 var rootTopic = topicPath[0];

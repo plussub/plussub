@@ -20,7 +20,7 @@
       "components/jquery/dist/jquery.js",
       "components/jquery-timer/jquery.timer.js",
       "js/MessageBus.js",
-      "js/ServiceDescriptor.js",
+      "js/Descriptor.js",
       "js/LogService.js",
       "js/ChannelLogService.js",
       "js/background/credential/credential.js",
@@ -51,7 +51,7 @@
       "js": [
         "components/jquery/dist/jquery.js",
         "js/MessageBus.js",
-        "js/ServiceDescriptor.js",
+        "js/Descriptor.js",
         "js/LogService.js",
         "js/content/BackgroundAvailabilityService.js",
         "js/content/ContentScriptBridge.js",

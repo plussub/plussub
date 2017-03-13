@@ -6,26 +6,26 @@ var expect = require('chai').expect;
 var requirejs = require('requirejs');
 
 
-describe('Service Descriptor', ()=> {
+describe('Descriptor', ()=> {
 
 
-    var serviceDescriptor;
+    var descriptor;
     beforeEach(()=> {
-        serviceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+        descriptor = require('../../../src/js/Descriptor.js').srtPlayer.Descriptor;
     });
 
     it('should full subscriber topic', ()=> {
-        expect(serviceDescriptor.SERVICE.META.SUB.PUBLISH).to.equal('metaService.publish');
-        expect(serviceDescriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH).to.equal('SubtitleProvider.search');
+        expect(descriptor.SERVICE.META.SUB.PUBLISH).to.equal('metaService.publish');
+        expect(descriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH).to.equal('SubtitleProvider.search');
     });
 
     it('should full publisher topic', ()=> {
-        expect(serviceDescriptor.SERVICE.META.PUB.READY).to.equal('metaService.ready');
-        expect(serviceDescriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND).to.equal('findVideoService.found');
+        expect(descriptor.SERVICE.META.PUB.READY).to.equal('metaService.ready');
+        expect(descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND).to.equal('findVideoService.found');
 
     });
 
     it('should contain channels  topic', ()=> {
-        expect(serviceDescriptor.CHANNEL.META).to.equal('meta');
+        expect(descriptor.CHANNEL.META).to.equal('meta');
     });
 });

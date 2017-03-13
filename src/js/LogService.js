@@ -5,7 +5,7 @@ var srtPlayer = srtPlayer || {};
 
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    srtPlayer.ServiceDescriptor = require('./ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = require('./Descriptor.js').srtPlayer.Descriptor;
 
 }
 
@@ -19,9 +19,9 @@ srtPlayer.LogService = srtPlayer.LogService || (()=> {
         };
 
         function getLoggerFor(serviceName){
-            var BACKEND_SERVICE = srtPlayer.ServiceDescriptor.SERVICE;
-            var CONTENT_SERVICE = srtPlayer.ServiceDescriptor.CONTENT_SERVICE;
-            var GENERAL_SERVICE = srtPlayer.ServiceDescriptor.GENERAL_SERVICE;
+            var BACKEND_SERVICE = srtPlayer.Descriptor.SERVICE;
+            var CONTENT_SERVICE = srtPlayer.Descriptor.CONTENT_SERVICE;
+            var GENERAL_SERVICE = srtPlayer.Descriptor.GENERAL_SERVICE;
 
             switch(serviceName){
                 case BACKEND_SERVICE.META.NAME:

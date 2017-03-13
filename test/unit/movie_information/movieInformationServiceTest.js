@@ -5,7 +5,7 @@ var messageBus = require('../../../src/js/MessageBus.js');
 var $ = require('jquery')(require("jsdom").jsdom().defaultView);
 var root = require('../../../src/js/background/movie_information/MovieInformationService.js');
 root.srtPlayer.LogService = require('./../util/LogService.js').srtPlayer.LogService();
-var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+var Descriptor = require('../../../src/js/Descriptor.js').srtPlayer.Descriptor;
 
 
 describe('MovieInformationService', ()=> {
@@ -75,7 +75,7 @@ describe('MovieInformationService', ()=> {
 
     beforeEach(()=> {
         messageBus.reset();
-        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.SERVICE);
+        SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
         movieInformationService = root.srtPlayer.MovieInformationService($,messageBus);
         ajaxStub = sinon.stub($, "ajax");
     });
@@ -92,7 +92,7 @@ describe('MovieInformationService', ()=> {
         );
 
         SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.ServiceDescriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
+            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
             callback: (result)=> {
                 "use strict";
                 expect(result.length).to.equal(8);
@@ -115,7 +115,7 @@ describe('MovieInformationService', ()=> {
         });
 
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
+            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
             data: 'Batman'
         });
     });
@@ -132,7 +132,7 @@ describe('MovieInformationService', ()=> {
             year: '2000'
         });
         SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.ServiceDescriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
+            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
             callback: (result)=> {
                 expect(result.length).to.equal(1);
                 expect(result[0]).to.deep.equal({
@@ -146,7 +146,7 @@ describe('MovieInformationService', ()=> {
             }
         });
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
+            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
             data: 'Batman'
         });
     });
@@ -171,14 +171,14 @@ describe('MovieInformationService', ()=> {
             });
         }
         SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.ServiceDescriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
+            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
             callback: (result)=> {
                 expect(result.length).to.equal(10);
                 done();
             }
         });
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.ServiceDescriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
+            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
             data: 'Batman'
         });
     });

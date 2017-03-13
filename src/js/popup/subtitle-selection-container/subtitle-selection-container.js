@@ -21,7 +21,7 @@ Polymer({
             .forEach((selectionElement) => selectionElement.reset());
 
         this.servicePublish({
-            topic: srtPlayer.ServiceDescriptor.SERVICE.PARSER.SUB.RESET,
+            topic: srtPlayer.Descriptor.SERVICE.PARSER.SUB.RESET,
             data:{}
         });
     }

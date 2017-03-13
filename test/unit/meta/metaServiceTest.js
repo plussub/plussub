@@ -7,7 +7,7 @@ var config = require('../../../src/js/background/meta/MetaConfig.js');
 root.srtPlayer.StoreService = require('./../mock/StoreMockService.js').srtMock.StoreMockService();
 root.srtPlayer.LogService = require('./../util/LogService.js').srtPlayer.LogService();
 
-var ServiceDescriptor = require('../../../src/js/ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+var Descriptor = require('../../../src/js/Descriptor.js').srtPlayer.Descriptor;
 
 describe('MetaService', ()=> {
 
@@ -16,9 +16,9 @@ describe('MetaService', ()=> {
 
     beforeEach(()=> {
         messageBus.reset();
-        SERVICE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.SERVICE);
-        META_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.META);
-        META_WRITE_CHANNEL = messageBus.channel(ServiceDescriptor.CHANNEL.META_WRITE);
+        SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
+        META_CHANNEL = messageBus.channel(Descriptor.CHANNEL.META);
+        META_WRITE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.META_WRITE);
         metaService = root.srtPlayer.MetaService(messageBus);
 
     });
@@ -41,10 +41,10 @@ describe('MetaService', ()=> {
             }
         });
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
+            topic: Descriptor.SERVICE.META.PUB.READY,
             callback: (d)=> {
                 SERVICE_CHANNEL.publish({
-                    topic: ServiceDescriptor.SERVICE.META.SUB.PUBLISH_ALL,
+                    topic: Descriptor.SERVICE.META.SUB.PUBLISH_ALL,
                     data: 'user'
                 });
             }
@@ -71,7 +71,7 @@ describe('MetaService', ()=> {
             }
         });
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
+            topic: Descriptor.SERVICE.META.PUB.READY,
             callback: ()=> {
                 META_WRITE_CHANNEL.publish({
                     topic: 'user.play.offsetTime',
@@ -102,7 +102,7 @@ describe('MetaService', ()=> {
         });
 
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
+            topic: Descriptor.SERVICE.META.PUB.READY,
             callback: ()=> {
                 META_WRITE_CHANNEL.publish({
                     topic: 'user.play.offsetTime',
@@ -110,7 +110,7 @@ describe('MetaService', ()=> {
                 });
 
                 SERVICE_CHANNEL.publish({
-                    topic: ServiceDescriptor.SERVICE.META.SUB.RESET,
+                    topic: Descriptor.SERVICE.META.SUB.RESET,
                     data: 'user'
                 });
 
@@ -130,10 +130,10 @@ describe('MetaService', ()=> {
         });
 
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
+            topic: Descriptor.SERVICE.META.PUB.READY,
             callback: (d)=> {
                 SERVICE_CHANNEL.publish({
-                    topic: ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+                    topic: Descriptor.SERVICE.META.SUB.PUBLISH,
                     data: 'user.test.deep.prop'
                 });
             }
@@ -151,9 +151,9 @@ describe('MetaService', ()=> {
         });
 
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
+            topic: Descriptor.SERVICE.META.PUB.READY,
             callback: (d)=> SERVICE_CHANNEL.publish({
-                topic: ServiceDescriptor.SERVICE.META.SUB.PUBLISH_ALL,
+                topic: Descriptor.SERVICE.META.SUB.PUBLISH_ALL,
                 data: 'parsed_subtitle'
             })
         });
@@ -170,7 +170,7 @@ describe('MetaService', ()=> {
             }
         });
         SERVICE_CHANNEL.subscribe({
-            topic: ServiceDescriptor.SERVICE.META.PUB.READY,
+            topic: Descriptor.SERVICE.META.PUB.READY,
             callback: ()=> {
                 META_WRITE_CHANNEL.publish({
                     topic: 'parsed_subtitle.parsedSubtitle',

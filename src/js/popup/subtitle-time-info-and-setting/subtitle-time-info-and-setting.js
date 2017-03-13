@@ -27,7 +27,7 @@ Polymer({
     },
     contentServiceSubscriptions: [
         {
-            topic: srtPlayer.ServiceDescriptor.CONTENT_SERVICE.VIDEO_META.PUB.TIME,
+            topic: srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META.PUB.TIME,
             callback: "onVideoTimeUpdate"
         }
     ],

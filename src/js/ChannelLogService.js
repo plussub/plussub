@@ -3,18 +3,18 @@ var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     srtPlayer.messageBus = messageBus;
-    srtPlayer.ServiceDescriptor = require('./ServiceDescriptor.js').srtPlayer.ServiceDescriptor;
+    srtPlayer.Descriptor = require('./Descriptor.js').srtPlayer.Descriptor;
 }
 
 
 srtPlayer.ChannelLogService = srtPlayer.ChannelLogService || (()=> {
         "use strict";
 
-        var console = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.GENERAL_SERVICE.CHANNEL_LOG_SERVICE.NAME);
+        var console = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.GENERAL_SERVICE.CHANNEL_LOG_SERVICE.NAME);
         var logChannels = [
-            //messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META),
-            //messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE),
-            //messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE)
+            //messageBus.channel(srtPlayer.Descriptor.CHANNEL.META),
+            //messageBus.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE),
+            //messageBus.channel(srtPlayer.Descriptor.CHANNEL.SERVICE)
         ];
 
         logChannels.forEach(channel=>

@@ -43,9 +43,9 @@ $(document).ready(function () {
     });
 
 
-    var SERVICE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.SERVICE);
-    var META_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META);
-    var META_WRITE_CHANNEL = messageBus.channel(srtPlayer.ServiceDescriptor.CHANNEL.META_WRITE);
+    var SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+    var META_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META);
+    var META_WRITE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE);
 
     META_CHANNEL.subscribe({
         topic: "option.css",
@@ -78,17 +78,17 @@ $(document).ready(function () {
     });
 
     SERVICE_CHANNEL.publish({
-        topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+        topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
         data: 'option.css'
     });
 
     SERVICE_CHANNEL.publish({
-        topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+        topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
         data: 'option.position'
     });
 
     SERVICE_CHANNEL.publish({
-        topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.PUBLISH,
+        topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
         data: 'option.errorReport'
     });
 
@@ -125,7 +125,7 @@ $(document).ready(function () {
 
     var reset = document.querySelector('#Reset');
     reset.addEventListener('click', ()=> SERVICE_CHANNEL.publish({
-        topic: srtPlayer.ServiceDescriptor.SERVICE.META.SUB.RESET,
+        topic: srtPlayer.Descriptor.SERVICE.META.SUB.RESET,
         data: 'option'
     }));
 

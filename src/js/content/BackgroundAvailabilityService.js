@@ -7,7 +7,7 @@ var srtPlayer = srtPlayer || {};
 
 srtPlayer.BackgroundAvailabilityService = srtPlayer.BackgroundAvailabilityService || (() => {
         "use strict";
-        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.ServiceDescriptor.CONTENT_SERVICE.BACKGROUND_AVAILABILITY.NAME);
+        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.CONTENT_SERVICE.BACKGROUND_AVAILABILITY.NAME);
 
         var wakeUpPromise = new Promise(resolve=> {
             var wakeUpListener = (request, sender, sendResponse) => {
