@@ -139,7 +139,7 @@ describe('SubtitleProvider', ()=> {
         messageBus.reset();
         SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
         fakeFetch = fetchMock.sandbox();
-        subtitleProvider = root.srtPlayer.SubtitleProvider(null,messageBus,fakeFetch);
+        subtitleProvider = root.srtPlayer.SubtitleProvider(messageBus,fakeFetch);
     });
 
     afterEach(()=>{

@@ -5,7 +5,7 @@ if (typeof exports !== 'undefined') {
     srtPlayer.Descriptor = require('./../../Descriptor.js').srtPlayer.Descriptor;
 }
 
-srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal = messageBus, fetch = window.fetch) => {
+srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = messageBus, fetch = window.fetch) => {
 
         var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
         var SERVICE_CONST = srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER;
@@ -85,5 +85,5 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || (($, messageBusLocal 
 
 //instant service does not correct initialize messageBus (in testfiles)
 if (typeof exports === 'undefined' && typeof srtPlayer.SubtitleProvider === 'function') {
-    srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider($);
+    srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider();
 }
