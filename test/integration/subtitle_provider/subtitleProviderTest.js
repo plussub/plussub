@@ -17,7 +17,7 @@ describe('Subtitle Provider', ()=> {
     beforeEach(() => {
         messageBus.reset();
         SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
-        subtitleProvider = root.srtPlayer.SubtitleProvider(null, messageBus, nodeFetch);
+        subtitleProvider = root.srtPlayer.SubtitleProvider(messageBus, nodeFetch);
     });
 
 
