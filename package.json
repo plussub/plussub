@@ -31,6 +31,9 @@
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
     "fetch-mock": "^5.9.4",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-bower": "0.0.13",
+    "gulp-crisper": "^1.1.0",
+    "run-sequence": "^1.2.2"
   }
 }
