@@ -1,0 +1,69 @@
+{
+  "name": "+Sub",
+  "version": "2.16",
+  "manifest_version": 2,
+  "description": "Load subtitle to a HTML5 video.",
+  "author": "Stefan Breitenstein",
+  "icons": {
+    "16": "res/icons/plussub16.png",
+    "48": "res/icons/plussub48.png",
+    "128": "res/icons/plussub128.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "19": "res/icons/browseraction.png"
+    },
+    "default_popup": "src/html/popup.html"
+  },
+  "background": {
+    "scripts": [
+      "src/js/MessageBus.js",
+      "src/js/Descriptor.js",
+      "src/js/LogService.js",
+      "src/js/ChannelLogService.js",
+      "src/js/background/bridge/BackgroundBridge.js",
+      "src/js/background/version/VersionService.js",
+      "src/js/background/meta/StoreService.js",
+      "src/js/background/meta/MetaConfig.js",
+      "src/js/background/meta/MetaService.js",
+      "src/js/background/parser/SrtParser.js",
+      "src/js/background/parser/ParserService.js",
+      "src/js/background/movie_information/MovieInformationService.js",
+      "src/js/background/subtitle_provider/pako/pako.js",
+      "src/js/background/subtitle_provider/pako/pako_deflate.js",
+      "src/js/background/subtitle_provider/pako/pako_inflate.js",
+      "src/js/background/subtitle_provider/SubtitleProvider.js",
+      "src/js/background/auto_subtitle_download/AutoSubtitleDownloadService.js"
+    ],
+    "persistent": false
+  },
+  "options_page": "src/html/options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_end",
+      "all_frames": false,
+      "js": [
+        "src/components/jquery/dist/jquery.js",
+        "src/js/MessageBus.js",
+        "src/js/Descriptor.js",
+        "src/js/LogService.js",
+        "src/js/content/BackgroundAvailabilityService.js",
+        "src/js/content/ContentScriptBridge.js",
+        "src/js/content/CSSInjectService.js",
+        "src/js/content/VTTInjectService.js",
+        "src/js/content/VideoMetaService.js",
+        "src/js/content/FindVideoService.js"
+      ]
+    }
+  ],
+  "minimum_chrome_version": "51",
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js; 'unsafe-eval'; object-src 'self'",
+  "permissions": [
+    "tabs",
+    "storage",
+    "notifications"
+  ]
+}

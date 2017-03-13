@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 			  archive: 'plussub.zip'
 			},
 			files: [
-			  {src: ['src/**'], dest: '/'} // includes files in path and its subdirs
+			  {src: ['src/**','res/**','manifest.json'], dest: '/'} // includes files in path and its subdirs
 			]
 		  }
 	}
@@ -45,11 +45,11 @@ module.exports = function(grunt) {
   
   var fs = require('fs');
   grunt.registerTask('update-chrome-extension-manifest', function() {
-		var manifest = require('./src/manifest.json');
+		var manifest = require('./manifest.json');
 		grunt.log.ok('Old version: '+manifest.version);
-		manifest.version=""+(parseFloat(manifest.version)+0.01);
+		manifest.version=""+(parseFloat(manifest.version)+0.01).toFixed(2);;
 		grunt.log.ok('New version: '+manifest.version);
-	    fs.writeFileSync('./src/manifest.json', JSON.stringify(manifest,null,2));
+	    fs.writeFileSync('./manifest.json', JSON.stringify(manifest,null,2));
   });
   
   grunt.registerTask('default', ['update-chrome-extension-manifest','compress']);
