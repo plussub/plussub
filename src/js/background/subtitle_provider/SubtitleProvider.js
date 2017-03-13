@@ -34,7 +34,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
             }
 
             fetch('https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/subtitle/' + data.imdbid + '/' + data.iso639)
-                .then(function (response) {
+                .then((response)=> {
                     if (response.status !== 200) {
                         console.log('Invalid Status Code: ' + response.status);
                         return;
