@@ -7,7 +7,6 @@ var gutil = require('gulp-util');
 var babel = require('babel-core/register');
 var bower = require('gulp-bower');
 var runSequence = require('run-sequence');
-var cspify = require('cspify');
 var crisper = require('gulp-crisper');
 var del = require('del');
 
@@ -17,8 +16,7 @@ gulp.task('clean',function(callback){
 
 gulp.task('build', function(callback) {
     runSequence('bower-popup',
-        // ['build-scripts', 'build-styles'], <- in parallel
-        'cspify-popup-components',
+        ['cspify-popup-components','cspify-option-components'], // <- in parallel
         'mocha_unit',
         'mocha_integration',
         callback);
@@ -35,6 +33,15 @@ gulp.task('cspify-popup-components',function(){
         }))
         .pipe(gulp.dest('./src/js/popup/bower_components'));
 });
+
+gulp.task('cspify-option-components',function(){
+    gulp.src('./src/js/option/bower_components/**/*.html')
+        .pipe(crisper({
+            scriptInHead: false
+        }))
+        .pipe(gulp.dest('./src/js/popup/bower_components'));
+});
+
 
 
 gulp.task('clean-popup',function(){
