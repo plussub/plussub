@@ -11,7 +11,8 @@ Polymer({
                 Year: 1986,
                 Genre: 'Action',
                 Country: 'Germany',
-                imdbRating:'9.8'
+                imdbRating:'9.8',
+                Poster:'http://i.imgur.com/fR9qvlG.jpg'
             })
         }
     }

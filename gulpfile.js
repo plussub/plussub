@@ -57,7 +57,7 @@ gulp.task('mocha_unit', function() {
 
 
 gulp.task('mocha_specific', function() {
-    return gulp.src(['test/integration/movie_information/*.js'], { read: false })
+    return gulp.src(['test/unit/movie_information/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });
