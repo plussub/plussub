@@ -24,7 +24,6 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || ((messa
                         console.log('Invalid Status Code: ' + response.status);
                         return;
                     }
-
                     // Examine the text in the response
                     response.json().then((data) => createOmdbInformationFrom(createImbdInformationFrom(data)));
                 })

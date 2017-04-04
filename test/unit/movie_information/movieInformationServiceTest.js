@@ -6,13 +6,16 @@ var $ = require('jquery')(require("jsdom").jsdom().defaultView);
 var root = require('../../../src/js/background/movie_information/MovieInformationService.js');
 root.srtPlayer.LogService = require('./../util/LogService.js').srtPlayer.LogService();
 var Descriptor = require('../../../src/js/Descriptor.js').srtPlayer.Descriptor;
+var fetchMock = require('fetch-mock');
 
 
-describe('MovieInformationService', ()=> {
+describe('MovieInformationService', () => {
 
     var SERVICE_CHANNEL;
     var movieInformationService;
     var ajaxStub;
+
+    var fakeFetch;
 
     var DEFAULT_IMDB_RESULT = {
         title_popular: [{id: 'ttpopularA'}, {id: 'ttpopularB'}],
@@ -73,27 +76,26 @@ describe('MovieInformationService', ()=> {
     };
 
 
-    beforeEach(()=> {
+    beforeEach(() => {
         messageBus.reset();
         SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
-        movieInformationService = root.srtPlayer.MovieInformationService($,messageBus);
-        ajaxStub = sinon.stub($, "ajax");
+        fakeFetch = fetchMock.sandbox();
+        movieInformationService = root.srtPlayer.MovieInformationService(messageBus, fakeFetch);
     });
 
-    afterEach(()=> {
-        $.ajax.restore();
+    afterEach(() => {
+        fakeFetch.reset();
     });
 
-    it('should map imdb results to omdb results', (done)=> {
-
-        ajaxStub.onCall(0).yieldsTo("success", DEFAULT_IMDB_RESULT);
-        Object.keys(DEFAULT_OMDB_RESULTS).map((k)=>DEFAULT_OMDB_RESULTS[k]).forEach((v, idx)=>
-            ajaxStub.onCall(idx + 1).yieldsTo("success", v)
-        );
+    it('should map imdb results to omdb results', function (done) {
+        fakeFetch.mock('http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=Batman', DEFAULT_IMDB_RESULT);
+        Object.keys(DEFAULT_OMDB_RESULTS).map((k) => DEFAULT_OMDB_RESULTS[k]).forEach((v) => {
+            fakeFetch.mock('http://www.omdbapi.com/?i=' + v.imdbId, v)
+        });
 
         SERVICE_CHANNEL.subscribe({
             topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
-            callback: (result)=> {
+            callback: (result) => {
                 "use strict";
                 expect(result.length).to.equal(8);
                 expect(result[0]).to.deep.equal({
@@ -120,50 +122,53 @@ describe('MovieInformationService', ()=> {
         });
     });
 
-    it('should replace n/a poster with error url', (done)=> {
-        ajaxStub.onCall(0).yieldsTo("success", {
-                title_popular: [{id: 'ttWithoutPoster'}]
-            }
-        );
-        ajaxStub.onCall(1).yieldsTo("success", {
+    it('should replace n/a poster with error url', function (done) {
+
+        var imdbIdWithoutPoster = 'ttWithoutPoster';
+
+        fakeFetch.mock('http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=' + imdbIdWithoutPoster, {
+            title_popular: [{id: imdbIdWithoutPoster}]
+        });
+        fakeFetch.mock('http://www.omdbapi.com/?i=' + imdbIdWithoutPoster, {
             title: 'withoutPoster',
             imdbId: 'ttWithoutPoster',
             Poster: 'N/A',
             year: '2000'
         });
+
         SERVICE_CHANNEL.subscribe({
             topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
-            callback: (result)=> {
+            callback: (result) => {
                 expect(result.length).to.equal(1);
                 expect(result[0]).to.deep.equal({
                     title: 'withoutPoster',
                     imdbId: 'ttWithoutPoster',
-                    Poster: '../icons/posterError.png',
+                    Poster: 'posterError.png',
                     year: '2000',
-                    valueField:'{"title":"withoutPoster","imdbId":"ttWithoutPoster","Poster":"../icons/posterError.png","year":"2000"}'
+                    valueField: '{"title":"withoutPoster","imdbId":"ttWithoutPoster","Poster":"posterError.png","year":"2000"}'
                 });
                 done();
             }
         });
         SERVICE_CHANNEL.publish({
             topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
-            data: 'Batman'
+            data: imdbIdWithoutPoster
         });
     });
 
-    it('should collect max. 10 omdb entries', (done)=> {
+    it('should collect max. 10 omdb entries', (done) => {
 
-        var entries=[];
-        for(let i=0; i<30;i++){
+        var entries = [];
+        for (let i = 0; i < 30; i++) {
             entries.push({id: i.toString()});
         }
 
-        ajaxStub.onCall(0).yieldsTo("success", {
-                title_popular: entries
-            }
-        );
-        for(let i=0; i<30;i++) {
-            ajaxStub.onCall(i+1).yieldsTo("success", {
+        fakeFetch.mock('http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=Batman', {
+            title_popular: entries
+        });
+
+        for (let i = 0; i < 30; i++) {
+            fakeFetch.mock('http://www.omdbapi.com/?i='+i, {
                 title: 'withoutPoster',
                 imdbId: 'ttWithoutPoster',
                 Poster: 'N/A',
@@ -172,7 +177,7 @@ describe('MovieInformationService', ()=> {
         }
         SERVICE_CHANNEL.subscribe({
             topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
-            callback: (result)=> {
+            callback: (result) => {
                 expect(result.length).to.equal(10);
                 done();
             }
