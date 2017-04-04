@@ -37,7 +37,7 @@
     ],
     "persistent": false
   },
-  "options_page": "src/html/options.html",
+  "options_page": "src/html/option.html",
   "content_scripts": [
     {
       "matches": [
@@ -46,7 +46,7 @@
       "run_at": "document_end",
       "all_frames": false,
       "js": [
-        "src/components/jquery/dist/jquery.js",
+        "src/js/content/jquery/dist/jquery.js",
         "src/js/MessageBus.js",
         "src/js/Descriptor.js",
         "src/js/LogService.js",

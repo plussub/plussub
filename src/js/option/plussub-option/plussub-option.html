@@ -1,0 +1,52 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<script type="text/javascript" src="../../MessageBus.js"></script>
+<script type="text/javascript" src="../../Descriptor.js"></script>
+<script type="text/javascript" src="../OptionBridge.js"></script>
+<link rel="import" href="../../popup/channel-behavior/channel-behaviors.html">
+
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../beautify-css/beautify-css.html">
+
+<link rel="import" href="../subtitle-styling/subtitle-styling.html">
+<link rel="import" href="../preview-video/preview-video.html">
+<link rel="import" href="../subtitle-positioning/subtitle-positioning.html">
+
+<link rel="import" href="../../theme/extended-theme.html">
+
+<dom-module id="plussub-option">
+
+    <template>
+        <style>
+            :host {
+                display: flex;
+                flex-direction: column;
+            }
+            subtitle-styling,subtitle-positioning{
+                flex:1 1 auto;
+            }
+            preview-video{
+                flex:2 1 auto;
+            }
+
+            paper-fab{
+                width:75px;
+                height:75px;
+            }
+
+        </style>
+        <div style="display:flex; justify-content: space-around;">
+            <subtitle-styling css="{{css}}"></subtitle-styling>
+            <preview-video cue="{{cue}}" css="{{css}}"></preview-video>
+            <subtitle-positioning cue="{{cue}}"></subtitle-positioning>
+        </div>
+        <div style="display:flex; justify-content: flex-start">
+            <paper-fab icon="save" style="margin-left:20px; margin-right:20px;" on-tap="save"></paper-fab>
+            <paper-fab style="margin-left:20px;" on-tap="reset" label="Reset"></paper-fab>
+        </div>
+
+    </template>
+
+    <script src="plussub-option.js"></script>
+
+</dom-module>

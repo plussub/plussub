@@ -79,7 +79,7 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 current: {},
                 fallback: {
                     store: 'option',
-                    css: "#editCSS{ font-size:20px;} \n ::cue(.srtPlayer){ \/* background-color:black; color:white; font-size:20px; *\/}",
+                    css: "#editCSS{ font-size:20px;} \n ::cue(.srtPlayer){ \/* background-color:black; \n color:white; \n font-size:20px; *\/}",
                     position: {
                         line: 13,
                         position: 50,

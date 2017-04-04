@@ -1,7 +1,7 @@
 /**
  * Created by sonste on 28.12.2016.
  */
-var tms = tms || {}; //trivial message service
+var tms = tms || {}; //trivial message bus
 
 if (typeof exports !== 'undefined') {
     var messageBus = require('./../../MessageBus.js');
@@ -71,6 +71,11 @@ tms.ContentServiceChannelBehavior = (function () {
         _initContentServiceChannelBehavior:function(){
             var subscriptions = this.contentServiceSubscriptions ? this.contentServiceSubscriptions : [];
 
+            if(this.contentServiceSubscribe){
+                console.warn("Content channel init already called. cancel init.");
+                return;
+            }
+
             this.contentServiceSubscribe = tms.BaseChannelBehavior.createSubscribeFor(CONTENT_SERVICE_CHANNEL);
             "use strict";
             tms.BaseChannelBehavior.initSubscriptions(subscriptions,
@@ -95,6 +100,10 @@ tms.MetaChannelBehavior = (function () {
             "use strict";
 
             var subscriptions = this.metaSubscriptions ? this.metaSubscriptions : [];
+            if(this.metaPublish){
+                console.warn("Meta channel init already called. cancel init.");
+                return;
+            }
 
             this.metaPublish = tms.BaseChannelBehavior.createPublishFor(META_WRITE_CHANNEL);
             this.metaSubscribe = tms.BaseChannelBehavior.createSubscribeFor(META_CHANNEL);
@@ -125,6 +134,11 @@ tms.ServiceChannelBehavior = (function () {
 
         _initServiceChannelBehavior:function(){
             "use strict";
+
+            if(this.servicePublish){
+                console.warn("Service channel init already called. cancel init.");
+                return;
+            }
 
             this.servicePublish = tms.BaseChannelBehavior.createPublishFor(SERVICE_CHANNEL);
             this.serviceSubscribe = tms.BaseChannelBehavior.createSubscribeFor(SERVICE_CHANNEL);
