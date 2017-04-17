@@ -1,3 +1,10 @@
-
+#intellij
 .idea
 chrome ext.iml
+
+#npm & bower
+node_modules/**
+**/bower_components/**
+
+#build artefacts
+plussub.zip
