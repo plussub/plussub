@@ -75,9 +75,18 @@ gulp.task('mocha_integration', function() {
 gulp.task('webserver-ui', function() {
     gulp.src('.')
         .pipe(webserver({
-            livereload: true,
+            livereload: false,
             directoryListing: true,
             open: 'http://localhost:8000/test/ui/'
+        }));
+});
+
+gulp.task('webserver-end-to-end', function() {
+    gulp.src('.')
+        .pipe(webserver({
+            livereload: false,
+            directoryListing: true,
+            open: 'http://localhost:8000/test/end_to_end/'
         }));
 });
 
