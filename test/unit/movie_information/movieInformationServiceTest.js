@@ -13,7 +13,9 @@ describe('MovieInformationService', () => {
 
     var SERVICE_CHANNEL;
     var movieInformationService;
-    var ajaxStub;
+
+    var SEARCH_URL="https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/movie/search/";
+    var INFORMATION_URL="https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/movie/information/";
 
     var fakeFetch;
 
@@ -87,10 +89,10 @@ describe('MovieInformationService', () => {
         fakeFetch.reset();
     });
 
-    it('should map imdb results to omdb results', function (done) {
-        fakeFetch.mock('http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=Batman', DEFAULT_IMDB_RESULT);
+    it('should map search results to information queries', function (done) {
+        fakeFetch.mock(SEARCH_URL+'Batman', DEFAULT_IMDB_RESULT);
         Object.keys(DEFAULT_OMDB_RESULTS).map((k) => DEFAULT_OMDB_RESULTS[k]).forEach((v) => {
-            fakeFetch.mock('http://www.omdbapi.com/?i=' + v.imdbId, v)
+            fakeFetch.mock(INFORMATION_URL + v.imdbId, v)
         });
 
         SERVICE_CHANNEL.subscribe({
@@ -128,10 +130,10 @@ describe('MovieInformationService', () => {
 
         var imdbIdWithoutPoster = 'ttWithoutPoster';
 
-        fakeFetch.mock('http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=' + imdbIdWithoutPoster, {
+        fakeFetch.mock(SEARCH_URL+ imdbIdWithoutPoster, {
             title_popular: [{id: imdbIdWithoutPoster}]
         });
-        fakeFetch.mock('http://www.omdbapi.com/?i=' + imdbIdWithoutPoster, {
+        fakeFetch.mock(INFORMATION_URL + imdbIdWithoutPoster, {
             title: 'withoutPoster',
             imdbId: 'ttWithoutPoster',
             Poster: 'N/A',
@@ -158,19 +160,19 @@ describe('MovieInformationService', () => {
         });
     });
 
-    it('should collect max. 10 omdb entries', (done) => {
+    it('should collect max. 10 movie information entries', (done) => {
 
         var entries = [];
         for (let i = 0; i < 30; i++) {
             entries.push({id: i.toString()});
         }
 
-        fakeFetch.mock('http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=Batman', {
+        fakeFetch.mock(SEARCH_URL+'Batman', {
             title_popular: entries
         });
 
         for (let i = 0; i < 30; i++) {
-            fakeFetch.mock('http://www.omdbapi.com/?i='+i, {
+            fakeFetch.mock(INFORMATION_URL+i, {
                 title: 'withoutPoster',
                 imdbId: 'ttWithoutPoster',
                 Poster: 'N/A',
