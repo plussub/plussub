@@ -19,7 +19,11 @@
     <link rel="import" href="../../src/js/popup/plussub-app/plussub-app.html">
 </head>
 <body style="display:flex">
+<div style="display:flex; flex-direction: column">
 <plussub-app id="fixture"></plussub-app>
+    <iframe src="../../src/html/option.html"> <!-- IFrame because different polymer versions (1.0/2.0)-->
+    </iframe>
+</div>
 
 <div style="display:flex; flex-direction: column">
     <video id="exampleVideo" preload="auto" loop autoplay controls muted style="width:500px">

@@ -19,6 +19,7 @@ gulp.task('clean',function(callback){
 gulp.task('build', function(callback) {
     runSequence(
         'bower-popup',
+        'bower-option',
         'bower-ui-test',
         'bower-end-to-end-test',
         ['cspify-popup-components','cspify-option-components'], // <- in parallel
@@ -29,6 +30,11 @@ gulp.task('build', function(callback) {
 
 gulp.task('bower-popup',function(){
     return bower({ cwd: './src/js/popup' })
+});
+
+
+gulp.task('bower-option',function(){
+    return bower({ cwd: './src/js/option' })
 });
 
 gulp.task('bower-ui-test',function(){
@@ -52,7 +58,7 @@ gulp.task('cspify-option-components',function(){
         .pipe(crisper({
             scriptInHead: false
         }))
-        .pipe(gulp.dest('./src/js/popup/bower_components'));
+        .pipe(gulp.dest('./src/js/option/bower_components'));
 });
 
 
