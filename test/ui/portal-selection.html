@@ -8,8 +8,6 @@
     <script src="test-util.js"></script>
     <script src="fakeVersionService.js"></script>
 
-    <script src="../../src/components/jquery/dist/jquery.js"></script>
-
     <script type="text/javascript" src="../../src/js/MessageBus.js"></script>
     <script type="text/javascript" src="../../src/js/Descriptor.js"></script>
 
@@ -56,11 +54,9 @@
 
         test('remove current selection should clear the current subtitle', function (done) {
 
-            TestUtil.triggerRemoveMoviePortalSelected();
-            var clearParsedSubtitle = TestUtil.pollDbUntilResult('parsed_subtitle',TestUtil.dbPollConditions.clearParsedSubtitle()).then((result)=>{
-               console.log(result);
-                var actualParsedSubtitle = JSON.parse(result.parsedSubtitle);
-                expect(actualParsedSubtitle).to.be.empty;
+            TestUtil.triggerEject();
+            var clearParsedSubtitle = TestUtil.pollDbUntilResult('parsed_subtitle',TestUtil.dbPollConditions.clearParsedSubtitle).then((result)=>{
+                expect(result.parsedSubtitle).to.be.empty;
             });
 
             Promise.all([clearParsedSubtitle]).then(() => done());

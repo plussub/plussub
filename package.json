@@ -35,6 +35,7 @@
     "gulp": "^3.9.1",
     "gulp-bower": "0.0.13",
     "gulp-crisper": "^1.1.0",
+    "gulp-webserver": "^0.9.1",
     "run-sequence": "^1.2.2"
   }
 }

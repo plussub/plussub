@@ -9,6 +9,8 @@ var bower = require('gulp-bower');
 var runSequence = require('run-sequence');
 var crisper = require('gulp-crisper');
 var del = require('del');
+var webserver = require('gulp-webserver');
+
 
 gulp.task('clean',function(callback){
     runSequence('clean-popup',callback);
@@ -67,6 +69,16 @@ gulp.task('mocha_integration', function() {
     return gulp.src(['test/integration/**/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
+});
+
+
+gulp.task('webserver-ui', function() {
+    gulp.src('.')
+        .pipe(webserver({
+            livereload: true,
+            directoryListing: true,
+            open: 'http://localhost:8000/test/ui/'
+        }));
 });
 
 gulp.task('watch-mocha', function() {

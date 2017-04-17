@@ -6,8 +6,7 @@ var TestUtil = TestUtil || (function () {
 
         var entryCondition = (result) => result && result.entry && Object.keys(result.entry).length > 0;
         var parsedSubtitleCondition = (result) => result && result.isParsed;
-        var clearParsedSubtitle = (result) => result && result.isParsed;
-
+        var clearParsedSubtitle = (result) => result && result.isParsed===false;
 
         return {
             dbPollConditions: {
@@ -25,6 +24,8 @@ var TestUtil = TestUtil || (function () {
                     var intervalId = setInterval(() => {
                         console.log("try load keypath: " + keypath);
                         srtPlayer.StoreService.find(keypath).then((result) => {
+                            console.log(result);
+                            console.log(condition);
                             if (condition(result)) {
                                 console.log("successful loaded keypath: " + keypath);
                                 clearInterval(intervalId);
@@ -52,8 +53,11 @@ var TestUtil = TestUtil || (function () {
                 });
             },
 
-            triggerRemoveMoviePortalSelected:function(){
-                document.querySelector('movie-selectize selectize-wrapper paper-fab').click();
+            triggerEject:function(){
+                // var e = new Event('touchstart');
+                // document.querySelector('plussub-app paper-fab[icon="eject"]').dispatchEvent(e);
+
+                document.querySelector('plussub-app #eject').click();
             }
 
         };

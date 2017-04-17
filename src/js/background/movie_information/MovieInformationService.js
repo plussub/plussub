@@ -18,7 +18,8 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || ((messa
 
         function loadData(query) {
 
-            fetch('http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=' + decodeURIComponent(query))
+
+            fetch('https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/movie/search/'+ decodeURIComponent(query))
                 .then((response) => {
                     if (response.status !== 200) {
                         console.log('Invalid Status Code: ' + response.status);
@@ -49,7 +50,7 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || ((messa
             var imdbResultPartial = imdbResult.slice(0, imdbResult.length > maxRequestedImdb ? maxRequestedImdb : imdbResult.length);
 
             Promise.all(imdbResultPartial.map((rawImdb) =>
-                fetch('http://www.omdbapi.com/?i=' + rawImdb.id)
+                fetch('https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/movie/information/' + rawImdb.id)
                     .then(response => response.json())
                     .catch((err) => SERVICE_CHANNEL.publish({
                         topic: srtPlayer.Descriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
