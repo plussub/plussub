@@ -55,9 +55,14 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
                         data: result
                     }));
                 })
-                .catch(function (err) {
-                    console.log('Fetch Error', err);
-                });
+                .catch((err)=>
+                    SERVICE_CHANNEL.publish({
+                        topic: srtPlayer.Descriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
+                        data: {
+                            msg: "Something goes wrong with the subtitle search"
+                        }
+                    })
+                );
         }
 
         function download(link) {
@@ -74,9 +79,14 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
                             data: result
                         })
                     })
-                    .catch(function (err) {
-                        console.log('Fetch Error', err);
-                    });
+                    .catch((err)=>
+                        SERVICE_CHANNEL.publish({
+                            topic: srtPlayer.Descriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
+                            data: {
+                                msg: "Something goes wrong with the subtitle download"
+                            }
+                        })
+                    );
             });
         }
 

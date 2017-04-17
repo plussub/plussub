@@ -31,7 +31,7 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || ((messa
                 .catch((err) => SERVICE_CHANNEL.publish({
                     topic: srtPlayer.Descriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
                     data: {
-                        msg: "Something goes wrong with(IMDB)."
+                        msg: "Something goes wrong with the video search"
                     }
                 }));
         }
@@ -55,7 +55,7 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || ((messa
                     .catch((err) => SERVICE_CHANNEL.publish({
                         topic: srtPlayer.Descriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
                         data: {
-                            msg: "Something goes wrong with (OMDB)."
+                            msg: "Something goes wrong with the video search"
                         }
                     }))
             )).then((responses) =>
