@@ -10,10 +10,11 @@
 
     <script type="text/javascript" src="../../src/js/MessageBus.js"></script>
     <script type="text/javascript" src="../../src/js/Descriptor.js"></script>
+    <script src="../../src/js/LogService.js"></script>
 
 
     <link rel="import" href="backend.html">
-    <link rel="import" href="content.html">
+    <!--<link rel="import" href="content.html">-->
     <script src="./bower_components/web-component-tester/browser.js"></script>
     <link rel="import" href="../../src/js/popup/plussub-app/plussub-app.html">
 </head>
@@ -33,15 +34,10 @@
 
             this.timeout(35000);
 
-            TestUtil.triggerMovieSelection("Tears of Steel");
-
-            var selectedMoviePromise = TestUtil.pollDbUntilResult('selected_movie').then((result) => {
-                expect(result.entry.Title).to.equal('Pulp Fiction');
-                expect(result.entry.Director).to.equal('Quentin Tarantino');
-            });
+            TestUtil.triggerMovieSelection('Tears of Steel');
 
             var selectedSubtitlePromise = TestUtil.pollDbUntilResult('selected_subtitle').then((result) => {
-                expect(result.entry.movieTitle).to.equal('Pulp Fiction');
+                expect(result.entry.movieTitle).to.equal('Tears of Steel');
                 expect(result.entry.subtitleLanguage).to.equal('English');
             });
 
@@ -52,9 +48,13 @@
             });
 
 
-            Promise.all([selectedMoviePromise,
-                selectedSubtitlePromise,
+            Promise.all([selectedSubtitlePromise,
                 parsedSubtitlePromise]).then(() => done());
+
+            var linkElement = document.createElement('link');
+            linkElement.setAttribute("rel","import");
+            linkElement.setAttribute("href","content.html");
+            document.querySelector('body').appendChild(linkElement);
 
         });
 

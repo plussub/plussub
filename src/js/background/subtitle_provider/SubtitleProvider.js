@@ -41,7 +41,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
                     }
 
                     // Examine the text in the response
-                    response.json()
+                   return response.json()
                         .then((data) => data.map(entry =>
                             Object.assign({}, {
                                 movieTitle: entry.MovieName,

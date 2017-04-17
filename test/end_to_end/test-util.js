@@ -22,10 +22,7 @@ var TestUtil = TestUtil || (function () {
             pollDbUntilResult: function (keypath, condition = entryCondition) {
                 return new Promise((resolve) => {
                     var intervalId = setInterval(() => {
-                        console.log("try load keypath: " + keypath);
                         srtPlayer.StoreService.find(keypath).then((result) => {
-                            console.log(result);
-                            console.log(condition);
                             if (condition(result)) {
                                 console.log("successful loaded keypath: " + keypath);
                                 clearInterval(intervalId);
@@ -54,9 +51,6 @@ var TestUtil = TestUtil || (function () {
             },
 
             triggerEject:function(){
-                // var e = new Event('touchstart');
-                // document.querySelector('plussub-app paper-fab[icon="eject"]').dispatchEvent(e);
-
                 document.querySelector('plussub-app #eject').click();
             }
 
