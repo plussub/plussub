@@ -19,7 +19,7 @@ var TestUtil = TestUtil || (function () {
             loadContentScript: function () {
                 var linkElement = document.createElement('link');
                 linkElement.setAttribute("rel","import");
-                linkElement.setAttribute("href","content.html");
+                linkElement.setAttribute("href","part/content.html");
                 document.querySelector('body').appendChild(linkElement);
             },
 
