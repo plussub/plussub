@@ -17,7 +17,8 @@ gulp.task('clean',function(callback){
 });
 
 gulp.task('build', function(callback) {
-    runSequence('bower-popup',
+    runSequence(
+        ['bower-popup','bower-ui-test','bower-end-to-end-test'],
         ['cspify-popup-components','cspify-option-components'], // <- in parallel
         'mocha_unit',
         'mocha_integration',
@@ -26,6 +27,14 @@ gulp.task('build', function(callback) {
 
 gulp.task('bower-popup',function(){
     return bower({ cwd: './src/js/popup' })
+});
+
+gulp.task('bower-ui-test',function(){
+    return bower({ cwd: './test/ui' })
+});
+
+gulp.task('bower-end-to-end-test',function(){
+    return bower({ cwd: './test/end_to_end' })
 });
 
 gulp.task('cspify-popup-components',function(){
@@ -59,7 +68,7 @@ gulp.task('mocha_unit', function() {
 
 
 gulp.task('mocha_specific', function() {
-    return gulp.src(['test/unit/movie_information/*.js'], { read: false })
+    return gulp.src(['test/integration/movie_information/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });

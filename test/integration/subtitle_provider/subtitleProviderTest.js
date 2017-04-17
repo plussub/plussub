@@ -23,7 +23,7 @@ describe('Subtitle Provider', ()=> {
 
     it('should search correct subtitle', function (done) {
 
-        this.timeout(13000);
+        this.timeout(20000);
 
         SERVICE_CHANNEL.subscribe({
             topic: root.srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,

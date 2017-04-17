@@ -25,7 +25,7 @@ describe('Movie Information Service', ()=> {
 
     it('should search correct movie information', function (done) {
 
-        this.timeout(13000);
+        this.timeout(20000);
 
         SERVICE_CHANNEL.subscribe({
             topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
@@ -36,12 +36,9 @@ describe('Movie Information Service', ()=> {
             }
         });
 
-
         SERVICE_CHANNEL.publish({
             topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
-            data: {
-                query: "Pulp Fiction"
-            }
+            data: "Pulp Fiction"
         });
     });
 });
