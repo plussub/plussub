@@ -18,7 +18,9 @@ gulp.task('clean',function(callback){
 
 gulp.task('build', function(callback) {
     runSequence(
-        ['bower-popup','bower-ui-test','bower-end-to-end-test'],
+        'bower-popup',
+        'bower-ui-test',
+        'bower-end-to-end-test',
         ['cspify-popup-components','cspify-option-components'], // <- in parallel
         'mocha_unit',
         'mocha_integration',
