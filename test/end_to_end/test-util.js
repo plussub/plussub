@@ -14,6 +14,15 @@ var TestUtil = TestUtil || (function () {
                 clearParsedSubtitle: clearParsedSubtitle,
                 entry: entryCondition
             },
+
+
+            loadContentScript: function () {
+                var linkElement = document.createElement('link');
+                linkElement.setAttribute("rel","import");
+                linkElement.setAttribute("href","content.html");
+                document.querySelector('body').appendChild(linkElement);
+            },
+
             /**
              * Result condition -> result && result.entry && result.entry contains properties
              * @param keypath
@@ -49,10 +58,6 @@ var TestUtil = TestUtil || (function () {
                     document.querySelector('movie-selectize selectize-wrapper').addItem(entry.valueField);
                 });
             },
-
-            triggerEject:function(){
-                document.querySelector('plussub-app #eject').click();
-            }
 
         };
     })();

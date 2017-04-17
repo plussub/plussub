@@ -135,7 +135,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
             if(track){
                 track.mode='disabled';
             }
-            track = video.addTextTrack("subtitles", "Plugin Subtitle", "en");
+            track = video.addTextTrack("subtitles", "Plugin: Plussub", "en");
             cues.forEach((vtt)=> {
                 track.addCue(vtt);
             });

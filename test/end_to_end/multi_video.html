@@ -21,13 +21,22 @@
 <body style="display:flex">
 <plussub-app id="fixture"></plussub-app>
 
-<video id="exampleVideo" preload="auto" loop autoplay controls muted style="width:500px">
-    <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov" type="video/mp4">
-</video>
-
+<div style="display:flex; flex-direction: column">
+    <video id="exampleVideo" preload="auto" loop autoplay controls muted style="width:500px">
+        <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov"
+                type="video/mp4">
+    </video>
+    <video id="exampleVideo2" preload="auto" loop autoplay controls muted style="width:500px">
+        <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov"
+                type="video/mp4">
+    </video>
+    <video id="exampleVideo3" preload="auto" loop autoplay controls muted style="width:500px">
+        <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov"
+                type="video/mp4">
+    </video>
+</div>
 <script>
     suite('movie portal selection', function () {
-
 
 
         test('should write the given selection into the database', function (done) {
@@ -43,7 +52,7 @@
             });
 
 
-            var parsedSubtitlePromise = TestUtil.pollDbUntilResult('parsed_subtitle',TestUtil.dbPollConditions.parsedSubtitle).then((result)=>{
+            var parsedSubtitlePromise = TestUtil.pollDbUntilResult('parsed_subtitle', TestUtil.dbPollConditions.parsedSubtitle).then((result) => {
                 var actualParsedSubtitle = JSON.parse(result.parsedSubtitle);
                 expect(actualParsedSubtitle).to.be.not.empty;
             });
@@ -55,7 +64,7 @@
         });
 
         test('subtitle should be added to each video', function () {
-            document.querySelectorAll('video').forEach((video)=>{
+            document.querySelectorAll('video').forEach((video) => {
                 expect(video.textTracks.length).to.equal(1);
                 expect(video.textTracks[0].label).to.equal("Plugin: Plussub");
             });
