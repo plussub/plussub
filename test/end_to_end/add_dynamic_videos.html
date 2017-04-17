@@ -19,13 +19,11 @@
     <link rel="import" href="../../src/js/popup/plussub-app/plussub-app.html">
 </head>
 <body style="display:flex">
-<plussub-app id="fixture"></plussub-app>
+<plussub-app id="fixture">
+</plussub-app>
 
-<div style="display:flex; flex-direction: column">
-    <video id="exampleVideo" preload="auto" loop autoplay controls muted style="width:500px">
-        <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov"
-                type="video/mp4">
-    </video>
+<div id="videoContainer" style="display:flex; flex-direction: column">
+    <button onclick="TestUtil.addVideo()">Add Video</button>
 </div>
 <script>
     suite('movie portal selection', function () {
@@ -49,9 +47,7 @@
                 expect(actualParsedSubtitle).to.be.not.empty;
             });
 
-
-            Promise.all([selectedSubtitlePromise,
-                parsedSubtitlePromise]).then(() => done());
+            Promise.all([selectedSubtitlePromise, parsedSubtitlePromise]).then(() => done());
 
         });
 

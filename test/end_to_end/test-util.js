@@ -23,6 +23,28 @@ var TestUtil = TestUtil || (function () {
                 document.querySelector('body').appendChild(linkElement);
             },
 
+        //     <video id="exampleVideo" preload="auto" loop autoplay controls muted style="width:500px">
+        //     <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov"
+        // type="video/mp4">
+        //     </video>
+
+            addVideo: function () {
+                var videoElement = document.createElement('video');
+                videoElement.setAttribute("preload","auto");
+                videoElement.setAttribute("autoplay","auto");
+                videoElement.setAttribute("controls","auto");
+                videoElement.setAttribute("muted","auto");
+                videoElement.setAttribute("style","width:500px");
+
+                var sourceElement = document.createElement('source');
+                sourceElement.setAttribute("src","http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov");
+                sourceElement.setAttribute("type","video/mp4");
+
+                videoElement.appendChild(sourceElement);
+
+                document.querySelector('#videoContainer').appendChild(videoElement);
+            },
+
             /**
              * Result condition -> result && result.entry && result.entry contains properties
              * @param keypath
