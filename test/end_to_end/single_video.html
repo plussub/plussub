@@ -13,11 +13,17 @@
 
 
     <link rel="import" href="backend.html">
+    <link rel="import" href="content.html">
     <script src="./bower_components/web-component-tester/browser.js"></script>
     <link rel="import" href="../../src/js/popup/plussub-app/plussub-app.html">
 </head>
-<body>
+<body style="display:flex">
 <plussub-app id="fixture"></plussub-app>
+
+<video id="exampleVideo" preload="auto" loop autoplay controls muted style="width:500px">
+    <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov" type="video/mp4">
+</video>
+
 <script>
     suite('movie portal selection', function () {
 
@@ -27,7 +33,7 @@
 
             this.timeout(35000);
 
-            TestUtil.triggerMovieSelection("pulp fiction");
+            TestUtil.triggerMovieSelection("Tears of Steel");
 
             var selectedMoviePromise = TestUtil.pollDbUntilResult('selected_movie').then((result) => {
                 expect(result.entry.Title).to.equal('Pulp Fiction');
@@ -52,18 +58,6 @@
 
         });
 
-        test('remove current selection should clear the current subtitle', function (done) {
-
-            TestUtil.triggerEject();
-            var clearParsedSubtitle = TestUtil.pollDbUntilResult('parsed_subtitle',TestUtil.dbPollConditions.clearParsedSubtitle).then((result)=>{
-                expect(result.parsedSubtitle).to.be.empty;
-            });
-
-            Promise.all([clearParsedSubtitle]).then(() => done());
-        });
-
-        //todo: encoding ascii to cp1252 to javascript
-        //filter cp1252
     });
 </script>
 </body>
