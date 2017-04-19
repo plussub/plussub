@@ -8,7 +8,6 @@ srtPlayer.VideoMetaService = srtPlayer.VideoMetaService || (() => {
 
         var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
         var SERVICE_CONST = srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META;
-        var console = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META.NAME);
         var video;
 
         CONTENT_SERVICE_CHANNEL.subscribe({

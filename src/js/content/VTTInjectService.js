@@ -53,7 +53,10 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
 
         META_CHANNEL.subscribe({
             topic: "option.position",
-            callback: (_vttSettings)=>vttSettings = _vttSettings
+            callback: (_vttSettings)=>{
+                console.log(_vttSettings);
+                vttSettings = _vttSettings
+            }
         });
 
 

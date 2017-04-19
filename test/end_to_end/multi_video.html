@@ -14,7 +14,6 @@
 
 
     <link rel="import" href="part/backend.html">
-    <!--<link rel="import" href="content.html">-->
     <script src="./bower_components/web-component-tester/browser.js"></script>
     <link rel="import" href="../../src/js/popup/plussub-app/plussub-app.html">
 </head>
@@ -35,6 +34,10 @@
                 type="video/mp4">
     </video>
 </div>
+
+<iframe src="part/option.html" width="1000" height="1000" frameBorder="0"> <!-- IFrame because different polymer versions (1.0/2.0)-->
+</iframe>
+
 <script>
     suite('movie portal selection', function () {
 

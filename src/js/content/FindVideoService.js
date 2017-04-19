@@ -7,14 +7,11 @@ var srtPlayer = srtPlayer || {};
 srtPlayer.FindVideoService = srtPlayer.FindVideoService || (() => {
         "use strict";
 
+        const CONTENT_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
 
-        let CONTENT_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
-
-
-
-        let detectNotTaggedVideos = function (callbackForFoundedVideos) {
-            let cssTagForDetectedVideos = "plussubDetectedVideo";
-            let videoList = Array.from(document.querySelectorAll('video'));
+        const detectNotTaggedVideos = function () {
+            const cssTagForDetectedVideos = "plussubDetectedVideo";
+            const videoList = Array.from(document.querySelectorAll('video'));
             videoList
                 .filter(video => !video.classList.contains(cssTagForDetectedVideos))
                 .forEach(video => {
