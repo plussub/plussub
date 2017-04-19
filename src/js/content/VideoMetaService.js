@@ -6,39 +6,35 @@ var srtPlayer = srtPlayer || {};
 srtPlayer.VideoMetaService = srtPlayer.VideoMetaService || (() => {
         "use strict";
 
-        var CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
-        var SERVICE_CONST = srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META;
-        var video;
+        const CONTENT_SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
+        const SERVICE_CONST = srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META;
+
+        const listOfDetectedVideos = [];
 
         CONTENT_SERVICE_CHANNEL.subscribe({
             topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
-            callback: (_video)=>{
-                console.log('bind video');
-                if(video){
-                    console.log('video already bounded');
-                    return;
+            callback: (video)=>{
+
+                const previous = listOfDetectedVideos.pop();
+                if(previous) {
+                     previous.video.removeEventListener("timeupdate",previous.updateFn);
                 }
-                console.log(_video);
-                video = $(_video);
-                video.bind('timeupdate', (evt)=> {
-                    var seconds = video[0].currentTime;
-                    var ms = (seconds * 1000) | 0;
+
+                const updateFn = () => {
+                    const seconds = video.currentTime;
+                    const ms = (seconds * 1000) | 0;
                     CONTENT_SERVICE_CHANNEL.publish({
                         topic: SERVICE_CONST.PUB.TIME,
                         data: ms
                     });
-                });
-            }
-        });
+                };
 
-        CONTENT_SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
-            callback: ()=>{
-                console.log('unbind video');
-                if(video){
-                    video.unbind();
-                }
-                video = null;
+                listOfDetectedVideos.push({
+                    video:video,
+                    updateFn: updateFn
+                });
+
+                video.addEventListener("timeupdate", updateFn, false);
             }
         });
 

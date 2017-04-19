@@ -9,7 +9,7 @@ srtPlayer.CSSInjectService = srtPlayer.CSSInjectService || (() => {
 
         META_CHANNEL.subscribe({
             topic: "option.css",
-            callback: (_css)=> {
+            callback: (css)=> {
 
                 let oldElement = document.querySelector('#'+injectCssId);
                 if(oldElement){
@@ -18,7 +18,7 @@ srtPlayer.CSSInjectService = srtPlayer.CSSInjectService || (() => {
 
                 let cssElement = document.createElement('style');
                 cssElement.setAttribute('id',injectCssId);
-                cssElement.innerHTML = _css;
+                cssElement.innerHTML = css;
                 document.querySelector('body').appendChild(cssElement);
             }
         });
