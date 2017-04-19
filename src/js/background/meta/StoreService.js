@@ -9,15 +9,13 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.StoreService = srtPlayer.StoreService || (()=> {
 
-
-
-        var schemas = [];
+        const schemas = [];
         schemas[0] = (db) => db.createObjectStore('srtStore', {keyPath: 'store'});
 
-        var currentVersion = srtPlayer.VersionService.getVersion();
-        var request = window.indexedDB.open("srtStore", currentVersion);
+        const currentVersion = srtPlayer.VersionService.getVersion();
+        const request = window.indexedDB.open("srtStore", currentVersion);
         request.onupgradeneeded = function (event) {
-            var db = event.target.result;
+            const db = event.target.result;
             if (event.oldVersion < event.newVersion) {
                 try {
                     db.deleteObjectStore("srtStore");
@@ -28,7 +26,7 @@ srtPlayer.StoreService = srtPlayer.StoreService || (()=> {
             }
         };
 
-        var promiseDBConnection = new Promise(resolve => {
+        const promiseDBConnection = new Promise(resolve => {
             request.onsuccess = (event) => resolve(request.result);
         });
 

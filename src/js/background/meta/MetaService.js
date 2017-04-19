@@ -15,12 +15,12 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus, config = srtPlayer.MetaConfig) => {
 
-        var console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.SERVICE.META.NAME);
-        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
-        var META_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META);
-        var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE);
+        const console2 = srtPlayer.LogService.getLoggerFor(srtPlayer.Descriptor.SERVICE.META.NAME);
+        const SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        const META_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META);
+        const META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE);
 
-        var topics = Object.keys(config);
+        const topics = Object.keys(config);
 
         function merge(obj1, obj2) {
             for (var p in obj2) {
@@ -58,24 +58,6 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             });
         }
 
-        var findOrFallback = (rootTopic) => {
-            "use strict";
-            return srtPlayer.StoreService.find(rootTopic)
-                .then(result => typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[rootTopic].fallback)));
-        };
-
-
-        var allReadyPromises = Promise.all( topics.map(findOrFallback)).then(values => {
-            values.forEach(result =>
-                setAllSubscriberFor(result, result.store, {
-                    data: result,
-                    root: result.store
-                })
-            );
-        });
-
-        allReadyPromises.then(() => SERVICE_CHANNEL.publish({topic: srtPlayer.Descriptor.SERVICE.META.PUB.READY}));
-
         function publish(current, path) {
             Object.keys(current).forEach(key => {
                 if (typeof current[key] === 'object' && Object.keys(current[key])) {
@@ -88,12 +70,32 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
             });
         }
 
+        const findOrFallback = async (rootTopic) => {
+            "use strict";
+            const result = await srtPlayer.StoreService.find(rootTopic);
+            return typeof result !== 'undefined' ? result : JSON.parse(JSON.stringify(config[rootTopic].fallback));
+        };
+
+        (async ()=>{
+            const findOrFallbackValues = await Promise.all( topics.map(findOrFallback));
+            findOrFallbackValues.forEach(result =>
+                setAllSubscriberFor(result, result.store, {
+                    data: result,
+                    root: result.store
+                })
+            );
+
+            SERVICE_CHANNEL.publish({topic: srtPlayer.Descriptor.SERVICE.META.PUB.READY});
+        })();
+
+
 
         SERVICE_CHANNEL.subscribe({
             topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH_ALL,
-            callback: (topic) => {
+            callback:async (topic) => {
                 console2.log("publish all: "+topic);
-                findOrFallback(topic).then((result)=>publish(result, config[topic].fallback.store));
+                const result = await findOrFallback(topic);
+                publish(result, config[topic].fallback.store)
             }
         });
 
@@ -101,39 +103,37 @@ srtPlayer.MetaService = srtPlayer.MetaService || ((messageBusLocal = messageBus,
 
         SERVICE_CHANNEL.subscribe({
             topic: srtPlayer.Descriptor.SERVICE.META.SUB.RESET,
-            callback: (topic) => {
+            callback: async (topic) => {
                 console2.log("reset topic: " + topic);
-
-                srtPlayer.StoreService.update(config[topic].fallback).then(() => {
-                    findOrFallback(topic).then((update) => {
-                        publish(update, config[topic].fallback.store);
-                    });
-                });
+                await srtPlayer.StoreService.update(config[topic].fallback);
+                const updatedValue = await findOrFallback(topic);
+                publish(updatedValue, config[topic].fallback.store);
             }
         });
 
 
         SERVICE_CHANNEL.subscribe({
             topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
-            callback: (topic) => {
+            callback: async (topic) => {
                 console2.log("full topic rest: "+topic);
-                srtPlayer.StoreService.update(config[topic].fallback)
-                    .then(() => findOrFallback(topic).then((result)=>publish(result, config[topic].fallback.store)));
+                await srtPlayer.StoreService.update(config[topic].fallback);
+                const updatedValue = await findOrFallback(topic);
+                publish(updatedValue, config[topic].fallback.store);
             }
         });
 
 
         SERVICE_CHANNEL.subscribe({
             topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
-            callback: (topic) => {
-                var topicPath = topic.split('.');
-                var rootTopic = topicPath[0];
-                findOrFallback(rootTopic).then((result) =>
-                    META_CHANNEL.publish({
-                        topic: topic,
-                        data: topicPath.slice(1).reduce((p, c) => p[c], result)
-                    })
-                );
+            callback:async (topic) => {
+                const topicPath = topic.split('.');
+                const rootTopic = topicPath[0];
+                const result = await findOrFallback(rootTopic);
+                META_CHANNEL.publish({
+                    topic: topic,
+                    data: topicPath.slice(1).reduce((p, c) => p[c], result)
+                });
+
             }
         });
 
