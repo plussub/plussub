@@ -46,7 +46,6 @@
       "run_at": "document_end",
       "all_frames": false,
       "js": [
-        "src/js/content/jquery/dist/jquery.js",
         "src/js/MessageBus.js",
         "src/js/Descriptor.js",
         "src/js/LogService.js",
