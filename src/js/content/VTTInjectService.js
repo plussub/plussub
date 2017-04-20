@@ -3,95 +3,119 @@
  */
 
 
-srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
+srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (async () => {
         "use strict";
 
 
-        var SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
-        var CONTENT_SERVICE = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
-        var META_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META);
-
-        var cues, video, track,vttSettings;
+        const SERVICE_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
+        const CONTENT_SERVICE = messageBus.channel(srtPlayer.Descriptor.CHANNEL.CONTENT_SERVICE);
+        const META_CHANNEL = messageBus.channel(srtPlayer.Descriptor.CHANNEL.META);
 
 
-        var currentDelayedTime=0;
+        let cues = [];
+        let delayedTime = 0;
+        let videoList = [];
+        let trackList = [];
+
+        const cssTag = "containsPlusSubSubtitle";
+
+        const vttSettings = await new Promise(resolve => {
+            META_CHANNEL.subscribe({
+                topic: "option.position",
+                callback: (vttSettings) => {
+                    console.log(vttSettings);
+                    resolve(vttSettings);
+                }
+            });
+
+            SERVICE_CHANNEL.publish({
+                topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
+                data: 'option.position'
+            });
+        });
 
 
         META_CHANNEL.subscribe({
             topic: "user.play.offsetTime",
-            callback: (delayedTime)=>{
-                if(currentDelayedTime === delayedTime){
+            callback: (_delayedTime) => {
+                console.log(_delayedTime);
+
+                if (delayedTime === _delayedTime) {
                     return;
                 }
+                removeAll(cues);
+                delayedTime = _delayedTime;
+                addCuesToVideos(videoList, cues, delayedTime);
 
-                if(cues){
-                    cues.forEach(cue=>{
-                        cue.startTime +=((delayedTime-currentDelayedTime)/1000);
-                        cue.endTime += ((delayedTime-currentDelayedTime)/1000);
-                    });
-                }
-                currentDelayedTime = delayedTime;
             }
         });
-
-        META_CHANNEL.subscribe({
-            topic: "user.play.offsetTime",
-            callback: (delayedTime)=>{
-                if(currentDelayedTime === delayedTime){
-                    return;
-                }
-
-                if(cues){
-                    cues.forEach(cue=>{
-                        cue.startTime +=((delayedTime-currentDelayedTime)/1000);
-                        cue.endTime += ((delayedTime-currentDelayedTime)/1000);
-                    });
-                }
-                currentDelayedTime = delayedTime;
-            }
-        });
-
-        META_CHANNEL.subscribe({
-            topic: "option.position",
-            callback: (_vttSettings)=>{
-                console.log(_vttSettings);
-                vttSettings = _vttSettings
-            }
-        });
-
 
 
         META_CHANNEL.subscribe({
             topic: 'parsed_subtitle.parsedSubtitle',
-            callback: (parsedSubtitle)=> {
-                if (parsedSubtitle) {
-                    cues = JSON.parse(parsedSubtitle).map((srt)=> {
-                        var vtt = new VTTCue((srt.from+currentDelayedTime) / 1000, (srt.to+currentDelayedTime) / 1000, "<c.srtPlayer>"+srt.text+"</c.srtPlayer>");
-                        Object.assign(vtt,vttSettings);
-                        return vtt;
-                    });
-                    addVttToVid();
+            callback: (parsedSubtitle) => {
+                if (!parsedSubtitle) {
+                    return;
                 }
 
-            }
-        });
+                removeAll(cues);
 
-        META_CHANNEL.subscribe({
-            topic: 'parsed_subtitle.isParsed',
-            callback: (isParsed)=> {
-                if (!isParsed && track) {
-                    track.mode='disabled';
-                }
+                cues = JSON.parse(parsedSubtitle).map((srt) => {
+                    const cue = new VTTCue((srt.from) / 1000, (srt.to) / 1000, "<c.srtPlayer>" + srt.text + "</c.srtPlayer>");
+                    return Object.assign(cue, vttSettings);
+                });
+
+                addCuesToVideos(videoList, cues, delayedTime);
             }
         });
 
         CONTENT_SERVICE.subscribe({
-            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.RELEASE,
-            callback: ()=> {
-                if(track){
-                    track.mode='disabled';
+            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
+            callback: (video) => {
+                removeAll();
+                videoList.push(video);
+                addCuesToVideos(videoList, cues, delayedTime);
+            }
+        });
+
+
+        function addCuesToVideos(videoList, cues, delayedTime) {
+
+
+            videoList
+                .filter(video => !video.classList.contains(cssTag))
+                .forEach(video => {
+                    // video.classList.add(cssTag);
+                    const track = video.addTextTrack("subtitles", "Plugin: Plussub", "en");
+                    trackList.push(track);
+
+                    cues.forEach(cue => {
+                        let newCue = new VTTCue(cue.startTime + (delayedTime / 1000), cue.endTime + (delayedTime / 1000), cue.text);
+                        Object.assign(newCue, vttSettings);
+                        track.addCue(newCue);
+                    });
+                    track.mode = 'showing';
+                });
+
+        }
+
+        function removeAll() {
+            trackList.forEach(track => track.mode = 'disabled');
+            trackList = [];
+        }
+
+        META_CHANNEL.subscribe({
+            topic: 'parsed_subtitle.isParsed',
+            callback: (isParsed) => {
+                if (!isParsed) {
+                    removeAll();
                 }
             }
+        });
+
+        SERVICE_CHANNEL.subscribe({
+            topic: srtPlayer.Descriptor.SERVICE.META.SUB.RESET,
+            callback: () => removeAll
         });
 
         SERVICE_CHANNEL.publish({
@@ -99,51 +123,10 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (() => {
             data: 'user.play.offsetTime'
         });
 
-        SERVICE_CHANNEL.publish({
-            topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
-            data: 'option.position'
-        });
 
         SERVICE_CHANNEL.publish({
             topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             data: 'parsed_subtitle.parsedSubtitle'
         });
-
-
-        CONTENT_SERVICE.subscribe({
-            topic: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
-            callback: (_video)=> {
-                video = _video;
-                addVttToVid();
-            }
-        });
-
-        SERVICE_CHANNEL.subscribe({
-            topic: srtPlayer.Descriptor.SERVICE.META.SUB.RESET,
-            callback:()=>{
-                if(cues){
-                    cues.forEach(cue=>{
-                        cue.startTime = 0;
-                        cue.endTime = 0;
-                    });
-                }
-            }
-        });
-
-
-        function addVttToVid() {
-            if (!cues || !video) {
-                return;
-            }
-            if(track){
-                track.mode='disabled';
-            }
-            track = video.addTextTrack("subtitles", "Plugin: Plussub", "en");
-            cues.forEach((vtt)=> {
-                track.addCue(vtt);
-            });
-            track.mode = 'showing';
-        }
-
-
-    })();
+    })
+    ();
