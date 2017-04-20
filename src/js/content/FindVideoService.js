@@ -27,4 +27,4 @@ srtPlayer.FindVideoService = srtPlayer.FindVideoService || (() => {
 
         new MutationObserver(detectNotTaggedVideos).observe(document.querySelector('body'), {childList: true, subtree: true});
 
-    })();
+    });

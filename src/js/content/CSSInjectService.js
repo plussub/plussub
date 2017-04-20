@@ -27,4 +27,4 @@ srtPlayer.CSSInjectService = srtPlayer.CSSInjectService || (() => {
             topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             data: 'option.css'
         });
-    })();
+    });

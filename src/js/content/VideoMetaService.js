@@ -40,4 +40,4 @@ srtPlayer.VideoMetaService = srtPlayer.VideoMetaService || (() => {
 
 
 
-    })();
+    });

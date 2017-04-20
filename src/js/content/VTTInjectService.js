@@ -126,5 +126,4 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (async () => {
             topic: srtPlayer.Descriptor.SERVICE.META.SUB.PUBLISH,
             data: 'parsed_subtitle.parsedSubtitle'
         });
-    })
-    ();
+    });
