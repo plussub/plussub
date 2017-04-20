@@ -15,6 +15,11 @@ Polymer({
             value: 0,
             observer: '_delayChanged'
         },
+        selected: {
+            type: String,
+            value: 'ahead',
+            observer: '_selectedChanged'
+        },
         isInit: {
             type: Boolean,
             value: false
@@ -54,6 +59,13 @@ Polymer({
 
     _normalize: function (unit) {
         return unit < 10 ? "0" + unit : unit.toString();
+    },
+
+    _selectedChanged:function(){
+        if (!this.isInit) {
+            return;
+        }
+        this._delayChanged(this.delay);
     },
 
     _delayChanged: function (newVal) {

@@ -38,8 +38,6 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (async () => {
         META_CHANNEL.subscribe({
             topic: "user.play.offsetTime",
             callback: (_delayedTime) => {
-                console.log(_delayedTime);
-
                 if (delayedTime === _delayedTime) {
                     return;
                 }
@@ -81,11 +79,11 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (async () => {
 
         function addCuesToVideos(videoList, cues, delayedTime) {
 
-
             videoList
-                .filter(video => !video.classList.contains(cssTag))
                 .forEach(video => {
-                    // video.classList.add(cssTag);
+                    if(!video.classList.contains(cssTag)) {
+                        video.classList.add(cssTag);
+                    }
                     const track = video.addTextTrack("subtitles", "Plugin: Plussub", "en");
                     trackList.push(track);
 
