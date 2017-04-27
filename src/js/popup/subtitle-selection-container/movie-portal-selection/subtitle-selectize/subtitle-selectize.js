@@ -54,7 +54,7 @@ Polymer({
     _channelBasedInitCallback:function(subtitleMeta){
 
 
-        this.async(()=> this._isInitState=false,500);
+        this.async(()=> this._isInitState=false,750);
         if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
             this.$.subtitleSelection.clearOptions();
             return;
