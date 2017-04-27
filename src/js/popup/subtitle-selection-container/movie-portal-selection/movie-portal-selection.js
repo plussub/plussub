@@ -26,5 +26,6 @@ Polymer({
     reset:function(){
         this.$.movieSelectize.currentSelected = null;
         this.$.subtitleSelectize.currentSelected = null;
+        this.$.movieSelectize.setTextboxValue("");
     }
 });

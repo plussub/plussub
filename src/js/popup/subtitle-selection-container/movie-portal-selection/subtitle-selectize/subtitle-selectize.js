@@ -18,6 +18,11 @@ Polymer({
         _currentLanguage: {
             type: Object,
             value: () => Object.assign({})
+        },
+
+        _isInitState:{
+            type:Boolean,
+            value:true
         }
     },
     metaSubscriptions: [
@@ -48,19 +53,21 @@ Polymer({
 
     _channelBasedInitCallback:function(subtitleMeta){
 
-        // if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
-        //     this.$.subtitleSelection.clearOptions();
-        //     return;
-        // }
-        //
-        // var subtitleMetaAsString = JSON.stringify(subtitleMeta);
-        // this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
-        // this.$.subtitleSelection.addItem(subtitleMetaAsString);
+
+        this.async(()=> this._isInitState=false,500);
+        if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
+            this.$.subtitleSelection.clearOptions();
+            return;
+        }
+
+        var subtitleMetaAsString = JSON.stringify(subtitleMeta);
+        this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
+        this.$.subtitleSelection.addItem(subtitleMetaAsString);
     },
+
 
     updateSubtitles:function(result){
         if(!Array.isArray(result)||result.length===0){
-
             this.$.subtitleSelection.clearOptions();
             return;
         }
@@ -116,17 +123,24 @@ Polymer({
         this._refreshItems();
     },
 
+    //todo: if movie changed -> hit eject?
     _refreshItems: function () {
 
+
         this.debounce('_subtitle_refresh', () => {
+            if(this._isInitState){
+                return;
+            }
+
             if (!this._currentLanguage
                 || Object.keys(this._currentLanguage).length === 0
                 || !this._currentMovie
                 || Object.keys(this._currentMovie).length === 0) {
 
-                this.$.subtitleSelection.clearOptions();
+               // this.$.subtitleSelection.clearOptions();
                 return;
             }
+
 
             this.servicePublish({
                 topic: srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
