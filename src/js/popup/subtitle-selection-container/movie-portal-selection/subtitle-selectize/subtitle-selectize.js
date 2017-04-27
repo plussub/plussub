@@ -48,14 +48,14 @@ Polymer({
 
     _channelBasedInitCallback:function(subtitleMeta){
 
-        if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
-            this.$.subtitleSelection.clearOptions();
-            return;
-        }
-
-        var subtitleMetaAsString = JSON.stringify(subtitleMeta);
-        this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
-        this.$.subtitleSelection.addItem(subtitleMetaAsString);
+        // if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
+        //     this.$.subtitleSelection.clearOptions();
+        //     return;
+        // }
+        //
+        // var subtitleMetaAsString = JSON.stringify(subtitleMeta);
+        // this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
+        // this.$.subtitleSelection.addItem(subtitleMetaAsString);
     },
 
     updateSubtitles:function(result){
@@ -94,10 +94,9 @@ Polymer({
             return;
         }
 
-
         this.fire('refreshSubtitle',  {
             selectionElement:this,
-            title: this._currentMovie.Title
+            title: this.currentSelected.movieTitle
         });
 
         //notify

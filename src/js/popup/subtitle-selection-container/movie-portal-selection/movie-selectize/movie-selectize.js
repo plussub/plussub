@@ -45,14 +45,14 @@ Polymer({
     },
 
     _channelBasedInitCallback : function(movieMeta){
-        if (!movieMeta || Object.keys(movieMeta).length===0) {
-            this.$.movieSelection.clearOptions();
-            return;
-        }
-
-        var movieMetaAsString = JSON.stringify(movieMeta);
-        this.$.movieSelection.addOption(Object.assign({}, movieMeta, {valueField: movieMetaAsString}));
-        this.$.movieSelection.addItem(movieMetaAsString);
+        // if (!movieMeta || Object.keys(movieMeta).length===0) {
+        //     this.$.movieSelection.clearOptions();
+        //     return;
+        // }
+        //
+        // var movieMetaAsString = JSON.stringify(movieMeta);
+        // this.$.movieSelection.addOption(Object.assign({}, movieMeta, {valueField: movieMetaAsString}));
+        // this.$.movieSelection.addItem(movieMetaAsString);
     },
 
 
