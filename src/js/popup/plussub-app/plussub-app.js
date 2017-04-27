@@ -6,7 +6,7 @@ Polymer({
     is: 'plussub-app',
     openOptionPage: function () {
         chrome.tabs.create({
-            url: "html/options.html"
+            url: "/src/html/option.html"
         });
     },
     reset:function(){
