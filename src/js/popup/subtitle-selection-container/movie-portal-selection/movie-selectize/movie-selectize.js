@@ -57,6 +57,7 @@ Polymer({
         "use strict";
         if (!movieMeta || Object.keys(movieMeta).length === 0) {
             this.$.movieSelection.clearOptions();
+            this.$.movieSelection.setTextboxValue("");
             this.servicePublish({
                 topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
                 data: 'selected_movie'
