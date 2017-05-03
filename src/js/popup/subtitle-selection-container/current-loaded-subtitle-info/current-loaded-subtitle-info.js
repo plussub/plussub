@@ -31,45 +31,46 @@ Polymer({
         if (!lastSelected || Object.keys(lastSelected).length===0) {
             return;
         }
-        if(lastSelected.type==='selection') {
-            this.title = lastSelected.subtitle.movieTitle;
-            this.poster= lastSelected.movie.Poster;
-            this.type="Selection";
-            this.$.paperExpansionPanel.opened=true;
-        }
-        else if(lastSelected.type==='fileinput'){
-            this.title=lastSelected.filename;
-            this.type="File input";
-            this.poster=null;
-            this.$.paperExpansionPanel.opened=true;
-        }
+        this.setInformation(lastSelected);
+        this.$.paperExpansionPanel.opened=true;
 
     },
 
     onRefreshSubtitle: function (event, data) {
-        this.currentSelectionElement = data.selectionElement ? data.selectionElement : null;
-        this.type = data.selectionElement ? data.selectionElement.simpleName : '';
-        this.title = data.title ? data.title : '-';
-        this.poster = data.poster;
+        this.setInformation(data);
+    },
+
+    setInformation:function(data){
+        if(data.type==='selection') {
+            this.title = data.subtitle.movieTitle;
+            this.poster= data.movie.Poster;
+            this.type="Selection";
+        }
+        else if(data.type==='fileinput'){
+            this.title=data.title;
+            this.poster=null;
+            this.type="File input";
+
+        }
     },
 
     onResetSubtitle: function (event, data) {
-
-        if (!this.currentSelectionElement ||
-            this.currentSelectionElement != data.selectionElement) {
+        if (!this.currentSelectionElement || this.currentSelectionElement !== data.selectionElement) {
             return;
         }
 
-        this.currentSelectionElement = null;
-        this.type = '';
-        this.title = '-';
-        this.servicePublish({
-            topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
-            data: 'last_selected'
-        });
+        this._reset();
     },
 
     manualReset:function(){
+       this._reset();
+    },
+
+    _reset:function(){
+        this.currentSelectionElement = null;
+        this.type = '';
+        this.title = '-';
+        this.poster= null;
         this.servicePublish({
             topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
             data: 'last_selected'

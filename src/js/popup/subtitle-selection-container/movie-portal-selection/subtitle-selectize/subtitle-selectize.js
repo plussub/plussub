@@ -77,15 +77,9 @@ Polymer({
         }
 
         this.fire('refreshSubtitle',  {
-            selectionElement:this,
-            title: this.currentSelected.movieTitle,
-            poster:this._currentMovie.Poster
-        });
-
-        //notify
-        this.metaPublish({
-            topic: 'selected_subtitle.entry',
-            data: subtitle
+            subtitle:subtitle,
+            movie:this._currentMovie,
+            type:"selection"
         });
 
         this.metaPublish({
@@ -96,6 +90,13 @@ Polymer({
                 type:"selection"
             }
         });
+        //notify
+        this.metaPublish({
+            topic: 'selected_subtitle.entry',
+            data: subtitle
+        });
+
+
 
     },
 

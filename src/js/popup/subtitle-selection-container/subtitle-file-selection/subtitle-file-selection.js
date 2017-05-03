@@ -52,8 +52,8 @@ Polymer({
             var filename =this.$.fileInput.inputElement.files[0].name;
 
             this.fire('refreshSubtitle', {
-                selectionElement: this,
-                title: filename
+                title:filename,
+                type:"fileinput"
             });
 
             //notify
@@ -67,7 +67,7 @@ Polymer({
             this.metaPublish({
                 topic: 'last_selected.entry',
                 data: {
-                    filename:filename,
+                    title:filename,
                     type:"fileinput"
                 }
             });
