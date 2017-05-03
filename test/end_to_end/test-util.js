@@ -23,11 +23,6 @@ var TestUtil = TestUtil || (function () {
                 document.querySelector('body').appendChild(linkElement);
             },
 
-            //     <video id="exampleVideo" preload="auto" loop autoplay controls muted style="width:500px">
-            //     <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov"
-            // type="video/mp4">
-            //     </video>
-
             addVideo: function () {
                 var videoElement = document.createElement('video');
                 videoElement.setAttribute("preload", "auto");

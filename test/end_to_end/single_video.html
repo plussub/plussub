@@ -14,6 +14,7 @@
 
 
     <link rel="import" href="part/backend.html">
+
     <script src="./bower_components/web-component-tester/browser.js"></script>
     <link rel="import" href="../../src/js/popup/plussub-app/plussub-app.html">
 
@@ -56,8 +57,7 @@
             });
 
 
-            Promise.all([selectedSubtitlePromise,
-                parsedSubtitlePromise]).then(() => done());
+            Promise.all([selectedSubtitlePromise, parsedSubtitlePromise]).then(() => done());
 
         });
 

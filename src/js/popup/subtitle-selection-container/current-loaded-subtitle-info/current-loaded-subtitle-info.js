@@ -32,7 +32,7 @@ Polymer({
             return;
         }
         this.setInformation(lastSelected);
-        this.$.paperExpansionPanel.opened=true;
+        // this.$.paperExpansionPanel.opened=true;
 
     },
 
