@@ -63,16 +63,7 @@ Polymer({
     _currentSelectedChanged: function (subtitle) {
         "use strict";
         if (!subtitle || Object.keys(subtitle).length===0) {
-            this.fire('resetSubtitle',{
-                selectionElement: this
-            });
-
-            this.$.subtitleSelection.clearOptions();
-            //racecondition, triggered when subtitle-selectize is not ready
-            this.async(()=>  this.servicePublish({
-                topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
-                data: 'selected_subtitle'
-            }));
+            // console.log("empty sub");
             return;
         }
 
