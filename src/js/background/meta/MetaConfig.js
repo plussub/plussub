@@ -92,7 +92,7 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                         line: 13,
                         position: 50,
                         size: 100,
-                        align: "middle",
+                        align: "center",
                         vertical: undefined
                     },
                     errorReport:true
