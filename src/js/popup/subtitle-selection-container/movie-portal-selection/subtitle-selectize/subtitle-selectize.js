@@ -4,7 +4,7 @@
 Polymer({
 
     is: 'subtitle-selectize',
-    behaviors: [tms.ServiceChannelBehavior, tms.MetaChannelBehavior, tms.ChannelBasedInitializeBehavior],
+    behaviors: [tms.ServiceChannelBehavior, tms.MetaChannelBehavior],
     properties: {
         currentSelected: {
             type: Object,
@@ -18,12 +18,8 @@ Polymer({
         _currentLanguage: {
             type: Object,
             value: () => Object.assign({})
-        },
-
-        _isInitState:{
-            type:Boolean,
-            value:true
         }
+
     },
     metaSubscriptions: [
         {
@@ -44,27 +40,6 @@ Polymer({
             callback: 'updateSubtitles'
         }
     ],
-
-    channelBasedInit : {
-        type:tms.MetaChannelBehavior,
-        topic:"selected_subtitle.entry",
-    },
-
-
-    _channelBasedInitCallback:function(subtitleMeta){
-
-
-        this.async(()=> this._isInitState=false,750);
-        if (!subtitleMeta || Object.keys(subtitleMeta).length===0) {
-            this.$.subtitleSelection.clearOptions();
-            return;
-        }
-
-        var subtitleMetaAsString = JSON.stringify(subtitleMeta);
-        this.$.subtitleSelection.addOption(Object.assign({}, subtitleMeta, {valueField: subtitleMetaAsString}));
-        this.$.subtitleSelection.addItem(subtitleMetaAsString);
-    },
-
 
     updateSubtitles:function(result){
         if(!Array.isArray(result)||result.length===0){
@@ -103,7 +78,8 @@ Polymer({
 
         this.fire('refreshSubtitle',  {
             selectionElement:this,
-            title: this.currentSelected.movieTitle
+            title: this.currentSelected.movieTitle,
+            poster:this._currentMovie.Poster
         });
 
         //notify
@@ -111,6 +87,16 @@ Polymer({
             topic: 'selected_subtitle.entry',
             data: subtitle
         });
+
+        this.metaPublish({
+            topic: 'last_selected.entry',
+            data: {
+                subtitle:subtitle,
+                movie:this._currentMovie,
+                type:"selection"
+            }
+        });
+
     },
 
     movieChanged: function (movieMeta) {
@@ -128,9 +114,6 @@ Polymer({
 
 
         this.debounce('_subtitle_refresh', () => {
-            if(this._isInitState){
-                return;
-            }
 
             if (!this._currentLanguage
                 || Object.keys(this._currentLanguage).length === 0

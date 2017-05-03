@@ -11,5 +11,7 @@ Polymer({
     },
     reset:function(){
         document.querySelector("subtitle-selection-container").onResetAllSubtitleSelections();
+        document.querySelector("current-loaded-subtitle-info").manualReset();
+
     }
 });

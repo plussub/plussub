@@ -64,6 +64,14 @@ Polymer({
                 }
             });
 
+            this.metaPublish({
+                topic: 'last_selected.entry',
+                data: {
+                    filename:filename,
+                    type:"fileinput"
+                }
+            });
+
             this.servicePublish({
                 topic: srtPlayer.Descriptor.SERVICE.PARSER.SUB.PARSE,
                 data: {

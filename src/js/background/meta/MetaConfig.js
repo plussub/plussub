@@ -75,6 +75,14 @@ srtPlayer.MetaConfig = srtPlayer.MetaConfig || (()=> {
                 }
             },
 
+            last_selected:{
+                current:{},
+                fallback: {
+                    store:'last_selected',
+                    entry:{}
+                }
+            },
+
             option: {
                 current: {},
                 fallback: {

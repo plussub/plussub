@@ -38,21 +38,6 @@ Polymer({
             callback: fn
         });
     },
-
-    channelBasedInit : {
-        type:tms.MetaChannelBehavior,
-        topic:"selected_movie.entry",
-    },
-
-    _channelBasedInitCallback : function(movieMeta){
-        if (!movieMeta || Object.keys(movieMeta).length===0) {
-            this.$.movieSelection.clearOptions();
-            return;
-        }
-        this.$.movieSelection.setTextboxValue(movieMeta.Title);
-    },
-
-
     _currentSelectedChanged: function (movieMeta) {
         "use strict";
         if (!movieMeta || Object.keys(movieMeta).length === 0) {
