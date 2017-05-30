@@ -1,0 +1,34 @@
+Mit nur wenigen Klicks ein Untertitle ihrer Wahl zum abgespielten Film hinzufügen.
+
+Sie brauchen ein Untertitle für ihr aktuell abgespieltes Film?
+Mit der Chrome-Erweiterung "Plussub" ist das problemlos möglich.
+Suchen sie sich den passenden Film/Serie aus und wählen dazu sie Ihre gewünschte
+Sprache. 
+
+Der Untertitle wird nun passend zum Film angezeigt. 
+
+Unterstüzte Getestet mit: 
+ - Netflix
+ - Amazon Video
+ - YouTube
+ - letsgrave?
+ - uvm.
+
+Zusätzliche Funktionen: 
+ - Dateisupport. Laden sie direkt subtitle Datei in das video.
+ - Anpassbare Untertitle. Sie bevorzugen ein schwarzen Hintergrund mit grüner schrift. Kein Problem.
+ - Zeige Untertitel verzögert an.
+  
+Sie möchten Plussub, mit einem Demo-Video, testen ohne das Plugin zu installieren?
+Besuchen sie:
+www.plus-sub.com/example 
+
+
+landing page
+wo leute sich subscriben können. 
+mit diversen features. nichts wird abgebucht nur registriert. 
+
+   - multi player support -> jwplayer,
+   - cast support -> (chromecast/firetv)
+   - speech2text -> prodcast support
+   

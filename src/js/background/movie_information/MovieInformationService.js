@@ -54,19 +54,6 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || ((messa
             const maxRequestedImdb = 10;
             const imdbResultPartial = imdbResult.slice(0, imdbResult.length > maxRequestedImdb ? maxRequestedImdb : imdbResult.length);
 
-           // return imdbResultPartial.map(e=>{
-           //    return {
-           //        imdbID:e.id,
-           //        Title:e.title,
-           //        Year:'?',
-           //        Rating:'?',
-           //        Genre:'?',
-           //        Country:'?',
-           //        Poster:missingPosterFb
-           //    };
-           // }).map(e => {
-           //      return Object.assign(e, {valueField: JSON.stringify(e)});
-           //  });
 
             return Promise.all(imdbResultPartial.map(async rawImdb => {
                 try {
@@ -75,24 +62,24 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || ((messa
                     const response = await (await fetch('https://app.plus-sub.com/movie/information/' + rawImdb.id)).json();
 
 
-                    let newEntry;
-                    if(response.movie_results.length){
+                    var newEntry;
+                    if(response.movie_results && response.movie_results.length){
                         newEntry={
                             imdbID:rawImdb.id,
                             Title:rawImdb.title,
                             Year:response.movie_results[0].release_date,
-                            Rating:'?',
-                            Genre:'?',
-                            Country:'?',
+                            Rating:'-',
+                            Genre:'-',
+                            Country:'-',
                             Poster:response.movie_results[0].poster_path ? 'https://image.tmdb.org/t/p/w500'+response.movie_results[0].poster_path : missingPosterFb
                         };
-                    }else if(response.tv_results.length){
+                    }else if(response.tv_results && response.tv_results.length){
                         newEntry={
                             imdbID:rawImdb.id,
                             Title:rawImdb.title,
                             Year:response.tv_results[0].first_air_date,
-                            Rating:'?',
-                            Genre:'?',
+                            Rating:'-',
+                            Genre:'-',
                             Country:response.tv_results[0].origin_country,
                             Poster:response.tv_results[0].poster_path ? 'https://image.tmdb.org/t/p/w500'+response.tv_results[0].poster_path : missingPosterFb
                         };
@@ -100,15 +87,13 @@ srtPlayer.MovieInformationService = srtPlayer.MovieInformationService || ((messa
                         newEntry = {
                             imdbID:rawImdb.id,
                             Title:rawImdb.title,
-                            Year:'?',
-                            Rating:'?',
-                            Genre:'?',
-                            Country:'?',
+                            Year:'-',
+                            Rating:'-',
+                            Genre:'-',
+                            Country:'-',
                             Poster:missingPosterFb
                         };
                     }
-
-
 
                     return Object.assign(newEntry, {valueField: JSON.stringify(newEntry)});
                 } catch (err) {
