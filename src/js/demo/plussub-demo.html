@@ -1,0 +1,37 @@
+<script>
+    window.indexedDB.deleteDatabase("srtStore");
+</script>
+<script src="fakeVersionService.js"></script>
+
+<script type="text/javascript" src="../MessageBus.js"></script>
+<script type="text/javascript" src="../Descriptor.js"></script>
+<script src="../LogService.js"></script>
+
+<link rel="import" href="part/backend.html">
+<link rel="import" href="../popup/plussub-app/plussub-app.html">
+
+
+<dom-module id="plussub-demo">
+
+    <template>
+        <div style="display:flex">
+            <plussub-app id="fixture"></plussub-app>
+
+
+
+            <div style="display:flex; flex-direction: column">
+                <video id="exampleVideo" preload="auto" loop autoplay controls muted style="width:500px">
+                    <source src="http://ftp.halifax.rwth-aachen.de/blender/demo/movies/ToS/tears_of_steel_720p.mov"
+                            type="video/mp4">
+                </video>
+            </div>
+
+
+            <iframe src="part/option.html" width="1000" height="1000" frameBorder="0">
+                <!-- IFrame because different polymer versions (1.0/2.0)-->
+            </iframe>
+            <!--<plussub-option></plussub-option>-->
+        </div>
+    </template>
+    <script src="plussub-demo.js"></script>
+</dom-module>

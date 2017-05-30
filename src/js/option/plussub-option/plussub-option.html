@@ -31,10 +31,14 @@
                 height:75px;
             }
 
+            .hidden{
+                display:none;
+            }
+
         </style>
         <div style="display:flex; justify-content: space-around;">
             <subtitle-styling css="{{css}}"></subtitle-styling>
-            <preview-video cue="{{cue}}" css="{{css}}"></preview-video>
+            <preview-video id="previewVideo" cue="{{cue}}" css="{{css}}"></preview-video>
             <subtitle-positioning cue="{{cue}}"></subtitle-positioning>
         </div>
         <div style="display:flex; justify-content: flex-start">

@@ -57,6 +57,13 @@ class PlussubOptionElement extends Polymer.mixinBehaviors([tms.MetaChannelBehavi
                     }';
                     return css_beautify(customSubtitleCss);
                 }
+            },
+            hidePreviewVideo:{
+                type:Boolean,
+                value:false,
+                reflectToAttribute:true,
+                notify:true,
+                observer:'hidePreviewVideoChanged'
             }
         }
     }
@@ -92,5 +99,12 @@ class PlussubOptionElement extends Polymer.mixinBehaviors([tms.MetaChannelBehavi
         setTimeout(()=>location.reload(),500);
     }
 
+    hidePreviewVideoChanged(newVal){
+        if(newVal) {
+            this.$.previewVideo.classList.add("hidden");
+        }else{
+            this.$.previewVideo.classList.remove("hidden");
+        }
+    }
 }
 customElements.define(PlussubOptionElement.is, PlussubOptionElement);
