@@ -14,8 +14,8 @@ describe('MovieInformationService', () => {
     var SERVICE_CHANNEL;
     var movieInformationService;
 
-    var SEARCH_URL="https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/movie/search/";
-    var INFORMATION_URL="https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/movie/information/";
+    var SEARCH_URL="https://app.plus-sub.com/movie/search/";
+    var INFORMATION_URL="https://app.plus-sub.com/movie/information/";
 
     var fakeFetch;
 

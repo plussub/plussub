@@ -19,9 +19,15 @@ Polymer({
         Object.assign(data, {selectionElement: this});
     },
 
+    openThemoviedb: function () {
+        chrome.tabs.create({url: this.$.themoviedbLink.href});
+    },
+
     openOpenSubtitle: function () {
         chrome.tabs.create({url: this.$.openSubtitleLink.href});
     },
+
+
 
     reset:function(){
         this.$.movieSelectize.currentSelected = null;
