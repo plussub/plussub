@@ -64,7 +64,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
         }
 
         async function download(link) {
-
+            link = link.replace('http://','https://');
             try {
                 const response = await fetch(link);
                 if (response.status !== 200) {
