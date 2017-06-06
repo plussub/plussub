@@ -1,3 +1,3 @@
-mv res deploy/.
-mv src deploy/.
-mv test deploy/.
+mv -R res deploy/.
+mv -R src deploy/.
+mv -R test deploy/.
