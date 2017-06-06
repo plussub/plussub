@@ -11,3 +11,5 @@ deploy:
   bucket: $AWS_S3_BUCKET_NAME
   skip_cleanup: true
   acl: public_read
+  before_deploy: "./create_deploy_dir.sh"
+  local_dir: deploy
