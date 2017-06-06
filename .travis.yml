@@ -14,3 +14,5 @@ deploy:
   region: eu-central-1
   before_deploy: "mv -R res deploy/. && mv -R src deploy/. && mv -R test deploy/."
   local_dir: deploy
+  on:
+    branch: master
