@@ -12,7 +12,6 @@ deploy:
   skip_cleanup: true
   acl: public_read
   region: eu-central-1
-  before_deploy: "mv -R res deploy/. && mv -R src deploy/. && mv -R test deploy/."
+  before_deploy:
+    - ./create_deploy_dir.sh
   local_dir: deploy
-  on:
-    tags: true
