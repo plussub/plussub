@@ -1,0 +1,3 @@
+[submodule "src/js/background"]
+	path = src/js/background
+	url = git@github.com:plussub/background-services.git
