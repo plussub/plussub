@@ -1,6 +1,6 @@
 {
-  "name": "subplustest",
-  "homepage": "https://github.com/ste-xx/plussub",
+  "name": "plussub-content",
+  "homepage": "https://github.com/plussub/background-services",
   "authors": [
     "stefan <stefan.breitenstein@gmail.com>"
   ],
@@ -15,11 +15,8 @@
     "test",
     "tests"
   ],
-  "devDependencies": {
-    "web-component-tester": "^5.0.1"
-  },
   "dependencies": {
-    "plussub-background": "^1.0.7",
+    "plussub-content-chrome-bridge": "*",
     "plussub-content-scripts": "^1.0.2"
   }
 }

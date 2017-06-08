@@ -19,7 +19,7 @@ var TestUtil = TestUtil || (function () {
             loadContentScript: function () {
                 var linkElement = document.createElement('link');
                 linkElement.setAttribute("rel", "import");
-                linkElement.setAttribute("href", "part/content.html");
+                linkElement.setAttribute("href", "bower_components/plussub-content-scripts/content.html");
                 document.querySelector('body').appendChild(linkElement);
             },
 
