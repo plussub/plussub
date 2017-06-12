@@ -47,7 +47,7 @@
         "src/js/content/bower_components/messagebus/MessageBus.js",
         "src/js/content/bower_components/descriptor/Descriptor.js",
         "src/js/content/bower_components/plussub-content-chrome-bridge/BackgroundAvailabilityService.js",
-        "src/js/content/bower_components/plussub-content-chrome-bridge/ContentScriptBridge.js",
+        "src/js/content/bower_components/plussub-content-chrome-bridge/Bridge.js",
         "src/js/content/bower_components/plussub-content-scripts/CSSInjectService.js",
         "src/js/content/bower_components/plussub-content-scripts/VTTInjectService.js",
         "src/js/content/bower_components/plussub-content-scripts/VideoMetaService.js",
