@@ -18,31 +18,68 @@ gulp.task('clean',function(callback){
 
 gulp.task('build', function(callback) {
     runSequence(
-        'bower-popup',
+        'bower-background',
+        'bower-content',
         'bower-option',
+        'bower-popup',
         'bower-ui-test',
         'bower-end-to-end-test',
-        ['cspify-popup-components','cspify-option-components'], // <- in parallel
+        ['cspify-background-components','cspify-content-components', 'cspify-option-components','cspify-popup-components'], // <- in parallel
         'mocha_unit',
         'mocha_integration',
         callback);
 });
 
-gulp.task('bower-popup',function(){
-    return bower({ cwd: './src/js/popup' })
+gulp.task('bower-background',function(){
+    return bower({cmd: 'update', cwd: './src/js/background' })
 });
 
+gulp.task('bower-content',function(){
+    return bower({cmd: 'update', cwd: './src/js/content' })
+});
 
 gulp.task('bower-option',function(){
-    return bower({ cwd: './src/js/option' })
+    return bower({ cmd: 'update', cwd: './src/js/option' })
 });
 
+gulp.task('bower-popup',function(){
+    return bower({cmd: 'update', cwd: './src/js/popup' })
+});
+
+
+
 gulp.task('bower-ui-test',function(){
-    return bower({ cwd: './test/ui' })
+    return bower({cmd: 'update', cwd: './test/ui' })
 });
 
 gulp.task('bower-end-to-end-test',function(){
-    return bower({ cwd: './test/end_to_end' })
+    return bower({ cmd: 'update', cwd: './test/end_to_end' })
+});
+
+
+gulp.task('cspify-background-components',function(){
+    gulp.src('./src/js/background/bower_components/**/*.html')
+        .pipe(crisper({
+            scriptInHead: false
+        }))
+        .pipe(gulp.dest('./src/js/option/bower_components'));
+});
+
+
+gulp.task('cspify-content-components',function(){
+    gulp.src('./src/js/content/bower_components/**/*.html')
+        .pipe(crisper({
+            scriptInHead: false
+        }))
+        .pipe(gulp.dest('./src/js/option/bower_components'));
+});
+
+gulp.task('cspify-option-components',function(){
+    gulp.src('./src/js/option/bower_components/**/*.html')
+        .pipe(crisper({
+            scriptInHead: false
+        }))
+        .pipe(gulp.dest('./src/js/option/bower_components'));
 });
 
 gulp.task('cspify-popup-components',function(){
@@ -53,13 +90,6 @@ gulp.task('cspify-popup-components',function(){
         .pipe(gulp.dest('./src/js/popup/bower_components'));
 });
 
-gulp.task('cspify-option-components',function(){
-    gulp.src('./src/js/option/bower_components/**/*.html')
-        .pipe(crisper({
-            scriptInHead: false
-        }))
-        .pipe(gulp.dest('./src/js/option/bower_components'));
-});
 
 
 
