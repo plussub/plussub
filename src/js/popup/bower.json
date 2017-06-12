@@ -2,19 +2,7 @@
   "name": "popup",
   "main": "index.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.7.0",
-    "paper-fab": "PolymerElements/paper-fab#~1.2.1",
-    "iron-icons": "PolymerElements/iron-icons#~1.2.0",
-    "paper-input": "PolymerElements/paper-input#^1.1.22",
-    "paper-tabs": "PolymerElements/paper-tabs#^1.7.0",
-    "iron-pages": "PolymerElements/iron-pages#^1.0.8",
-    "paper-expansion-panel": "Collaborne/paper-expansion-panel#^1.0.0",
-    "paper-button": "PolymerElements/paper-button#^1.0.14",
-    "moment": "^2.17.1",
-    "paper-radio-group": "PolymerElements/paper-radio-group#^1.2.1",
-    "paper-toast": "PolymerElements/paper-toast#^1.3.0",
-    "selectize": "^0.12.4",
-    "jquery": "^3.2.1",
-    "iron-image": "PolymerElements/iron-image#^1.2.5"
+    "plussub-app-chrome-bridge":"^1.0.0",
+    "plussub-app-element":"^1.0.0"
   }
 }
