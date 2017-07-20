@@ -3,6 +3,8 @@
   "main": "index.html",
   "dependencies": {
     "plussub-option-chrome-bridge":"^1.0.1",
-    "plussub-option-element":"^1.0.0"
+    "plussub-option-element":"^1.0.8",
+    "paper-card": "polymerelements/paper-card#^2.0.0"
+
   }
 }

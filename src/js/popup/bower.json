@@ -3,6 +3,6 @@
   "main": "index.html",
   "dependencies": {
     "plussub-app-chrome-bridge":"^1.0.0",
-    "plussub-app-element":"^1.0.0"
+    "plussub-app-element":"^1.1.0"
   }
 }

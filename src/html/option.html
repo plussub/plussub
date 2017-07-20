@@ -2,11 +2,69 @@
 <html>
 <head>
 
+     <script src="../js/option/bower_components/webcomponentsjs/webcomponents-lite.js">
+     </script>
+     <link rel="import" href="../js/option/bower_components/polymer/polymer.html">
+
      <link rel="import" href="../js/option/bower_components/plussub-option-chrome-bridge/bridge.html">
      <link rel="import" href="../js/option/bower_components/plussub-option-element/plussub-option/plussub-option.html">
 
+     <link rel="import" href="../js/option/bower_components/paper-card/paper-card.html">
+     <link rel="import" href="../js/option/bower_components/plussub-option-element/subtitle-styling/subtitle-styling.html">
+     <link rel="import" href="../js/option/bower_components/plussub-option-element/preview-video/preview-video.html">
+     <link rel="import" href="../js/option/bower_components/plussub-option-element/subtitle-positioning/subtitle-positioning.html">
 </head>
 <body>
-<plussub-option></plussub-option>
+<dom-module id="main-document-element">
+     <template>
+          <style>
+
+               .content {
+                    max-width: calc(100% - 10px);
+                    margin: 5px auto;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-around;
+               }
+
+               paper-card {
+                    display: block;
+                    margin: 5px;
+                    max-width:570px;
+                    min-width:410px;
+               }
+
+               h1{
+                    background-color: var(--default-primary-color);
+                    color:var(--text-primary-color);
+                    width:100%;
+               }
+
+          </style>
+
+          <plussub-option id="option" class="content" css="{{css}}" cue="{{cue}}">
+               <paper-card>
+                    <div class="card-content">
+                         <h1 align="center">Styling</h1>
+                         <subtitle-styling css="{{css}}"></subtitle-styling>
+                    </div>
+               </paper-card>
+               <paper-card>
+                    <div class="card-content">
+                         <h1 align="center">Preview</h1>
+                         <preview-video id="previewVideo" cue="{{cue}}" css="{{css}}"></preview-video>
+                    </div>
+               </paper-card>
+               <paper-card>
+                    <div class="card-content">
+                         <h1 align="center">Positioning</h1>
+                         <subtitle-positioning cue="{{cue}}"></subtitle-positioning>
+                    </div>
+               </paper-card>
+          </plussub-option>
+     </template>
+     <script src="option.js"></script>
+</dom-module>
+<main-document-element></main-document-element>
 </body>
 </html>
