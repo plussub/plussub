@@ -1,0 +1,8 @@
+{
+  "name": "popup",
+  "main": "index.html",
+  "dependencies": {
+    "plussub-core": "^2.0.0",
+    "paper-dialog": "PolymerElements/paper-dialog#^2.0.0"
+  }
+}

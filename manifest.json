@@ -1,6 +1,6 @@
 {
   "name": "+Sub",
-  "version": "2.27",
+  "version": "2.28",
   "manifest_version": 2,
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
@@ -17,22 +17,23 @@
   },
   "background": {
     "scripts": [
-      "src/js/background/bower_components/messagebus/MessageBus.js",
-      "src/js/background/bower_components/descriptor/Descriptor.js",
-      "src/js/background/bower_components/plussub-background-chrome-bridge/Bridge.js",
-      "src/js/background/bower_components/plussub-background/version/ChromeVersionProvider.js",
-      "src/js/background/bower_components/plussub-background/version/VersionService.js",
-      "src/js/background/bower_components/plussub-background/meta/StoreService.js",
-      "src/js/background/bower_components/plussub-background/meta/MetaConfig.js",
-      "src/js/background/bower_components/plussub-background/meta/MetaService.js",
-      "src/js/background/bower_components/plussub-background/parser/SrtParser.js",
-      "src/js/background/bower_components/plussub-background/parser/ParserService.js",
-      "src/js/background/bower_components/plussub-background/movie_information/MovieInformationService.js",
-      "src/js/background/bower_components/plussub-background/subtitle_provider/pako/pako.js",
-      "src/js/background/bower_components/plussub-background/subtitle_provider/pako/pako_deflate.js",
-      "src/js/background/bower_components/plussub-background/subtitle_provider/pako/pako_inflate.js",
-      "src/js/background/bower_components/plussub-background/subtitle_provider/SubtitleProvider.js",
-      "src/js/background/bower_components/plussub-background/auto_subtitle_download/AutoSubtitleDownloadService.js"
+      "src/js/bower_components/redux/index.js",
+      "src/js/bower_components/plussub-core/background/guid/GuidService.js",
+      "src/js/bower_components/plussub-core/descriptor/Descriptor.js",
+      "src/js/bower_components/plussub-core/redux/extension-specific/background-bridge.js",
+      "src/js/bower_components/plussub-core/redux/extension-specific/reduxConfigForBackgroundScript.js",
+
+      "src/js/bower_components/plussub-core/redux/redux.js",
+      "src/js/bower_components/plussub-core/redux/actionCreators.js",
+      "src/js/bower_components/plussub-core/background/version/ChromeVersionProvider.js",
+      "src/js/bower_components/plussub-core/background/version/VersionService.js",
+      "src/js/bower_components/plussub-core/background/parser/SrtParser.js",
+      "src/js/bower_components/plussub-core/background/parser/ParserService.js",
+      "src/js/bower_components/plussub-core/background/movie_search/MovieSearchService.js",
+      "src/js/bower_components/plussub-core/background/subtitle_provider/pako/pako.js",
+      "src/js/bower_components/plussub-core/background/subtitle_provider/pako/pako_deflate.js",
+      "src/js/bower_components/plussub-core/background/subtitle_provider/pako/pako_inflate.js",
+      "src/js/bower_components/plussub-core/background/subtitle_provider/SubtitleProvider.js"
     ],
     "persistent": false
   },
@@ -45,15 +46,20 @@
       "run_at": "document_end",
       "all_frames": false,
       "js": [
-        "src/js/content/bower_components/messagebus/MessageBus.js",
-        "src/js/content/bower_components/descriptor/Descriptor.js",
-        "src/js/content/bower_components/plussub-content-chrome-bridge/BackgroundAvailabilityService.js",
-        "src/js/content/bower_components/plussub-content-chrome-bridge/Bridge.js",
-        "src/js/content/bower_components/plussub-content-scripts/CSSInjectService.js",
-        "src/js/content/bower_components/plussub-content-scripts/VTTInjectService.js",
-        "src/js/content/bower_components/plussub-content-scripts/VideoMetaService.js",
-        "src/js/content/bower_components/plussub-content-scripts/FindVideoService.js",
-        "src/js/content/bower_components/plussub-content-scripts/InitService.js"
+        "src/js/bower_components/redux/index.js",
+        "src/js/bower_components/plussub-core/background/guid/GuidService.js",
+        "src/js/bower_components/plussub-core/descriptor/Descriptor.js",
+        "src/js/bower_components/plussub-core/redux/extension-specific/app-bridge.js",
+
+        "src/js/bower_components/plussub-core/redux/extension-specific/reduxConfigForUiElement.js",
+
+        "src/js/bower_components/plussub-core/redux/redux.js",
+        "src/js/bower_components/plussub-core/redux/actionCreators.js",
+        "src/js/bower_components/plussub-core/content-scripts/CSSInjectService.js",
+        "src/js/bower_components/plussub-core/content-scripts/VTTInjectService.js",
+        "src/js/bower_components/plussub-core/content-scripts/VideoMetaService.js",
+        "src/js/bower_components/plussub-core/content-scripts/FindVideoService.js",
+        "src/js/bower_components/plussub-core/content-scripts/InitService.js"
       ]
     }
   ],

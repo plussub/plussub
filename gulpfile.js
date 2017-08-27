@@ -18,34 +18,18 @@ gulp.task('clean',function(callback){
 
 gulp.task('build', function(callback) {
     runSequence(
-        'bower-background',
-        'bower-content',
-        'bower-option',
-        'bower-popup',
+        'bower-update',
         'bower-ui-test',
         'bower-end-to-end-test',
-        ['cspify-background-components','cspify-content-components', 'cspify-option-components','cspify-popup-components'], // <- in parallel
+        ['cspify'], // <- in parallel
         'mocha_unit',
         'mocha_integration',
         callback);
 });
 
-gulp.task('bower-background',function(){
-    return bower({cmd: 'update', cwd: './src/js/background' })
+gulp.task('bower-update',function(){
+    return bower({cmd: 'update', cwd: './src/js' })
 });
-
-gulp.task('bower-content',function(){
-    return bower({cmd: 'update', cwd: './src/js/content' })
-});
-
-gulp.task('bower-option',function(){
-    return bower({ cmd: 'update', cwd: './src/js/option' })
-});
-
-gulp.task('bower-popup',function(){
-    return bower({cmd: 'update', cwd: './src/js/popup' })
-});
-
 
 
 gulp.task('bower-ui-test',function(){
@@ -57,40 +41,13 @@ gulp.task('bower-end-to-end-test',function(){
 });
 
 
-gulp.task('cspify-background-components',function(){
-    gulp.src('./src/js/background/bower_components/**/*.html')
+gulp.task('cspify',function(){
+    gulp.src('./src/js/bower_components/**/*.html')
         .pipe(crisper({
             scriptInHead: false
         }))
-        .pipe(gulp.dest('./src/js/option/bower_components'));
+        .pipe(gulp.dest('./src/js/bower_components'));
 });
-
-
-gulp.task('cspify-content-components',function(){
-    gulp.src('./src/js/content/bower_components/**/*.html')
-        .pipe(crisper({
-            scriptInHead: false
-        }))
-        .pipe(gulp.dest('./src/js/option/bower_components'));
-});
-
-gulp.task('cspify-option-components',function(){
-    gulp.src('./src/js/option/bower_components/**/*.html')
-        .pipe(crisper({
-            scriptInHead: false
-        }))
-        .pipe(gulp.dest('./src/js/option/bower_components'));
-});
-
-gulp.task('cspify-popup-components',function(){
-    gulp.src('./src/js/popup/bower_components/**/*.html')
-        .pipe(crisper({
-            scriptInHead: false
-        }))
-        .pipe(gulp.dest('./src/js/popup/bower_components'));
-});
-
-
 
 
 gulp.task('clean-popup',function(){

@@ -23,6 +23,7 @@
     "jshint-stylish": "x",
     "mocha": "^2.4.5",
     "node-fetch": "^1.6.3",
+    "react-chrome-redux": "^1.3.3",
     "requirejs": "^2.2.0",
     "sinon": "^1.17.3"
   },
