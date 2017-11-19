@@ -18,11 +18,11 @@
   "background": {
     "scripts": [
       "src/js/bower_components/redux/index.js",
-      "src/js/bower_components/plussub-core/background/guid/GuidService.js",
       "src/js/bower_components/plussub-core/descriptor/Descriptor.js",
       "src/js/bower_components/plussub-core/redux/extension-specific/background-bridge.js",
       "src/js/bower_components/plussub-core/redux/extension-specific/reduxConfigForBackgroundScript.js",
 
+      "src/js/bower_components/plussub-core/redux/GuidService.js",
       "src/js/bower_components/plussub-core/redux/redux.js",
       "src/js/bower_components/plussub-core/redux/actionCreators.js",
       "src/js/bower_components/plussub-core/background/version/ChromeVersionProvider.js",
@@ -30,10 +30,12 @@
       "src/js/bower_components/plussub-core/background/parser/SrtParser.js",
       "src/js/bower_components/plussub-core/background/parser/ParserService.js",
       "src/js/bower_components/plussub-core/background/movie_search/MovieSearchService.js",
-      "src/js/bower_components/plussub-core/background/subtitle_provider/pako/pako.js",
-      "src/js/bower_components/plussub-core/background/subtitle_provider/pako/pako_deflate.js",
-      "src/js/bower_components/plussub-core/background/subtitle_provider/pako/pako_inflate.js",
-      "src/js/bower_components/plussub-core/background/subtitle_provider/SubtitleProvider.js"
+      "src/js/bower_components/plussub-core/background/subtitle_download/pako/pako.js",
+      "src/js/bower_components/plussub-core/background/subtitle_download/pako/pako_deflate.js",
+      "src/js/bower_components/plussub-core/background/subtitle_download/pako/pako_inflate.js",
+      "src/js/bower_components/plussub-core/background/subtitle_download/Inflater.js",
+      "src/js/bower_components/plussub-core/background/subtitle_download/SubtitleDownloadService.js",
+      "src/js/bower_components/plussub-core/background/subtitle_search/SubtitleSearchService.js"
     ],
     "persistent": false
   },
@@ -47,7 +49,7 @@
       "all_frames": false,
       "js": [
         "src/js/bower_components/redux/index.js",
-        "src/js/bower_components/plussub-core/background/guid/GuidService.js",
+        "src/js/bower_components/plussub-core/redux/GuidService.js",
         "src/js/bower_components/plussub-core/descriptor/Descriptor.js",
         "src/js/bower_components/plussub-core/redux/extension-specific/app-bridge.js",
 

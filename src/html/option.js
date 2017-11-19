@@ -5,8 +5,23 @@ HTMLImports.whenReady(function() {
     class MainDocumentElement extends Polymer.Element {
 
         ready(){
+            srtPlayer.Redux.store.ready().then(()=>{
+                let option = srtPlayer.Redux.store.getState().option;
+                this.css = option.css;
+                Object.assign(this.cue,option.subtitleProperties);
+                // this.$.subtitlePosition.cue = null;
+                // this.$.subtitlePosition.cue = this.cue;
+                this.$.subtitlePosition.notifyPath('cue.position');
+                this.$.subtitlePosition.notifyPath('cue.line');
+                this.$.subtitlePosition.notifyPath('cue.size');
+                this.$.subtitlePosition.notifyPath('cue.align');
+                this.$.subtitlePosition.notifyPath('cue.vertical');
+
+
+            });
+
             super.ready();
-            setTimeout(()=> this.$.option.load(),0);
+            // setTimeout(()=> this.$.option.load(),1000);
         }
 
         static get is() { return 'main-document-element'; }
