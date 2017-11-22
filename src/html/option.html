@@ -18,6 +18,7 @@
      <link rel="import" href="../js/bower_components/plussub-core/option-element/subtitle-styling/subtitle-styling.html">
      <link rel="import" href="../js/bower_components/plussub-core/option-element/preview-video/preview-video.html">
      <link rel="import" href="../js/bower_components/plussub-core/option-element/subtitle-positioning/subtitle-positioning.html">
+     <link rel="import" href="../js/bower_components/plussub-core/option-element/advanced-settings/advanced-settings.html">
 
 </head>
 <body>
@@ -48,7 +49,7 @@
 
           </style>
 
-          <plussub-option id="option" class="content" css="{{css}}" cue="{{cue}}">
+          <plussub-option id="option" class="content" css="{{css}}" cue="{{cue}}" settings="{{advancedSettingsObj}}">
                <paper-card>
                     <div class="card-content">
                          <h1 align="center">Styling</h1>
@@ -65,6 +66,12 @@
                     <div class="card-content">
                          <h1 align="center">Positioning</h1>
                          <subtitle-positioning id="subtitlePosition" cue="{{cue}}"></subtitle-positioning>
+                    </div>
+               </paper-card>
+               <paper-card>
+                    <div class="card-content">
+                         <h1 align="center">Advanced</h1>
+                         <advanced-settings id="advancedSettings" settings="{{advancedSettingsObj}}"></advanced-settings>
                     </div>
                </paper-card>
           </plussub-option>

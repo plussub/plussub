@@ -9,14 +9,12 @@ HTMLImports.whenReady(function() {
                 let option = srtPlayer.Redux.store.getState().option;
                 this.css = option.css;
                 Object.assign(this.cue,option.subtitleProperties);
-                // this.$.subtitlePosition.cue = null;
-                // this.$.subtitlePosition.cue = this.cue;
-                this.$.subtitlePosition.notifyPath('cue.position');
-                this.$.subtitlePosition.notifyPath('cue.line');
-                this.$.subtitlePosition.notifyPath('cue.size');
-                this.$.subtitlePosition.notifyPath('cue.align');
-                this.$.subtitlePosition.notifyPath('cue.vertical');
+                this.advancedSettingsObj ={
+                    enableDebugConsole: srtPlayer.Redux.getState().debug.enableDebugConsole
+                };
 
+                ["line","position","size","align", "vertical"].forEach((path)=> this.$.subtitlePosition.notifyPath(`cue.${path}`));
+                Object.keys(this.advancedSettingsObj).forEach((path)=> this.$.advancedSettings.notifyPath(`advancedSettingsObj.${path}`));
 
             });
 
@@ -28,6 +26,13 @@ HTMLImports.whenReady(function() {
 
         static get properties() {
             return {
+                advancedSettingsObj:{
+                    type: Object,
+                    value: ()=>{
+                        return {hallo:"ext"};
+                    }
+                },
+
                 cue: {
                     type: Object,
                     value:()=> {
