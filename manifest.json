@@ -1,6 +1,6 @@
 {
   "name": "+Sub",
-  "version": "2.28",
+  "version": "2.33",
   "manifest_version": 2,
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
@@ -21,7 +21,6 @@
       "src/js/bower_components/plussub-core/descriptor/Descriptor.js",
       "src/js/bower_components/plussub-core/redux/extension-specific/background-bridge.js",
       "src/js/bower_components/plussub-core/redux/extension-specific/reduxConfigForBackgroundScript.js",
-
       "src/js/bower_components/plussub-core/redux/GuidService.js",
       "src/js/bower_components/plussub-core/redux/redux.js",
       "src/js/bower_components/plussub-core/redux/actionCreators.js",
@@ -52,9 +51,7 @@
         "src/js/bower_components/plussub-core/redux/GuidService.js",
         "src/js/bower_components/plussub-core/descriptor/Descriptor.js",
         "src/js/bower_components/plussub-core/redux/extension-specific/app-bridge.js",
-
         "src/js/bower_components/plussub-core/redux/extension-specific/reduxConfigForUiElement.js",
-
         "src/js/bower_components/plussub-core/redux/redux.js",
         "src/js/bower_components/plussub-core/redux/actionCreators.js",
         "src/js/bower_components/plussub-core/content-scripts/CSSInjectService.js",

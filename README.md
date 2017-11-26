@@ -1,10 +1,8 @@
 # +Sub Chrome Extension
 [![Build Status](https://travis-ci.org/ste-xx/plussub.svg?branch=master)](https://travis-ci.org/plussub/chrome-extension)
-
-is an extension which adds subtitle to HTML <video> tags
-
-This repository contains code to enable +Sub core used as Chrome extension.
-The +Sub core is available under https://github.com/plussub/core
+is an extension which adds subtitle to HTML <video> tags. <br>
+This repository contains code to enable +Sub core used as Chrome extension. <br>
+The +Sub core is available under https://github.com/plussub/core. <br>
 
 ## Quickstart
 
@@ -28,9 +26,7 @@ The +Sub core is available under https://github.com/plussub/core
 
 
 ## Version
-Released chrome-extensions are tagged with git tags
-e.g:
-
-Webstore +Sub version is 2.50. 
-
-This released version can be found with the git tag 2.50
+Released chrome-extensions are tagged with git tags <br>
+e.g: <br>
+Webstore +Sub version is 2.50 .<br> 
+This released version can be found with the git tag 2.50 <br>
