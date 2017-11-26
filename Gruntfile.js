@@ -52,6 +52,7 @@ module.exports = function (grunt) {
 
         git_rev.tag((tag)=>{
             grunt.log.ok(`New version: ${tag}`);
+            manifest.version = tag;
             fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2));
             done();
         });
