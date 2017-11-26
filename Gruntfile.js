@@ -57,6 +57,6 @@ module.exports = function (grunt) {
         });
     });
 
-    grunt.registerTask('default',['githash','update-chrome-extension-manifest', 'compress']);
+    grunt.registerTask('default',['update-chrome-extension-manifest', 'compress']);
 
 };
