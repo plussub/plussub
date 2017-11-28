@@ -2,7 +2,7 @@
   "name": "popup",
   "main": "index.html",
   "dependencies": {
-    "plussub-core": "^2.50.0",
+    "plussub-core": "^2.50.2",
     "paper-dialog": "PolymerElements/paper-dialog#^2.0.0"
   }
 }
