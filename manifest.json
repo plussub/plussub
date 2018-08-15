@@ -1,6 +1,6 @@
 {
   "name": "+Sub",
-  "version": "2.55",
+  "version": "2.52",
   "manifest_version": 2,
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
@@ -17,24 +17,7 @@
   },
   "background": {
     "scripts": [
-      "src/js/bower_components/redux/index.js",
-      "src/js/bower_components/plussub-core/descriptor/Descriptor.js",
-      "src/js/bower_components/plussub-core/redux/extension-specific/background-bridge.js",
-      "src/js/bower_components/plussub-core/redux/extension-specific/reduxConfigForBackgroundScript.js",
-      "src/js/bower_components/plussub-core/redux/GuidService.js",
-      "src/js/bower_components/plussub-core/redux/redux.js",
-      "src/js/bower_components/plussub-core/redux/actionCreators.js",
-      "src/js/bower_components/plussub-core/background/version/ChromeVersionProvider.js",
-      "src/js/bower_components/plussub-core/background/version/VersionService.js",
-      "src/js/bower_components/plussub-core/background/parser/SrtParser.js",
-      "src/js/bower_components/plussub-core/background/parser/ParserService.js",
-      "src/js/bower_components/plussub-core/background/movie_search/MovieSearchService.js",
-      "src/js/bower_components/plussub-core/background/subtitle_download/pako/pako.js",
-      "src/js/bower_components/plussub-core/background/subtitle_download/pako/pako_deflate.js",
-      "src/js/bower_components/plussub-core/background/subtitle_download/pako/pako_inflate.js",
-      "src/js/bower_components/plussub-core/background/subtitle_download/Inflater.js",
-      "src/js/bower_components/plussub-core/background/subtitle_download/SubtitleDownloadService.js",
-      "src/js/bower_components/plussub-core/background/subtitle_search/SubtitleSearchService.js"
+      "node_modules/plussub-core/descriptor/Descriptor.js"
     ],
     "persistent": false
   },
@@ -47,23 +30,22 @@
       "run_at": "document_end",
       "all_frames": false,
       "js": [
-        "src/js/bower_components/redux/index.js",
-        "src/js/bower_components/plussub-core/redux/GuidService.js",
-        "src/js/bower_components/plussub-core/descriptor/Descriptor.js",
-        "src/js/bower_components/plussub-core/redux/extension-specific/app-bridge.js",
-        "src/js/bower_components/plussub-core/redux/extension-specific/reduxConfigForUiElement.js",
-        "src/js/bower_components/plussub-core/redux/redux.js",
-        "src/js/bower_components/plussub-core/redux/actionCreators.js",
-        "src/js/bower_components/plussub-core/content-scripts/CSSInjectService.js",
-        "src/js/bower_components/plussub-core/content-scripts/VTTInjectService.js",
-        "src/js/bower_components/plussub-core/content-scripts/VideoMetaService.js",
-        "src/js/bower_components/plussub-core/content-scripts/FindVideoService.js",
-        "src/js/bower_components/plussub-core/content-scripts/InitService.js"
+        "node_modules/plussub-core/redux/GuidService.js",
+        "node_modules/plussub-core/descriptor/Descriptor.js",
+        "node_modules/plussub-core/redux/extension-specific/app-bridge.js",
+        "node_modules/plussub-core/redux/extension-specific/reduxConfigForUiElement.js",
+        "node_modules/plussub-core/redux/redux.js",
+        "node_modules/plussub-core/redux/actionCreators.js",
+        "node_modules/plussub-core/content-scripts/CSSInjectService.js",
+        "node_modules/plussub-core/content-scripts/VTTInjectService.js",
+        "node_modules/plussub-core/content-scripts/VideoMetaService.js",
+        "node_modules/plussub-core/content-scripts/FindVideoService.js",
+        "node_modules/plussub-core/content-scripts/InitService.js"
       ]
     }
   ],
   "minimum_chrome_version": "51",
-  "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js; 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://unpkg.com/vue https://www.google-analytics.com/analytics.js; object-src 'self'",
   "permissions": [
     "tabs",
     "storage",
