@@ -1,1 +1,1 @@
-browserify -t vueify -e src/html/popup.js -o src/gen/popup_build.js
+browserify -t vueify -e src/chrome/popup.js -o src/chrome/gen/popup_build.js

@@ -1,0 +1,35 @@
+<link rel="import" href="../../../../polymer/polymer.html">
+<link rel="import" href="../../../../paper-input/paper-input.html">
+<link rel="import" href="../../../../paper-fab/paper-fab.html">
+<link rel="import" href="../../../../iron-icons/iron-icons.html">
+
+<dom-module id="file-selection">
+    <link rel="import" href="../../../theme/theme.css" type="css">
+    <link rel="import" href="../../../theme/extended-theme.css" type="css">
+
+    <template>
+        <style>
+            #container{
+                display:flex;
+                flex-direction: row-reverse;
+            }
+
+            #fileInput{
+                flex-grow: 1;
+            }
+
+            paper-fab{
+                display:none;
+                align-self: flex-end;
+            }
+
+        </style>
+        <label for="container">Select a <b>.srt</b> File</label>
+        <div id="container">
+            <paper-fab mini="" icon="eject" on-tap="reset"></paper-fab>
+            <paper-input id="fileInput" type="file" on-change="fileSelected">
+            </paper-input>
+        </div>
+    </template>
+    <script src="file-selection.js"></script>
+</dom-module>

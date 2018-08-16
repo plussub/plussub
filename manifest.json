@@ -13,15 +13,31 @@
     "default_icon": {
       "19": "res/icons/browseraction.png"
     },
-    "default_popup": "src/html/popup.html"
+    "default_popup": "src/chrome/popup.html"
   },
   "background": {
     "scripts": [
-      "node_modules/plussub-core/descriptor/Descriptor.js"
+      "src/core/descriptor/Descriptor.js",
+      "src/core/redux/extension-specific/background-bridge.js",
+      "src/core/redux/extension-specific/reduxConfigForBackgroundScript.js",
+      "src/core/redux/GuidService.js",
+      "src/core/redux/redux.js",
+      "src/core/redux/actionCreators.js",
+      "src/core/background/version/ChromeVersionProvider.js",
+      "src/core/background/version/VersionService.js",
+      "src/core/background/parser/SrtParser.js",
+      "src/core/background/parser/ParserService.js",
+      "src/core/background/movie_search/MovieSearchService.js",
+      "src/core/background/subtitle_download/pako/pako.js",
+      "src/core/background/subtitle_download/pako/pako_deflate.js",
+      "src/core/background/subtitle_download/pako/pako_inflate.js",
+      "src/core/background/subtitle_download/Inflater.js",
+      "src/core/background/subtitle_download/SubtitleDownloadService.js",
+      "src/core/background/subtitle_search/SubtitleSearchService.js"
     ],
     "persistent": false
   },
-  "options_page": "src/html/option.html",
+  "options_page": "src/chrome/option.html",
   "content_scripts": [
     {
       "matches": [
@@ -30,17 +46,18 @@
       "run_at": "document_end",
       "all_frames": false,
       "js": [
-        "node_modules/plussub-core/redux/GuidService.js",
-        "node_modules/plussub-core/descriptor/Descriptor.js",
-        "node_modules/plussub-core/redux/extension-specific/app-bridge.js",
-        "node_modules/plussub-core/redux/extension-specific/reduxConfigForUiElement.js",
-        "node_modules/plussub-core/redux/redux.js",
-        "node_modules/plussub-core/redux/actionCreators.js",
-        "node_modules/plussub-core/content-scripts/CSSInjectService.js",
-        "node_modules/plussub-core/content-scripts/VTTInjectService.js",
-        "node_modules/plussub-core/content-scripts/VideoMetaService.js",
-        "node_modules/plussub-core/content-scripts/FindVideoService.js",
-        "node_modules/plussub-core/content-scripts/InitService.js"
+        "src/core/redux/GuidService.js",
+        "src/core/descriptor/Descriptor.js",
+        "src/core/redux/extension-specific/app-bridge.js",
+        "src/core/redux/extension-specific/reduxConfigForUiElement.js",
+        "src/core/redux/redux.js",
+        "src/core/redux/actionCreators.js",
+
+        "src/core/content-scripts/CSSInjectService.js",
+        "src/core/content-scripts/VTTInjectService.js",
+        "src/core/content-scripts/VideoMetaService.js",
+        "src/core/content-scripts/FindVideoService.js",
+        "src/core/content-scripts/InitService.js"
       ]
     }
   ],

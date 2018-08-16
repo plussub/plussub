@@ -1,0 +1,43 @@
+movie-selectize .selectize-dropdown-content {
+    max-height: 350px !important;
+}
+
+.selectize-dropdown {
+    top:30px !important;
+    max-width:calc(100% - 10px);
+}
+
+.selectize-control::before {
+    transition: opacity 0.2s;
+    content: ' ';
+    z-index: 2;
+    position: absolute;
+    display: block;
+    top: 50%;
+    right: 34px;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 0;
+    background: url(spinner.gif);
+    background-size: 16px 16px;
+    opacity: 0;
+}
+
+.selectize-control.loading::before {
+    opacity: 0.4;
+}
+
+.selectize-input {
+    border-left:0px !important;
+    border-right: 0px !important;
+    border-top: 0px !important;
+    border-radius: 0px !important;
+}
+
+.selectize-input.focus {
+    border-color: inherit !important;
+    outline: 0 !important;
+    box-shadow: inset 0 0px 0px rgba(0,0,0,.075), 0 0 0px rgba(38, 41, 60, 0.6) !important;
+
+
+}

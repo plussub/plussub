@@ -1,9 +1,0 @@
-[submodule "src/js/background"]
-	path = src/js/background
-	url = git@github.com:plussub/background-services.git
-[submodule "src/js/messagebus"]
-	path = src/js/messagebus
-	url = git@github.com:plussub/messagebus.git
-[submodule "src/js/descriptor"]
-	path = src/js/descriptor
-	url = git@github.com:plussub/descriptor.git

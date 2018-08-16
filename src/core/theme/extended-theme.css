@@ -1,0 +1,37 @@
+paper-fab[mini] {
+    transform: var(--default-fab-size);
+}
+
+label {
+    font-size: 75%;
+    color:var(--primary-text-color);
+}
+
+
+paper-expansion-panel /deep/ iron-icon{
+    color:var(--text-primary-color);
+}
+
+
+paper-expansion-panel {
+
+    --paper-expansion-panel-summary: {
+        color: var(--text-primary-color);
+        font-size: 12px;
+        font-weight: 500;
+    };
+
+    --paper-expansion-panel-content: {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 0px;
+        background-color:var(--primary-background-color)
+    };
+
+    --paper-expansion-panel-header: {
+        background-color: var(--default-primary-color);
+        color: var(--text-primary-color);
+        font-size: 14px;
+        font-weight: 500;
+    };
+}

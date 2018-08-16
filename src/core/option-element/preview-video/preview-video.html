@@ -1,0 +1,16 @@
+<link rel="import" href="../../../polymer/polymer.html">
+
+<dom-module id="preview-video">
+    <template>
+        <style>
+            /** do not delete needed for dynamic css replacement*/
+            .SubtitlePlaceholderCssId{  background-color:green;  }
+        </style>
+        <video id="exampleVideo" preload="auto" loop="" autoplay="" controls="" muted="">
+            <source src="../../../../res/video/optionmovie.mp4" type="video/mp4">
+        </video>
+
+        <paper-input id="subtitleText" label="Subtitle preview text" value="{{previewText}}"></paper-input>
+    </template>
+    <script src="preview-video.js"></script>
+</dom-module>

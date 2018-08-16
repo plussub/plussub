@@ -1,0 +1,24 @@
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="show-redux-state.html">
+<dom-module id="debug-console">
+    <template>
+        <style>
+            :host {
+                display: none;
+            }
+        </style>
+        <paper-input></paper-input>
+
+        <paper-tabs selected="{{_selectedView}}">
+            <paper-tab>Redux State</paper-tab>
+        </paper-tabs>
+        <iron-pages selected="[[_selectedView]]">
+            <show-redux-state></show-redux-state>
+        </iron-pages>
+
+        <paper-button on-tap="sendReduxHeartbeat">Send Heartbeat</paper-button>
+
+
+    </template>
+    <script src="debug-console.js"></script>
+</dom-module>

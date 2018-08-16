@@ -1,0 +1,34 @@
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../paper-input/paper-textarea.html">
+<link rel="import" href="../../../iron-icons/iron-icons.html">
+<link rel="import" href="../../../paper-fab/paper-fab.html">
+
+<link rel="import" href="../beautify-css/beautify-css.html">
+
+<dom-module id="subtitle-styling">
+    <template>
+        <style>
+            :host{
+                min-width:200px;
+            }
+
+            h1 {
+                width: 100%;
+                min-height: 50px;
+                text-align: center;
+                color: var(--text-primary-color);
+                background-color: var(--default-primary-color);
+            }
+            paper-textarea{
+                min-width:300px;
+                max-width:500px;
+                min-height:500px;
+            }
+        </style>
+
+        <paper-fab icon="icons:sort" mini="" on-tap="tidyUp" style="float:right"></paper-fab>
+        <paper-textarea id="subtitleCssArea" label="Subtitle CSS" value="{{css}}">
+        </paper-textarea>
+</template>
+    <script src="subtitle-styling.js"></script>
+</dom-module>

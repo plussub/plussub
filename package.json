@@ -6,8 +6,9 @@
     "test": "gulp mocha_unit"
   },
   "dependencies": {
+    "redux": "^4.0.0",
     "vue": "^2.5.17",
-    "plussub-core": "^3.52.0"
+    "vuetify": "^1.1.12"
   },
   "engine": "node >= 0.10",
   "devDependencies": {
@@ -21,6 +22,15 @@
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-update-json": "^0.2.2",
-    "vueify": "^9.4.1"
+    "vueify": "^9.4.1",
+    "chai": "^4.1.2",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^2.2.0",
+    "run-sequence": "^2.2.1",
+    "mocha": "^5.2.0",
+    "requirejs": "^2.3.5",
+    "sinon": "^6.1.5",
+    "node-fetch": "^2.2.0",
+    "fetch-mock": "^6.5.2"
   }
 }
