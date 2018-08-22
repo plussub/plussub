@@ -4,7 +4,7 @@ class CSSInjectService {
     constructor() {
         this.injectCssElementId = 'plussubInjectedCss';
         this.options = {
-            nodeToInjectStyleElement: () => document.querySelectorAll("body")
+            nodeToInjectStyleElement: () => document.querySelector("body")
         };
 
         let previousLoadedCss = "";

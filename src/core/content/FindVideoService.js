@@ -4,14 +4,14 @@ import {foundVideo} from "../redux/actionCreators";
 class FindVideoService {
     constructor() {
 
-        this.options = Object.assign({
+        this.options = {
             collectNodeListOfFoundedVideos: () => document.querySelectorAll("video"),
             observedNodeToDetectedAddedVideos: () => document.querySelector("body")
-        });
+        };
         this.cssTag = "plussubDetectedVideo";
         this.detectNotTaggedVideos();
 
-        new MutationObserver(this.detectNotTaggedVideos).observe(this.options.observedNodeToDetectedAddedVideos(), {
+        new MutationObserver(()=>this.detectNotTaggedVideos).observe(this.options.observedNodeToDetectedAddedVideos(), {
             childList: true,
             subtree: true
         });
