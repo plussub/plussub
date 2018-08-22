@@ -29,7 +29,7 @@
 
 <script>
     import Debug from '../component/debug.vue';
-    import {dispatch} from '../redux/redux.js';
+    import {store} from '../redux/redux.js';
     import {setMovieInfo, parseRawSubtitle} from '../redux/actionCreators.js';
 
     export default {
@@ -38,11 +38,6 @@
             Debug,
         },
         methods: {
-            guid() {
-                let s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-                return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-            },
-
             fileSelected() {
                 const reader = new FileReader();
                 console.log(this.$refs["fileInput"]);
@@ -51,13 +46,12 @@
                     const filename = this.$refs["fileInput"].files[0].name;
                     console.log(`file loaded: ${filename}`);
 
-                    dispatch(setMovieInfo({
-                        id: this.guid(),
+                    store.dispatch(setMovieInfo({
                         title: filename,
                         src: "File selection"
                     }));
 
-                    dispatch(parseRawSubtitle(reader.result));
+                    store.dispatch(parseRawSubtitle(reader.result));
                 };
             }
         }
