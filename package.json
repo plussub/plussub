@@ -8,29 +8,21 @@
   "dependencies": {
     "redux": "^4.0.0",
     "vue": "^2.5.17",
+    "vue-router": "^3.0.1",
     "vuetify": "^1.1.12"
   },
   "engine": "node >= 0.10",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-preset-env": "^1.7.0",
-    "browserify": "^3.9.1",
-    "git-rev": "^0.2.1",
-    "grunt": "^1.0.3",
-    "grunt-contrib-compress": "^1.4.3",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-update-json": "^0.2.2",
-    "vueify": "^9.4.1",
-    "chai": "^4.1.2",
-    "gulp": "^3.9.1",
-    "gulp-mocha": "^2.2.0",
-    "run-sequence": "^2.2.1",
-    "mocha": "^5.2.0",
-    "requirejs": "^2.3.5",
-    "sinon": "^6.1.5",
-    "node-fetch": "^2.2.0",
-    "fetch-mock": "^6.5.2"
+    "@babel/core": "^7.0.0-rc.2",
+    "@babel/plugin-transform-runtime": "^7.0.0-rc.2",
+    "@babel/preset-env": "^7.0.0-rc.2",
+    "@babel/runtime": "^7.0.0-rc.2",
+    "babel-loader": "^8.0.0-beta.6",
+    "css-loader": "^1.0.0",
+    "style-loader": "^0.22.1",
+    "vue-loader": "^15.4.0",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0"
   }
 }

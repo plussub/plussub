@@ -1,218 +1,157 @@
-/**
- * Created by stefa on 25.08.2017.
- */
-var srtPlayer = srtPlayer || {};
-if (typeof exports !== 'undefined') {
-    exports.srtPlayer = srtPlayer;
-    srtPlayer.Descriptor = require('../descriptor/Descriptor').srtPlayer.Descriptor;
-    srtPlayer.GuidService = require('./GuidService').srtPlayer.GuidService;
-}
+import type from './const.js';
 
+let timestampFilter = (payload) => Object.assign(payload, {reduxTimestamp: new Date()});
+let resultFilter = (payload) => Object.assign({}, {result: payload, resultId: srtPlayer.GuidService.createGuid()});
 
-srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
+let parseRawSubtitle = (raw) => ({
+    type: type.subtitle_parser_parse,
+    payload: raw
+});
 
-        let timestampFilter = (payload) => Object.assign(payload, {reduxTimestamp: new Date()});
-        let resultFilter = (payload) => Object.assign({}, {result: payload, resultId: srtPlayer.GuidService.createGuid() });
+let setOffsetTimeForSubtitle = (delay = 0) => ({
+    type: type.subtitle_offset_time,
+    payload: delay
+});
 
-        return {
+let removeLoadedSubtitle = () => ({
+    type: type.subtitle_remove,
+    meta: "appPage"
+});
+let parsedSubtitle = (subtitleOrError = "", isError = false) => ({
+    type: type.subtitle_parser_parsed,
+    payload: isError ? timestampFilter(subtitleOrError) : resultFilter(subtitleOrError),
+    error: isError
+});
 
-            parseRawSubtitle: (raw) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSE,
-                    payload: raw
-                }
-            },
+let triggerSearchMovie = (query) => ({
+    type: type.movie_search_query,
+    payload: query
+});
 
-            setOffsetTimeForSubtitle: (delay = 0) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE.OFFSET_TIME.PUB.VALUE,
-                    payload: delay
-                };
-            },
+let setMovieSearchResult = (searchResultOrError, isError = false) => ({
+    type: type.movie_search_result,
+    payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
+    error: isError
+});
 
-            removeLoadedSubtitle: () => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE.REMOVE.PUB.CURRENT_SUBTITLE,
-                    meta: "appPage"
-                };
-            },
+let setSelectedMovieSelection = (index) => ({
+    type: type.movie_search_selected,
+    payload: index
+});
 
-            parsedSubtitle: (subtitleOrError = "", isError = false) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSED,
-                    payload: isError ? timestampFilter(subtitleOrError) : resultFilter(subtitleOrError),
-                    error: isError
-                };
-            },
+let triggerMovieSearchReset = () => ({type: type.movie_search_reset});
 
-            triggerSearchMovie: (query) => {
-                return {
-                    type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.SEARCH,
-                    payload: query
-                };
-            },
+let setMovieInfo = (movieInfo) => ({
+    type: type.movie_info_reset,
+    payload: Object.assign(movieInfo, {
+        id: srtPlayer.GuidService.createGuid()
+    })
+});
 
-            setMovieSearchResult: (searchResultOrError, isError = false) => {
+let resetMovieInfo = () => ({type: type.movie_info_reset});
 
-                return {
-                    type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESULT,
-                    payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
-                    error: isError
-                };
-            },
+let triggerSubtitleSearchViaImdbId = (imdbId) => ({
+    type: type.subtitle_search_via_imdb,
+    payload: imdbId
 
-            setSelectedMovieSelection: (index) => {
-                return {
-                    type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.SET_SELECTED,
-                    payload: index
-                };
-            },
+});
 
-            triggerMovieSearchReset: () => {
-                return {
-                    type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESET
-                };
-            },
+let triggerSubtitleSearchViaLanguage = (language) => ({
+    type: type.subtitle_search_via_language,
+    payload: language
+});
 
-            setMovieInfo: (movieInfo) => {
-                return {
-                    type: srtPlayer.Descriptor.MOVIE_INFO.MOVIE_INFO.PUB.SET,
-                    payload: Object.assign(movieInfo,{
-                        id:srtPlayer.GuidService.createGuid()
-                    })
-                };
-            },
+let setSelectedSubtitleSelection = (index) => ({
+    type: type.subtitle_search_selected,
+    payload: index
+});
 
-            resetMovieInfo: () => {
-                return {
-                    type: srtPlayer.Descriptor.MOVIE_INFO.MOVIE_INFO.PUB.RESET
-                };
-            },
+let setSubtitleSearchResult = (searchResultOrError, isError = false) => ({
+    type: type.subtitle_search_result,
+    payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
+    error: isError
+});
 
+let triggerSubtitleSearchReset = () => ({type: type.subtitle_search_reset});
 
-            triggerSubtitleSearchViaImdbId: (imdbId) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_IMDB,
-                    payload: imdbId
-                };
-            },
+let triggerSubtitleDownload = (link) => ({
+    type: type.subtitle_download_link,
+    payload: link
+});
 
+let setSubtitleDownloadResult = (rawSubtitleOrError, isError = false) => ({
+    type: type.subtitle_download_result,
+    payload: isError ? timestampFilter(rawSubtitleOrError) : resultFilter(rawSubtitleOrError),
+    error: isError
+});
 
-            triggerSubtitleSearchViaLanguage: (language) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_LANGUAGE,
-                    payload: language
-                };
-            },
+let resetSubtitleDownload = () => ({type: type.subtitle_download_reset});
 
-            setSelectedSubtitleSelection: (index) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SET_SELECTED,
-                    payload: index
-                };
-            },
+let changeCss = (css = "") => ({
+    type: type.option_css,
+    payload: css
+});
 
-            setSubtitleSearchResult: (searchResultOrError, isError=false) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESULT,
-                    payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
-                    error: isError
-                };
-            },
+let changeSubtitleProperties = (properties = {}) => ({
+    type: type.option_subtitle_properties,
+    payload: properties
+});
 
-            triggerSubtitleSearchReset: () => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET
-                };
-            },
+let resetOption = () => ({type: type.option_reset});
 
-            triggerSubtitleDownload: (link) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.DOWNLOAD_LINK,
-                    payload: link
-                };
-            },
+let foundVideo = (video = null) => ({
+    type: type.content_found_video,
+    payload: video
+});
 
-            setSubtitleDownloadResult: (rawSubtitleOrError,isError=false) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESULT,
-                    payload: isError ? timestampFilter(rawSubtitleOrError) : resultFilter(rawSubtitleOrError),
-                    error: isError
-                };
-            },
+let videoTick = (ms = 0) => ({
+    type: type.content_video_timestamp,
+    payload: ms
+});
 
-            resetSubtitleDownload: () => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESET
-                };
-            },
+let resetAll = () => ({type: type.reset_all});
 
-            changeCss: (css = "") => {
-                return {
-                    type: srtPlayer.Descriptor.OPTION.OPTION.PUB.CSS,
-                    payload: css
-                };
-            },
+let sendHeartBeat = () => ({type: "<does not match>"});
 
-            changeSubtitleProperties: (properties = {}) => {
-                return {
-                    type: srtPlayer.Descriptor.OPTION.OPTION.PUB.SUBTITLE_PROPERTIES,
-                    payload: properties
-                };
-            },
+let toggleShowDebugConsole = () => ({type: type.debug_toggle_console});
 
-            resetOption: () => {
-                return {
-                    type: srtPlayer.Descriptor.OPTION.OPTION.PUB.RESET
-                };
-            },
+let enableDebugConsole = (enabled) => ({
+    type: type.debug_enable_console,
+    payload: enabled
+});
 
-            foundVideo: (video = null) => {
-                return {
-                    type: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
-                    payload: video
-                };
-            },
+let selectSubtitleSelectionMode = (selectedMode) => ({
+    type: type.app_state_select_mode,
+    payload: selectedMode
+});
 
-            videoTick: (ms = 0) => {
-                return {
-                    type: srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META.PUB.TIME,
-                    payload: ms
-                }
-            },
-
-            resetAll: () => {
-                return {
-                    type: srtPlayer.Descriptor.RESET.RESET.PUB.ALL
-                }
-            },
-
-            sendHeartBeat: () => {
-                return {
-                    type: "<does not match>"
-                }
-            },
-
-            toggleShowDebugConsole: () => {
-                return {
-                    type: srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE
-                }
-            },
-
-            enableDebugConsole: (enabled) => {
-                return {
-                    type: srtPlayer.Descriptor.DEBUG.DEBUG.PUB.ENABLE_CONSOLE,
-                    payload: enabled
-                }
-            },
-
-            selectSubtitleSelectionMode: (selectedMode) => {
-                return {
-                    type: srtPlayer.Descriptor.APP_STATE.APP_STATE.PUB.SELECT_MODE,
-                    payload: selectedMode
-                }
-            }
-        }
-
-
-    })();
+export {
+    parseRawSubtitle,
+    setOffsetTimeForSubtitle,
+    removeLoadedSubtitle,
+    parsedSubtitle,
+    triggerSearchMovie,
+    setMovieSearchResult,
+    setSelectedMovieSelection,
+    triggerMovieSearchReset,
+    setMovieInfo,
+    resetMovieInfo,
+    triggerSubtitleSearchViaImdbId,
+    triggerSubtitleSearchViaLanguage,
+    setSelectedSubtitleSelection,
+    setSubtitleSearchResult,
+    triggerSubtitleSearchReset,
+    triggerSubtitleDownload,
+    setSubtitleDownloadResult,
+    resetSubtitleDownload,
+    changeCss,
+    changeSubtitleProperties,
+    resetOption,
+    foundVideo,
+    videoTick,
+    resetAll,
+    sendHeartBeat,
+    toggleShowDebugConsole,
+    enableDebugConsole,
+    selectSubtitleSelectionMode
+};

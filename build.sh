@@ -1,1 +1,2 @@
-browserify -t vueify -e src/chrome/popup.js -o src/chrome/gen/popup_build.js
+npx webpack --config webpack/popup.webpack.config.js --display-module
+npx webpack --config webpack/content.webpack.config.js --display-module
