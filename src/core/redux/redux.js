@@ -106,6 +106,8 @@ store.subscribe(() => {
 
 let dispatch = store.dispatch;
 let subscribe = store.subscribe;
-export {store, dispatch, subscribe};
+let getState = store.getState;
+
+export {store, dispatch, subscribe, getState};
 
 console.log("Redux loaded");

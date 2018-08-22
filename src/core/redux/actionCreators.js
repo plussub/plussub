@@ -1,7 +1,8 @@
 import type from './const.js';
+import {createGuid} from "../guid/guid.js";
 
 let timestampFilter = (payload) => Object.assign(payload, {reduxTimestamp: new Date()});
-let resultFilter = (payload) => Object.assign({}, {result: payload, resultId: srtPlayer.GuidService.createGuid()});
+let resultFilter = (payload) => Object.assign({}, {result: payload, resultId: createGuid()});
 
 let parseRawSubtitle = (raw) => ({
     type: type.subtitle_parser_parse,
@@ -44,7 +45,7 @@ let triggerMovieSearchReset = () => ({type: type.movie_search_reset});
 let setMovieInfo = (movieInfo) => ({
     type: type.movie_info_reset,
     payload: Object.assign(movieInfo, {
-        id: srtPlayer.GuidService.createGuid()
+        id: createGuid()
     })
 });
 
