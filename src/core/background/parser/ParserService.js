@@ -16,7 +16,7 @@ class ParserService {
                 try {
                     this.parse({raw, offsetTime});
                 } catch (e) {
-                    console.log(e);
+                    console.warn(e);
                     return dispatch(parsedSubtitle({
                         message: `Parsing failed: ${e}`,
                         src: "parserService"
