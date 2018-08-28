@@ -32,7 +32,6 @@ export default {
     content_found_video: 'content_found_video',
     content_video_timestamp: 'content_video_timestamp',
 
-    debug_toggle_console: 'debug_toggle_console',
-    debug_enable_console: 'debug_enable_console'
+    debug_set: 'debug_set'
 
 }

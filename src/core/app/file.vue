@@ -28,14 +28,14 @@
 
 
 <script>
-    import Debug from '../component/debug.vue';
+    import ReduxState from '../component/redux-state.vue';
     import {store} from '../redux/redux.js';
     import {setMovieInfo, parseRawSubtitle} from '../redux/actionCreators.js';
 
     export default {
         name: 'file-view',
         components: {
-            Debug,
+            ReduxState,
         },
         methods: {
             fileSelected() {

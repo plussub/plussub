@@ -7,7 +7,7 @@ export default {
             case type.option_css:
                 return {...state, css: action.payload};
             case type.option_subtitle_properties:
-                return {...state, subtitleProperties: action.payload};
+                return {...state, ...action.payload};
             case type.option_reset:
                 return {...state, ...initial.state.option};
             default:

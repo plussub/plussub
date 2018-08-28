@@ -25,6 +25,7 @@ function reducers(state = initial.state, action) {
     switch (action.type) {
 
         case type.reset_all:
+            console.warn('reset all');
             return {...state, ...initial.state};
         case type.app_state_select_mode:
             return {...state, appState: appStateReducer.reduce(state.appState, action)};
@@ -58,8 +59,7 @@ function reducers(state = initial.state, action) {
         case type.subtitle_download_result:
         case type.subtitle_download_reset:
             return {...state, subtitleDownload: subtitleDownloadReducer.reduce(state.subtitleDownload, action)};
-        case type.debug_enable_console:
-        case type.debug_toggle_console:
+        case type.debug_set:
             return {...state, debug: debugReducer.reduce(state.debug, action)};
         default:
             return state
@@ -75,7 +75,7 @@ if (!loadedState || loadedState.schemaVersion < initial.state.schemaVersion) {
     loadedState = initial.state;
 }
 
-if (loadedState.debug.reduxStore) {
+if (loadedState.debug.redux) {
     console.log(`load state: ${loadedState}`);
 }
 
@@ -89,7 +89,7 @@ if (typeof store.ready === 'undefined') {
 // let store = wrapStore(Redux.createStore(reducers, _ initial.state));
 store.subscribe(() => {
     let state = Object.assign({}, store.getState());
-    if (!config.shouldStoreState || state.debug.disableStoreReduxState) {
+    if (!config.shouldStoreState) {
         return;
     }
     //It makes no sense to safe founded videos or the current time of the video
@@ -97,7 +97,7 @@ store.subscribe(() => {
     //Also currentVideos contains circular dependencies because it is a video-html5 instance;
     state.videoMeta = initial.state.videoMeta;
 
-    if (state.debug.reduxStore) {
+    if (state.debug.redux) {
         console.log(JSON.stringify(state));
     }
 

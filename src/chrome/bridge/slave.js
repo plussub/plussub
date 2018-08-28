@@ -64,7 +64,7 @@ class Bridge{
             action.payload = "<placeholder>";
         }
 
-        if (this.state.debug.messageBridge) {
+        if (this.state && this.state.debug.messageBridge) {
             console.log(`Dispatch action: \n ${JSON.stringify(action, null, 2)}`);
         }
 

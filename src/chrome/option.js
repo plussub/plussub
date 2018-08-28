@@ -1,62 +1,37 @@
-/**
- * Created by sonste on 20.07.2017.
- */
-HTMLImports.whenReady(function() {
-    class MainDocumentElement extends Polymer.Element {
+//todo: use ../js/nodemodules/vue ?
 
-        ready(){
-            srtPlayer.Redux.store.ready().then(()=>{
-                let option = srtPlayer.Redux.store.getState().option;
-                this.css = option.css;
-                Object.assign(this.cue,option.subtitleProperties);
-                this.advancedSettingsObj ={
-                    enableDebugConsole: srtPlayer.Redux.getState().debug.enableDebugConsole
-                };
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Vuetify from 'vuetify';
+import ReduxConfig from './redux_config/slave.js'
+import OptionRouter from './option_router.vue';
+import Subtitle from '../core/option/subtitle.vue';
+import Debug from '../core/option/debug.vue';
+import Factory from '../core/option/factory.vue';
 
-                ["line","position","size","align", "vertical"].forEach((path)=> this.$.subtitlePosition.notifyPath(`cue.${path}`));
-                Object.keys(this.advancedSettingsObj).forEach((path)=> this.$.advancedSettings.notifyPath(`advancedSettingsObj.${path}`));
-
-            });
-
-            super.ready();
-            // setTimeout(()=> this.$.option.load(),1000);
-        }
-
-        static get is() { return 'main-document-element'; }
-
-        static get properties() {
-            return {
-                advancedSettingsObj:{
-                    type: Object,
-                    value: ()=>{
-                        return {hallo:"ext"};
-                    }
-                },
-
-                cue: {
-                    type: Object,
-                    value:()=> {
-                        let cue = new VTTCue(0, 60, "<c.srtPlayer> value </c.srtPlayer>");
-                        return Object.assign(cue,{
-                            position:3,
-                            line:100,
-                            size:100
-                        })
-                    }
-                },
-                css: {
-                    type: String,
-                    value: () => {
-                        var customSubtitleCss = '::cue(.srtPlayer) \
-                    {\
-                        background-color:green;\
-                    }';
-                        return css_beautify(customSubtitleCss);
-                    }
-                }
-
-            }
-        }
+Vue.use(Vuetify, {
+    theme: {
+        primary: '#5BC0DE',
+        secondary: '#b0bec5',
+        accent: '#8c9eff',
+        error: '#b71c1c',
+        debug: '#b710af'
     }
-    window.customElements.define(MainDocumentElement.is, MainDocumentElement);
 });
+Vue.use(VueRouter);
+
+const routes = [
+    {path: '/subtitle', name: 'home', component: Subtitle},
+    {path: '/debug', name: 'debug', component: Debug},
+    {path: '/factory', name: 'factory', component: Factory}
+
+];
+
+const router = new VueRouter({routes});
+
+new Vue({
+    router,
+    render(createElement) {
+        return createElement(OptionRouter)
+    }
+}).$mount('#app');

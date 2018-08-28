@@ -9,10 +9,17 @@ export default {
         },
 
         option: {
-            css: "#editCSS{ font-size:20px;} \n ::cue(.srtPlayer){ \/* background-color:black; \n color:white; \n font-size:20px; *\/}",
-            subtitleProperties: {
-                position: 50
-            } //cue properties
+            css: "::cue(.srtPlayer)\n" +
+            "{\n" +
+            " /* background-color:black; \n" +
+            " color:white; \n" +
+            " font-size:20px; */\n" +
+            "}",
+            subtitleVertical: '',
+            subtitleLine: 'auto',
+            subtitlePosition: 'auto',
+            subtitleAlign: 'start',
+            subtitleSize: 100
         },
 
         subtitle: {
@@ -65,13 +72,10 @@ export default {
         errors: [],
 
         debug: {
-            messageBridge: true,
-            content: true,
-            showDebugConsole: false,
-            enableDebugConsole: false,
-            redux: false,
-            reduxStore: false,
-            disableStoreReduxState: false
+            option: false,
+            messageBridge: false,
+            content: false,
+            redux: false
         }
     }
 }

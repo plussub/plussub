@@ -10,9 +10,16 @@ class VTTInjectService {
                 subtitle,
                 videoMeta: {
                     currentVideos
+                },
+                option:{
+                    subtitleVertical: vertical,
+                    subtitleLine: line,
+                    subtitlePosition: position,
+                    subtitleAlign: align,
+                    subtitleSize: size
                 }
             } = store.getState();
-            this.processVideos(subtitle,currentVideos);
+            this.processVideos(subtitle,currentVideos, {vertical,line,position,align,size});
         });
 
         if (store.getState().debug.content) {
@@ -20,7 +27,7 @@ class VTTInjectService {
         }
     }
 
-    processVideos(subtitle, videos) {
+    processVideos(subtitle, videos, vttSettings) {
         if (subtitle.id === -1) {
             this.disableAllCreatedTracks();
             return;
@@ -36,7 +43,7 @@ class VTTInjectService {
             return;
         }
 
-        let cues = this.generateCuesFrom(subtitle.parsed);
+        let cues = this.generateCuesFrom(subtitle.parsed,vttSettings);
         let tracks = processVideos.map(video => {
             if (!video.classList.contains(this.processedCssTag)) {
                 video.classList.add(this.processedCssTag);

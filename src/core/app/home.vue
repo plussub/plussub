@@ -52,8 +52,7 @@
                 </v-flex>
             </v-layout>
 
-            <div>&nbsp;</div>
-            <v-layout>
+            <v-layout mt-2>
                 <v-flex xs12 sm6 offset-sm3>
                     <v-card>
                         <v-layout>
@@ -67,18 +66,18 @@
                 </v-flex>
             </v-layout>
         </v-container>
-        <debug></debug>
+        <redux-state></redux-state>
 
     </div>
 </template>
 
 <script>
-    import Debug from '../component/debug.vue';
+    import ReduxState from '../component/redux-state.vue';
 
     export default {
         name: 'home-view',
         components: {
-            Debug,
+            ReduxState
         }
     };
 

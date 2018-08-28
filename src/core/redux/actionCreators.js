@@ -114,11 +114,9 @@ let resetAll = () => ({type: type.reset_all});
 
 let sendHeartBeat = () => ({type: "<does not match>"});
 
-let toggleShowDebugConsole = () => ({type: type.debug_toggle_console});
-
-let enableDebugConsole = (enabled) => ({
-    type: type.debug_enable_console,
-    payload: enabled
+let setDebugSettings = (debugSettings) => ({
+    type: type.debug_set,
+    payload: debugSettings
 });
 
 let selectSubtitleSelectionMode = (selectedMode) => ({
@@ -152,7 +150,6 @@ export {
     videoTick,
     resetAll,
     sendHeartBeat,
-    toggleShowDebugConsole,
-    enableDebugConsole,
+    setDebugSettings,
     selectSubtitleSelectionMode
 };

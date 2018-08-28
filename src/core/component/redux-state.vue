@@ -1,8 +1,7 @@
 <template>
-    <div>
-        <h1>redux state</h1>
-        <pre>{{ reduxState }}</pre>
-    </div>
+    <pre style="height:100%;">
+        {{ reduxState }}
+    </pre>
 </template>
 <script>
     import {store} from "../redux/redux.js";
