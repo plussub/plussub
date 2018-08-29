@@ -49,8 +49,8 @@
                                                                                   @change="propertiesModified"
                                                                                   mandatory>
                                                                         <v-btn flat value="">Horizontal</v-btn>
-                                                                        <v-btn flat value="rl">vertical left</v-btn>
-                                                                        <v-btn flat value="lr">vertical right</v-btn>
+                                                                        <v-btn flat value="rl">left</v-btn>
+                                                                        <v-btn flat value="lr">right</v-btn>
                                                                     </v-btn-toggle>
                                                                 </v-flex>
                                                             </v-layout>
