@@ -9,12 +9,12 @@ let parseRawSubtitle = (raw) => ({
     payload: raw
 });
 
-let setOffsetTimeForSubtitle = (delay = 0) => ({
+let setOffsetTime = (delay = 0) => ({
     type: type.subtitle_offset_time,
     payload: delay
 });
 
-let removeLoadedSubtitle = () => ({
+let removeSubtitle = () => ({
     type: type.subtitle_remove,
     meta: "appPage"
 });
@@ -43,18 +43,17 @@ let setSelectedMovieSelection = (index) => ({
 let triggerMovieSearchReset = () => ({type: type.movie_search_reset});
 
 let setMovieInfo = (movieInfo) => ({
-    type: type.movie_info_reset,
+    type: type.movie_info_set,
     payload: Object.assign(movieInfo, {
         id: createGuid()
     })
 });
 
-let resetMovieInfo = () => ({type: type.movie_info_reset});
+let removeMovieInfo = () => ({type: type.movie_info_remove});
 
 let triggerSubtitleSearchViaImdbId = (imdbId) => ({
     type: type.subtitle_search_via_imdb,
     payload: imdbId
-
 });
 
 let triggerSubtitleSearchViaLanguage = (language) => ({
@@ -124,17 +123,23 @@ let selectSubtitleSelectionMode = (selectedMode) => ({
     payload: selectedMode
 });
 
+let openOptionPage = (payload) => ({
+    type: type.app_state_open_option,
+    payload: payload
+});
+
 export {
+    openOptionPage,
     parseRawSubtitle,
-    setOffsetTimeForSubtitle,
-    removeLoadedSubtitle,
+    setOffsetTime,
+    removeSubtitle,
     parsedSubtitle,
     triggerSearchMovie,
     setMovieSearchResult,
     setSelectedMovieSelection,
     triggerMovieSearchReset,
     setMovieInfo,
-    resetMovieInfo,
+    removeMovieInfo,
     triggerSubtitleSearchViaImdbId,
     triggerSubtitleSearchViaLanguage,
     setSelectedSubtitleSelection,

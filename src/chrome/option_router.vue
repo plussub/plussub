@@ -30,13 +30,17 @@
         </v-navigation-drawer>
         <v-toolbar dark color="primary" fixed app>
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-            <v-toolbar-title>+Sub Options</v-toolbar-title>
+            <v-toolbar-title>
+                <v-avatar>
+                    <img :src="logo">
+                </v-avatar>
+            </v-toolbar-title>
         </v-toolbar>
         <v-content>
             <v-container fluid fill-height>
                 <v-layout justify-center align-center>
                     <v-flex text-xs-center>
-                       <router-view></router-view>
+                        <router-view></router-view>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -50,7 +54,8 @@
 
     export default {
         data: () => ({
-            drawer: null
+            drawer: null,
+            logo: '../icons/plussub128.png'
         }),
         created() {
             this.$router.push('/subtitle');
@@ -58,14 +63,14 @@
                 store.dispatch(sendHeartBeat());
             });
         },
-        methods:{
-            gotoSubtitle(){
+        methods: {
+            gotoSubtitle() {
                 this.$router.push('/subtitle');
             },
-            gotoDebug(){
+            gotoDebug() {
                 this.$router.push('/debug');
             },
-            gotoFactorySettings(){
+            gotoFactorySettings() {
                 this.$router.push('/factory');
             }
         }

@@ -1,6 +1,6 @@
 <style scoped>
     .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s;
+        transition: opacity .1s ease;
     }
 
     .fade-enter, .fade-leave-to {

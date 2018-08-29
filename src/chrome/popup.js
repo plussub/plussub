@@ -5,6 +5,7 @@ import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import ReduxConfig from './redux_config/slave.js'
 import PopupRouter from './popup_router.vue';
+import openOptionPageEventHandler from './eventhandler/openOptionPage.js';
 
 import Home from '../core/app/home.vue';
 import Search from '../core/app/search.vue';

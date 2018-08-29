@@ -8,7 +8,7 @@
                 </v-btn>
             </router-link>
 
-            <v-toolbar-title class="white--text">+Sub File Selection</v-toolbar-title>
+            <v-toolbar-title class="white--text">File Selection</v-toolbar-title>
         </v-toolbar>
 
         <v-container>
@@ -22,25 +22,19 @@
                 </v-card-actions>
             </v-card>
         </v-container>
-        <debug></debug>
     </div>
 </template>
 
 
 <script>
-    import ReduxState from '../component/redux-state.vue';
     import {store} from '../redux/redux.js';
     import {setMovieInfo, parseRawSubtitle} from '../redux/actionCreators.js';
 
     export default {
         name: 'file-view',
-        components: {
-            ReduxState,
-        },
         methods: {
             fileSelected() {
                 const reader = new FileReader();
-                console.log(this.$refs["fileInput"]);
                 reader.readAsText(this.$refs["fileInput"].files[0]);
                 reader.onload = () => {
                     const filename = this.$refs["fileInput"].files[0].name;
@@ -52,6 +46,7 @@
                     }));
 
                     store.dispatch(parseRawSubtitle(reader.result));
+                    this.$router.push('/home');
                 };
             }
         }

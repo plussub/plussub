@@ -5,7 +5,8 @@ export default {
         schemaVersion: 253,
 
         appState: {
-            selectedMode: 0
+            selectedMode: 0,
+            openOptionPage: ''
         },
 
         option: {
@@ -18,7 +19,7 @@ export default {
             subtitleVertical: '',
             subtitleLine: 'auto',
             subtitlePosition: 'auto',
-            subtitleAlign: 'start',
+            subtitleAlign: 'center',
             subtitleSize: 100
         },
 
@@ -41,7 +42,7 @@ export default {
 
         movieInfo: {
             id: -1,
-            title: "-",
+            title: "",
             poster: null,
             src: ""
         },

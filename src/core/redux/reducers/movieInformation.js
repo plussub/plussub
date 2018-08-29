@@ -6,7 +6,7 @@ export default {
         switch (action.type) {
             case type.movie_info_set:
                 return {...state, ...action.payload};
-            case type.movie_info_reset:
+            case type.movie_info_remove:
                 return {...state, ...initial.state.movieInfo};
             default:
                 return state;

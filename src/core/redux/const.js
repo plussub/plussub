@@ -1,9 +1,10 @@
 export default {
     reset_all: 'reset_all',
     app_state_select_mode: 'app_state_select_mode',
-    
+    app_state_open_option: 'app_state_open_option',
+
     movie_info_set: 'movie_info_set',
-    movie_info_reset: 'movie_info_set',
+    movie_info_remove: 'movie_info_remove',
 
     option_css: 'option_css',
     option_subtitle_properties: 'option_subtitle_properties',

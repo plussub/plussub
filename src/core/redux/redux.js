@@ -28,6 +28,7 @@ function reducers(state = initial.state, action) {
             console.warn('reset all');
             return {...state, ...initial.state};
         case type.app_state_select_mode:
+        case type.app_state_open_option:
             return {...state, appState: appStateReducer.reduce(state.appState, action)};
         case type.content_found_video:
         case type.content_video_timestamp:
@@ -42,7 +43,7 @@ function reducers(state = initial.state, action) {
         case type.subtitle_remove:
             return {...state, subtitle: subtitleReducer.reduce(state.subtitle, action)};
         case type.movie_info_set:
-        case type.movie_info_reset:
+        case type.movie_info_remove:
             return {...state, movieInfo: movieInformationReducer.reduce(state.movieInfo, action)};
         case type.movie_search_query:
         case type.movie_search_result:
