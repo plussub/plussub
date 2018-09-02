@@ -30,6 +30,7 @@ export default {
                 if (isNaN(action.payload)) {
                     throw "OffsetTime is not a number (NaN)";
                 }
+
                 if (action.payload === state.offsetTime) {
                     return state;
                 }

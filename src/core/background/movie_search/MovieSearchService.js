@@ -1,49 +1,59 @@
-var srtPlayer = srtPlayer || {};
-if (typeof exports !== 'undefined') {
-    exports.srtPlayer = srtPlayer;
-    srtPlayer.Descriptor = require('../../descriptor/Descriptor.js').srtPlayer.Descriptor;
-    srtPlayer.Redux = require('../../redux/redux').srtPlayer.Redux;
-    srtPlayer.ActionCreators = require('../../redux/actionCreators').srtPlayer.ActionCreators;
-}
+import {subscribe, dispatch, getState} from "../../redux/redux.js";
+import {setMovieSearchResult, stopMovieSearch} from "../../redux/actionCreators.js";
 
-srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((fetch = window.fetch) => {
+class MovieSearchService {
 
-        let previousQuery = srtPlayer.Redux.getState().movieSearch.query;
-        let unsubscribe = srtPlayer.Redux.subscribe(() => {
-            let movieSearch = srtPlayer.Redux.getState().movieSearch;
-            if (previousQuery !== movieSearch.query && movieSearch.query !== "") {
-                previousQuery = movieSearch.query;
-                loadData(movieSearch.query);
+    constructor() {
+        this.source = null;
+
+        this.unsubscribe = subscribe(() => {
+            let {
+                query,
+                previousQuery,
+                isLoading,
+                isStopping,
+                stopped,
+                resultId,
+                result,
+                selected
+            } = getState().movieSearch;
+
+            if (previousQuery !== query && query !== "") {
+                console.log(`load query ${query}`);
+                this.loadData(query);
             }
-        });
 
-        async function loadData(query) {
-            try {
-                const response = await fetch('https://app.plus-sub.com/v2/movie/search/' + decodeURIComponent(query));
-                if (response.status !== 200) {
-                    srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult({
-                        message:`Failed to search movie. Status (${response.status})`,
-                        src:"movieSearchService"
-                    },true));
-                    return;
+            if (isStopping && isLoading) {
+                console.log('stop');
+                if (this.source) {
+                    this.source.cancel('Stop event');
+                    dispatch(stopMovieSearch());
                 }
-
-                const result = (await response.json()).results.map(e =>   Object.assign(e, {valueField: JSON.stringify(e)}));
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult(result));
-            } catch (err) {
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult({
-                    message:`Failed to search movie. Are you Disconnected? Err: (${err})`,
-                    src:"movieSearchService"
-                },true));
             }
-        }
 
-        return {
-            shutdown:unsubscribe
-        }
-    });
+        });
+        console.log("MovieSearchService ready");
+    }
 
-//instant service does not correct initialize messageBus (in testfiles)
-if (typeof exports === 'undefined' && typeof srtPlayer.MovieSearchService === 'function') {
-    srtPlayer.MovieSearchService = srtPlayer.MovieSearchService();
+    async loadData(query) {
+
+        if (this.source) {
+            this.source.cancel('New request');
+        }
+        this.source = axios.CancelToken.source();
+        return axios.get(`https://app.plus-sub.com/v2/movie/search/${decodeURIComponent(query)}`, {cancelToken: this.source.token})
+            .then((response) => dispatch(setMovieSearchResult(response.data.results)))
+            .catch((error) => dispatch(setMovieSearchResult({
+                    message: `Failed to search movie. (${error})`,
+                    src: "movieSearchService"
+                }, true))
+            );
+    }
+
+    shutdown() {
+        this.unsubscribe();
+    }
+
 }
+
+export default new MovieSearchService();

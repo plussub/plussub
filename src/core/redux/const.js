@@ -9,8 +9,10 @@ export default {
     option_css: 'option_css',
     option_subtitle_properties: 'option_subtitle_properties',
     option_reset: 'option_reset',
-    
+
     movie_search_query: 'movie_search_query',
+    movie_search_stop: 'movie_search_stop',
+    movie_search_stopped: 'movie_search_stopped',
     movie_search_result: 'movie_search_result',
     movie_search_selected: 'movie_search_selected',
     movie_search_reset: 'movie_search_reset',

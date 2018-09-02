@@ -46,6 +46,8 @@ function reducers(state = initial.state, action) {
         case type.movie_info_remove:
             return {...state, movieInfo: movieInformationReducer.reduce(state.movieInfo, action)};
         case type.movie_search_query:
+        case type.movie_search_stop:
+        case type.movie_search_stopped:
         case type.movie_search_result:
         case type.movie_search_selected:
         case type.movie_search_reset:

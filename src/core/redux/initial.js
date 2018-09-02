@@ -34,7 +34,10 @@ export default {
 
         movieSearch: {
             query: "",
+            previousQuery:"",
             isLoading: false,
+            isStopping: false,
+            stopped: false,
             resultId: -1,
             result: [],
             selected: -1,
@@ -73,6 +76,7 @@ export default {
         errors: [],
 
         debug: {
+            app: false,
             option: false,
             messageBridge: false,
             content: false,

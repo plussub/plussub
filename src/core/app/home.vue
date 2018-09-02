@@ -72,7 +72,10 @@
                                                   @input="doOffsetModified"
                                                   suffix="ms"
                                                   :append-icon="'fa-arrows-alt-h'"
-                                                  @click:append="doOffsetTime">
+                                                  clearable
+                                                  @click:clear="doClearOffsetTime"
+                                                  @click:append="doOffsetTime"
+                                                  @keyup.enter="doOffsetTime">
                                     </v-text-field>
                                 </v-card-title>
                             </v-flex>
@@ -154,10 +157,16 @@
             doOffsetTime() {
                 store.dispatch(setOffsetTime(parseInt(this.offsetTime, 10)));
 
-                //todo: move to parser service?
+                //todo: move to parser service? -> if offset is set do parse
                 if (store.getState().subtitle.id !== -1) {
                     store.dispatch(parseRawSubtitle(store.getState().subtitle.raw));
                 }
+            },
+
+            doClearOffsetTime() {
+                this.offsetTime = 0;
+                this.doOffsetModified();
+                this.doOffsetTime();
             },
 
             sendHeartBeat() {

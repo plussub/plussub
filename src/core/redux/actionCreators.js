@@ -11,7 +11,7 @@ let parseRawSubtitle = (raw) => ({
 
 let setOffsetTime = (delay = 0) => ({
     type: type.subtitle_offset_time,
-    payload: delay
+    payload: (delay === null || isNaN(delay)) ? 0 : delay
 });
 
 let removeSubtitle = () => ({
@@ -24,10 +24,15 @@ let parsedSubtitle = (subtitleOrError = "", isError = false) => ({
     error: isError
 });
 
-let triggerSearchMovie = (query) => ({
+let triggerMovieSearch = (query) => ({
     type: type.movie_search_query,
     payload: query
 });
+
+let triggerMovieSearchStop = () => ({type: type.movie_search_stop});
+
+let stopMovieSearch = () => ({type: type.movie_search_stopped});
+
 
 let setMovieSearchResult = (searchResultOrError, isError = false) => ({
     type: type.movie_search_result,
@@ -134,7 +139,9 @@ export {
     setOffsetTime,
     removeSubtitle,
     parsedSubtitle,
-    triggerSearchMovie,
+    triggerMovieSearch,
+    triggerMovieSearchStop,
+    stopMovieSearch,
     setMovieSearchResult,
     setSelectedMovieSelection,
     triggerMovieSearchReset,

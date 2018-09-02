@@ -12,6 +12,8 @@
                                         <v-card-text>
                                             <v-switch label="Enable debug on option page" v-model="option"
                                                       @change="setModifiedState"></v-switch>
+                                            <v-switch label="Enable debug on app page" v-model="app"
+                                                      @change="setModifiedState"></v-switch>
                                             <v-switch label="Enable debug for content script" v-model="content"
                                                       @change="setModifiedState"></v-switch>
                                             <v-switch label="Enable debug for message bridge" v-model="messageBridge"
@@ -56,6 +58,7 @@
 
     export default {
         data: () => ({
+            app: false,
             option: false,
             content: false,
             messageBridge: false,
@@ -71,6 +74,7 @@
                     return;
                 }
                 this.option = store.getState().debug.option;
+                this.app = store.getState().debug.app;
                 this.content = store.getState().debug.content;
                 this.messageBridge = store.getState().debug.messageBridge;
                 this.redux = store.getState().debug.redux;
@@ -89,6 +93,7 @@
             save() {
                 store.dispatch(setDebugSettings({
                     option: this.option,
+                    app: this.app,
                     content: this.content,
                     messageBridge: this.messageBridge,
                     redux: this.redux

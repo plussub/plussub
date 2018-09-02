@@ -16,7 +16,8 @@ Vue.use(Vuetify, {
         primary: '#5BC0DE',
         secondary: '#b0bec5',
         accent: '#8c9eff',
-        error: '#b71c1c'
+        error: '#b71c1c',
+        debug: '#b710af'
     }
 });
 Vue.use(VueRouter);
