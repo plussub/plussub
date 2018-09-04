@@ -180,6 +180,10 @@
                     this.movieSearchResults = store.getState().movieSearch.result;
                     this.movieSearchResultsUi = this.movieSearchResults.reduce((acc, c) => [...acc, c, this.divider], []);
                 }
+
+                if( this.subtitleSearchResult !== store.getState().subtitleSearch.result){
+                    this.subtitleSearchResult = store.getState().subtitleSearch.result;
+                }
             });
         },
 

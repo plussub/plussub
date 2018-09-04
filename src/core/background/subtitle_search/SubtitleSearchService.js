@@ -33,21 +33,22 @@ class SubtitleSearchService {
         }
         this.source = axios.CancelToken.source();
 
-        let info = await axios.get(`https://app.plus-sub.com/v2/movie/information/${decodeURIComponent(tmdbId)}`, {cancelToken: this.source.token})
-            .catch((error) => dispatch(setSubtitleSearchResult({
-                    message: `Failed to search subtitle (imdb id). (${error})`,
-                    src: "movieSearchService"
-                }, true))
-            );
-
-        if (!info.data.imdbid) {
-            info = await axios.get(`https://app.plus-sub.com/v2/tv/information/${decodeURIComponent(tmdbId)}`, {cancelToken: this.source.token})
-                .catch((error) => dispatch(setSubtitleSearchResult({
-                    message: `Failed to search subtitle (imdb id). (${error})`,
-                    src: "movieSearchService"
-                }, true)));
-        }
-
+        let info = await axios.get(`https://app.plus-sub.com/v2/movie/information/${decodeURIComponent(tmdbId)}`, {
+            cancelToken: this.source.token,
+            transformResponse: [...axios.defaults.transformResponse, (data) => {
+                if (data.imdbid) {
+                    return data;
+                }
+                return axios.get(`https://app.plus-sub.com/v2/tv/information/${decodeURIComponent(tmdbId)}`, {cancelToken: this.source.token})
+                    .catch((error) => dispatch(setSubtitleSearchResult({
+                        message: `Failed to search subtitle (imdb id). (${error})`,
+                        src: "movieSearchService"
+                    }, true)))
+            }]
+        }).catch((error) => dispatch(setSubtitleSearchResult({
+            message: `Failed to search subtitle (imdb id). (${error})`,
+            src: "movieSearchService"
+        }, true)));
 
         return axios.get(`https://app.plus-sub.com/v2/subtitle/${info.data.imdbId}/${language}`, {
             cancelToken: this.source.token,

@@ -3,7 +3,23 @@
   "description": "+Sub build script",
   "author": "Stefan Breitenstein",
   "scripts": {
-    "test": "gulp mocha_unit"
+    "test": "jest --no-cache"
+  },
+  "jest": {
+    "verbose": true,
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "modulePathIgnorePatterns": [
+      "src/chrome",
+      "src/core/app",
+      "src/core/app-element",
+      "src/core/background",
+      "src/core/component",
+      "src/core/content",
+      "src/core/guid",
+      "src/core/option"
+    ]
   },
   "dependencies": {
     "cssbeautify": "^0.3.1",
@@ -14,12 +30,15 @@
   },
   "engine": "node >= 0.10",
   "devDependencies": {
-    "@babel/core": "^7.0.0-rc.2",
-    "@babel/plugin-transform-runtime": "^7.0.0-rc.2",
-    "@babel/preset-env": "^7.0.0-rc.2",
-    "@babel/runtime": "^7.0.0-rc.2",
-    "babel-loader": "^8.0.0-beta.6",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.4.2",
+    "babel-loader": "^8.0.0",
     "css-loader": "^1.0.0",
+    "jest": "^23.5.0",
     "style-loader": "^0.22.1",
     "vue-loader": "^15.4.0",
     "vue-template-compiler": "^2.5.17",

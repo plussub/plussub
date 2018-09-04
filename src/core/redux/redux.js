@@ -55,7 +55,8 @@ function reducers(state = initial.state, action) {
             return {...state, movieSearch: movieSearchReducer.reduce(state.movieSearch, action)};
         case type.subtitle_language_iso639:
             return {...state, subtitleLanguage: subtitleLanguageReducer.reduce(state.subtitleLanguage, action)};
-        case type.subtitle_search_query:
+        case type.subtitle_search_via_imdb:
+        case type.subtitle_search_via_language:
         case type.subtitle_search_result:
         case type.subtitle_search_selected:
         case type.subtitle_search_reset:

@@ -5,7 +5,6 @@ import CSSInjectService from './CSSInjectService.js';
 import FindVideoService from './FindVideoService.js';
 
 (async () => {
-    let debug = true;
     await store.ready();
     VTTInjectService();
     VideoMetaService();
