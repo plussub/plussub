@@ -33,19 +33,32 @@ let triggerMovieSearchStop = () => ({type: type.movie_search_stop});
 
 let stopMovieSearch = () => ({type: type.movie_search_stopped});
 
-
 let setMovieSearchResult = (searchResultOrError, isError = false) => ({
     type: type.movie_search_result,
     payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
     error: isError
 });
 
-let setSelectedMovieSelection = (index) => ({
+let selectMovie = (index) => ({
     type: type.movie_search_selected,
     payload: index
 });
 
 let triggerMovieSearchReset = () => ({type: type.movie_search_reset});
+
+let selectSubtitleLanguage = (iso639) => ({
+    type: type.subtitle_language_iso639,
+    payload: iso639
+});
+
+
+let triggerSubtitleSearch = (payload) => ({
+    type: type.subtitle_search_query,
+    payload: {
+        queryLanguage: payload.queryLanguage,
+        queryTmdbId: payload.queryTmdbId
+    }
+});
 
 let setMovieInfo = (movieInfo) => ({
     type: type.movie_info_set,
@@ -55,16 +68,6 @@ let setMovieInfo = (movieInfo) => ({
 });
 
 let removeMovieInfo = () => ({type: type.movie_info_remove});
-
-let triggerSubtitleSearchViaImdbId = (imdbId) => ({
-    type: type.subtitle_search_via_imdb,
-    payload: imdbId
-});
-
-let triggerSubtitleSearchViaLanguage = (language) => ({
-    type: type.subtitle_search_via_language,
-    payload: language
-});
 
 let setSelectedSubtitleSelection = (index) => ({
     type: type.subtitle_search_selected,
@@ -143,12 +146,14 @@ export {
     triggerMovieSearchStop,
     stopMovieSearch,
     setMovieSearchResult,
-    setSelectedMovieSelection,
+    selectMovie,
     triggerMovieSearchReset,
+    selectSubtitleLanguage,
+    triggerSubtitleSearch,
+
+
     setMovieInfo,
     removeMovieInfo,
-    triggerSubtitleSearchViaImdbId,
-    triggerSubtitleSearchViaLanguage,
     setSelectedSubtitleSelection,
     setSubtitleSearchResult,
     triggerSubtitleSearchReset,

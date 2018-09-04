@@ -11,6 +11,7 @@ import movieSearchReducer from './reducers/movieSearch.js'
 import subtitleSearchReducer from './reducers/subtitleSearch.js'
 import subtitleDownloadReducer from './reducers/subtitleDownload.js'
 import debugReducer from './reducers/debug.js'
+import subtitleLanguageReducer from './reducers/subtitleLanguage.js'
 
 //use this workaround to inject different redux configs
 let config = window.ReduxConfig;
@@ -52,8 +53,9 @@ function reducers(state = initial.state, action) {
         case type.movie_search_selected:
         case type.movie_search_reset:
             return {...state, movieSearch: movieSearchReducer.reduce(state.movieSearch, action)};
-        case type.subtitle_search_via_imdb:
-        case type.subtitle_search_via_language:
+        case type.subtitle_language_iso639:
+            return {...state, subtitleLanguage: subtitleLanguageReducer.reduce(state.subtitleLanguage, action)};
+        case type.subtitle_search_query:
         case type.subtitle_search_result:
         case type.subtitle_search_selected:
         case type.subtitle_search_reset:

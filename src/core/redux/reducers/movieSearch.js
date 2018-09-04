@@ -38,7 +38,6 @@ export default {
                 };
 
             case type.movie_search_result:
-                console.log(state);
                 return {
                     ...state,
                     previousQuery:state.query,

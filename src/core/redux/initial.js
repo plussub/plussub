@@ -34,13 +34,17 @@ export default {
 
         movieSearch: {
             query: "",
-            previousQuery:"",
+            previousQuery: "",
             isLoading: false,
             isStopping: false,
             stopped: false,
             resultId: -1,
             result: [],
             selected: -1,
+        },
+
+        subtitleLanguage: {
+            iso639: ''
         },
 
         movieInfo: {
@@ -51,12 +55,16 @@ export default {
         },
 
         subtitleSearch: {
-            imdbId: "",
-            language: "eng",
+            previousQueryTmdbId: "",
+            queryTmdbId: "",
+            previousQueryLanguage:"",
+            queryLanguage: "",
+
             isLoading: false,
+
             resultId: -1,
             result: [],
-            selected: -1,
+            selected: -1
         },
 
         subtitleDownload: {

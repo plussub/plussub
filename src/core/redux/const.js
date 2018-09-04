@@ -17,8 +17,9 @@ export default {
     movie_search_selected: 'movie_search_selected',
     movie_search_reset: 'movie_search_reset',
 
-    subtitle_search_via_imdb: 'subtitle_search_via_imdb',
-    subtitle_search_via_language: 'subtitle_search_via_language',
+    subtitle_language_iso639:'subtitle_language_iso639',
+
+    subtitle_search_query: 'subtitle_search_query',
     subtitle_search_result: 'subtitle_search_result',
     subtitle_search_selected: 'subtitle_search_selected',
     subtitle_search_reset: 'subtitle_search_reset',

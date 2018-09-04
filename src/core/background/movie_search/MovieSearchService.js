@@ -20,7 +20,7 @@ class MovieSearchService {
 
             if (previousQuery !== query && query !== "") {
                 console.log(`load query ${query}`);
-                this.loadData(query);
+                this.search(query);
             }
 
             if (isStopping && isLoading) {
@@ -35,7 +35,7 @@ class MovieSearchService {
         console.log("MovieSearchService ready");
     }
 
-    async loadData(query) {
+    async search(query) {
 
         if (this.source) {
             this.source.cancel('New request');
