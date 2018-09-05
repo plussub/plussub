@@ -1,60 +1,59 @@
-var srtPlayer = srtPlayer || {};
+import {subscribe, dispatch, getState} from "../../redux/redux.js";
+import {requestSubtitleDownload, stopSubtitleDownload, setSubtitleSearchResult, parseRawSubtitle} from "../../redux/actionCreators.js";
 
-if (typeof exports !== 'undefined') {
-    exports.srtPlayer = srtPlayer;
-    srtPlayer.Descriptor = require('../../descriptor/Descriptor.js').srtPlayer.Descriptor;
-    srtPlayer.Redux = require('../../redux/redux').srtPlayer.Redux;
-    srtPlayer.ActionCreators = require('../../redux/actionCreators').srtPlayer.ActionCreators;
-}
+class SubtitleDownloadService {
+    constructor() {
+        this.source = null;
+        this.unsubscribe = subscribe(() => {
+            let {
+                downloadLink,
+                requestId,
+                prevRequestId,
+                isLoading,
+                isStopping
+            } = getState().subtitleDownload;
 
-srtPlayer.SubtitleDownloadService = srtPlayer.SubtitleDownloadService || ((fetch = window.fetch) => {
-
-        let previousLink = srtPlayer.Redux.getState().subtitleDownload.downloadLink;
-        let previousResultId = srtPlayer.Redux.getState().subtitleSearch.resultId;
-
-        let unsubscribe = srtPlayer.Redux.subscribe(() => {
-            let subtitleDownload = srtPlayer.Redux.getState().subtitleDownload;
-
-            if (previousLink !== subtitleDownload.downloadLink && subtitleDownload.downloadLink !== "") {
-                previousLink = subtitleDownload.downloadLink;
-                download(subtitleDownload.downloadLink);
+            if (prevRequestId !== requestId && downloadLink !== "") {
+                dispatch(requestSubtitleDownload());
+                this.download(downloadLink);
             }
 
-            if (previousResultId !== subtitleDownload.resultId && subtitleDownload.resultId !== -1) {
-                previousResultId = subtitleDownload.resultId;
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.parseRawSubtitle(subtitleDownload.result));
+            if (isStopping && isLoading) {
+                console.log('stop');
+                if (this.source) {
+                    this.source.cancel('Stop event');
+                    dispatch(stopSubtitleDownload());
+                }
             }
         });
 
-        async function download(downloadLink) {
-            let link = downloadLink.replace('http://', 'https://');
-            try {
-                const response = await fetch(link);
-                if (response.status !== 200) {
-                    srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({
-                        message: `Failed to download subtitle. Status ${response.status}`,
-                        src: "subtitleDownloadService"
-                    }, true));
-                    return;
-                }
-                const raw = await srtPlayer.Inflater().inflate(response);
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult(raw));
+        console.log("SubtitleDownloadService ready");
 
-            } catch (err) {
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({
-                    message: `Failed to download subtitle. Are you Disconnected? Err: (${err})`,
-                    src: "subtitleDownloadService"
-                }, true));
-            }
+    }
+
+    async download(downloadLink) {
+        if (this.source) {
+            this.source.cancel('New request');
         }
 
-        return {
-            shutdown: unsubscribe
-        }
+        return axios.get(downloadLink.replace('http://', 'https://'), {
+            transformResponse: [...axios.defaults.transformResponse, (data) => {
+                console.log(data);
+                // const raw = await srtPlayer.Inflater().inflate(response);
+                return data;
+            }]
+        }).then(response =>{
+            dispatch(setSubtitleSearchResult(response.data));
+            dispatch(parseRawSubtitle(response.data));
+        }).catch((error) => dispatch(setSubtitleSearchResult({
+            message: `Failed to download subtitle. (${error})`,
+            src: "subtitleDownloadService"
+        }, true)));
+    }
 
-    });
+    shutdown() {
+        this.unsubscribe();
+    }
 
-//instant service does not correct initialize messageBus (in testfiles)
-if (typeof exports === 'undefined' && typeof srtPlayer.SubtitleDownloadService === 'function') {
-    srtPlayer.SubtitleDownloadService = srtPlayer.SubtitleDownloadService();
 }
+export default new SubtitleDownloadService();
