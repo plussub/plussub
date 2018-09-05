@@ -1,5 +1,10 @@
 import {subscribe, dispatch, getState} from "../../redux/redux.js";
-import {requestSubtitleDownload, stopSubtitleDownload, setSubtitleSearchResult, parseRawSubtitle} from "../../redux/actionCreators.js";
+import {
+    requestSubtitleDownload,
+    stopSubtitleDownload,
+    setSubtitleDownloadResult,
+    parseRawSubtitle
+} from "../../redux/actionCreators.js";
 
 class SubtitleDownloadService {
     constructor() {
@@ -37,18 +42,18 @@ class SubtitleDownloadService {
         }
 
         return axios.get(downloadLink.replace('http://', 'https://'), {
-            transformResponse: [...axios.defaults.transformResponse, (data) => {
-                console.log(data);
-                // const raw = await srtPlayer.Inflater().inflate(response);
-                return data;
-            }]
-        }).then(response =>{
-            dispatch(setSubtitleSearchResult(response.data));
+            responseType: 'arraybuffer',
+            transformResponse: [...axios.defaults.transformResponse,
+                (data) => pako.inflate(data, {to: "string"})
+            ]
+        }).then(response => {
+            dispatch(setSubtitleDownloadResult(response.data));
             dispatch(parseRawSubtitle(response.data));
         }).catch((error) => dispatch(setSubtitleSearchResult({
-            message: `Failed to download subtitle. (${error})`,
-            src: "subtitleDownloadService"
-        }, true)));
+                message: `Failed to download subtitle. (${error})`,
+                src: "subtitleDownloadService"
+            }, true))
+        );
     }
 
     shutdown() {
@@ -56,4 +61,5 @@ class SubtitleDownloadService {
     }
 
 }
+
 export default new SubtitleDownloadService();

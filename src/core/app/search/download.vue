@@ -28,16 +28,6 @@
             loading: true
         }),
         props: ['hasFocus'],
-        created: function () {
-            store.subscribe(() => {
-                // this.loading = store.getState().subtitleDownload.isLoading;
-                if(this.hasFocus){
-                //    todo if download fin:
-                //     setTimeout(() => this.$router.push('/home'), 2500);
-                }
-            });
-        },
-
         mounted: function () {
             this.sendHeartBeat();
         },
@@ -45,6 +35,7 @@
         watch: {
             hasFocus: function (hasFocus) {
                 if (hasFocus) {
+                    this.loading = true;
                     this.doDownload();
                 }
             }
@@ -55,14 +46,25 @@
             doDownload() {
                 //timeout needed because sync between subtitle selection and background redux store
                 setTimeout(() => {
-                    this.loading = false;
-                    let subtitle = store.getState().subtitleSearch.result[ store.getState().subtitleSearch.selected];
+                    let subtitle = store.getState().subtitleSearch.result[store.getState().subtitleSearch.selected];
 
                     console.log(`do download sub (${subtitle.MovieName})`);
                     console.log(`download link: ${subtitle.SubDownloadLink}`);
 
                     store.dispatch(triggerSubtitleDownload(subtitle.SubDownloadLink));
-                }, 2000);
+                    //timeout needed because sync between subtitle download trigger and background redux store
+
+                    setTimeout(() => {
+                        let unsubscribe = store.subscribe(() => {
+                            if (store.getState().subtitleDownload.resultId !== -1) {
+                                unsubscribe();
+                                this.loading = false;
+                                setTimeout(() => this.$router.push('/home'), 700);
+                            }
+                        });
+                        this.sendHeartBeat();
+                    }, 500);
+                }, 100);
             },
 
             doCancel() {

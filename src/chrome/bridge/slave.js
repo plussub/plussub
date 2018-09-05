@@ -1,7 +1,7 @@
 import type from '../../core/redux/const.js';
 
 
-class Bridge{
+class Bridge {
     constructor() {
 
         this.state = null;
@@ -53,6 +53,9 @@ class Bridge{
             console.log(`subscribe: ${cb}`);
         }
         this.subscribers.push(cb);
+        return () => {
+            this.subscribers = this.subscribers.filter(x => cb.toString() === x.toString());
+        }
     }
 
     dispatch(action) {
