@@ -1,5 +1,5 @@
 import {subscribe, dispatch, getState} from "../../redux/redux.js";
-import {setSubtitleSearchResult} from "../../redux/actionCreators.js";
+import {setSubtitleSearchResult, requestSubtitleSearch, stopSubtitleSearch} from "../../redux/actionCreators.js";
 
 class SubtitleSearchService {
     constructor() {
@@ -7,21 +7,27 @@ class SubtitleSearchService {
 
         this.unsubscribe = subscribe(() => {
             let {
-                previousQueryTmdbId,
                 queryTmdbId,
-                previousQueryLanguage,
                 queryLanguage,
+                requestId,
+                prevRequestId,
                 isLoading,
-                resultId,
-                result,
-                selected
+                isStopping
             } = getState().subtitleSearch;
 
 
-            if ((previousQueryTmdbId !== queryTmdbId && queryTmdbId !== "") ||
-                (previousQueryLanguage !== queryLanguage && queryLanguage !== "")) {
-                console.log(`load query tmdb: ${queryTmdbId} lang: ${queryLanguage}`);
+            if (prevRequestId !== requestId && queryTmdbId !== "" && queryLanguage !== "") {
+                console.warn(`load query tmdb: ${queryTmdbId} lang: ${queryLanguage}`);
+                dispatch(requestSubtitleSearch());
                 this.search(queryTmdbId, queryLanguage);
+            }
+
+            if (isStopping && isLoading) {
+                console.log('stop');
+                if (this.source) {
+                    this.source.cancel('Stop event');
+                    dispatch(stopSubtitleSearch());
+                }
             }
         });
         console.log("SubtitleSearchService ready");
@@ -50,12 +56,12 @@ class SubtitleSearchService {
 
         return axios.get(`https://app.plus-sub.com/v2/subtitle/${info.data.imdbId}/${language}`, {
             cancelToken: this.source.token
-        }).then((response) => dispatch(setSubtitleSearchResult(response.data))
-        ).catch((error) => dispatch(setSubtitleSearchResult({
-                message: `Failed to search subtitle. (${error})`,
-                src: "SubtitleSearchService"
-            }, true))
-        );
+        }).then((response) => dispatch(setSubtitleSearchResult(response.data)))
+            .catch((error) => dispatch(setSubtitleSearchResult({
+                    message: `Failed to search subtitle. (${error})`,
+                    src: "SubtitleSearchService"
+                }, true))
+            );
     }
 
     shutdown() {

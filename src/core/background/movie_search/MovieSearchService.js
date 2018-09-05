@@ -12,11 +12,7 @@ class MovieSearchService {
                 requestId,
                 prevRequestId,
                 isLoading,
-                isStopping,
-                stopped,
-                resultId,
-                result,
-                selected
+                isStopping
             } = getState().movieSearch;
 
             if (prevRequestId !== requestId && query !== "") {

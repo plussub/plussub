@@ -21,11 +21,17 @@ export default {
     subtitle_language_iso639: 'subtitle_language_iso639',
 
     subtitle_search_query: 'subtitle_search_query',
+    subtitle_search_requested: 'subtitle_search_requested',
+    subtitle_search_stop: 'subtitle_search_stop',
+    subtitle_search_stopped: 'subtitle_search_stopped',
     subtitle_search_result: 'subtitle_search_result',
     subtitle_search_selected: 'subtitle_search_selected',
     subtitle_search_reset: 'subtitle_search_reset',
 
     subtitle_download_link: 'subtitle_download_link',
+    subtitle_download_requested: 'subtitle_download_requested',
+    subtitle_download_stop: 'subtitle_download_stop',
+    subtitle_download_stopped: 'subtitle_download_stopped',
     subtitle_download_result: 'subtitle_download_result',
     subtitle_download_reset: 'subtitle_download_reset',
 

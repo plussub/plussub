@@ -18,8 +18,7 @@
             </template>
         </v-data-table>
 
-        <v-btn mt-5 v-if="loading" flat @click="doCancel">Stop Search
-        </v-btn>
+        <v-btn mt-5 v-if="loading" flat @click="doCancel">Stop Search</v-btn>
         <v-btn v-if="debug" color="debug" class="white--text" @click="sendHeartBeat">HB</v-btn>
     </div>
 </template>
@@ -28,8 +27,10 @@
 
     import {store} from "../../../core/redux/redux.js";
     import {
-        sendHeartBeat,
-        triggerSubtitleSearch
+        triggerSubtitleSearch,
+        triggerSubtitleSearchStop,
+        selectSubtitle,
+        sendHeartBeat
     } from "../../../core/redux/actionCreators.js";
 
     export default {
@@ -40,16 +41,14 @@
                 {text: 'Rating', value: 'SubRating'},
             ],
             filter: '',
-            loading: false,
+            loading: true,
             result: []
         }),
         props: ['hasFocus'],
         created: function () {
             store.subscribe(() => {
                 this.loading = store.getState().subtitleSearch.isLoading;
-
                 if (this.result !== store.getState().subtitleSearch.result) {
-                    console.warn(this.result);
                     this.result = store.getState().subtitleSearch.result;
                 }
             });
@@ -62,6 +61,8 @@
         watch: {
             hasFocus: function (hasFocus) {
                 if (hasFocus) {
+                    //to prevent an empty datatable
+                    this.loading = true;
                     this.doSearch();
                 }
             }
@@ -70,25 +71,27 @@
         methods: {
 
             doSearch() {
+                //timeout needed because sync between language selection and background redux store
                 setTimeout(() => {
-                    console.warn("do search sub");
-                    console.warn(store.getState().subtitleLanguage.iso639);
-                    console.warn(store.getState().movieSearch.result[store.getState().movieSearch.selected].id);
+                    console.log('do search sub');
+                    console.log(`lang: ${store.getState().subtitleLanguage.iso639}`);
+                    console.log(`tmbdId: ${store.getState().movieSearch.result[store.getState().movieSearch.selected].id}`);
 
                     store.dispatch(triggerSubtitleSearch({
                         queryLanguage: store.getState().subtitleLanguage.iso639,
                         queryTmdbId: store.getState().movieSearch.result[store.getState().movieSearch.selected].id
                     }));
-                }, 500);
+                }, 100);
             },
 
-            doSelect(val) {
-                console.log(`subtitle selected: ${val}`);
-                console.log(`index: ${this.result.findIndex(e => e.IDSubtitleFile === val.IDSubtitleFile)}`);
+            doSelect(selected) {
+                store.dispatch(selectSubtitle(this.result.findIndex(x => x.IDSubtitleFile === selected.IDSubtitleFile)));
+                console.log(`Selected subtitle: ${JSON.stringify(selected)}`);
+                this.$emit('stepper-content-select');
             },
 
             doCancel() {
-                console.warn('cancel')
+                store.dispatch(triggerSubtitleSearchStop());
             },
 
             sendHeartBeat() {

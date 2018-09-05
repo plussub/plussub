@@ -22,7 +22,12 @@
 
                     <v-divider></v-divider>
 
-                    <v-stepper-step step="3">Pick a subtitle</v-stepper-step>
+                    <v-stepper-step :complete="e1 > 2" step="3">Pick a subtitle</v-stepper-step>
+
+                    <v-divider></v-divider>
+
+                    <v-stepper-step :complete="e1 > 3" step="4">Download result page</v-stepper-step>
+
                 </v-stepper-header>
 
                 <v-stepper-items>
@@ -37,6 +42,10 @@
                     <v-stepper-content step="3">
                         <subtitle-search v-on:stepper-content-select="doSelect" :has-focus="e1 === 3"></subtitle-search>
                     </v-stepper-content>
+
+                    <v-stepper-content step="4">
+                        <subtitle-download v-on:stepper-content-select="doSelect" :has-focus="e1 === 4"></subtitle-download>
+                    </v-stepper-content>
                 </v-stepper-items>
             </v-stepper>
         </v-container>
@@ -47,6 +56,7 @@
     import MovieSearch from './search/movie.vue';
     import LanguageSelection from './search/language.vue';
     import SubtitleSearch from './search/subtitle.vue';
+    import SubtitleDownload from './search/download.vue';
 
     export default {
         data: () => ({
@@ -61,7 +71,8 @@
         components: {
             MovieSearch,
             LanguageSelection,
-            SubtitleSearch
+            SubtitleSearch,
+            SubtitleDownload
         }
     }
 </script>

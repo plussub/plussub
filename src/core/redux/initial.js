@@ -33,9 +33,10 @@ export default {
         },
 
         movieSearch: {
-            query: "",
             requestId: "",
             prevRequestId: "",
+
+            query: "",
             isLoading: false,
             isStopping: false,
             stopped: false,
@@ -48,20 +49,16 @@ export default {
             iso639: ''
         },
 
-        movieInfo: {
-            id: -1,
-            title: "",
-            poster: null,
-            src: ""
-        },
-
         subtitleSearch: {
-            previousQueryTmdbId: "",
+            requestId: "",
+            prevRequestId: "",
+
             queryTmdbId: "",
-            previousQueryLanguage: "",
             queryLanguage: "",
 
             isLoading: false,
+            isStopping: false,
+            stopped: false,
 
             resultId: -1,
             result: [],
@@ -69,10 +66,24 @@ export default {
         },
 
         subtitleDownload: {
+            requestId: "",
+            prevRequestId: "",
+
             downloadLink: "",
+
             isLoading: false,
+            isStopping: false,
+            stopped: false,
+
             resultId: -1,
             result: ""
+        },
+
+        movieInfo: {
+            id: -1,
+            title: "",
+            poster: null,
+            src: ""
         },
 
         //videoMeta is transient

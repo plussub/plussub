@@ -61,8 +61,48 @@ let triggerSubtitleSearch = (payload) => ({
     type: type.subtitle_search_query,
     payload: {
         queryLanguage: payload.queryLanguage,
-        queryTmdbId: payload.queryTmdbId
+        queryTmdbId: payload.queryTmdbId,
+        requestId: createGuid()
     }
+});
+
+let requestSubtitleSearch = () => ({type: type.subtitle_search_requested});
+
+let triggerSubtitleSearchStop = () => ({type: type.subtitle_search_stop});
+
+let stopSubtitleSearch = () => ({type: type.subtitle_search_stopped});
+
+let setSubtitleSearchResult = (searchResultOrError, isError = false) => ({
+    type: type.subtitle_search_result,
+    payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
+    error: isError
+});
+
+let selectSubtitle = (index) => ({
+    type: type.subtitle_search_selected,
+    payload: index
+});
+
+let triggerSubtitleSearchReset = () => ({type: type.subtitle_search_reset});
+
+let triggerSubtitleDownload = (link) => ({
+    type: type.subtitle_download_link,
+    payload: {
+        link,
+        requestId: createGuid()
+    }
+});
+
+let requestSubtitleDownload = () => ({type: type.subtitle_download_requested});
+
+let triggerSubtitleDownloadStop = () => ({type: type.subtitle_download_stop});
+
+let stopSubtitleDownload = () => ({type: type.subtitle_download_stopped});
+
+let setSubtitleDownloadResult = (rawSubtitleOrError, isError = false) => ({
+    type: type.subtitle_download_result,
+    payload: isError ? timestampFilter(rawSubtitleOrError) : resultFilter(rawSubtitleOrError),
+    error: isError
 });
 
 let setMovieInfo = (movieInfo) => ({
@@ -74,29 +114,6 @@ let setMovieInfo = (movieInfo) => ({
 
 let removeMovieInfo = () => ({type: type.movie_info_remove});
 
-let setSelectedSubtitleSelection = (index) => ({
-    type: type.subtitle_search_selected,
-    payload: index
-});
-
-let setSubtitleSearchResult = (searchResultOrError, isError = false) => ({
-    type: type.subtitle_search_result,
-    payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
-    error: isError
-});
-
-let triggerSubtitleSearchReset = () => ({type: type.subtitle_search_reset});
-
-let triggerSubtitleDownload = (link) => ({
-    type: type.subtitle_download_link,
-    payload: link
-});
-
-let setSubtitleDownloadResult = (rawSubtitleOrError, isError = false) => ({
-    type: type.subtitle_download_result,
-    payload: isError ? timestampFilter(rawSubtitleOrError) : resultFilter(rawSubtitleOrError),
-    error: isError
-});
 
 let resetSubtitleDownload = () => ({type: type.subtitle_download_reset});
 
@@ -156,16 +173,21 @@ export {
     triggerMovieSearchReset,
     selectSubtitleLanguage,
     triggerSubtitleSearch,
-
+    requestSubtitleSearch,
+    triggerSubtitleSearchStop,
+    stopSubtitleSearch,
+    setSubtitleSearchResult,
+    selectSubtitle,
+    triggerSubtitleSearchReset,
+    triggerSubtitleDownload,
+    requestSubtitleDownload,
+    triggerSubtitleDownloadStop,
+    stopSubtitleDownload,
+    setSubtitleDownloadResult,
+    resetSubtitleDownload,
 
     setMovieInfo,
     removeMovieInfo,
-    setSelectedSubtitleSelection,
-    setSubtitleSearchResult,
-    triggerSubtitleSearchReset,
-    triggerSubtitleDownload,
-    setSubtitleDownloadResult,
-    resetSubtitleDownload,
     changeCss,
     changeSubtitleProperties,
     resetOption,

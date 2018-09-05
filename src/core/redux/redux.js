@@ -57,11 +57,17 @@ function reducers(state = initial.state, action) {
         case type.subtitle_language_iso639:
             return {...state, subtitleLanguage: subtitleLanguageReducer.reduce(state.subtitleLanguage, action)};
         case type.subtitle_search_query:
+        case type.subtitle_search_requested:
+        case type.subtitle_search_stop:
+        case type.subtitle_search_stopped:
         case type.subtitle_search_result:
         case type.subtitle_search_selected:
         case type.subtitle_search_reset:
             return {...state, subtitleSearch: subtitleSearchReducer.reduce(state.subtitleSearch, action)};
         case type.subtitle_download_link:
+        case type.subtitle_download_requested:
+        case type.subtitle_download_stop:
+        case type.subtitle_download_stopped:
         case type.subtitle_download_result:
         case type.subtitle_download_reset:
             return {...state, subtitleDownload: subtitleDownloadReducer.reduce(state.subtitleDownload, action)};

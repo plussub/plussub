@@ -6,7 +6,7 @@
                       v-model="query"
                       @input="doQueryModified"
                       @keyup.enter="doSearch"
-                      @click:clear="doClear">
+        >
 
             <v-layout slot="append">
                 <v-icon @click="doSearch" size="24">fa-search</v-icon>
@@ -73,9 +73,7 @@
                 this.loading = store.getState().movieSearch.isLoading;
 
                 if (this.result !== store.getState().movieSearch.result) {
-                    console.log(store.getState().movieSearch.result);
                     this.result = store.getState().movieSearch.result;
-
                     this.resultUi = this.result.reduce((acc, c) => [...acc, c, this.divider], []);
                 }
             });
@@ -92,10 +90,6 @@
 
             doQueryModified() {
                 this.queryModified = true;
-            },
-
-            doClear() {
-                this.items = [];
             },
 
             doSelect(index) {
