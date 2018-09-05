@@ -47,6 +47,7 @@ function reducers(state = initial.state, action) {
         case type.movie_info_remove:
             return {...state, movieInfo: movieInformationReducer.reduce(state.movieInfo, action)};
         case type.movie_search_query:
+        case type.movie_search_requested:
         case type.movie_search_stop:
         case type.movie_search_stopped:
         case type.movie_search_result:
@@ -55,8 +56,7 @@ function reducers(state = initial.state, action) {
             return {...state, movieSearch: movieSearchReducer.reduce(state.movieSearch, action)};
         case type.subtitle_language_iso639:
             return {...state, subtitleLanguage: subtitleLanguageReducer.reduce(state.subtitleLanguage, action)};
-        case type.subtitle_search_via_imdb:
-        case type.subtitle_search_via_language:
+        case type.subtitle_search_query:
         case type.subtitle_search_result:
         case type.subtitle_search_selected:
         case type.subtitle_search_reset:

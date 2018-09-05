@@ -34,7 +34,8 @@ export default {
 
         movieSearch: {
             query: "",
-            previousQuery: "",
+            requestId: "",
+            prevRequestId: "",
             isLoading: false,
             isStopping: false,
             stopped: false,
@@ -57,7 +58,7 @@ export default {
         subtitleSearch: {
             previousQueryTmdbId: "",
             queryTmdbId: "",
-            previousQueryLanguage:"",
+            previousQueryLanguage: "",
             queryLanguage: "",
 
             isLoading: false,

@@ -26,8 +26,13 @@ let parsedSubtitle = (subtitleOrError = "", isError = false) => ({
 
 let triggerMovieSearch = (query) => ({
     type: type.movie_search_query,
-    payload: query
+    payload: {
+        query: query,
+        requestId: createGuid()
+    }
 });
+
+let requestMovieSearch = () => ({type: type.movie_search_requested});
 
 let triggerMovieSearchStop = () => ({type: type.movie_search_stop});
 
@@ -143,6 +148,7 @@ export {
     removeSubtitle,
     parsedSubtitle,
     triggerMovieSearch,
+    requestMovieSearch,
     triggerMovieSearchStop,
     stopMovieSearch,
     setMovieSearchResult,

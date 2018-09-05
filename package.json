@@ -9,19 +9,10 @@
     "verbose": true,
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
-    },
-    "modulePathIgnorePatterns": [
-      "src/chrome",
-      "src/core/app",
-      "src/core/app-element",
-      "src/core/background",
-      "src/core/component",
-      "src/core/content",
-      "src/core/guid",
-      "src/core/option"
-    ]
+    }
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "cssbeautify": "^0.3.1",
     "redux": "^4.0.0",
     "vue": "^2.5.17",

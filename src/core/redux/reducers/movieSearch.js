@@ -14,9 +14,9 @@ export default {
                 return {
                     ...state,
 
-                    query: action.payload,
-
-                    isLoading: true,
+                    query: action.payload.query,
+                    requestId: action.payload.requestId,
+                    isLoading: false,
                     isStopping: false,
                     stopped: false,
 
@@ -24,14 +24,20 @@ export default {
                     resultId: -1,
                     selected: -1
                 };
-
+            case type.movie_search_requested:
+                return {
+                    ...state,
+                    isLoading: true,
+                    isStopping: false,
+                    stopped: false,
+                    prevRequestId: state.requestId
+                };
             case type.movie_search_stop:
                 return {...state, isStopping: true};
 
             case type.movie_search_stopped:
                 return {
                     ...state,
-                    previousQuery: '<CANCELD>',
                     stopped: true,
                     isLoading: false,
                     isStopping: false
@@ -40,7 +46,6 @@ export default {
             case type.movie_search_result:
                 return {
                     ...state,
-                    previousQuery:state.query,
                     isLoading: false,
                     isStopping: false,
                     result: action.payload.result,

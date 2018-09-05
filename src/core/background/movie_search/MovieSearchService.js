@@ -1,5 +1,5 @@
 import {subscribe, dispatch, getState} from "../../redux/redux.js";
-import {setMovieSearchResult, stopMovieSearch} from "../../redux/actionCreators.js";
+import {requestMovieSearch, setMovieSearchResult, stopMovieSearch} from "../../redux/actionCreators.js";
 
 class MovieSearchService {
 
@@ -9,7 +9,8 @@ class MovieSearchService {
         this.unsubscribe = subscribe(() => {
             let {
                 query,
-                previousQuery,
+                requestId,
+                prevRequestId,
                 isLoading,
                 isStopping,
                 stopped,
@@ -18,8 +19,9 @@ class MovieSearchService {
                 selected
             } = getState().movieSearch;
 
-            if (previousQuery !== query && query !== "") {
+            if (prevRequestId !== requestId && query !== "") {
                 console.log(`load query ${query}`);
+                dispatch(requestMovieSearch());
                 this.search(query);
             }
 
@@ -42,7 +44,7 @@ class MovieSearchService {
         }
         this.source = axios.CancelToken.source();
         return axios.get(`https://app.plus-sub.com/v2/movie/search/${decodeURIComponent(query)}`, {cancelToken: this.source.token})
-            .then((response) => dispatch(setMovieSearchResult(response.data.results)))
+            .then((response) => dispatch(setMovieSearchResult(response.data.results.filter((entry, index, self) => self.findIndex(t => t.id === entry.id) === index))))
             .catch((error) => dispatch(setMovieSearchResult({
                     message: `Failed to search movie. (${error})`,
                     src: "movieSearchService"
