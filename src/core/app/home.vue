@@ -84,6 +84,7 @@
                 </v-flex>
             </v-layout>
         </v-container>
+        <error-notification></error-notification>
     </div>
 </template>
 
@@ -100,6 +101,8 @@
 
     const emptyImg = '../img/empty.png';
     const unknownImg = '../img/unknown.png';
+
+    import ErrorNotification from '../component/error-notification.vue';
 
 
     export default {
@@ -171,7 +174,10 @@
 
             sendHeartBeat() {
                 store.dispatch(sendHeartBeat());
-            }
+            },
+        },
+        components: {
+            ErrorNotification
         }
     };
 

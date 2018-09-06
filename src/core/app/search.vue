@@ -49,6 +49,7 @@
                 </v-stepper-items>
             </v-stepper>
         </v-container>
+        <error-notification></error-notification>
     </div>
 </template>
 
@@ -57,6 +58,8 @@
     import LanguageSelection from './search/language.vue';
     import SubtitleSearch from './search/subtitle.vue';
     import SubtitleDownload from './search/download.vue';
+
+    import ErrorNotification from '../component/error-notification.vue';
 
     export default {
         data: () => ({
@@ -72,7 +75,8 @@
             MovieSearch,
             LanguageSelection,
             SubtitleSearch,
-            SubtitleDownload
+            SubtitleDownload,
+            ErrorNotification
         }
     }
 </script>
