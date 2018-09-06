@@ -31,9 +31,7 @@ class SubtitleDownloadService {
                 }
             }
         });
-
         console.log("SubtitleDownloadService ready");
-
     }
 
     async download(downloadLink) {
@@ -47,7 +45,7 @@ class SubtitleDownloadService {
                 (data) => pako.inflate(data, {to: "string"})
             ]
         }).then(response => {
-            dispatch(setSubtitleDownloadResult(response.data));
+            dispatch(setSubtitleDownloadResult({}));
             dispatch(parseRawSubtitle(response.data));
         }).catch((error) => dispatch(setSubtitleSearchResult({
                 message: `Failed to download subtitle. (${error})`,

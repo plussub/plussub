@@ -19,6 +19,7 @@
     import {
         triggerSubtitleDownload,
         triggerSubtitleDownloadStop,
+        setMovieInfo,
         sendHeartBeat
     } from "../../../core/redux/actionCreators.js";
 
@@ -58,6 +59,13 @@
                         let unsubscribe = store.subscribe(() => {
                             if (store.getState().subtitleDownload.resultId !== -1) {
                                 unsubscribe();
+                               let movieInfo = store.getState().movieSearch.result[store.getState().movieSearch.selected];
+
+                                store.dispatch(setMovieInfo({
+                                    title: movieInfo.Title,
+                                    poster: movieInfo.Poster,
+                                    src: "Search"
+                                }));
                                 this.loading = false;
                                 setTimeout(() => this.$router.push('/home'), 700);
                             }
