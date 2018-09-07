@@ -1,4 +1,5 @@
 import {subscribe, dispatch, getState} from "../../redux/redux.js";
+import axios from 'axios';
 import {requestMovieSearch, setMovieSearchResult, stopMovieSearch} from "../../redux/actionCreators.js";
 
 class MovieSearchService {

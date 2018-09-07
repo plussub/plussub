@@ -1,3 +1,5 @@
+import axios from 'axios';
+import pako from 'pako';
 import {subscribe, dispatch, getState} from "../../redux/redux.js";
 import {
     requestSubtitleDownload,

@@ -80,4 +80,4 @@ class Bridge {
 }
 
 
-export default new Bridge();
+export default () => new Bridge();

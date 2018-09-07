@@ -1,4 +1,6 @@
-import bridge from '../bridge/slave.js'
+import Bridge from '../bridge/slave.js'
+
+let bridge = Bridge();
 
 window.ReduxConfig = {
     loadState: () => null,

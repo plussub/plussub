@@ -166,7 +166,7 @@
 
     export default {
         data: () => ({
-            videoUrl: '../video/testscreen.mp4',
+            videoUrl: 'video/testscreen.mp4',
             videoType: 'video/mp4',
             previewText: 'Lorem ipsum dolor sit amet, quo an erant',
             cue: new VTTCue(0, 60, '<c.srtPlayer> Lorem ipsum dolor sit amet, quo an erant </c.srtPlayer>'),
