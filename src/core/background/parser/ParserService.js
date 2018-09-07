@@ -52,4 +52,4 @@ class ParserService {
     }
 }
 
-export default new ParserService();
+export default () => new ParserService();

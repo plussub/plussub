@@ -3,6 +3,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
+import Redux from 'redux';
 import ReduxConfig from './redux_config/slave.js'
 import OptionRouter from './option_router.vue';
 import Subtitle from '../core/option/subtitle.vue';

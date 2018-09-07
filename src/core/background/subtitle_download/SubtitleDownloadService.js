@@ -60,4 +60,4 @@ class SubtitleDownloadService {
 
 }
 
-export default new SubtitleDownloadService();
+export default () => new SubtitleDownloadService();

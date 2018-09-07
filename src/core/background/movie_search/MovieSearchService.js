@@ -54,4 +54,4 @@ class MovieSearchService {
 
 }
 
-export default new MovieSearchService();
+export default () => new MovieSearchService();

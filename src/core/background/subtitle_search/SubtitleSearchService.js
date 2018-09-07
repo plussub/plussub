@@ -69,4 +69,4 @@ class SubtitleSearchService {
     }
 }
 
-export default new SubtitleSearchService();
+export default () => new SubtitleSearchService();
