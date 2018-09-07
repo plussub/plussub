@@ -1,4 +1,4 @@
-import type from '../../core/redux/const.js';
+import type from '../../redux/const.js';
 
 
 class Bridge {

@@ -13,13 +13,13 @@
     "default_icon": {
       "19": "res/icons/browseraction.png"
     },
-    "default_popup": "src/chrome/popup.html"
+    "default_popup": "src/app/app.html"
   },
   "background": {
-    "page": "src/chrome/background.html",
+    "page": "src/background/background.html",
     "persistent": false
   },
-  "options_page": "src/chrome/option.html",
+  "options_page": "src/option/option.html",
   "content_scripts": [
     {
       "matches": [
@@ -28,7 +28,7 @@
       "run_at": "document_end",
       "all_frames": false,
       "js": [
-        "src/chrome/gen/content_build.js"
+        "src/content/gen/content_build.js"
       ]
     }
   ],

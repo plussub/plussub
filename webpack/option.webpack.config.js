@@ -3,10 +3,10 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-    entry: './src/chrome/option.js',
+    entry: './src/option/option.js',
     output: {
         filename: 'option_build.js',
-        path: path.resolve(__dirname)+'/../src/chrome/gen/'
+        path: path.resolve(__dirname)+'/../src/option/gen/'
     },
     mode: 'development',
     module: {

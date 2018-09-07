@@ -1,5 +1,5 @@
-import {store} from "../../core/redux/redux.js";
-import {openOptionPage} from "../../core/redux/actionCreators.js";
+import {store} from "../../redux/redux.js";
+import {openOptionPage} from "../../redux/actionCreators.js";
 
 store.subscribe(() => {
     if (store.getState().appState.openOptionPage === 'open') {

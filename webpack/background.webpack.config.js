@@ -2,10 +2,10 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/chrome/background.js',
+    entry: './src/background/background.js',
     output: {
         filename: 'background_build.js',
-        path: path.resolve(__dirname)+'/../src/chrome/gen/'
+        path: path.resolve(__dirname)+'/../src/background/gen/'
     },
     mode: 'development',
     module: {

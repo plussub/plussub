@@ -1,4 +1,4 @@
-import {store} from '../../core/redux/redux.js'
+import {store} from '../../redux/redux.js'
 
 class Bridge {
     constructor() {

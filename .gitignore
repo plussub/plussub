@@ -3,8 +3,7 @@
 chrome ext.iml
 
 #npm & bower
-node_modules/**
-**/bower_components/**
+node_modules/
 
 #build artefacts
 plussub.zip
