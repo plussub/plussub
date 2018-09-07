@@ -3,6 +3,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css';
 import Redux from 'redux';
 import ReduxConfig from '../chrome/redux_config/slave.js';
 import PopupRouter from './app_router.vue';
