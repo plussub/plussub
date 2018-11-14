@@ -1,6 +1,6 @@
 {
   "name": "plussub",
-  "description": "+Sub build script",
+  "description": "Chrome extension which adds subtitle to html5 videos",
   "author": "Stefan Breitenstein",
   "scripts": {
     "test": "jest --no-cache"
