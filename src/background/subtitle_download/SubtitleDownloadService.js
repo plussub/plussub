@@ -49,7 +49,7 @@ class SubtitleDownloadService {
         }).then(response => {
             dispatch(setSubtitleDownloadResult({}));
             dispatch(parseRawSubtitle(response.data));
-        }).catch((error) => dispatch(setSubtitleSearchResult({
+        }).catch((error) => dispatch(setSubtitleDownloadResult({
                 message: `Failed to download subtitle. (${error})`,
                 src: "subtitleDownloadService"
             }, true))
