@@ -3,18 +3,14 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-    entry: './src/option/option.js',
+    entry: './src/content/content.js',
     output: {
-        filename: 'option_build.js',
-        path: path.resolve(__dirname)+'/../src/option/gen/'
+        filename: 'content_build.js',
+        path: `${path.resolve(__dirname)}/gen/`
     },
     mode: 'development',
     module: {
         rules: [
-            {
-                test: /\.vue$/,
-                loader: 'vue-loader'
-            },
             {
                 test: /\.css$/,
                 use: [
@@ -33,8 +29,5 @@ module.exports = {
                 }
             }
         ]
-    },
-    plugins: [
-        new VueLoaderPlugin()
-    ]
+    }
 };

@@ -1,1 +1,0 @@
-zip -r plussub.zip manifest.json src/ res/

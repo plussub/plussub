@@ -3,10 +3,10 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-    entry: './src/app/app.js',
+    entry: './src/option/option.js',
     output: {
-        filename: 'app_build.js',
-        path: path.resolve(__dirname)+'/../src/app/gen/'
+        filename: 'option_build.js',
+        path: `${path.resolve(__dirname)}/gen/`
     },
     mode: 'development',
     module: {

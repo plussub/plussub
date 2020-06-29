@@ -1,9 +1,17 @@
 {
   "name": "plussub",
+  "version": "3.0.2",
   "description": "Chrome extension which adds subtitle to html5 videos",
   "author": "Stefan Breitenstein",
   "scripts": {
-    "test": "jest --no-cache"
+    "build:app": "webpack --config src/app/webpack.config.js --display-module",
+    "build:background": "webpack --config src/background/webpack.config.js --display-module",
+    "build:content": "webpack --config src/content/webpack.config.js --display-module",
+    "build:option": "webpack --config src/option/webpack.config.js --display-module",
+    "build": "npm run build:app && npm run build:background && npm run build:content && npm run build:content",
+    "zip": "rm -f ../plussub.zip && bestzip plussub.zip manifest.json src/ res/",
+    "test": "jest --no-cache",
+    "version": "node sync-manifest.js && git add manifest.json"
   },
   "jest": {
     "verbose": true,
@@ -29,12 +37,19 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.4.2",
     "babel-loader": "^8.0.0",
+    "bestzip": "^2.1.5",
     "css-loader": "^1.0.0",
     "jest": "^23.5.0",
+    "prettier": "^2.0.5",
     "style-loader": "^0.22.1",
     "vue-loader": "^15.4.0",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "printWidth": 200,
+    "singleQuote": true
   }
 }
