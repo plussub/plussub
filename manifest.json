@@ -13,27 +13,14 @@
     "default_icon": {
       "19": "res/icons/browseraction.png"
     },
-    "default_popup": "src/app/app.html"
+    "default_popup": "dist/popup.html"
   },
   "background": {
-    "page": "src/background/background.html",
+    "page": "dist/background.html",
     "persistent": false
   },
-  "options_page": "src/option/option.html",
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "run_at": "document_end",
-      "all_frames": false,
-      "js": [
-        "src/content/gen/content_build.js"
-      ]
-    }
-  ],
   "minimum_chrome_version": "51",
-  "content_security_policy": "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://unpkg.com/vue https://www.google-analytics.com/analytics.js; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "permissions": [
     "tabs",
     "storage",

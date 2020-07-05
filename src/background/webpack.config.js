@@ -1,25 +1,28 @@
 // webpack.config.js
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './src/background/background.js',
-    output: {
-        filename: 'background_build.js',
-        path: `${path.resolve(__dirname)}/gen/`
-    },
-    mode: 'development',
-    module: {
-        // rules: [
-        //     {
-        //         test: /\.js$/,
-        //         exclude: /(node_modules|bower_components)/,
-        //         use: {
-        //             loader: 'babel-loader',
-        //             options: {
-        //                 presets: ['@babel/preset-env']
-        //             }
-        //         }
-        //     }
-        // ]
-    }
+  entry: './src/background/index.ts',
+  output: {
+    filename: 'background.js',
+    path: `${path.resolve(__dirname)}/../../dist`
+  },
+  mode: 'development',
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+      }
+    ],
+  },
+  plugins: [new HtmlWebpackPlugin({
+    filename: 'background.html'
+  })]
 };
