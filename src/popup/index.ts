@@ -1,57 +1,56 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Home from './home.vue';
-import HomeToolbar from './homeToolbar.vue';
-import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
+import { createApp } from 'vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '@/home/Content.vue';
+import HomeToolbar from '@/home/Toolbar.vue';
+import Search from '@/search/Content.vue';
+import SearchToolbar from '@/search/Toolbar.vue';
+import Filepick from '@/filepick/Content.vue';
+import FilepickToolbar from '@/filepick/Toolbar.vue';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSearch, faUpload, faCog} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import App from './App.vue';
 
-import App from './app.vue';
+import 'knopf.css';
+import '@fortawesome/fontawesome-free/js/all';
 
-Vue.use(Vuetify);
-Vue.use(VueRouter);
+const routerHistory = createWebHistory();
 
-library.add(faSearch, faUpload, faCog)
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+// @ts-expect-error
+const app = createApp(App);
 
-const routes = [
-  {
-    path: '/home',
-    name: 'home',
-    components: {
-      toolbar: HomeToolbar,
-      content: Home
-    }
-  }
-  // {path: '/search', name: 'search', component: Search},
-  // {path: '/file', name: 'file', component: File},
-];
-
-const router = new VueRouter({ routes });
-
-new Vue({
-  router,
-  render(createElement) {
-    return createElement(App);
-  },
-  vuetify: new Vuetify({
-    icons: {
-      iconfont: 'fa'
+const router = createRouter({
+  history: routerHistory,
+  routes: [
+    {
+      path: '/home',
+      name: 'home',
+      // @ts-expect-error
+      components: {
+        toolbar: HomeToolbar,
+        content: Home
+      }
     },
-    theme: {
-      themes: {
-        light: {
-          primary: '#5BC0DE',
-          onPrimary: '#FFFFFF',
-          secondary: '#b0bec5',
-          accent: '#8c9eff',
-          error: '#b71c1c',
-          debug: '#b710af'
-        }
+    {
+      path: '/search',
+      name: 'search',
+      // @ts-expect-error
+      components: {
+        toolbar: SearchToolbar,
+        content: Search
+      }
+    },
+    {
+      path: '/filepick',
+      name: 'filepick',
+      // @ts-expect-error
+      components: {
+        toolbar: FilepickToolbar,
+        content: Filepick
       }
     }
-  })
-}).$mount('body');
+  ]
+});
+
+app.use(router);
+router.push('home');
+
+app.mount('body');
