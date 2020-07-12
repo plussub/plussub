@@ -18,7 +18,8 @@ module.exports = {
       // extra re-export somehow causes webpack to always invalidate the module
       // on the first HMR update and causes the page to reload.
       'vue': '@vue/runtime-dom',
-      '@': path.resolve(__dirname)
+      '@': path.resolve(__dirname),
+      'openOptionPage': `${path.resolve(__dirname)}/platform/openOptionPage/chrome/index.ts`
     }
   },
   mode: 'development',
@@ -58,6 +59,10 @@ module.exports = {
             }
           }
         ],
+      },
+      {
+        test: /\.(woff|woff2|ttf|eot)$/,
+        use: 'file-loader?name=fonts/[name].[ext]!static'
       },
       {
         test: /\.tsx?$/,

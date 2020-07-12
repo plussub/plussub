@@ -1,28 +1,30 @@
 <template>
-  <div class="home-container">
+  <div class="home-toolbar--container">
     <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;" />
     <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
-      <a class="knopf flat pill small" style="color: white;" @click="this.$router.replace('search')"><i class="fa fa-search fa-lg"></i></a>
-      <a class="knopf flat pill small" style="color: white;" @click="this.$router.replace('filepick')"><i class="fa fa-upload fa-lg"></i></a>
-      <a class="knopf flat pill small" style="color: white;"><i class="fa fa-cog fa-lg"></i></a>
+      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace('search')"><i class="fa fa-search fa-lg"></i></a>
+      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace('filepick')"><i class="fa fa-upload fa-lg"></i></a>
+      <a class="knopf flat pill small buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
     </div>
   </div>
 </template>
 
 <script>
 import logo from '@/res/plussub128.png';
+import { openOptionPage } from 'openOptionPage';
 
 export default {
   setup() {
     return {
-      logo
+      logo,
+      openOptionPage
     };
   }
 };
 </script>
 
 <style>
-.home-container {
+.home-toolbar--container {
   background-color: var(--primary);
   color: var(--onPrimary);
   width: 100%;

@@ -6,6 +6,8 @@ import Search from '@/search/Content.vue';
 import SearchToolbar from '@/search/Toolbar.vue';
 import Filepick from '@/filepick/Content.vue';
 import FilepickToolbar from '@/filepick/Toolbar.vue';
+import "typeface-roboto";
+import "typeface-rubik";
 
 import App from './App.vue';
 
