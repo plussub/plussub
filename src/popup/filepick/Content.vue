@@ -1,13 +1,50 @@
 <template>
-  <div>
-
+  <div class="filepicker-content--container">
+    <div class="filepicker-content--container--card" style="grid-area: filepicker;" type="file" @change="fileSelected" ref="fileInput">
+      <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
+        Pick a .srt/.vtt file
+      </div>
+      <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput" />
+    </div>
+    <div style="grid-area: spacer">&nbsp;</div>
   </div>
 </template>
 
 <script>
-
 export default {
   setup() {
+    return {
+      fileSelected: () => {}
+    };
   }
 };
 </script>
+<style scoped>
+.filepicker-content--container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  justify-content: center;
+  grid-template-areas:
+    '. filepicker .'
+    '. spacer .';
+  grid-template-rows: auto auto;
+  grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
+}
+
+.filepicker-content--container--card {
+  background-color: var(--surface-color);
+  box-shadow: var(--card-shadow);
+  display: grid;
+  padding-top: var(--card-padding-top);
+  grid-template-areas:
+    '. card-header .'
+    '. . .'
+    '. card-content .'
+    'card-divider card-divider card-divider'
+    '. card-action .';
+  grid-template-rows: auto 16px 1fr 16px auto;
+  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
+  width: 100%;
+}
+</style>

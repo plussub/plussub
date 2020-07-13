@@ -3,7 +3,11 @@ query videoSearch($query: String!)
 {
   videoSearch(query: $query){
     entries{
+      id
       title
+      overview
+      poster_path
+      release_date
     }
   }
 }
