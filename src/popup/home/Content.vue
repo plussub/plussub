@@ -1,6 +1,6 @@
 <template>
   <div class="home-content--container">
-    <div v-if="contentExists" class="home-content--current-sub--container--card" style="grid-area: current-sub;">
+    <div v-if="state.contentExists" class="home-content--current-sub--container--card" style="grid-area: current-sub;">
       <div style="grid-area: card-header; position: relative;">
         <div class="home-content--current-sub--container--card--hero">
           <img src="https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;" />
@@ -41,7 +41,7 @@
       </div>
       <div style="grid-area: card-action; justify-self: end;">
         <a class="knopf flat block end small" style="width: 100%;">More Info</a>
-        <a class="knopf flat block end small" style="width: 100%;">Remove subtitle</a>
+        <a class="knopf flat block end small" style="width: 100%;" @click="removeSubtitle">Remove subtitle</a>
         <a class="knopf flat block end small" style="width: 100%;">Select another subtitle</a>
       </div>
     </div>
@@ -86,14 +86,19 @@
 
 <script>
 import Divider from '@/components/Divider';
+import {reactive} from "vue";
 
 export default {
   components: {
     Divider
   },
   setup(){
+    const state = reactive({ contentExists: true });
     return {
-      contentExists: true
+      state,
+      removeSubtitle: () => {
+        state.contentExists = false;
+      },
     }
   }
 };

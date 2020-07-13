@@ -1,12 +1,12 @@
 <template>
   <div class="filepicker-content--container">
-    <div class="filepicker-content--container--card" style="grid-area: filepicker;" type="file" @change="fileSelected" ref="fileInput">
+    <div class="filepicker-content--container--card" style="grid-area: filepicker;">
       <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
         Pick a .srt/.vtt file
       </div>
-      <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput" />
+      <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput" accept="text/plain"/>
     </div>
-    <div style="grid-area: spacer">&nbsp;</div>
+    <div style="grid-area: spacer;">&nbsp;</div>
   </div>
 </template>
 
@@ -14,7 +14,17 @@
 export default {
   setup() {
     return {
-      fileSelected: () => {}
+      fileSelected () {
+        const reader = new FileReader();
+        console.warn(this.$refs['fileInput'])
+        reader.readAsText(this.$refs['fileInput'].files[0]);
+        reader.onload = () => {
+          const filename = this.$refs['fileInput'].files[0].name;
+          console.log(reader.result);
+          console.log(`file loaded: ${filename}`);
+          this.$router.replace('home');
+        };
+      }
     };
   }
 };
