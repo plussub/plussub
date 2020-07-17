@@ -22,7 +22,7 @@ export default {
           const filename = this.$refs['fileInput'].files[0].name;
           console.log(reader.result);
           console.log(`file loaded: ${filename}`);
-          this.$router.replace('home');
+          this.$router.replace({name: 'home'});
         };
       }
     };

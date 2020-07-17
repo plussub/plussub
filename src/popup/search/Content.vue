@@ -11,20 +11,16 @@
           </div>
           <div style="position: absolute; color: white; top: 8px; left: 16px; width: calc(100% - 32px);">
             <div style="font-family: var(--card-header-font-family); width: 100%; display: flex; justify-content: space-between;">
-            <span>
-              <div style="font-size: var(--card-header-font-size);">
-                {{ item.title }}
-              </div>
-              <div style="font-size: 0.75em;">
-                ({{ item.media_type }} {{ item.release_date}})
-              </div>
-            </span>
+              <span>
+                <div style="font-size: var(--card-header-font-size);">
+                  {{ item.title }}
+                </div>
+                <div style="font-size: 0.75em;">({{ item.media_type }} {{ item.release_date }})</div>
+              </span>
             </div>
           </div>
-          <div style="font-size: 0.75em; position: absolute; bottom: 12px; right: 16px; color: white">
-            <div>
-              tmdb: {{ item.vote_average}}
-            </div>
+          <div style="font-size: 0.75em; position: absolute; bottom: 12px; right: 16px; color: white;">
+            <div>tmdb: {{ item.vote_average }}</div>
           </div>
         </div>
         <div style="grid-area: card-content; display: flex; width: 100%; font-size: 0.75em; line-height: 1.6;">
@@ -34,7 +30,7 @@
           <divider />
         </div>
         <div style="grid-area: card-action; justify-self: end;">
-          <a class="knopf flat block end small" style="width: 100%;">Select</a>
+          <a class="knopf flat block end small" style="width: 100%;" @click="select(item)">Select</a>
         </div>
       </div>
     </div>
@@ -61,7 +57,11 @@ export default {
     return {
       state,
       posterFallback,
-      useEventBusListener
+      useEventBusListener,
+      select({ id }) {
+        console.warn(id);
+        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id } });
+      }
     };
   }
 };
@@ -81,18 +81,17 @@ export default {
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
 }
 
-
 .search-content--container--card {
   --image-height: 120px;
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);
   display: grid;
   grid-template-areas:
-          'card-header card-header card-header'
-          '. . .'
-          '. card-content .'
-          'card-divider card-divider card-divider'
-          '. card-action .';
+    'card-header card-header card-header'
+    '. . .'
+    '. card-content .'
+    'card-divider card-divider card-divider'
+    '. card-action .';
   grid-template-rows: var(--image-height) 16px 1fr 16px auto;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;

@@ -4,6 +4,8 @@ import Home from '@/home/Content.vue';
 import HomeToolbar from '@/home/Toolbar.vue';
 import Search from '@/search/Content.vue';
 import SearchToolbar from '@/search/Toolbar.vue';
+import SubtitleSelection from '@/subtitleSelection/Content.vue';
+import SubtitleSelectionToolbar from '@/subtitleSelection/Toolbar.vue';
 import Filepick from '@/filepick/Content.vue';
 import FilepickToolbar from '@/filepick/Toolbar.vue';
 import "typeface-roboto";
@@ -38,6 +40,20 @@ const router = createRouter({
       components: {
         toolbar: SearchToolbar,
         content: Search
+      }
+    },
+    {
+      path: '/subtitle-selection/:tmdbId',
+      name: 'subtitleSelection',
+      components: {
+        // @ts-expect-error
+        toolbar: SubtitleSelectionToolbar,
+        // @ts-expect-error
+        content: SubtitleSelection
+      },
+      props: {
+        toolbar: true,
+        content: true
       }
     },
     {

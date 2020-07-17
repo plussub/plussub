@@ -2,8 +2,8 @@
   <div class="home-toolbar--container">
     <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;" />
     <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
-      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace('search')"><i class="fa fa-search fa-lg"></i></a>
-      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace('filepick')"><i class="fa fa-upload fa-lg"></i></a>
+      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({name: 'search'})"><i class="fa fa-search fa-lg"></i></a>
+      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({name: 'filepick'})"><i class="fa fa-upload fa-lg"></i></a>
       <a class="knopf flat pill small buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
     </div>
   </div>
