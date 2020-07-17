@@ -13,7 +13,7 @@ import ToolbarBackToHome from '@/components/ToolbarBackToHome.vue';
 
 export default {
   components: {
-    ToolbarBackToHome
+    ToolbarBackToHome,
   }
 };
 </script>

@@ -43,7 +43,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/subtitle-selection/:tmdbId',
+      path: '/subtitle-selection/:tmdbId/:mediaType',
       name: 'subtitleSelection',
       components: {
         // @ts-expect-error

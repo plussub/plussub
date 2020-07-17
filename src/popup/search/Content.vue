@@ -58,9 +58,9 @@ export default {
       state,
       posterFallback,
       useEventBusListener,
-      select({ id }) {
+      select({ id, media_type }) {
         console.warn(id);
-        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id } });
+        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type } });
       }
     };
   }
