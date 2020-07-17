@@ -8,6 +8,8 @@ query videoSearch($query: String!)
       overview
       poster_path
       release_date
+      media_type
+      vote_average
     }
   }
 }
