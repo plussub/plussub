@@ -1,49 +1,35 @@
 <template>
   <div class="search-toolbar--container">
     <toolbar-back-to-home style="grid-area: back;" />
-
-    <div class="knopf-group" style="grid-area: search-bar; display: flex;">
-      <input style="flex-grow: 1;" placeholder="Search movie or series" id="search" type="text" v-model="state.query" />
-      <a class="knopf flat pill small sharp buttonOnPrimary" style="width: 40px;"><i class="fa fa-search fa-sm"></i></a>
-    </div>
-
-    <div class="knopf-group" style="grid-area: sub-lang-drop-down; display: flex;">
-      <a class="knopf even active flat subtitle-dropdown-label sharp" style="flex-grow: 1;">Subtitle language: En</a>
-      <a class="knopf even active pale sharp buttonOnPrimary" style="width: 40px;"><i class="fa fa-chevron-down fa-sm"></i></a>
-    </div>
+    <search-bar @on-search-results="onSearchResults" style="grid-area: search-bar;"/>
+    <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;"/>
   </div>
 </template>
 
 <script>
-import { reactive, watch } from 'vue';
-import { emit, debounce } from '@/composables';
-import { searchRequest } from '@/search/searchRequest';
 import ToolbarBackToHome from '@/components/ToolbarBackToHome.vue';
+import SearchBar from '@/search/SearchBar.vue';
+import LanguageAccordion from '@/search/LanguageAccordion.vue';
+import {reactive} from "vue";
+import { emit } from '@/composables';
 
 export default {
   components: {
-    ToolbarBackToHome
+    ToolbarBackToHome,
+    SearchBar,
+    LanguageAccordion
   },
-  setup() {
-    const state = reactive({ query: '', queryResult: {} });
-    const req = debounce({
-      fn: searchRequest,
-      timeout: 3000,
-      cb: (result) => (state.queryResult = result)
+  setup(){
+    const state = reactive({
+      selectedLanguage: 'de',
     });
 
-    watch(
-      () => state.query,
-      (search) => req(search)
-    );
-    watch(
-      () => state.queryResult,
-      (result) => emit('searchResult', result?.data?.videoSearch?.entries ?? [])
-    );
-
     return {
-      state
-    };
+      state,
+      onSearchResults(result) {
+        emit('searchResult', result)
+      }
+    }
   }
 };
 </script>
@@ -64,10 +50,5 @@ export default {
     'back . . .';
   grid-template-rows: 16px 25px 16px 25px 8px;
   grid-template-columns: auto 8px 1fr 16px;
-}
-.active.subtitle-dropdown-label:hover,
-.active.subtitle-dropdown-label {
-  --knopf-text-color: white;
-  --knopf-font-size: 1em;
 }
 </style>

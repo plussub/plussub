@@ -21,6 +21,7 @@ export default {
 :root {
   --primary: #5bc0de;
   --onPrimary: #ffffff;
+  --on-surface: var(--default-text-color);
   --secondary: #b0bec5;
   --accent: #8c9eff;
   --error: #b71c1c;

@@ -1,9 +1,15 @@
 <template>
-  <div style="max-width: calc(100% - 32px); margin-left: 16px; margin-right: 16px;">
-    search results
-    <div v-for="item in state.entries">
-      {{ item.title }}
+  <div class="search-content--container">
+    <div style="grid-area: search-results;">
+      <div v-show="state.entries.length === 0">
+        After a search, the results are displayed here.
+      </div>
+      <div v-for="item in state.entries">
+        {{ item.title }}
+      </div>
     </div>
+
+    <div style="grid-area: spacer;">&nbsp;</div>
   </div>
 </template>
 
@@ -35,3 +41,18 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.search-content--container {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  display: grid;
+  justify-content: center;
+  grid-template-areas:
+    '. search-results .'
+    '. spacer .';
+  grid-template-rows: auto auto;
+  grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
+}
+</style>
