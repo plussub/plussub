@@ -13,7 +13,7 @@ query subtitleSearch($tmdbId: String!, $language: String!, $mediaType: String!)
 }
 `
 
-export const searchRequest = async (queryParam) => {
+export const searchRequest = async (variables) => {
   return await fetch('https://plussub-gql-cf-worker.stefanbreitenstein.workers.dev', {
     method: 'post',
     headers: {
@@ -21,9 +21,7 @@ export const searchRequest = async (queryParam) => {
     },
     body: JSON.stringify({
       query,
-      variables: {
-        query: queryParam
-      }
+      variables
     })
   }).then(r => r.json());
 }
