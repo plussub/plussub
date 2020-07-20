@@ -8,6 +8,7 @@ query subtitleSearch($tmdbId: String!, $language: String!, $mediaType: String!)
       ZipDownloadLink
       SubtitlesLink
       SubRating
+      SubFormat
     }
   }
 }
