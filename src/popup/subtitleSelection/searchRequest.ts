@@ -9,6 +9,7 @@ query subtitleSearch($tmdbId: String!, $language: String!, $mediaType: String!)
       SubtitlesLink
       SubRating
       SubFormat
+      LanguageName
     }
   }
 }
