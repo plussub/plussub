@@ -11,8 +11,11 @@ import { debounce } from '@/composables';
 import { searchRequest } from '@/search/searchRequest';
 
 export default {
-  setup(props, {emit}) {
-    const state = reactive({ query: '', queryResult: {} });
+  props: {
+    query: String
+  },
+  setup(props, { emit }) {
+    const state = reactive({ queryResult: {}, query: props.query });
     const req = debounce({
       fn: searchRequest,
       timeout: 1500,
@@ -21,7 +24,10 @@ export default {
 
     watch(
       () => state.query,
-      (search) => req(search)
+      (query) => {
+        emit('update:query', query);
+        return req(query);
+      }
     );
     watch(
       () => state.queryResult,
@@ -29,7 +35,8 @@ export default {
     );
 
     return {
-      state
+      state,
+      props
     };
   }
 };
