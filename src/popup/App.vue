@@ -1,12 +1,7 @@
 <template>
   <div class="app--container">
-    <router-view name="toolbar" v-slot="{ Component }">
-      <component :is="Component" style="grid-area: toolbar; z-index: 1000;" />
-    </router-view>
-    <router-view name="content" v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
-        <component :is="Component" style="grid-area: content; overflow-y: auto; background-color: var(--background-color); padding-top: 12px; width: 100%; max-width: 100%;" />
-      </transition>
+    <router-view v-slot="{ Component }">
+      <component :is="Component"/>
     </router-view>
   </div>
 </template>
@@ -56,6 +51,19 @@ body {
   --knopf-hue: 0;
   --knopf-saturation: 0%;
   --knopf-luminosity: 100%;
+}
+
+.toolbar {
+  grid-area: toolbar;
+  z-index: 1000;
+}
+.content {
+  grid-area: content;
+  overflow-y: auto;
+  background-color: var(--background-color);
+  padding-top: 12px;
+  width: 100%;
+  max-width: 100%;
 }
 </style>
 

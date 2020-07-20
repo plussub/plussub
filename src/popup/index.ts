@@ -1,13 +1,9 @@
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/home/Content.vue';
-import HomeToolbar from '@/home/Toolbar.vue';
-import Search from '@/search/Content.vue';
-import SearchToolbar from '@/search/Toolbar.vue';
-import SubtitleSelection from '@/subtitleSelection/Content.vue';
-import SubtitleSelectionToolbar from '@/subtitleSelection/Toolbar.vue';
-import Filepick from '@/filepick/Content.vue';
-import FilepickToolbar from '@/filepick/Toolbar.vue';
+import Home from '@/home/Home.vue';
+import Search from '@/search/Search.vue';
+import SubtitleSelection from '@/subtitleSelection/SubtitleSelection.vue';
+import FilePick from '@/filepick/FilePick.vue';
 import "typeface-roboto";
 import "typeface-rubik";
 
@@ -28,42 +24,26 @@ const router = createRouter({
       path: '/home',
       name: 'home',
       // @ts-expect-error
-      components: {
-        toolbar: HomeToolbar,
-        content: Home
-      }
+      component: Home
     },
     {
       path: '/search',
       name: 'search',
       // @ts-expect-error
-      components: {
-        toolbar: SearchToolbar,
-        content: Search
-      }
+      component: Search
     },
     {
       path: '/subtitle-selection/:tmdbId/:mediaType',
       name: 'subtitleSelection',
-      components: {
-        // @ts-expect-error
-        toolbar: SubtitleSelectionToolbar,
-        // @ts-expect-error
-        content: SubtitleSelection
-      },
-      props: {
-        toolbar: true,
-        content: true
-      }
+      // @ts-expect-error
+      component: SubtitleSelection,
+      props: true
     },
     {
       path: '/filepick',
       name: 'filepick',
       // @ts-expect-error
-      components: {
-        toolbar: FilepickToolbar,
-        content: Filepick
-      }
+      component: FilePick
     }
   ]
 });

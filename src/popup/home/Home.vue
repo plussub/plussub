@@ -1,5 +1,13 @@
 <template>
-  <div class="home-content--container">
+  <div class="home-toolbar--container toolbar">
+    <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;" />
+    <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
+      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'search' })"><i class="fa fa-search fa-lg"></i></a>
+      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'filepick' })"><i class="fa fa-upload fa-lg"></i></a>
+      <a class="knopf flat pill small buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
+    </div>
+  </div>
+  <div class="home-content--container content">
     <div v-if="state.contentExists" class="home-content--current-sub--container--card" style="grid-area: current-sub;">
       <div style="grid-area: card-header; position: relative;">
         <div class="home-content--current-sub--container--card--hero">
@@ -51,9 +59,9 @@
         No subtitle selected
       </div>
       <div style="grid-area: card-content; width: 100%; font-size: 0.75em; line-height: 1.6; margin-bottom: 16px;">
-        <div style="width: 100%"> Hi, you currently have no subtitle selected. </div>
-        <div style="width: 100%"> To search subtitle online use <i class="fa fa-search fa-sm"></i>. </div>
-        <div style="width: 100%"> If you want to load a subtitle file use  <i class="fa fa-upload fa-sm"></i>. </div>
+        <div style="width: 100%;">Hi, you currently have no subtitle selected.</div>
+        <div style="width: 100%;">To search subtitle online use <i class="fa fa-search fa-sm"></i>.</div>
+        <div style="width: 100%;">If you want to load a subtitle file use <i class="fa fa-upload fa-sm"></i>.</div>
       </div>
     </div>
 
@@ -80,31 +88,48 @@
       </div>
     </div>
 
-    <div style="grid-area: spacer">&nbsp;</div>
+    <div style="grid-area: spacer;">&nbsp;</div>
   </div>
 </template>
 
 <script>
+import logo from '@/res/plussub128.png';
+import { openOptionPage } from 'openOptionPage';
+import { reactive } from 'vue';
 import Divider from '@/components/Divider';
-import {reactive} from "vue";
 
 export default {
   components: {
     Divider
   },
-  setup(){
+  setup() {
     const state = reactive({ contentExists: true });
     return {
+      logo,
+      openOptionPage,
       state,
       removeSubtitle: () => {
         state.contentExists = false;
-      },
-    }
+      }
+    };
   }
 };
 </script>
 
 <style scoped>
+
+.home-toolbar--container {
+  background-color: var(--primary);
+  color: var(--onPrimary);
+  width: 100%;
+  height: 100%;
+  box-shadow: var(--toolbar-shadow);
+  display: grid;
+  grid-template-areas: 'logo buttons .';
+  grid-template-rows: 40px;
+  grid-template-columns: 64px 1fr 16px;
+}
+
 .home-content--container {
   width: 100%;
   height: 100%;
@@ -125,9 +150,9 @@ export default {
   display: grid;
   padding-top: var(--card-padding-top);
   grid-template-areas:
-          '. card-header .'
-          '. . .'
-          '. card-content .';
+    '. card-header .'
+    '. . .'
+    '. card-content .';
   grid-template-rows: auto 16px 1fr;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;

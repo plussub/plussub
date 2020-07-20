@@ -1,5 +1,9 @@
 <template>
-  <div class="search-content--container">
+  <div style="background-color: var(--primary); color: var(--onPrimary); width: 100%; height: 40px; box-shadow: var(--toolbar-shadow); display: flex;" class="toolbar">
+    <toolbar-back-to-home style="height: 100%;" />
+    <search-bar @on-search-results="onSearchResults" style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px;" />
+  </div>
+  <div class="search-content--container content">
     <div style="grid-area: search-results; display: flex; flex-wrap: wrap;">
       <div v-show="state.entries.length === 0" style="width: 100%;">
         After a search, the results are displayed here.
@@ -39,6 +43,9 @@
 </template>
 
 <script>
+import ToolbarBackToHome from '@/components/ToolbarBackToHome.vue';
+import SearchBar from '@/search/SearchBar.vue';
+import { emit } from '@/composables';
 import { useEventBusListener } from '@/composables';
 import { reactive } from 'vue';
 import posterFallback from '@/res/posterFallback.png';
@@ -46,7 +53,9 @@ import Divider from '@/components/Divider';
 
 export default {
   components: {
-    Divider
+    ToolbarBackToHome,
+    Divider,
+    SearchBar
   },
   setup() {
     const state = reactive({ entries: [] });
@@ -59,8 +68,10 @@ export default {
       posterFallback,
       useEventBusListener,
       select({ id, media_type }) {
-        console.warn(id);
         this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type } });
+      },
+      onSearchResults(result) {
+        emit('searchResult', result);
       }
     };
   }
