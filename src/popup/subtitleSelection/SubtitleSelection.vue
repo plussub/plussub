@@ -60,13 +60,19 @@ export default {
       });
     };
 
-    dataReady.value = searchRequest({ ...props, language: state.selectedLanguage }).then((result) => {
+    const triggerSearch = () => searchRequest({ ...props, language: state.selectedLanguage }).then((result) => {
       dataReady.value = true;
       state.entries = result.data.subtitleSearch.entries;
       setFiltered();
     });
 
+    triggerSearch();
+
     watch(() => state.filter, setFiltered);
+    watch(() => state.selectedLanguage, () => {
+      dataReady.value = false;
+      triggerSearch();
+    });
 
     return {
       dataReady,
