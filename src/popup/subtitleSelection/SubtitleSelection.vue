@@ -1,8 +1,12 @@
 <template>
   <div class="subtitle-selection-toolbar--container toolbar">
-    <toolbar-back-btn style="grid-area: back;" :back-fn="backFn" />
-    <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;" />
-    <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;" />
+    <transition name="toolbar-transition" appear>
+      <div class="subtitle-selection-toolbar--container--content">
+        <toolbar-back-btn style="grid-area: back;" :back-fn="backFn" />
+        <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;" />
+        <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;" />
+      </div>
+    </transition>
   </div>
   <template v-if="dataReady">
     <div class="subtitle-selection-content--container content">
@@ -55,7 +59,6 @@ export default {
   setup(props) {
     const state = reactive({ entries: [], filteredEntries: [], selectedLanguage: 'en', filter: '' });
     let dataReady = ref(false);
-
     const setFiltered = () => {
       state.filteredEntries = state.entries.filter(({ SubFileName }) => {
         if (state.filter === '') {
@@ -103,6 +106,8 @@ export default {
   width: 100%;
   height: 100%;
   box-shadow: var(--toolbar-shadow);
+}
+.subtitle-selection-toolbar--container--content {
   display: grid;
   grid-template-areas:
     'back . . .'

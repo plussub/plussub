@@ -48,8 +48,7 @@ const router = createRouter({
     }
   ]
 });
-
 app.use(router);
-router.push('home');
-
-app.mount('body');
+// router.isReady().then(() => app.mount('#app'))
+app.mount('body')
+router.replace({name: 'home'});

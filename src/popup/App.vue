@@ -1,9 +1,7 @@
 <template>
   <div class="app--container">
     <router-view v-slot="{ Component }">
-      <transition name="slide-left">
-        <component :is="Component" />
-      </transition>
+      <component :is="Component" />
     </router-view>
   </div>
 </template>
@@ -67,6 +65,18 @@ body {
   width: 100%;
   max-width: 100%;
 }
+
+.toolbar-transition-enter-active,
+.toolbar-transition-leave-active {
+  transition-duration: 0.3s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.toolbar-transition-enter-from,
+.toolbar-transition-leave-active {
+  opacity: 0;
+}
 </style>
 
 <style scoped>
@@ -82,33 +92,5 @@ body {
     'content';
   grid-template-rows: auto 1fr;
   grid-template-columns: 100%;
-}
-
-.slide-left-enter-active, .slide-left-leave-active {
-  transition: all 400ms;
-}
-
-.slide-left-enter {
-  position: absolute;
-  transform: translateX(100vw);
-}
-
-.slide-left-leave-to {
-  position: absolute;
-  transform: translateX(-100vw);
-}
-
-.slide-right-enter-active, .slide-right-leave-active {
-  transition: all 400ms;
-}
-
-.slide-right-enter {
-  position: absolute;
-  transform: translateX(-100vw);
-}
-
-.slide-right-leave-to {
-  position: absolute;
-  transform: translateX(100vw);
 }
 </style>

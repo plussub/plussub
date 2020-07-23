@@ -1,70 +1,75 @@
 <template>
   <div class="home-toolbar--container toolbar">
-    <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;" />
-    <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
-      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'search' })"><i class="fa fa-search fa-lg"></i></a>
-      <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'filepick' })"><i class="fa fa-upload fa-lg"></i></a>
-      <a class="knopf flat pill small buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
+    <transition name="toolbar-transition" appear>
+      <div class="home-toolbar--container--content">
+      <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;" />
+      <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
+        <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'search' })"><i class="fa fa-search fa-lg"></i></a>
+        <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'filepick' })"><i class="fa fa-upload fa-lg"></i></a>
+        <a class="knopf flat pill small buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
+      </div>
     </div>
+    </transition>
   </div>
+
   <div class="home-content--container content">
-    <div v-if="state.contentExists" class="home-content--current-sub--container--card" style="grid-area: current-sub;">
-      <div style="grid-area: card-header; position: relative;">
-        <div class="home-content--current-sub--container--card--hero">
-          <img src="https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;" />
-        </div>
-        <div style="position: absolute; color: white; top: 8px; left: 16px; width: calc(100% - 32px);">
-          <div style="font-family: var(--card-header-font-family); width: 100%; display: flex; justify-content: space-between;">
-            <span>
-              <span style="font-size: var(--card-header-font-size);">
-                Pulp Fiction
-              </span>
-              <span style="font-size: 0.75em;">
-                (1994-09-10)
-              </span>
-            </span>
-            <span style="align-self: flex-end;">
-              <i class="fa fa-spinner"></i>
-            </span>
+    <transition name="fade" appear>
+      <div v-if="state.contentExists" class="home-content--current-sub--container--card" style="grid-area: current-sub;">
+        <div style="grid-area: card-header; position: relative;">
+          <div class="home-content--current-sub--container--card--hero">
+            <img src="https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;" />
           </div>
-          <div style="font-size: 0.75em; margin-top: 16px; line-height: 1.6;">
-            <div>
-              imdb: 8,7
+          <div style="position: absolute; color: white; top: 8px; left: 16px; width: calc(100% - 32px);">
+            <div style="font-family: var(--card-header-font-family); width: 100%; display: flex; justify-content: space-between;">
+              <span>
+                <span style="font-size: var(--card-header-font-size);">
+                  Pulp Fiction
+                </span>
+                <span style="font-size: 0.75em;">
+                  (1994-09-10)
+                </span>
+              </span>
+              <span style="align-self: flex-end;">
+                <i class="fa fa-spinner"></i>
+              </span>
             </div>
-            <div>
-              subRating: 7
-            </div>
-            <div>
-              subLang: English
+            <div style="font-size: 0.75em; margin-top: 16px; line-height: 1.6;">
+              <div>
+                imdb: 8,7
+              </div>
+              <div>
+                subRating: 7
+              </div>
+              <div>
+                subLang: English
+              </div>
             </div>
           </div>
         </div>
+        <div style="grid-area: card-content; display: flex; width: 100%; font-size: 0.75em; line-height: 1.6;">
+          A burger-loving hit man, his philosophical partner, a drug-addled gangster's moll and a washed-up boxer converge in this sprawling, comedic crime caper. Their adventures unfurl in three
+          stories that ingeniously trip back and forth in time.
+        </div>
+        <div style="grid-area: card-divider; align-self: end;">
+          <divider />
+        </div>
+        <div style="grid-area: card-action; justify-self: end;">
+          <a class="knopf flat block end small" style="width: 100%;">More Info</a>
+          <a class="knopf flat block end small" style="width: 100%;" @click="removeSubtitle">Remove subtitle</a>
+          <a class="knopf flat block end small" style="width: 100%;">Select another subtitle</a>
+        </div>
       </div>
-      <div style="grid-area: card-content; display: flex; width: 100%; font-size: 0.75em; line-height: 1.6;">
-        A burger-loving hit man, his philosophical partner, a drug-addled gangster's moll and a washed-up boxer converge in this sprawling, comedic crime caper. Their adventures unfurl in three
-        stories that ingeniously trip back and forth in time.
+      <div v-else class="home-content--no-sub--container--card" style="grid-area: current-sub;">
+        <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
+          No subtitle selected
+        </div>
+        <div style="grid-area: card-content; width: 100%; font-size: 0.75em; line-height: 1.6; margin-bottom: 16px;">
+          <div style="width: 100%;">Hi, you currently have no subtitle selected.</div>
+          <div style="width: 100%;">To search subtitle online use <i class="fa fa-search fa-sm"></i>.</div>
+          <div style="width: 100%;">If you want to load a subtitle file use <i class="fa fa-upload fa-sm"></i>.</div>
+        </div>
       </div>
-      <div style="grid-area: card-divider; align-self: end;">
-        <divider />
-      </div>
-      <div style="grid-area: card-action; justify-self: end;">
-        <a class="knopf flat block end small" style="width: 100%;">More Info</a>
-        <a class="knopf flat block end small" style="width: 100%;" @click="removeSubtitle">Remove subtitle</a>
-        <a class="knopf flat block end small" style="width: 100%;">Select another subtitle</a>
-      </div>
-    </div>
-
-    <div v-else class="home-content--no-sub--container--card" style="grid-area: current-sub;">
-      <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
-        No subtitle selected
-      </div>
-      <div style="grid-area: card-content; width: 100%; font-size: 0.75em; line-height: 1.6; margin-bottom: 16px;">
-        <div style="width: 100%;">Hi, you currently have no subtitle selected.</div>
-        <div style="width: 100%;">To search subtitle online use <i class="fa fa-search fa-sm"></i>.</div>
-        <div style="width: 100%;">If you want to load a subtitle file use <i class="fa fa-upload fa-sm"></i>.</div>
-      </div>
-    </div>
-
+    </transition>
     <div class="home-content--offset--container--card" style="grid-area: offset;">
       <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
         Subtitle offset setting
@@ -117,12 +122,14 @@ export default {
 </script>
 
 <style scoped>
-
 .home-toolbar--container {
   background-color: var(--primary);
   color: var(--onPrimary);
   width: 100%;
   height: 100%;
+}
+
+.home-toolbar--container--content {
   box-shadow: var(--toolbar-shadow);
   display: grid;
   grid-template-areas: 'logo buttons .';
