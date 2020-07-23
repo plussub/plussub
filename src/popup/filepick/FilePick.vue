@@ -10,15 +10,17 @@
     </transition>
   </div>
 
-  <div class="filepicker-content--container content">
-    <div class="filepicker-content--container--card" style="grid-area: filepicker;">
-      <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
-        Pick a .srt/.vtt file
+  <transition :name="props.showContentAnimation" appear>
+    <div class="filepicker-content--container content">
+      <div class="filepicker-content--container--card" style="grid-area: filepicker;">
+        <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
+          Pick a .srt/.vtt file
+        </div>
+        <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput" accept="text/plain" />
       </div>
-      <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput" accept="text/plain" />
+      <div style="grid-area: spacer;">&nbsp;</div>
     </div>
-    <div style="grid-area: spacer;">&nbsp;</div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -28,8 +30,15 @@ export default {
   components: {
     ToolbarBackBtn
   },
-  setup() {
+  props: {
+    showContentAnimation: {
+      type: String,
+      default: ''
+    }
+  },
+  setup(props) {
     return {
+      props,
       fileSelected() {
         const reader = new FileReader();
         reader.readAsText(this.$refs['fileInput'].files[0]);

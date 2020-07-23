@@ -24,7 +24,8 @@ const router = createRouter({
       path: '/home',
       name: 'home',
       // @ts-expect-error
-      component: Home
+      component: Home,
+      props: true
     },
     {
       path: '/search',
@@ -44,7 +45,8 @@ const router = createRouter({
       path: '/filepick',
       name: 'filepick',
       // @ts-expect-error
-      component: FilePick
+      component: FilePick,
+      props: true
     }
   ]
 });

@@ -7,19 +7,21 @@
       </div>
     </transition>
   </div>
-  <div class="search-content--container content">
-    <div v-if="state.entries.length > 0" style="grid-area: search-results; display: flex; flex-wrap: wrap;">
-      <search-entry v-for="item in state.entries" :item="item" @select="(event) => select(event)" />
-    </div>
-    <div v-else-if="state.query === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
+  <transition :name="props.showContentAnimation" appear>
+    <div class="search-content--container content">
+      <div v-if="state.entries.length" style="grid-area: search-results; display: flex; flex-wrap: wrap;">
+        <search-entry v-for="item in state.entries" :item="item" @select="(event) => select(event)" />
+      </div>
+      <div v-else-if="state.query === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
         After a search, the results are displayed here.
+      </div>
+      <div v-else-if="!state.loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
+        <div>Sorry, no movies or tv shows found</div>
+        <div>(╯°□°)╯︵ ┻━┻</div>
+      </div>
+      <div style="grid-area: spacer;">&nbsp;</div>
     </div>
-    <div v-else-if="!state.loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
-      <div>Sorry, no movies or tv shows found</div>
-      <div>(╯°□°)╯︵ ┻━┻</div>
-    </div>
-    <div style="grid-area: spacer;">&nbsp;</div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -38,13 +40,18 @@ export default {
     SearchEntry
   },
   props: {
-    query: String
+    query: String,
+    showContentAnimation: {
+      type: String,
+      default: ''
+    }
   },
   setup(props) {
     const state = reactive({ query: props.query ?? '', entries: [], loading: false });
-    console.warn(this)
+    console.warn(this);
 
     return {
+      props,
       static: {
         posterFallback
       },
@@ -53,7 +60,7 @@ export default {
         state.entries = entries;
       },
       select({ id, media_type }) {
-        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type, searchQuery: state.query } });
+        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type, searchQuery: state.query, showContentAnimation: 'content-navigate-deeper' } });
       }
     };
   }

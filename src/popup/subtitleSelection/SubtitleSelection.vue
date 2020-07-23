@@ -8,36 +8,36 @@
       </div>
     </transition>
   </div>
-  <template v-if="dataReady">
-    <div v-if="state.filteredEntries.length" class="subtitle-selection-content--container content">
-      <div style="grid-area: search-results; display: grid;">
-        <div v-for="item in state.filteredEntries" class="subtitle-selection-content--container--card">
-          <div style="grid-area: card-header; overflow: hidden; text-overflow: ellipsis;">{{ item.SubFileName }}</div>
-          <div style="grid-area: card-content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
-            <div style="grid-column: 1 / 2;">subRating:</div>
-            <div style="grid-column: 2 / 3;">{{ item.SubRating }}</div>
-            <div style="grid-column: 1 / 2;">subFormat:</div>
-            <div style="grid-column: 2 / 3;">{{ item.SubFormat }}</div>
-            <div style="grid-column: 1 / 2;">subLang:</div>
-            <div style="grid-column: 2 / 3;">{{ item.LanguageName }}</div>
-          </div>
-          <div style="grid-area: card-divider; align-self: end;">
-            <divider />
-          </div>
-          <div style="grid-area: card-action; justify-self: end;">
-            <a class="knopf flat block end small" style="width: 100%;" @click="select(item)">Select</a>
+  <transition :name="props.showContentAnimation" appear>
+    <div class="content">
+      <div v-if="!dataReady" style="line-height: 3; text-align: center;">Loading subtitles...</div>
+      <div v-else-if="state.filteredEntries.length" class="subtitle-selection-content--container">
+        <div style="grid-area: search-results; display: grid;">
+          <div v-for="item in state.filteredEntries" class="subtitle-selection-content--container--card">
+            <div style="grid-area: card-header; overflow: hidden; text-overflow: ellipsis;">{{ item.SubFileName }}</div>
+            <div style="grid-area: card-content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
+              <div style="grid-column: 1 / 2;">subRating:</div>
+              <div style="grid-column: 2 / 3;">{{ item.SubRating }}</div>
+              <div style="grid-column: 1 / 2;">subFormat:</div>
+              <div style="grid-column: 2 / 3;">{{ item.SubFormat }}</div>
+              <div style="grid-column: 1 / 2;">subLang:</div>
+              <div style="grid-column: 2 / 3;">{{ item.LanguageName }}</div>
+            </div>
+            <div style="grid-area: card-divider; align-self: end;">
+              <divider />
+            </div>
+            <div style="grid-area: card-action; justify-self: end;">
+              <a class="knopf flat block end small" style="width: 100%;" @click="select(item)">Select</a>
+            </div>
           </div>
         </div>
       </div>
+      <div v-else style="line-height: 3; text-align: center;">
+        <div>Sorry, no subtitle found.</div>
+        <div>(╯°□°)╯︵ ┻━┻</div>
+      </div>
     </div>
-    <div v-else style="margin: 16px; line-height: 3; text-align: center;">
-      <div>Sorry, no subtitle found.</div>
-      <div>(╯°□°)╯︵ ┻━┻</div>
-    </div>
-  </template>
-  <template v-else>
-    <div class="content">Loading subtitles...</div>
-  </template>
+  </transition>
 </template>
 
 <script>
@@ -58,7 +58,11 @@ export default {
   props: {
     tmdbId: String,
     mediaType: String,
-    searchQuery: String
+    searchQuery: String,
+    showContentAnimation: {
+      type: String,
+      default: ''
+    }
   },
   setup(props) {
     const state = reactive({ entries: [], filteredEntries: [], selectedLanguage: 'en', filter: '' });
@@ -95,8 +99,7 @@ export default {
       state,
       props,
       backFn() {
-        console.warn(props.searchQuery);
-        this.$router.replace({ name: 'search', params: { query: props.searchQuery } });
+        this.$router.replace({ name: 'search', params: { query: props.searchQuery, showContentAnimation: 'content-navigate-shallow'} });
       }
     };
   }
