@@ -2,12 +2,14 @@
   <div class="knopf-group" style="display: flex; position: relative;">
     <a class="knopf even active flat subtitle-dropdown-label sharp start" style="flex-grow: 1; margin-left: -7px;" @click="toggleLanguageSelection">Subtitle language: {{ state.prettySelected }}</a>
     <a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px;" @click="toggleLanguageSelection"><i class="fa fa-chevron-down fa-sm"></i></a>
-    <div v-show="state.showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px;">
-      <input style="grid-area: search-bar;" placeholder="Search language" type="text" v-model="state.query" />
-      <div style="grid-area: content; overflow-y: auto;">
-        <a class="knopf flat block small" style="width: 100%;" v-for="lang in state.languageList" :key="lang.iso639_2" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
+    <transition name="slide-down">
+      <div v-show="state.showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px;">
+        <input ref="input" style="grid-area: search-bar;" placeholder="Search language" type="text" v-model="state.query" />
+        <div style="grid-area: content; overflow-y: auto;">
+          <a class="knopf flat block small" style="width: 100%;" v-for="lang in state.languageList" :key="lang.iso639_2" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -22,7 +24,7 @@ export default {
   setup(props, { emit }) {
     const state = reactive({
       showLanguageSelection: false,
-      prettySelected: computed(()=> `${props.selected.charAt(0).toUpperCase()}${props.selected.slice(1)}`),
+      prettySelected: computed(() => `${props.selected.charAt(0).toUpperCase()}${props.selected.slice(1)}`),
       query: '',
       languageList: computed(() => {
         if (state.query === '') {
@@ -36,8 +38,13 @@ export default {
     return {
       state,
       props,
-      toggleLanguageSelection: () => (state.showLanguageSelection = !state.showLanguageSelection),
-      select({iso639_2}) {
+      toggleLanguageSelection() {
+        state.showLanguageSelection = !state.showLanguageSelection;
+        if(state.showLanguageSelection){
+          this.$refs.input.focus();
+        }
+      },
+      select({ iso639_2 }) {
         state.showLanguageSelection = false;
         emit('update:selected', iso639_2);
       }
@@ -72,4 +79,19 @@ export default {
   --knopf-text-color: var(--onPrimary);
 }
 
+.slide-down-leave-active,
+.slide-down-enter-active {
+  transition-duration: 0.3s;
+  transition-timing-function: linear;
+}
+
+.slide-down-enter-to, .slide-down-leave {
+  max-height: 100px;
+  overflow: hidden;
+}
+
+.slide-down-enter-from, .slide-down-leave-to {
+  overflow: hidden;
+  max-height: 0;
+}
 </style>

@@ -48,7 +48,6 @@ export default {
   },
   setup(props) {
     const state = reactive({ query: props.query ?? '', entries: [], loading: false });
-    console.warn(this);
 
     return {
       props,
