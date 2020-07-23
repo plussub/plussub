@@ -1,6 +1,6 @@
 <template>
   <div class="subtitle-selection-toolbar--container toolbar">
-    <toolbar-back-to-home style="grid-area: back;" :back-fn="backFn" />
+    <toolbar-back-btn style="grid-area: back;" :back-fn="backFn" />
     <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;" />
     <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;" />
   </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import ToolbarBackToHome from '@/components/ToolbarBackToHome.vue';
+import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import LanguageAccordion from '@/subtitleSelection/LanguageAccordion.vue';
 import FilterBar from '@/subtitleSelection/filterBar';
 import { reactive, ref, watch } from 'vue';
@@ -42,7 +42,7 @@ import Divider from '@/components/Divider';
 
 export default {
   components: {
-    ToolbarBackToHome,
+    ToolbarBackBtn,
     LanguageAccordion,
     FilterBar,
     Divider

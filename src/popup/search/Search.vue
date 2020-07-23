@@ -1,6 +1,6 @@
 <template>
   <div style="background-color: var(--primary); color: var(--onPrimary); width: 100%; height: 40px; box-shadow: var(--toolbar-shadow); display: flex;" class="toolbar">
-    <toolbar-back-to-home style="height: 100%;" />
+    <toolbar-back-btn style="height: 100%;" />
     <search-bar v-model:query="state.query" @on-search-results="onSearchResults" style="margin-left: 16px; flex-grow: 1; align-content: center;" />
   </div>
   <div class="search-content--container content">
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import ToolbarBackToHome from '@/components/ToolbarBackToHome.vue';
+import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import SearchBar from '@/search/SearchBar.vue';
 import SearchEntry from '@/search/SearchEntry.vue';
 import { reactive } from 'vue';
@@ -29,7 +29,7 @@ import Divider from '@/components/Divider';
 
 export default {
   components: {
-    ToolbarBackToHome,
+    ToolbarBackBtn,
     Divider,
     SearchBar,
     SearchEntry
@@ -49,7 +49,7 @@ export default {
         state.entries = entries;
       },
       select({ id, media_type }) {
-        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type, searchQuery: state.query}});
+        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type, searchQuery: state.query } });
       }
     };
   }
