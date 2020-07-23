@@ -1,8 +1,8 @@
 <template>
   <div class="knopf-group" style="display: flex; position: relative;">
-    <a class="knopf even active flat subtitle-dropdown-label sharp" style="flex-grow: 1;" @click="toggleLanguageSelection">Subtitle language: {{ state.prettySelected }}</a>
-    <a class="knopf even active pale sharp buttonOnPrimary" style="width: 40px;" @click="toggleLanguageSelection"><i class="fa fa-chevron-down fa-sm"></i></a>
-    <div v-show="state.showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -16px;">
+    <a class="knopf even active flat subtitle-dropdown-label sharp start" style="flex-grow: 1; margin-left: -7px;" @click="toggleLanguageSelection">Subtitle language: {{ state.prettySelected }}</a>
+    <a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px;" @click="toggleLanguageSelection"><i class="fa fa-chevron-down fa-sm"></i></a>
+    <div v-show="state.showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px;">
       <input style="grid-area: search-bar;" placeholder="Search language" type="text" v-model="state.query" />
       <div style="grid-area: content; overflow-y: auto;">
         <a class="knopf flat block small" style="width: 100%;" v-for="lang in state.languageList" :key="lang.iso639_2" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
@@ -65,7 +65,11 @@ export default {
 
 .active.subtitle-dropdown-label:hover,
 .active.subtitle-dropdown-label {
-  --knopf-text-color: white;
   --knopf-font-size: 1em;
 }
+.active.subtitle-dropdown-chevron,
+.active.subtitle-dropdown-label {
+  --knopf-text-color: var(--onPrimary);
+}
+
 </style>

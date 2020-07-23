@@ -48,6 +48,7 @@ body {
 }
 
 .buttonOnPrimary {
+  --knopf-text-color: --onPrimary;
   --knopf-hue: 0;
   --knopf-saturation: 0%;
   --knopf-luminosity: 100%;

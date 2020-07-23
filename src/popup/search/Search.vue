@@ -3,21 +3,20 @@
     <transition name="toolbar-transition" appear>
       <div style="display: flex;">
         <toolbar-back-btn style="height: 100%;" />
-        <search-bar v-model:query="state.query" @on-search-results="onSearchResults" style="margin-left: 16px; flex-grow: 1; align-content: center;" />
+        <search-bar v-model:query="state.query" v-model:loading="state.loading" @on-search-results="onSearchResults" style="flex-grow: 1; align-content: center;" />
       </div>
     </transition>
   </div>
   <div class="search-content--container content">
-    <div style="grid-area: search-results; display: flex; flex-wrap: wrap;">
-      <div v-show="state.entries.length === 0" style="width: 100%;">
-        <div v-if="state.query === ''">
-          After a search, the results are displayed here.
-        </div>
-        <div v-else>
-          No movie or tv series found.
-        </div>
-      </div>
+    <div v-if="state.entries.length > 0" style="grid-area: search-results; display: flex; flex-wrap: wrap;">
       <search-entry v-for="item in state.entries" :item="item" @select="(event) => select(event)" />
+    </div>
+    <div v-else-if="state.query === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
+        After a search, the results are displayed here.
+    </div>
+    <div v-else-if="!state.loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
+      <div>Sorry, no movies or tv shows found</div>
+      <div>(╯°□°)╯︵ ┻━┻</div>
     </div>
     <div style="grid-area: spacer;">&nbsp;</div>
   </div>
@@ -42,7 +41,7 @@ export default {
     query: String
   },
   setup(props) {
-    const state = reactive({ query: props.query ?? '', entries: [] });
+    const state = reactive({ query: props.query ?? '', entries: [], loading: false });
     console.warn(this)
 
     return {

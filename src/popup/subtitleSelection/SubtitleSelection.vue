@@ -9,7 +9,7 @@
     </transition>
   </div>
   <template v-if="dataReady">
-    <div class="subtitle-selection-content--container content">
+    <div v-if="state.filteredEntries.length" class="subtitle-selection-content--container content">
       <div style="grid-area: search-results; display: grid;">
         <div v-for="item in state.filteredEntries" class="subtitle-selection-content--container--card">
           <div style="grid-area: card-header; overflow: hidden; text-overflow: ellipsis;">{{ item.SubFileName }}</div>
@@ -29,6 +29,10 @@
           </div>
         </div>
       </div>
+    </div>
+    <div v-else style="margin: 16px; line-height: 3; text-align: center;">
+      <div>Sorry, no subtitle found.</div>
+      <div>(╯°□°)╯︵ ┻━┻</div>
     </div>
   </template>
   <template v-else>
@@ -110,13 +114,13 @@ export default {
 .subtitle-selection-toolbar--container--content {
   display: grid;
   grid-template-areas:
-    'back . . .'
-    'back . filter-bar .'
-    'back . . .'
-    'back . sub-lang-drop-down .'
-    'back . . .';
-  grid-template-rows: 16px 25px 16px 25px 8px;
-  grid-template-columns: auto 8px 1fr 16px;
+    'back . .'
+    'back filter-bar  filter-bar'
+    'back . .'
+    'back sub-lang-drop-down .'
+    'back . .';
+  grid-template-rows: 5px 30px 8px 25px 8px;
+  grid-template-columns: auto 1fr;
 }
 
 .subtitle-selection-content--container {
