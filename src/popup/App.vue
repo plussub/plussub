@@ -1,7 +1,9 @@
 <template>
   <div class="app--container">
     <router-view v-slot="{ Component }">
-      <component :is="Component"/>
+      <transition name="slide-left">
+        <component :is="Component" />
+      </transition>
     </router-view>
   </div>
 </template>
@@ -82,13 +84,31 @@ body {
   grid-template-columns: 100%;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.1s ease;
+.slide-left-enter-active, .slide-left-leave-active {
+  transition: all 400ms;
 }
 
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+.slide-left-enter {
+  position: absolute;
+  transform: translateX(100vw);
+}
+
+.slide-left-leave-to {
+  position: absolute;
+  transform: translateX(-100vw);
+}
+
+.slide-right-enter-active, .slide-right-leave-active {
+  transition: all 400ms;
+}
+
+.slide-right-enter {
+  position: absolute;
+  transform: translateX(-100vw);
+}
+
+.slide-right-leave-to {
+  position: absolute;
+  transform: translateX(100vw);
 }
 </style>
