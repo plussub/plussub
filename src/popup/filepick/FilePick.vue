@@ -28,7 +28,6 @@
       return {
         fileSelected () {
           const reader = new FileReader();
-          console.warn(this.$refs['fileInput'])
           reader.readAsText(this.$refs['fileInput'].files[0]);
           reader.onload = () => {
             const filename = this.$refs['fileInput'].files[0].name;

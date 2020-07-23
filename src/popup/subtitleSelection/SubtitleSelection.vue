@@ -1,6 +1,6 @@
 <template>
   <div class="subtitle-selection-toolbar--container toolbar">
-    <toolbar-back-to-home style="grid-area: back;" />
+    <toolbar-back-to-home style="grid-area: back;" :back-fn="backFn" />
     <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;" />
     <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;" />
   </div>
@@ -10,9 +10,12 @@
         <div v-for="item in state.filteredEntries" class="subtitle-selection-content--container--card">
           <div style="grid-area: card-header; overflow: hidden; text-overflow: ellipsis;">{{ item.SubFileName }}</div>
           <div style="grid-area: card-content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
-            <div style="grid-column: 1 / 2">subRating:</div><div style="grid-column: 2 / 3"> {{ item.SubRating }}</div>
-            <div style="grid-column: 1 / 2">subFormat:</div><div style="grid-column: 2 / 3"> {{ item.SubFormat }}</div>
-            <div style="grid-column: 1 / 2">subLang:</div><div style="grid-column: 2 / 3"> {{ item.LanguageName }}</div>
+            <div style="grid-column: 1 / 2;">subRating:</div>
+            <div style="grid-column: 2 / 3;">{{ item.SubRating }}</div>
+            <div style="grid-column: 1 / 2;">subFormat:</div>
+            <div style="grid-column: 2 / 3;">{{ item.SubFormat }}</div>
+            <div style="grid-column: 1 / 2;">subLang:</div>
+            <div style="grid-column: 2 / 3;">{{ item.LanguageName }}</div>
           </div>
           <div style="grid-area: card-divider; align-self: end;">
             <divider />
@@ -46,7 +49,8 @@ export default {
   },
   props: {
     tmdbId: String,
-    mediaType: String
+    mediaType: String,
+    searchQuery: String
   },
   setup(props) {
     const state = reactive({ entries: [], filteredEntries: [], selectedLanguage: 'en', filter: '' });
@@ -61,24 +65,32 @@ export default {
       });
     };
 
-    const triggerSearch = () => searchRequest({ ...props, language: state.selectedLanguage }).then((result) => {
-      dataReady.value = true;
-      state.entries = result.data.subtitleSearch.entries;
-      setFiltered();
-    });
+    const triggerSearch = () =>
+      searchRequest({ ...props, language: state.selectedLanguage }).then((result) => {
+        dataReady.value = true;
+        state.entries = result.data.subtitleSearch.entries;
+        setFiltered();
+      });
 
     triggerSearch();
 
     watch(() => state.filter, setFiltered);
-    watch(() => state.selectedLanguage, () => {
-      dataReady.value = false;
-      triggerSearch();
-    });
+    watch(
+      () => state.selectedLanguage,
+      () => {
+        dataReady.value = false;
+        triggerSearch();
+      }
+    );
 
     return {
       dataReady,
       state,
-      props
+      props,
+      backFn() {
+        console.warn(props.searchQuery);
+        this.$router.replace({ name: 'search', params: { query: props.searchQuery } });
+      }
     };
   }
 };

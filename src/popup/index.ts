@@ -30,7 +30,8 @@ const router = createRouter({
       path: '/search',
       name: 'search',
       // @ts-expect-error
-      component: Search
+      component: Search,
+      props: true
     },
     {
       path: '/subtitle-selection/:tmdbId/:mediaType',

@@ -1,7 +1,7 @@
 <template>
   <div style="background-color: var(--primary); color: var(--onPrimary); width: 100%; height: 40px; box-shadow: var(--toolbar-shadow); display: flex;" class="toolbar">
     <toolbar-back-to-home style="height: 100%;" />
-    <search-bar v-model:query="state.query" @on-search-results="onSearchResults" style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px;" />
+    <search-bar v-model:query="state.query" @on-search-results="onSearchResults" style="margin-left: 16px; flex-grow: 1; align-content: center;" />
   </div>
   <div class="search-content--container content">
     <div style="grid-area: search-results; display: flex; flex-wrap: wrap;">
@@ -13,7 +13,7 @@
           No movie or tv series found.
         </div>
       </div>
-      <search-entry v-for="item in state.entries" :item="item" @select="select"/>
+      <search-entry v-for="item in state.entries" :item="item" @select="select" />
     </div>
     <div style="grid-area: spacer;">&nbsp;</div>
   </div>
@@ -34,8 +34,11 @@ export default {
     SearchBar,
     SearchEntry
   },
-  setup() {
-    const state = reactive({ query: "", entries: [] });
+  props: {
+    query: String
+  },
+  setup(props) {
+    const state = reactive({ query: props.query ?? '', entries: [] });
 
     return {
       static: {
@@ -46,8 +49,8 @@ export default {
         state.entries = entries;
       },
       select({ id, media_type }) {
-        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type } });
-      },
+        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type, searchQuery: state.query}});
+      }
     };
   }
 };

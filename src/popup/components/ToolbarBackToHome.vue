@@ -1,3 +1,18 @@
 <template>
-  <a class="knopf flat pill small sharp buttonOnPrimary" @click="this.$router.replace({name: 'home'})"><i class="fa fa-chevron-left fa-lg"></i></a>
+  <a class="knopf flat pill small sharp buttonOnPrimary" @click="backFn ? backFn() : backFallbackFn() "><i class="fa fa-chevron-left fa-lg"></i></a>
 </template>
+<script>
+export default {
+  props: {
+    backFn: Function
+  },
+  setup(props) {
+    return {
+      backFn: props.backFn,
+      backFallbackFn () {
+        this.$router.replace({ name: 'home' })
+      }
+    }
+  }
+};
+</script>
