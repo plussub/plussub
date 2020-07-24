@@ -1,44 +1,44 @@
 <template>
-  <div style="background-color: var(--primary); color: var(--onPrimary); width: 100%; height: 40px; box-shadow: var(--toolbar-shadow);" class="toolbar">
-    <transition name="toolbar-transition" appear>
+  <page-layout :content-transition-name="contentTransitionName">
+    <template #toolbar>
       <div style="display: flex;">
         <toolbar-back-btn style="height: 100%;" />
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px;">
           Pick a file
         </div>
       </div>
-    </transition>
-  </div>
-
-  <transition :name="props.showContentAnimation" appear>
-    <div class="filepicker-content--container content">
-      <div class="filepicker-content--container--card" style="grid-area: filepicker;">
-        <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
-          Pick a .srt/.vtt file
+    </template>
+    <template #content>
+      <div class="filepicker-content--container">
+        <div class="filepicker-content--container--card" style="grid-area: filepicker;">
+          <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
+            Pick a .srt/.vtt file
+          </div>
+          <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput" accept="text/plain" />
         </div>
-        <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput" accept="text/plain" />
+        <div style="grid-area: spacer;">&nbsp;</div>
       </div>
-      <div style="grid-area: spacer;">&nbsp;</div>
-    </div>
-  </transition>
+    </template>
+  </page-layout>
 </template>
 
 <script>
 import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
+import PageLayout from '@/components/PageLayout';
 
 export default {
   components: {
-    ToolbarBackBtn
+    ToolbarBackBtn,
+    PageLayout
   },
   props: {
-    showContentAnimation: {
+    contentTransitionName: {
       type: String,
       default: ''
     }
   },
-  setup(props) {
+  setup() {
     return {
-      props,
       fileSelected() {
         const reader = new FileReader();
         reader.readAsText(this.$refs['fileInput'].files[0]);

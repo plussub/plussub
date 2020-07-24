@@ -27,6 +27,7 @@ export default {
   --default-header-text-color: #000000;
 
   --toolbar-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  --toolbar-height: 40px;
   --content-lr-space: 8px;
 
   --card-padding-top: 16px;
@@ -54,30 +55,6 @@ body {
   --knopf-luminosity: 100%;
 }
 
-.toolbar {
-  grid-area: toolbar;
-  z-index: 1000;
-}
-.content {
-  grid-area: content;
-  overflow-y: auto;
-  background-color: var(--background-color);
-  padding-top: 12px;
-  width: 100%;
-  max-width: 100%;
-}
-
-.toolbar-transition-enter-active,
-.toolbar-transition-leave-active {
-  transition-duration: 0.3s;
-  transition-property: opacity;
-  transition-timing-function: ease;
-}
-
-.toolbar-transition-enter-from,
-.toolbar-transition-leave-active {
-  opacity: 0;
-}
 .content-navigate-deeper-enter-active {
   transition: all 0.25s ease;
 }

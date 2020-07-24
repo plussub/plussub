@@ -1,15 +1,13 @@
 <template>
-  <div class="subtitle-selection-toolbar--container toolbar">
-    <transition name="toolbar-transition" appear>
+  <page-layout :content-transition-name="contentTransitionName">
+    <template #toolbar>
       <div class="subtitle-selection-toolbar--container--content">
         <toolbar-back-btn style="grid-area: back;" :back-fn="backFn" />
         <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;" />
         <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;" />
       </div>
-    </transition>
-  </div>
-  <transition :name="props.showContentAnimation" appear>
-    <div class="content">
+    </template>
+    <template #content>
       <div v-if="!dataReady" style="line-height: 3; text-align: center;">Loading subtitles...</div>
       <div v-else-if="state.filteredEntries.length" class="subtitle-selection-content--container">
         <div style="grid-area: search-results; display: grid;">
@@ -36,8 +34,8 @@
         <div>Sorry, no subtitle found.</div>
         <div>(╯°□°)╯︵ ┻━┻</div>
       </div>
-    </div>
-  </transition>
+    </template>
+  </page-layout>
 </template>
 
 <script>
@@ -47,19 +45,21 @@ import FilterBar from '@/subtitleSelection/filterBar';
 import { reactive, ref, watch } from 'vue';
 import { searchRequest } from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
+import PageLayout from '@/components/PageLayout';
 
 export default {
   components: {
     ToolbarBackBtn,
     LanguageAccordion,
     FilterBar,
-    Divider
+    Divider,
+    PageLayout
   },
   props: {
     tmdbId: String,
     mediaType: String,
     searchQuery: String,
-    showContentAnimation: {
+    contentTransitionName: {
       type: String,
       default: ''
     }
@@ -97,9 +97,8 @@ export default {
     return {
       dataReady,
       state,
-      props,
       backFn() {
-        this.$router.replace({ name: 'search', params: { query: props.searchQuery, showContentAnimation: 'content-navigate-shallow'} });
+        this.$router.replace({ name: 'search', params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' } });
       }
     };
   }
@@ -107,13 +106,6 @@ export default {
 </script>
 
 <style scoped>
-.subtitle-selection-toolbar--container {
-  background-color: var(--primary);
-  color: var(--onPrimary);
-  width: 100%;
-  height: 100%;
-  box-shadow: var(--toolbar-shadow);
-}
 .subtitle-selection-toolbar--container--content {
   display: grid;
   grid-template-areas:
@@ -156,5 +148,10 @@ export default {
   width: 100%;
   min-width: 100%;
   margin-bottom: 8px;
+}
+</style>
+<style>
+.toolbar {
+  --toolbar-height: auto;
 }
 </style>

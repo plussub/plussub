@@ -10,7 +10,7 @@ export default {
     return {
       backFn: props.backFn,
       backFallbackFn () {
-        this.$router.replace({ name: 'home', params: { showContentAnimation: 'content-navigate-shallow'} })
+        this.$router.replace({ name: 'home', params: { contentTransitionName: 'content-navigate-shallow'} })
       }
     }
   }

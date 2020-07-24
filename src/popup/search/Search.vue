@@ -1,27 +1,27 @@
 <template>
-  <div style="background-color: var(--primary); color: var(--onPrimary); width: 100%; height: 40px; box-shadow: var(--toolbar-shadow);" class="toolbar">
-    <transition name="toolbar-transition" appear>
+  <page-layout :content-transition-name="contentTransitionName">
+    <template #toolbar>
       <div style="display: flex;">
         <toolbar-back-btn style="height: 100%;" />
         <search-bar v-model:query="state.query" v-model:loading="state.loading" @on-search-results="onSearchResults" style="flex-grow: 1; align-content: center;" />
       </div>
-    </transition>
-  </div>
-  <transition :name="props.showContentAnimation" appear>
-    <div class="search-content--container content">
-      <div v-if="state.entries.length" style="grid-area: search-results; display: flex; flex-wrap: wrap;">
-        <search-entry v-for="item in state.entries" :item="item" @select="(event) => select(event)" />
+    </template>
+    <template #content>
+      <div class="search-content--container">
+        <div v-if="state.entries.length" style="grid-area: search-results; display: flex; flex-wrap: wrap;">
+          <search-entry v-for="item in state.entries" :item="item" @select="(event) => select(event)" />
+        </div>
+        <div v-else-if="state.query === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
+          After a search, the results are displayed here.
+        </div>
+        <div v-else-if="!state.loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
+          <div>Sorry, no movies or tv shows found</div>
+          <div>(╯°□°)╯︵ ┻━┻</div>
+        </div>
+        <div style="grid-area: spacer;">&nbsp;</div>
       </div>
-      <div v-else-if="state.query === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
-        After a search, the results are displayed here.
-      </div>
-      <div v-else-if="!state.loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
-        <div>Sorry, no movies or tv shows found</div>
-        <div>(╯°□°)╯︵ ┻━┻</div>
-      </div>
-      <div style="grid-area: spacer;">&nbsp;</div>
-    </div>
-  </transition>
+    </template>
+  </page-layout>
 </template>
 
 <script>
@@ -31,17 +31,19 @@ import SearchEntry from '@/search/SearchEntry.vue';
 import { reactive } from 'vue';
 import posterFallback from '@/res/posterFallback.png';
 import Divider from '@/components/Divider';
+import PageLayout from '@/components/PageLayout';
 
 export default {
   components: {
     ToolbarBackBtn,
     Divider,
     SearchBar,
-    SearchEntry
+    SearchEntry,
+    PageLayout
   },
   props: {
     query: String,
-    showContentAnimation: {
+    contentTransitionName: {
       type: String,
       default: ''
     }
@@ -59,7 +61,7 @@ export default {
         state.entries = entries;
       },
       select({ id, media_type }) {
-        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type, searchQuery: state.query, showContentAnimation: 'content-navigate-deeper' } });
+        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type, searchQuery: state.query, contentTransitionName: 'content-navigate-deeper' } });
       }
     };
   }
