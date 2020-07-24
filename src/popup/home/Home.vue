@@ -96,9 +96,17 @@
           </div>
         </div>
 
+        <div class="home-content--debug--container--card" style="grid-area: debug;">
+          <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
+            Debug Menu
+          </div>
+          <div style="grid-area: card-content;">
+            <a class="knopf flat small">Show loaded </a>
+          </div>
+        </div>
+
         <div style="grid-area: spacer;">&nbsp;</div>
       </div>
-
     </template>
   </page-layout>
 </template>
@@ -159,8 +167,9 @@ export default {
   grid-template-areas:
     '. current-sub .'
     '. offset .'
+    '. debug .'
     '. spacer .';
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto auto auto;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
   row-gap: 16px;
 }
@@ -217,6 +226,22 @@ export default {
     '. card-content .'
     'card-divider card-divider card-divider'
     '. card-action .';
+  grid-template-rows: auto 16px 1fr 16px auto;
+  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
+  width: 100%;
+}
+
+.home-content--debug--container--card {
+  background-color: var(--surface-color);
+  box-shadow: var(--card-shadow);
+  display: grid;
+  padding-top: var(--card-padding-top);
+  grid-template-areas:
+          '. card-header .'
+          '. . .'
+          '. card-content .'
+          'card-divider card-divider card-divider'
+          '. card-action .';
   grid-template-rows: auto 16px 1fr 16px auto;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
