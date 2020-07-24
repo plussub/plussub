@@ -4,8 +4,12 @@
       <div class="home-toolbar--container--content">
         <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;" />
         <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
-          <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'search', params: { showContentAnimation: 'content-navigate-deeper'} })"><i class="fa fa-search fa-lg"></i></a>
-          <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'filepick', params: { showContentAnimation: 'content-navigate-deeper'} })"><i class="fa fa-upload fa-lg"></i></a>
+          <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'search', params: { showContentAnimation: 'content-navigate-deeper' } })"
+            ><i class="fa fa-search fa-lg"></i
+          ></a>
+          <a class="knopf flat pill small buttonOnPrimary" @click="this.$router.replace({ name: 'filepick', params: { showContentAnimation: 'content-navigate-deeper' } })"
+            ><i class="fa fa-upload fa-lg"></i
+          ></a>
           <a class="knopf flat pill small buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
         </div>
       </div>
@@ -215,5 +219,15 @@ export default {
   grid-template-rows: auto 16px 1fr 16px auto;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  height: 130px;
 }
 </style>
