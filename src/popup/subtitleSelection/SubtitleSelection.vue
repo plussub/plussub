@@ -46,6 +46,7 @@ import { reactive, ref, watch } from 'vue';
 import { searchRequest } from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
+import { write, snapshot } from '../../shared/appState';
 
 export default {
   components: {
@@ -56,13 +57,13 @@ export default {
     PageLayout
   },
   props: {
-    tmdbId: String,
-    mediaType: String,
     searchQuery: String,
     contentTransitionName: {
       type: String,
       default: ''
-    }
+    },
+    tmdb_id: String,
+    media_type: String
   },
   setup(props) {
     const state = reactive({ entries: [], filteredEntries: [], selectedLanguage: 'en', filter: '' });
@@ -99,6 +100,20 @@ export default {
       state,
       backFn() {
         this.$router.replace({ name: 'search', params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' } });
+      },
+      select(item) {
+        const ss = snapshot();
+        write({
+          ...ss,
+          state: 'SELECTED',
+          src: 'SEARCH',
+          search: {
+            inSelectionTmdb: null,
+            tmbd: ss.search?.inSelectionTmdb,
+            opensubtitles: item
+          }
+        });
+        this.$router.replace({ name: 'home', params: { contentTransitionName: 'content-navigate-deeper' } });
       }
     };
   }

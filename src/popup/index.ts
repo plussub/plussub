@@ -35,7 +35,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/subtitle-selection/:tmdbId/:mediaType',
+      path: '/subtitle-selection/:tmdb_id/:media_type',
       name: 'subtitleSelection',
       // @ts-expect-error
       component: SubtitleSelection,

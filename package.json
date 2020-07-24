@@ -18,6 +18,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/vue-fontawesome": "^0.1.10",
     "cssbeautify": "^0.3.1",
+    "debug": "^4.1.1",
     "knopf.css": "^1.0.9",
     "mini-css-extract-plugin": "^0.9.0",
     "pako": "^1.0.6",

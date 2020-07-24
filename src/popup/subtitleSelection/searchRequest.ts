@@ -1,7 +1,7 @@
 const query = `
-query subtitleSearch($tmdbId: String!, $language: String!, $mediaType: String!)
+query subtitleSearch($tmdb_id: String!, $language: String!, $media_type: String!)
 {
-  subtitleSearch(tmdbId: $tmdbId, language: $language, mediaType: $mediaType){
+  subtitleSearch(tmdb_id: $tmdb_id, language: $language, media_type: $media_type){
     entries{
       SubFileName
       SubDownloadLink

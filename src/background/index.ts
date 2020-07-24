@@ -1,16 +1,19 @@
 import { reactive, watch } from 'vue';
-import {loadAppState} from '#/appState';
+import { snapshot } from '../shared/appState';
 (async () => {
-  const appState = await loadAppState();
-  console.warn(appState);
+  const appState = reactive(snapshot());
   // const state = reactive({ someval: 'a' });
   //
-  // watch(() => state.someval,
-  //   (change) => console.warn(change) );
-  //
-  // setInterval(() => {
-  //   state.someval += 'x';
-  // }, 1000)
-
-  console.log('wt2f')
+  watch(
+    () => appState.offsetTime,
+    (change) => console.warn(change),
+    {
+      deep: true
+    }
+  );
+  // console.warn('wtf');
+  // console.warn(appState);
+  setInterval(() => {
+    // ++appState.offsetTime.time;
+  }, 1000);
 })();

@@ -32,6 +32,7 @@ import { reactive } from 'vue';
 import posterFallback from '@/res/posterFallback.png';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
+import { write, snapshot } from '../../shared/appState';
 
 export default {
   components: {
@@ -50,7 +51,6 @@ export default {
   },
   setup(props) {
     const state = reactive({ query: props.query ?? '', entries: [], loading: false });
-
     return {
       props,
       static: {
@@ -60,8 +60,17 @@ export default {
       onSearchResults(entries) {
         state.entries = entries;
       },
-      select({ id, media_type }) {
-        this.$router.replace({ name: 'subtitleSelection', params: { tmdbId: id, mediaType: media_type, searchQuery: state.query, contentTransitionName: 'content-navigate-deeper' } });
+      select(item) {
+        const ss = snapshot();
+
+        write({
+          ...ss,
+          search: {
+            ...ss.search,
+            inSelectionTmdb: item
+          }
+        })
+        this.$router.replace({ name: 'subtitleSelection', params: { tmdb_id: item.tmdb_id, media_type: item.media_type, searchQuery: state.query, contentTransitionName: 'content-navigate-deeper' } });
       }
     };
   }

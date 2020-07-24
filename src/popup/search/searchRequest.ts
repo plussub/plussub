@@ -3,7 +3,7 @@ query videoSearch($query: String!)
 {
   videoSearch(query: $query){
     entries{
-      id
+      tmdb_id
       title
       overview
       poster_path

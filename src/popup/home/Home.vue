@@ -80,7 +80,7 @@
           <div style="grid-area: card-content; display: flex; width: 100%;">
             <div>
               <span style="font-size: 0.8em;">Actual</span>
-              <input style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" value="0" type="text" disabled />
+              <input style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" :value="appState.offsetTime.time" type="text" disabled />
             </div>
             <div>
               <span style="font-size: 0.8em;">New</span>
@@ -117,6 +117,7 @@ import { openOptionPage } from 'openOptionPage';
 import { reactive } from 'vue';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
+import {snapshot} from '../../shared/appState';
 
 export default {
   components: {
@@ -132,6 +133,7 @@ export default {
   setup(props) {
     const state = reactive({ contentExists: true });
     return {
+      appState: snapshot(),
       logo,
       openOptionPage,
       state,
@@ -237,11 +239,11 @@ export default {
   display: grid;
   padding-top: var(--card-padding-top);
   grid-template-areas:
-          '. card-header .'
-          '. . .'
-          '. card-content .'
-          'card-divider card-divider card-divider'
-          '. card-action .';
+    '. card-header .'
+    '. . .'
+    '. card-content .'
+    'card-divider card-divider card-divider'
+    '. card-action .';
   grid-template-rows: auto 16px 1fr 16px auto;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
