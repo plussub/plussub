@@ -109,7 +109,7 @@ export default {
           src: 'SEARCH',
           search: {
             inSelectionTmdb: null,
-            tmbd: ss.search?.inSelectionTmdb,
+            tmdb: ss.search?.inSelectionTmdb,
             opensubtitles: item
           }
         });

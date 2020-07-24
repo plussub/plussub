@@ -26,7 +26,7 @@ interface OpensubtitlesState {
 
 interface SearchState {
   inSelectionTmdb: TmdbState | null;
-  tmbd: TmdbState | null;
+  tmdb: TmdbState | null;
   opensubtitles: OpensubtitlesState | null;
 }
 
