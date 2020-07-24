@@ -86,6 +86,7 @@ body {
   max-width: 400px;
   width: 400px;
   max-height: 500px;
+  height: 500px;
   overflow-x: hidden;
   overflow-y: hidden;
   display: grid;

@@ -56,7 +56,6 @@ export default {
 <style scoped>
 .filepicker-content--container {
   width: 100%;
-  height: 100%;
   display: grid;
   justify-content: center;
   grid-template-areas:
