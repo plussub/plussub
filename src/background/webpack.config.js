@@ -8,6 +8,12 @@ module.exports = {
     filename: 'background.js',
     path: `${path.resolve(__dirname)}/../../dist`
   },
+  resolve: {
+    extensions: ['.ts', '.js', '.json'],
+    alias: {
+      '#': path.resolve(__dirname),
+    }
+  },
   mode: 'development',
   module: {
     rules: [

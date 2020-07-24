@@ -6,8 +6,8 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["src/*"],
-      "ReduxConfig": ["test/reduxConfig"]
+      "@/*": ["src/popup/*"],
+      "#/*": ["src/background/*"]
     },
     "strictNullChecks": true,
     "strictBindCallApply": true,
