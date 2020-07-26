@@ -8,7 +8,7 @@
       <div>Subtitle via file</div>
     </div>
     <div style="grid-area: card-content; width: 100%; font-size: 0.75em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px;">
-      <div style="grid-column: 1 / 2;">filename:</div>
+      <div style="grid-column: 1 / 2;">Filename:</div>
       <div style="grid-column: 2 / 3;">{{ appState.filePick.filename }}</div>
     </div>
     <div style="grid-area: card-divider; align-self: end;">
