@@ -1,6 +1,6 @@
-import { AppState, OpensubtitlesState, setAppState, snapshot, TmdbState } from '@/../shared/appState';
+import { OpensubtitlesState, setAppState, snapshot } from '@/../shared/appState';
 
-export const setSelection = (item: OpensubtitlesState) => {
+export const setSelection = (item: OpensubtitlesState): void => {
   const snapshotResult = snapshot();
 
   setAppState({

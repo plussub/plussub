@@ -1,6 +1,6 @@
-import {getInitialState} from './getInitialState';
+import { getInitialState } from './getInitialState';
 import logger from '../logger';
-import {AppState} from './types';
+import { AppState } from './types';
 
 export * from './types';
 
@@ -28,8 +28,8 @@ const load = (): AppState => {
 
 export const snapshot = (): AppState => load();
 
-export const setAppState = (state: AppState) => localStorage.setItem('appState', JSON.stringify(state));
-export const setAppStatePartial = (state: Partial<AppState>) => localStorage.setItem('appState', JSON.stringify({ ...snapshot(), ...state }));
+export const setAppState = (state: AppState): void => localStorage.setItem('appState', JSON.stringify(state));
+export const setAppStatePartial = (state: Partial<AppState>): void => localStorage.setItem('appState', JSON.stringify({ ...snapshot(), ...state }));
 
 // watch(
 //   () => appState,

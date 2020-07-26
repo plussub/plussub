@@ -1,6 +1,4 @@
-
 const fs = require('fs').promises;
-
 const toJson = (r) => JSON.parse(r);
 
 (async () => {

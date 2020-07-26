@@ -1,3 +1,5 @@
+import {TmdbState} from "../../shared/appState";
+
 const query = `
 query videoSearch($query: String!)
 {
@@ -15,7 +17,7 @@ query videoSearch($query: String!)
 }
 `
 
-export const searchRequest = async (queryParam) => {
+export const searchRequest = async (queryParam: string): Promise<{entries: TmdbState[]}> => {
   return await fetch('https://plussub-gql-cf-worker.stefanbreitenstein.workers.dev', {
     method: 'post',
     headers: {

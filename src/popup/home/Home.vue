@@ -74,7 +74,7 @@ import { reactive } from 'vue';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import ResultFromSearch from '@/home/ResultFromSearch';
-import { snapshot } from '../../shared/appState';
+import { snapshot } from '@/../shared/appState';
 
 export default {
   components: {

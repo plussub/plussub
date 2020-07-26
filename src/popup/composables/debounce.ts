@@ -1,9 +1,23 @@
-import { ref } from 'vue'
-export const debounce = ({ fn, timeout, cb }) => {
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { ref } from 'vue';
+import {Ref} from "@vue/reactivity";
+
+interface Payload<T> {
+  fn: (...args) => T;
+  timeout: number;
+}
+
+interface Result<T> {
+  fn: Payload<T>['fn'];
+  result: Ref<Record<string, unknown>>;
+  loading: Ref<boolean>;
+}
+
+export const debounce = <T> ({ fn, timeout }: Payload<T>): Result<T> => {
   let isCalled = false;
   let nextFn;
-  let result = ref({});
-  let loading = ref(false);
+  const result = ref({});
+  const loading = ref(false);
 
   const dbFn = async (...args) => {
     loading.value = true;
@@ -26,6 +40,7 @@ export const debounce = ({ fn, timeout, cb }) => {
   };
 
   return {
+    // @ts-ignore
     fn: dbFn,
     result,
     loading
