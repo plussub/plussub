@@ -16,11 +16,11 @@
     </template>
     <template #content>
       <div class="home-content--container">
-<!--        <transition name="fade" appear>-->
+        <transition name="fade" appear>
           <result-from-search v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'" style="grid-area: current-sub;" @remove="remove"></result-from-search>
-          <result-from-file v-if="appState.state !== 'NONE' && appState.src === 'FILE'" style="grid-area: current-sub;" @remove="remove"></result-from-file>
+          <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'" style="grid-area: current-sub;" @remove="remove"></result-from-file>
           <no-sub v-else style="grid-area: current-sub"></no-sub>
-<!--        </transition>-->
+        </transition>
         <div class="home-content--offset--container--card" style="grid-area: offset;">
           <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
             Subtitle offset setting
