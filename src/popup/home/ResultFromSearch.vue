@@ -1,9 +1,11 @@
 <template>
-  <div class="result-from-search--card">
+  <div class="result-from-search--card" style="position: relative;">
     <div style="grid-row: 1/2; grid-column: 2/3; z-index: 10;" class="result-from-search--card--hero--text">
+      <div style="position: absolute; top: 8px; right: 16px; display: flex;">
+        <div style="font-size: 0.5em; margin-right: 16px;">{{ currentState }}</div>
+        <div style="font-size: 0.5em;"><spinner /></div>
+      </div>
       <div style="grid-area: title; font-size: var(--card-header-font-size);">{{ appState.search.tmdb.title }}</div>
-      <div style="grid-area: spinner-text; font-size: 0.5em; place-self: center end; padding-right: 5px;">{{ currentState }}</div>
-      <div style="grid-area: spinner; font-size: 0.5em; align-self: center; justify-self: center;"><spinner /></div>
       <div style="grid-area: subtitle; font-size: 0.75em;">({{ appState.search.tmdb.media_type }} {{ appState.search.tmdb.release_date }})</div>
       <div style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
         <div style="grid-column: 1 / 2;">subRating:</div>
@@ -79,7 +81,7 @@ export default {
   color: white;
   grid-template-areas:
     '. .        .            .'
-    '. title    spinner-text      spinner'
+    '. title    .            .'
     '. subtitle .            .'
     '. .        .            .'
     '. detail   detail2      .'

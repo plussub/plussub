@@ -16,19 +16,11 @@
     </template>
     <template #content>
       <div class="home-content--container">
-        <transition name="fade" appear>
-          <result-from-search v-if="appState.state === 'SELECTED' && appState.src === 'SEARCH'" style="grid-area: current-sub;" @remove="remove"></result-from-search>
-          <div v-else class="home-content--no-sub--container--card" style="grid-area: current-sub;">
-            <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
-              No subtitle selected
-            </div>
-            <div style="grid-area: card-content; width: 100%; font-size: 0.75em; line-height: 1.6; margin-bottom: 16px;">
-              <div style="width: 100%;">Hi, you currently have no subtitle selected.</div>
-              <div style="width: 100%;">To search subtitle online use <i class="fa fa-search fa-sm"></i>.</div>
-              <div style="width: 100%;">If you want to load a subtitle file use <i class="fa fa-upload fa-sm"></i>.</div>
-            </div>
-          </div>
-        </transition>
+<!--        <transition name="fade" appear>-->
+          <result-from-search v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'" style="grid-area: current-sub;" @remove="remove"></result-from-search>
+          <result-from-file v-if="appState.state !== 'NONE' && appState.src === 'FILE'" style="grid-area: current-sub;" @remove="remove"></result-from-file>
+          <no-sub v-else style="grid-area: current-sub"></no-sub>
+<!--        </transition>-->
         <div class="home-content--offset--container--card" style="grid-area: offset;">
           <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
             Subtitle offset setting
@@ -73,6 +65,8 @@ import { openOptionPage } from 'openOptionPage';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import ResultFromSearch from '@/home/ResultFromSearch';
+import ResultFromFile from '@/home/ResultFromFile';
+import NoSub from '@/home/NoSub';
 import { snapshot } from '@/../shared/appState';
 import { remove } from '@/home/remove';
 
@@ -80,7 +74,9 @@ export default {
   components: {
     Divider,
     PageLayout,
-    ResultFromSearch
+    ResultFromSearch,
+    ResultFromFile,
+    NoSub
   },
   props: {
     contentTransitionName: {
@@ -123,19 +119,6 @@ export default {
   row-gap: 16px;
 }
 
-.home-content--no-sub--container--card {
-  background-color: var(--surface-color);
-  box-shadow: var(--card-shadow);
-  display: grid;
-  padding-top: var(--card-padding-top);
-  grid-template-areas:
-    '. card-header .'
-    '. . .'
-    '. card-content .';
-  grid-template-rows: auto 16px 1fr;
-  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
-  width: 100%;
-}
 
 .home-content--offset--container--card {
   background-color: var(--surface-color);
