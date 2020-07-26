@@ -46,7 +46,8 @@ import { reactive, ref, watch } from 'vue';
 import { searchRequest } from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
-import { write, snapshot } from '../../shared/appState';
+import { setAppState, snapshot } from '../../shared/appState';
+import {setSelection} from "@/subtitleSelection/setSelection";
 
 export default {
   components: {
@@ -102,17 +103,7 @@ export default {
         this.$router.replace({ name: 'search', params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' } });
       },
       select(item) {
-        const ss = snapshot();
-        write({
-          ...ss,
-          state: 'SELECTED',
-          src: 'SEARCH',
-          search: {
-            inSelectionTmdb: null,
-            tmdb: ss.search?.inSelectionTmdb,
-            opensubtitles: item
-          }
-        });
+        setSelection(item);
         this.$router.replace({ name: 'home', params: { contentTransitionName: 'content-navigate-deeper' } });
       }
     };

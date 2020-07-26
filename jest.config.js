@@ -5,7 +5,7 @@ module.exports = {
     '^.+\\.(js|ts)$': 'babel-jest'
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/src/popup/$1',
     '^ReduxConfig$': '<rootDir>/test/reduxConfig'
   },
   testRegex: 'test/.*(test|spec)\\.(js|ts)$',

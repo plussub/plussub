@@ -32,7 +32,7 @@ import { reactive } from 'vue';
 import posterFallback from '@/res/posterFallback.png';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
-import { write, snapshot } from '../../shared/appState';
+import {setSelection} from "@/search/setSelection";
 
 export default {
   components: {
@@ -61,15 +61,7 @@ export default {
         state.entries = entries;
       },
       select(item) {
-        const ss = snapshot();
-
-        write({
-          ...ss,
-          search: {
-            ...ss.search,
-            inSelectionTmdb: item
-          }
-        })
+        setSelection(item);
         this.$router.replace({ name: 'subtitleSelection', params: { tmdb_id: item.tmdb_id, media_type: item.media_type, searchQuery: state.query, contentTransitionName: 'content-navigate-deeper' } });
       }
     };
