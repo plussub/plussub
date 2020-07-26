@@ -10,5 +10,6 @@ export const getInitialState = (): AppState => ({
   offsetTime: {
     time: 0,
     applied: true
-  }
+  },
+  rawSrt: ''
 });

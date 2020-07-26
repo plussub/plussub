@@ -37,4 +37,5 @@ export interface AppState {
   src: 'NONE' | 'FILE' | 'SEARCH';
   search: SearchState| null;
   offsetTime: OffsetTimeState;
+  rawSrt: string;
 }
