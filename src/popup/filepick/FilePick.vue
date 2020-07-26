@@ -25,6 +25,7 @@
 <script>
 import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import PageLayout from '@/components/PageLayout';
+import {setSelection} from "@/filepick/setSelection";
 
 export default {
   components: {
@@ -44,8 +45,7 @@ export default {
         reader.readAsText(this.$refs['fileInput'].files[0]);
         reader.onload = () => {
           const filename = this.$refs['fileInput'].files[0].name;
-          console.log(reader.result);
-          console.log(`file loaded: ${filename}`);
+          setSelection({filename, rawSrt: reader.result});
           this.$router.replace({ name: 'home' });
         };
       }

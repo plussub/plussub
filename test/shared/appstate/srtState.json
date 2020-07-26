@@ -1,0 +1,10 @@
+{
+  "raw": "<given srt>",
+  "parsed": [
+    {
+      "from": 12,
+      "to": 25,
+      "text": "given subtitle"
+    }
+  ]
+}

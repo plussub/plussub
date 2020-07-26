@@ -2,7 +2,8 @@
   <div class="result-from-search--card">
     <div style="grid-row: 1/2; grid-column: 2/3; z-index: 10;" class="result-from-search--card--hero--text">
       <div style="grid-area: title; font-size: var(--card-header-font-size);">{{ appState.search.tmdb.title }}</div>
-      <div style="grid-area: loading; align-self: end;"> <i class="fa fa-spinner"></i></div>
+      <div style="grid-area: spinner-text; font-size: 0.5em; place-self: center end; padding-right: 5px;">{{ currentState }}</div>
+      <div style="grid-area: spinner; font-size: 0.5em; align-self: center; justify-self: center;"><spinner /></div>
       <div style="grid-area: subtitle; font-size: 0.75em;">({{ appState.search.tmdb.media_type }} {{ appState.search.tmdb.release_date }})</div>
       <div style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
         <div style="grid-column: 1 / 2;">subRating:</div>
@@ -28,7 +29,7 @@
       <divider />
     </div>
     <div style="grid-area: card-action; justify-self: end;">
-      <a class="knopf flat block end small" style="width: 100%;" @click="removeSubtitle">Remove subtitle</a>
+      <a class="knopf flat block end small" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
     </div>
   </div>
 </template>
@@ -36,14 +37,19 @@
 <script>
 import Divider from '@/components/Divider';
 import { snapshot } from '../../shared/appState';
+import Spinner from '@/components/Spinner';
+import { computed } from '@vue/reactivity';
 
 export default {
   components: {
-    Divider
+    Divider,
+    Spinner
   },
   setup() {
+    const appState = snapshot();
     return {
-      appState: snapshot()
+      appState,
+      currentState: computed(() => `${appState.state.charAt(0).toUpperCase()}${appState.state.slice(1).toLowerCase()}`)
     };
   }
 };
@@ -72,12 +78,12 @@ export default {
   height: 100%;
   color: white;
   grid-template-areas:
-    '. .        .       .'
-    '. title    .       loading'
-    '. subtitle .       .'
-    '. .        .       .'
-    '. detail   detail2 .'
-    '. .        .       .';
+    '. .        .            .'
+    '. title    spinner-text      spinner'
+    '. subtitle .            .'
+    '. .        .            .'
+    '. detail   detail2      .'
+    '. .        .            .';
   grid-template-rows: 8px auto auto 1fr auto 8px;
   grid-template-columns: var(--card-lr-space) 1fr auto var(--card-lr-space);
 }

@@ -25,9 +25,24 @@ export interface SearchState {
   opensubtitles: OpensubtitlesState | null;
 }
 
+export interface FilePick {
+  filename: string;
+}
+
 export interface OffsetTimeState {
   time: number;
   applied: boolean;
+}
+
+export interface SrtEntry {
+  from: number;
+  to: number;
+  text: string;
+}
+
+export interface SrtState {
+  raw: string | null;
+  parsed: SrtEntry[];
 }
 
 export interface AppState {
@@ -35,7 +50,8 @@ export interface AppState {
   debug: boolean;
   state: 'NONE' | 'SELECTED' | 'DOWNLOADING' | 'PARSING' | 'DONE';
   src: 'NONE' | 'FILE' | 'SEARCH';
-  search: SearchState| null;
+  search: SearchState | null;
+  filePick: FilePick | null;
   offsetTime: OffsetTimeState;
-  rawSrt: string;
+  srt: SrtState;
 }

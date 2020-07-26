@@ -17,7 +17,7 @@
     <template #content>
       <div class="home-content--container">
         <transition name="fade" appear>
-          <result-from-search v-if="appState.state === 'SELECTED' && appState.src === 'SEARCH' " style="grid-area: current-sub;"></result-from-search>
+          <result-from-search v-if="appState.state === 'SELECTED' && appState.src === 'SEARCH'" style="grid-area: current-sub;" @remove="remove"></result-from-search>
           <div v-else class="home-content--no-sub--container--card" style="grid-area: current-sub;">
             <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
               No subtitle selected
@@ -70,11 +70,11 @@
 <script>
 import logo from '@/res/plussub128.png';
 import { openOptionPage } from 'openOptionPage';
-import { reactive } from 'vue';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import ResultFromSearch from '@/home/ResultFromSearch';
 import { snapshot } from '@/../shared/appState';
+import { remove } from '@/home/remove';
 
 export default {
   components: {
@@ -89,15 +89,11 @@ export default {
     }
   },
   setup(props) {
-    const state = reactive({ contentExists: true });
     return {
       appState: snapshot(),
       logo,
       openOptionPage,
-      state,
-      removeSubtitle: () => {
-        state.contentExists = false;
-      }
+      remove
     };
   }
 };
