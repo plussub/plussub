@@ -7,9 +7,13 @@ export const getInitialState = (): AppState => ({
   state: 'NONE',
   src: 'NONE',
   search: null,
+  filePick: null,
   offsetTime: {
     time: 0,
     applied: true
   },
-  rawSrt: ''
+  srt: {
+    raw: null,
+    parsed: []
+  }
 });

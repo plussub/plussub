@@ -19,7 +19,8 @@ module.exports = {
       // on the first HMR update and causes the page to reload.
       'vue': '@vue/runtime-dom',
       '@': path.resolve(__dirname),
-      'openOptionPage': `${path.resolve(__dirname)}/platform/openOptionPage/chrome/index.ts`
+      'openOptionPage': `${path.resolve(__dirname)}/platform/openOptionPage/chrome/index.ts`,
+      'getBackgroundPage': `${path.resolve(__dirname)}/platform/getBackgroundPage/chrome/index.ts`
     }
   },
   mode: 'development',

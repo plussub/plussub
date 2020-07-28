@@ -19,7 +19,7 @@
         <transition name="fade" appear>
           <result-from-search v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'" style="grid-area: current-sub;" @remove="remove"></result-from-search>
           <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'" style="grid-area: current-sub;" @remove="remove"></result-from-file>
-          <no-sub v-else style="grid-area: current-sub"></no-sub>
+          <no-sub v-else style="grid-area: current-sub;"></no-sub>
         </transition>
         <div class="home-content--offset--container--card" style="grid-area: offset;">
           <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
@@ -63,12 +63,14 @@
 import logo from '@/res/plussub128.png';
 import { openOptionPage } from 'openOptionPage';
 import Divider from '@/components/Divider';
+import {useAppStateStorageListener} from '@/composables/useAppStateStorageListener';
 import PageLayout from '@/components/PageLayout';
 import ResultFromSearch from '@/home/ResultFromSearch';
 import ResultFromFile from '@/home/ResultFromFile';
 import NoSub from '@/home/NoSub';
 import { snapshot } from '@/../shared/appState';
 import { remove } from '@/home/remove';
+import {reactive} from "@vue/reactivity";
 
 export default {
   components: {
@@ -84,12 +86,16 @@ export default {
       default: ''
     }
   },
-  setup(props) {
+  setup() {
+    const appState = reactive(snapshot());
+    useAppStateStorageListener((state) => Object.assign(appState, state))
     return {
-      appState: snapshot(),
+      appState,
       logo,
       openOptionPage,
-      remove
+      remove: () => {
+        return Object.assign(appState, remove({appState}));
+      }
     };
   }
 };
@@ -118,7 +124,6 @@ export default {
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
   row-gap: 16px;
 }
-
 
 .home-content--offset--container--card {
   background-color: var(--surface-color);

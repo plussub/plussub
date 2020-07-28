@@ -1,9 +1,12 @@
-import {setAppState, snapshot} from '@/../shared/appState';
+import {AppState, setAppState} from '@/../shared/appState';
 
-export const remove = (): void => {
-  const snapshotResult = snapshot();
-  setAppState({
-    ...snapshotResult,
+interface Payload {
+  appState: AppState
+}
+
+export const remove = ({appState}: Payload): AppState => {
+  return setAppState({
+    ...appState,
     state: 'NONE',
     src: 'NONE',
     srt: {
@@ -14,7 +17,7 @@ export const remove = (): void => {
     filePick: null,
     offsetTime: {
       applied: false,
-      time: snapshotResult.offsetTime.time
+      time: appState.offsetTime.time
     }
   });
 };

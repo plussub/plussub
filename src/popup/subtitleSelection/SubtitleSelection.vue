@@ -68,7 +68,8 @@ export default {
   },
   setup(props) {
     const state = reactive({ entries: [], filteredEntries: [], selectedLanguage: 'en', filter: '' });
-    let dataReady = ref(false);
+    const dataReady = ref(false);
+
     const setFiltered = () => {
       state.filteredEntries = state.entries.filter(({ SubFileName }) => {
         if (state.filter === '') {
@@ -103,7 +104,7 @@ export default {
         this.$router.replace({ name: 'search', params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' } });
       },
       select(item) {
-        setSelection(item);
+        setSelection({item, appState: snapshot()});
         this.$router.replace({ name: 'home', params: { contentTransitionName: 'content-navigate-deeper' } });
       }
     };

@@ -1,5 +1,5 @@
 import { remove } from '@/home/remove';
-import { AppState, setAppState, snapshot } from '@/../shared/appState';
+import { AppState, setAppState } from '@/../shared/appState';
 import { getInitialState } from '@/../shared/appState/getInitialState';
 import opensubtitles from '../../shared/appstate/opensubtitlesState.json';
 import filePick from '../../shared/appstate/filePickState.json';
@@ -9,7 +9,6 @@ import tmdb from '../../shared/appstate/tmbdState.json';
 
 jest.mock('@/../shared/appState', () => ({
   __esModule: true,
-  snapshot: jest.fn(),
   setAppState: jest.fn()
 }));
 
@@ -19,7 +18,7 @@ describe('set selection', () => {
   });
 
   it('without previous result', () => {
-    const currentState: AppState = {
+    const appState: AppState = {
       ...getInitialState(),
       state: 'DONE',
       src: 'FILE',
@@ -32,9 +31,8 @@ describe('set selection', () => {
       srt,
       offsetTime
     };
-    (snapshot as jest.Mock).mockReturnValue(currentState);
 
-    remove();
+    remove({appState});
 
     expect(setAppState).toHaveBeenCalledWith({
       ...getInitialState(),

@@ -1,11 +1,15 @@
-import { snapshot, TmdbState, setAppState } from '@/../shared/appState';
+import {TmdbState, setAppState, AppState} from '@/../shared/appState';
 
-export const setSelection = (item: TmdbState): void => {
-  const snapshotResult = snapshot();
-  setAppState({
-    ...snapshotResult,
+interface Payload {
+  item: TmdbState,
+  appState: AppState
+}
+
+export const setSelection = ({item, appState}: Payload): AppState => {
+  return setAppState({
+    ...appState,
     search: {
-      ...(snapshotResult.search ?? { opensubtitles: null, tmdb: null }),
+      ...(appState.search ?? { opensubtitles: null, tmdb: null }),
       inSelectionTmdb: item
     }
   });

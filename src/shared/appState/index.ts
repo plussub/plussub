@@ -28,8 +28,15 @@ const load = (): AppState => {
 
 export const snapshot = (): AppState => load();
 
-export const setAppState = (state: AppState): void => localStorage.setItem('appState', JSON.stringify(state));
-export const setAppStatePartial = (state: Partial<AppState>): void => localStorage.setItem('appState', JSON.stringify({ ...snapshot(), ...state }));
+export const setAppState = (state: AppState): AppState => {
+  localStorage.setItem('appState', JSON.stringify(state));
+  return state;
+};
+export const setAppStatePartial = (state: Partial<AppState>): AppState => {
+  const newState = {...snapshot(), ...state};
+  localStorage.setItem('appState', JSON.stringify(newState));
+  return newState;
+};
 
 // watch(
 //   () => appState,
