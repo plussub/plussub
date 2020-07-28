@@ -45,7 +45,7 @@ export default {
       fileSelected() {
         const reader = new FileReader();
         reader.readAsText(this.$refs['fileInput'].files[0]);
-        reader.onload = () => {
+        reader.onload = async () => {
           const filename = this.$refs['fileInput'].files[0].name;
           setSelection({ filename, rawSrt: reader.result, appState: snapshot() });
           parseInBackground();

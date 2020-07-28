@@ -1,5 +1,7 @@
 export interface PlussubBackgroundWindowProps {
-  parse: () => void
+  plussub: {
+    parse: () => void
+  }
 }
 
 export type GetBackgroundPageResult = Window & PlussubBackgroundWindowProps

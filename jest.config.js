@@ -6,6 +6,7 @@ module.exports = {
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/popup/$1',
+    '^#/(.*)$': '<rootDir>/src/background/$1',
     '^ReduxConfig$': '<rootDir>/test/reduxConfig'
   },
   testRegex: 'test/.*(test|spec)\\.(js|ts)$',
