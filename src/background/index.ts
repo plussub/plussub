@@ -1,5 +1,5 @@
 import { setAppState, setAppStatePartial, snapshot } from '#/../shared/appState';
-import { parse } from '@plussub/srt-vtt-parser/dist/src';
+import { parse } from '@plussub/srt-vtt-parser';
 
 declare global {
   interface Window {

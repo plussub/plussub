@@ -18,7 +18,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/vue-fontawesome": "^0.1.10",
-    "@plussub/srt-vtt-parser": "^0.1.6",
+    "@plussub/srt-vtt-parser": "^0.1.8",
     "cssbeautify": "^0.3.1",
     "debug": "^4.1.1",
     "knopf.css": "^1.0.9",
