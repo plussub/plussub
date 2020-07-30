@@ -29,11 +29,6 @@ export interface FilePick {
   filename: string;
 }
 
-export interface OffsetTimeState {
-  time: number;
-  applied: boolean;
-}
-
 export interface SrtEntry {
   from: number;
   to: number;
@@ -43,6 +38,7 @@ export interface SrtEntry {
 export interface SrtState {
   raw: string | null;
   parsed: SrtEntry[];
+  withOffsetParsed: SrtEntry[];
 }
 
 export interface AppState {
@@ -52,6 +48,6 @@ export interface AppState {
   src: 'NONE' | 'FILE' | 'SEARCH';
   search: SearchState | null;
   filePick: FilePick | null;
-  offsetTime: OffsetTimeState;
+  offsetTime: number;
   srt: SrtState;
 }

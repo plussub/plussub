@@ -8,12 +8,10 @@ export const getInitialState = (): AppState => ({
   src: 'NONE',
   search: null,
   filePick: null,
-  offsetTime: {
-    time: 0,
-    applied: true
-  },
+  offsetTime: 0,
   srt: {
     raw: null,
-    parsed: []
+    parsed: [],
+    withOffsetParsed: []
   }
 });

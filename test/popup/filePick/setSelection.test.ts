@@ -1,7 +1,6 @@
 import { setSelection } from '@/filepick/setSelection';
 import {AppState, setAppState} from '@/../shared/appState';
 import { getInitialState } from '@/../shared/appState/getInitialState';
-import offsetTime from '../../shared/appstate/offsetTimeState.json';
 
 jest.mock('@/../shared/appState', () => ({
   __esModule: true,
@@ -16,7 +15,7 @@ describe('set selection', () => {
   it('without previous result', () => {
     const appState: AppState = {
       ...getInitialState(),
-      offsetTime
+      offsetTime: 12
     };
 
     setSelection({filename: 'given filename', rawSrt: 'given srt', appState});
@@ -30,12 +29,10 @@ describe('set selection', () => {
       },
       srt: {
         raw: 'given srt',
-        parsed: []
+        parsed: [],
+        withOffsetParsed: []
       },
-      offsetTime: {
-        applied: false,
-        time: offsetTime.time
-      }
+      offsetTime: 12
     });
   });
 });

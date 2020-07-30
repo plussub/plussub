@@ -4,7 +4,6 @@ import { getInitialState } from '@/../shared/appState/getInitialState';
 import opensubtitles from '../../shared/appstate/opensubtitlesState.json';
 import filePick from '../../shared/appstate/filePickState.json';
 import srt from '../../shared/appstate/srtState.json';
-import offsetTime from '../../shared/appstate/offsetTimeState.json';
 import tmdb from '../../shared/appstate/tmbdState.json';
 
 jest.mock('@/../shared/appState', () => ({
@@ -29,7 +28,7 @@ describe('set selection', () => {
       },
       filePick,
       srt,
-      offsetTime
+      offsetTime: 12
     };
 
     remove({appState});
@@ -38,15 +37,13 @@ describe('set selection', () => {
       ...getInitialState(),
       state: 'NONE',
       src: 'NONE',
-      offsetTime: {
-        time: offsetTime.time,
-        applied: false
-      },
+      offsetTime: 12,
       search: null,
       filePick: null,
       srt: {
         raw: null,
-        parsed: []
+        parsed: [],
+        withOffsetParsed: []
       }
     });
   });

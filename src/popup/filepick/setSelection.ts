@@ -12,14 +12,11 @@ export const setSelection = ({ rawSrt, filename, appState }: Payload): AppState 
     src: 'FILE',
     srt: {
       raw: rawSrt,
-      parsed: []
+      parsed: [],
+      withOffsetParsed: []
     },
     filePick: {
       filename
-    },
-    offsetTime: {
-      applied: false,
-      time: appState.offsetTime.time
     }
   });
 };

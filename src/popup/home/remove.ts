@@ -11,13 +11,10 @@ export const remove = ({appState}: Payload): AppState => {
     src: 'NONE',
     srt: {
       raw: null,
-      parsed: []
+      parsed: [],
+      withOffsetParsed: []
     },
     search: null,
-    filePick: null,
-    offsetTime: {
-      applied: false,
-      time: appState.offsetTime.time
-    }
+    filePick: null
   });
 };

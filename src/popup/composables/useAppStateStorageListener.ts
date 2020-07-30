@@ -1,7 +1,7 @@
 import { onMounted, onUnmounted } from 'vue';
-import {AppState} from "../../shared/appState";
+import { AppState } from '../../shared/appState';
 
-export function useAppStateStorageListener(handler: (appState: AppState) => void) {
+export function useAppStateStorageListener(handler: (appState: AppState) => void): void {
   const listener = ({ key, newValue }) => {
     if (key !== 'appState' || !newValue) {
       return;
