@@ -1,4 +1,4 @@
-import { AppState, setAppState, setAppStatePartial, snapshot } from '#/../shared/appState';
+import { setAppState, setAppStatePartial, snapshot } from '#/../shared/appState';
 import { parse } from '@plussub/srt-vtt-parser';
 import JSZip from 'jszip';
 
