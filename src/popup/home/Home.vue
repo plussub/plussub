@@ -99,22 +99,6 @@ export default {
   row-gap: 16px;
 }
 
-.home-content--debug--container--card {
-  background-color: var(--surface-color);
-  box-shadow: var(--card-shadow);
-  display: grid;
-  padding-top: var(--card-padding-top);
-  grid-template-areas:
-    '. card-header .'
-    '. . .'
-    '. card-content .'
-    'card-divider card-divider card-divider'
-    '. card-action .';
-  grid-template-rows: auto 16px 1fr 16px auto;
-  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
-  width: 100%;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;

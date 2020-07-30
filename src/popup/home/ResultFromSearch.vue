@@ -3,11 +3,19 @@
     <div style="grid-row: 1/2; grid-column: 2/3; z-index: 10;" class="result-from-search--card--hero--text">
       <div style="position: absolute; top: 8px; right: 16px; display: flex;">
         <div style="font-size: 0.5em; margin-right: 16px;">{{ currentState }}</div>
-        <div style="font-size: 0.5em;"><spinner /></div>
+        <div style="font-size: 0.5em;">
+          <transition name="fade" mode="out-in">
+            <spinner v-if="appState.state !== 'DONE'"/>
+            <i v-else class="fa fa-check fa-sm"></i>
+          </transition>
+        </div>
       </div>
       <div style="grid-area: title; font-size: var(--card-header-font-size);">{{ appState.search.tmdb.title }}</div>
-      <div style="grid-area: subtitle; font-size: 0.75em;">({{ appState.search.tmdb.media_type }} {{ appState.search.tmdb.release_date }})</div>
-      <div style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
+      <div style="grid-area: subtitle; font-size: 0.75em;">({{ appState.search.tmdb.media_type }}
+        {{ appState.search.tmdb.release_date }})
+      </div>
+      <div
+          style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
         <div style="grid-column: 1 / 2;">subRating:</div>
         <div style="grid-column: 2 / 3;">{{ appState.search.opensubtitles.SubRating }}</div>
         <div style="grid-column: 1 / 2;">subFormat:</div>
@@ -21,14 +29,15 @@
     </div>
     <div style="grid-area: card-header; position: relative;">
       <div class="result-from-search--card--hero">
-        <img :src="appState.search.tmdb.poster_path" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;" />
+        <img :src="appState.search.tmdb.poster_path"
+             style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;"/>
       </div>
     </div>
     <div style="grid-area: card-content; display: flex; width: 100%; font-size: 0.75em; line-height: 1.6;">
       {{ appState.search.tmdb.overview }}
     </div>
     <div style="grid-area: card-divider; align-self: end;">
-      <divider />
+      <divider/>
     </div>
     <div style="grid-area: card-action; justify-self: end;">
       <a class="knopf flat block end small" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
@@ -38,7 +47,7 @@
 
 <script>
 import Divider from '@/components/Divider';
-import { snapshot } from '../../shared/appState';
+import {snapshot} from '../../shared/appState';
 import Spinner from '@/components/Spinner';
 import {computed, reactive} from '@vue/reactivity';
 import {useAppStateStorageListener} from "@/composables/useAppStateStorageListener";
@@ -100,6 +109,16 @@ export default {
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.62);
+  opacity: 1;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 1;
 }
 </style>
