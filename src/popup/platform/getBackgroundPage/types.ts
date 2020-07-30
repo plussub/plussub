@@ -1,6 +1,7 @@
 export interface PlussubBackgroundWindowProps {
   plussub: {
     parse: () => void
+    setOffsetTime: ({offsetTime}: { offsetTime: number }) => void
   }
 }
 
