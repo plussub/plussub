@@ -48,6 +48,7 @@ import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import { setAppState, snapshot } from '../../shared/appState';
 import {setSelection} from "@/subtitleSelection/setSelection";
+import {triggerDownload} from "@/subtitleSelection/triggerDownloadInBackground";
 
 export default {
   components: {
@@ -105,6 +106,7 @@ export default {
       },
       select(item) {
         setSelection({item, appState: snapshot()});
+        triggerDownload();
         this.$router.replace({ name: 'home', params: { contentTransitionName: 'content-navigate-deeper' } });
       }
     };
