@@ -7,6 +7,8 @@
     <div style="grid-area: card-content;">
       <div v-for="video in state.videos" v-if="state.videos.length">
         {{ video.src }}
+        <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.src)"><i class="fa fa-sm fa-minus"></i></a>
+        <a v-else class="knopf flat small" @click="addSubTo(video.src)"><i class="fa fa-sm fa-plus"></i></a>
       </div>
       <div v-else>
         No videos found in current tab.
@@ -18,13 +20,20 @@
 <script>
 import {findVideosInCurrentTab} from 'findVideosInCurrentTab';
 import {reactive} from "@vue/reactivity";
+import {setAppStatePartial} from "@/../shared/appState";
+import {addSubtitleInCurrentTab} from 'addSubtitleInCurrentTab';
 
 export default {
   setup: function () {
     const state = reactive({videos: []});
     findVideosInCurrentTab().then(({videos}) => state.videos = videos)
     return {
-      state
+      state,
+      addSubTo: (targetSrc) => {
+        addSubtitleInCurrentTab({targetSrc});
+      },
+      removeSubFrom: () => {
+      }
     }
   }
 }

@@ -5,18 +5,16 @@
       Debug Menu
     </div>
     <div style="grid-area: card-content;">
-      <a class="knopf flat small" @click="execInBackground">Exec </a>
+      <a class="knopf flat small">Exec </a>
     </div>
   </div>
 </template>
 
 <script>
-import {execInBackground} from '@/home/execInBackground';
 
 export default {
   setup(){
     return {
-      execInBackground
     }
   }
 }

@@ -2,9 +2,9 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/addSubtitleContentScript/index.ts',
+  entry: './src/addSubtitleInCurrentTab/index.ts',
   output: {
-    filename: 'addSubtitleContentScript.js',
+    filename: 'addSubtitleInCurrentTab.js',
     path: `${path.resolve(__dirname)}/../../dist`
   },
   resolve: {

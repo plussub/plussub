@@ -21,7 +21,8 @@ module.exports = {
       '@': path.resolve(__dirname),
       'openOptionPage': `${path.resolve(__dirname)}/platform/openOptionPage/chrome/index.ts`,
       'getBackgroundPage': `${path.resolve(__dirname)}/platform/getBackgroundPage/chrome/index.ts`,
-      'findVideosInCurrentTab': `${path.resolve(__dirname)}/platform/findVideosInCurrentTab/chrome/index.ts`
+      'findVideosInCurrentTab': `${path.resolve(__dirname)}/platform/findVideosInCurrentTab/chrome/index.ts`,
+      'addSubtitleInCurrentTab': `${path.resolve(__dirname)}/platform/addSubtitleInCurrentTab/chrome/index.ts`
     }
   },
   mode: 'development',
