@@ -29,6 +29,7 @@
     "typeface-roboto": "0.0.75",
     "typeface-rubik": "0.0.72",
     "url-loader": "^4.1.0",
+    "uuid": "^8.3.0",
     "vue": "^3.0.0-rc.4"
   },
   "engine": "node >= 0.10",
