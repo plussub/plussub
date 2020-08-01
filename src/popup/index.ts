@@ -15,7 +15,6 @@ import '@fortawesome/fontawesome-free/js/all';
 
 const routerHistory = createWebHistory();
 
-// @ts-expect-error  because dont know why not match
 const app = createApp(App);
 
 const router = createRouter({
@@ -24,28 +23,24 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      // @ts-expect-error because dont know why not match
       component: Home,
       props: true
     },
     {
       path: '/search',
       name: 'search',
-      // @ts-expect-error  because dont know why not match
       component: Search,
       props: true
     },
     {
       path: '/subtitle-selection/:tmdb_id/:media_type',
       name: 'subtitleSelection',
-      // @ts-expect-error because dont know why not match
       component: SubtitleSelection,
       props: true
     },
     {
       path: '/filepick',
       name: 'filepick',
-      // @ts-expect-error  because dont know why not match
       component: FilePick,
       props: true
     }

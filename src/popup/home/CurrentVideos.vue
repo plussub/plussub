@@ -1,29 +1,37 @@
 <template>
-  <div class="debug--card">
+  <div class="videos--card">
     <div
         style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
-      Debug Menu
+      Founded videos on this site
     </div>
     <div style="grid-area: card-content;">
-      <a class="knopf flat small" @click="execInBackground">Exec </a>
+      <div v-for="video in state.videos" v-if="state.videos.length">
+        {{ video.src }}
+      </div>
+      <div v-else>
+        No videos found in current tab.
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import {execInBackground} from '@/home/execInBackground';
+import {findVideosInCurrentTab} from 'findVideosInCurrentTab';
+import {reactive} from "@vue/reactivity";
 
 export default {
-  setup(){
+  setup: function () {
+    const state = reactive({videos: []});
+    findVideosInCurrentTab().then(({videos}) => state.videos = videos)
     return {
-      execInBackground
+      state
     }
   }
 }
 </script>
 
 <style scoped>
-.debug--card {
+.videos--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);
   display: grid;

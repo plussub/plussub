@@ -21,6 +21,7 @@
           <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'" style="grid-area: current-sub;" @remove="remove"></result-from-file>
           <no-sub v-else style="grid-area: current-sub;"></no-sub>
         </transition>
+        <current-videos style="grid-area: videos;"/>
         <offset-time style="grid-area: offset;"/>
         <debug style="grid-area: debug;"/>
         <div style="grid-area: spacer;">&nbsp;</div>
@@ -38,6 +39,7 @@ import PageLayout from '@/components/PageLayout';
 import ResultFromSearch from '@/home/ResultFromSearch';
 import ResultFromFile from '@/home/ResultFromFile';
 import NoSub from '@/home/NoSub';
+import CurrentVideos from '@/home/CurrentVideos';
 import { snapshot } from '@/../shared/appState';
 import { remove } from '@/home/remove';
 import {reactive} from "@vue/reactivity";
@@ -52,7 +54,8 @@ export default {
     PageLayout,
     ResultFromSearch,
     ResultFromFile,
-    NoSub
+    NoSub,
+    CurrentVideos
   },
   props: {
     contentTransitionName: {
@@ -91,10 +94,11 @@ export default {
   justify-content: center;
   grid-template-areas:
     '. current-sub .'
+    '. videos .'
     '. offset .'
     '. debug .'
     '. spacer .';
-  grid-template-rows: auto auto auto auto;
+  grid-template-rows: auto auto auto auto auto;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
   row-gap: 16px;
 }

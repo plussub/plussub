@@ -29,6 +29,8 @@ export const createContextMenu = () => {
   });
 
   chrome.contextMenus.onClicked.addListener(() => {
-    console.warn('hit');
+    chrome.tabs.executeScript({
+      code: 'document.body.style.backgroundColor="red"'
+    });
   });
 };

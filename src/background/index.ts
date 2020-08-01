@@ -1,7 +1,7 @@
-import {parse} from '#/parse';
-import {setOffsetTime} from '#/setOffsetTime';
-import {triggerDownload} from '#/triggerDownload';
-import {createContextMenu} from 'contextMenu';
+import { parse } from '#/parse';
+import { setOffsetTime } from '#/setOffsetTime';
+import { triggerDownload } from '#/triggerDownload';
+import { createContextMenu } from 'contextMenu';
 
 declare global {
   interface Window {
@@ -9,6 +9,7 @@ declare global {
       parse: () => void;
       setOffsetTime: ({ offsetTime }: { offsetTime: number }) => void;
       triggerDownload: () => Promise<void>;
+      exec: () => void;
     };
   }
 }
@@ -16,8 +17,17 @@ declare global {
 window.plussub = {
   parse,
   setOffsetTime,
-  triggerDownload
+  triggerDownload,
+  exec: () => {
+    chrome.tabs.executeScript(
+      {
+        file: 'dist/addSubtitleContentScript.js'
+      },
+      (result) => {
+        console.warn(result);
+      }
+    );
+  }
 };
 
 createContextMenu();
-

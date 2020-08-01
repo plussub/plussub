@@ -8,7 +8,10 @@
     "paths": {
       "@/*": ["src/popup/*"],
       "#/*": ["src/background/*"],
-      "getBackgroundPage": ["src/popup/platform/getBackgroundPage/chrome/index.ts"]
+      "+/*": ["src/addSubtitleContentScript/*"],
+      "getBackgroundPage": ["src/popup/platform/getBackgroundPage/chrome/index.ts"],
+      "findVideosInCurrentTab": ["src/popup/platform/findVideosInCurrentTab/chrome/index.ts"],
+      "contextMenu": ["src/background/platform/contextMenu/chrome/index.ts"]
     },
     "strictNullChecks": true,
     "strictBindCallApply": true,
