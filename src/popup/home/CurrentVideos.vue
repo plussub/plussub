@@ -30,7 +30,8 @@ export default {
     return {
       state,
       addSubTo: (targetSrc) => {
-        addSubtitleInCurrentTab({targetSrc});
+        setAppStatePartial({targetSrc});
+        addSubtitleInCurrentTab();
       },
       removeSubFrom: () => {
       }

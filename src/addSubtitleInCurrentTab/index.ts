@@ -1,5 +1,3 @@
-chrome.storage.local.get(null, function ({ targetSrc}) {
-
-  console.warn(targetSrc);
-
+chrome.storage.local.get(null, function (result) {
+  console.warn(result);
 });
