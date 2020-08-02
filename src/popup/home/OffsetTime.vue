@@ -28,7 +28,7 @@
 <script>
 import {reactive} from "@vue/reactivity";
 import {snapshot} from "../../shared/appState";
-import {useAppStateStorageListener} from "@/composables/useAppStateStorageListener";
+import {useAppStateStorageListener} from 'useAppStateStorageListener';
 import Divider from "../components/Divider";
 import {setOffsetTimeInBackground} from "./setOffsetTimeInBackground";
 
@@ -37,8 +37,10 @@ export default {
     Divider
   },
   async setup() {
-    const appState = reactive(await snapshot());
+    const appState = reactive({});
     useAppStateStorageListener((state) => Object.assign(appState, state));
+    Object.assign(appState, await snapshot());
+
     return {
       appState,
       setOffsetTime() {

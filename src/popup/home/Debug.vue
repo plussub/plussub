@@ -5,19 +5,19 @@
       Debug Menu
     </div>
     <div style="grid-area: card-content;">
-      <a class="knopf flat small" @click="clearExtensionStorage">Clear Extension Storage</a>
+      <a class="knopf flat small" @click="resetAppState">Reset app state</a>
     </div>
   </div>
 </template>
 
 <script>
 
-import {clearExtensionStorage} from 'clearExtensionStorage';
+import {resetAppState} from '@/../shared/appState';
 
 export default {
   setup(){
     return {
-      clearExtensionStorage
+      resetAppState
     }
   }
 }

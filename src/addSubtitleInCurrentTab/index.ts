@@ -1,3 +1,6 @@
-chrome.storage.local.get(null, function (result) {
-  console.warn(result);
-});
+import { snapshot } from '+/../shared/appState';
+
+(async () => {
+  const appState = await snapshot();
+  console.warn(appState);
+})();

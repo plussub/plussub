@@ -13,17 +13,18 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
+      '@': path.resolve(__dirname),
       // this isn't technically needed, since the default `vue` entry for bundlers
       // is a simple `export * from '@vue/runtime-dom`. However having this
       // extra re-export somehow causes webpack to always invalidate the module
       // on the first HMR update and causes the page to reload.
       'vue': '@vue/runtime-dom',
-      '@': path.resolve(__dirname),
       'openOptionPage': `${path.resolve(__dirname)}/platform/openOptionPage/chrome/index.ts`,
+      'useAppStateStorageListener': `${path.resolve(__dirname)}/platform/useAppStateStorageListener/chrome/index.ts`,
       'getBackgroundPage': `${path.resolve(__dirname)}/platform/getBackgroundPage/chrome/index.ts`,
       'findVideosInCurrentTab': `${path.resolve(__dirname)}/platform/findVideosInCurrentTab/chrome/index.ts`,
       'addSubtitleInCurrentTab': `${path.resolve(__dirname)}/platform/addSubtitleInCurrentTab/chrome/index.ts`,
-      'clearExtensionStorage': `${path.resolve(__dirname)}/platform/clearExtensionStorage/chrome/index.ts`
+      'storage': `${path.resolve(__dirname)}/../shared/platform/storage/chrome/index.ts`
     }
   },
   mode: 'development',

@@ -50,7 +50,7 @@ import Divider from '@/components/Divider';
 import {snapshot} from '../../shared/appState';
 import Spinner from '@/components/Spinner';
 import {computed, reactive} from '@vue/reactivity';
-import {useAppStateStorageListener} from "@/composables/useAppStateStorageListener";
+import {useAppStateStorageListener} from 'useAppStateStorageListener';
 
 export default {
   components: {

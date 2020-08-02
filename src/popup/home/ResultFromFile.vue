@@ -32,7 +32,7 @@ import {snapshot} from '../../shared/appState';
 import Divider from '@/components/Divider';
 import Spinner from '@/components/Spinner';
 import {computed, reactive} from '@vue/reactivity';
-import {useAppStateStorageListener} from "@/composables/useAppStateStorageListener";
+import {useAppStateStorageListener} from 'useAppStateStorageListener';
 
 export default {
   components: {
@@ -40,8 +40,10 @@ export default {
     Spinner
   },
   async setup() {
-    const appState = reactive(await snapshot());
+    const appState = reactive({});
     useAppStateStorageListener((state) => Object.assign(appState, state));
+    Object.assign(appState, await snapshot());
+
     return {
       appState,
       currentState: computed(() => `${appState.state.charAt(0).toUpperCase()}${appState.state.slice(1).toLowerCase()}`)

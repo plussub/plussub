@@ -12,8 +12,9 @@
       "getBackgroundPage": ["src/popup/platform/getBackgroundPage/chrome/index.ts"],
       "findVideosInCurrentTab": ["src/popup/platform/findVideosInCurrentTab/chrome/index.ts"],
       "addSubtitleInCurrentTab": ["src/popup/platform/addSubtitleInCurrentTab/chrome/index.ts"],
-      "clearExtensionStorage": ["src/popup/platform/clearExtensionStorage/chrome/index.ts"],
-      "contextMenu": ["src/background/platform/contextMenu/chrome/index.ts"]
+      "useAppStateStorageListener": ["src/popup/platform/useAppStateStorageListener/chrome/index.ts"],
+      "contextMenu": ["src/background/platform/contextMenu/chrome/index.ts"],
+      "storage": ["src/shared/platform/storage/chrome/index.ts"]
     },
     "strictNullChecks": true,
     "strictBindCallApply": true,

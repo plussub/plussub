@@ -11,8 +11,9 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js', '.json'],
     alias: {
-      'contextMenu': `${path.resolve(__dirname)}/platform/contextMenu/chrome/index.ts`,
       '#': path.resolve(__dirname),
+      'contextMenu': `${path.resolve(__dirname)}/platform/contextMenu/chrome/index.ts`,
+      'storage': `${path.resolve(__dirname)}/../shared/platform/storage/chrome/index.ts`
     }
   },
   mode: 'development',

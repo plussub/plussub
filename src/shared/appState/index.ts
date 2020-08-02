@@ -1,40 +1,45 @@
 import { getInitialState } from './getInitialState';
 import logger from '../logger';
 import { AppState } from './types';
+import {get, set, clear} from 'storage';
 
 export * from './types';
 
 const log = logger.extend('appstate');
 
 const forceWrite = false;
-const load = (): AppState => {
-  const loadedState = localStorage.getItem('appState');
+const load = async (): Promise<AppState> => {
+  const loadedState = await get<AppState>();
   const initialState = getInitialState();
   if (!loadedState || forceWrite) {
     log('No state found, create new appState');
-    localStorage.setItem('appState', JSON.stringify(initialState));
+    await set(initialState);
     return initialState;
   }
-  const parsedLoadedState: AppState = JSON.parse(loadedState);
 
-  if (initialState.version !== parsedLoadedState.version) {
+  if (initialState.version !== loadedState.version) {
     log('Version mismatch, create new appState');
-    localStorage.setItem('appState', JSON.stringify(initialState));
+    await set(initialState);
     return initialState;
   }
-  log('Load state: %J', parsedLoadedState);
-  return parsedLoadedState;
+  log('Load state: %J', loadedState);
+  return loadedState;
 };
 
 export const snapshot = async (): Promise<AppState> => load();
 
 export const setAppState = async (state: AppState): Promise<AppState> => {
-  localStorage.setItem('appState', JSON.stringify(state));
+  await set(state);
   return state;
 };
 export const setAppStatePartial = async (state: Partial<AppState>): Promise<AppState> => {
-  const newState = {...(await snapshot()), ...state};
-  console.warn(newState);
-  localStorage.setItem('appState', JSON.stringify(newState));
-  return newState;
+  await set(state);
+  return get() as Promise<AppState>;
 };
+
+export const resetAppState = async ():Promise<AppState> => {
+  await clear();
+  const initialState = getInitialState();
+  await set(initialState);
+  return initialState;
+}

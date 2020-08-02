@@ -28,8 +28,8 @@ export default {
     const state = reactive({videos: (await findVideosInCurrentTab().catch(() => ({videos: []}))).videos});
     return {
       state,
-      addSubTo: (targetSrc) => {
-        setAppStatePartial({targetSrc});
+      async addSubTo(targetSrc){
+        await setAppStatePartial({targetSrc});
         addSubtitleInCurrentTab();
       },
       removeSubFrom: () => {

@@ -11,6 +11,7 @@ module.exports = {
     extensions: ['.ts', '.js', '.json'],
     alias: {
       '+': path.resolve(__dirname),
+      'storage': `${path.resolve(__dirname)}/../shared/platform/storage/chrome/index.ts`
     }
   },
   mode: 'development',
