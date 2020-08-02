@@ -22,7 +22,8 @@ module.exports = {
       'openOptionPage': `${path.resolve(__dirname)}/platform/openOptionPage/chrome/index.ts`,
       'getBackgroundPage': `${path.resolve(__dirname)}/platform/getBackgroundPage/chrome/index.ts`,
       'findVideosInCurrentTab': `${path.resolve(__dirname)}/platform/findVideosInCurrentTab/chrome/index.ts`,
-      'addSubtitleInCurrentTab': `${path.resolve(__dirname)}/platform/addSubtitleInCurrentTab/chrome/index.ts`
+      'addSubtitleInCurrentTab': `${path.resolve(__dirname)}/platform/addSubtitleInCurrentTab/chrome/index.ts`,
+      'clearExtensionStorage': `${path.resolve(__dirname)}/platform/clearExtensionStorage/chrome/index.ts`
     }
   },
   mode: 'development',

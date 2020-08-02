@@ -5,16 +5,19 @@
       Debug Menu
     </div>
     <div style="grid-area: card-content;">
-      <a class="knopf flat small">Exec </a>
+      <a class="knopf flat small" @click="clearExtensionStorage">Clear Extension Storage</a>
     </div>
   </div>
 </template>
 
 <script>
 
+import {clearExtensionStorage} from 'clearExtensionStorage';
+
 export default {
   setup(){
     return {
+      clearExtensionStorage
     }
   }
 }
