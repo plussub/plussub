@@ -1,13 +1,11 @@
-import { AppState, FilePick, setAppState, SrtState } from '@/../shared/appState';
+import {AppState, FilePick, setAppStatePartial, SrtState} from '@/../shared/appState';
 
 interface Payload {
   filename: FilePick['filename'];
   rawSrt: SrtState['raw'];
-  appState: AppState;
 }
-export const setSelection = ({ rawSrt, filename, appState }: Payload): AppState => {
-  return setAppState({
-    ...appState,
+export const setSelection = async ({ rawSrt, filename }: Payload): Promise<AppState> => {
+  return setAppStatePartial({
     state: 'SELECTED',
     src: 'FILE',
     srt: {

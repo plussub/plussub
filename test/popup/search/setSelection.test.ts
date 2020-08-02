@@ -1,12 +1,13 @@
 import { setSelection } from '@/search/setSelection';
-import { AppState, setAppState } from '@/../shared/appState';
+import { AppState, setAppState, snapshot } from '@/../shared/appState';
 import { getInitialState } from '@/../shared/appState/getInitialState';
 import opensubtitles from '../../shared/appstate/opensubtitlesState.json';
 import tmdb from '../../shared/appstate/tmbdState.json';
 
 jest.mock('@/../shared/appState', () => ({
   __esModule: true,
-  setAppState: jest.fn()
+  setAppState: jest.fn(),
+  snapshot: jest.fn()
 }));
 
 describe('set selection', () => {
@@ -14,9 +15,10 @@ describe('set selection', () => {
     jest.resetAllMocks();
   });
 
-  it('without previous result', () => {
-    setSelection({
-      appState: getInitialState(),
+  it('without previous result', async () => {
+    (snapshot as jest.Mock).mockResolvedValue(getInitialState());
+
+    await setSelection({
       item: {
         tmdb_id: 'given_tmdb_id',
         media_type: 'given_media_type',
@@ -48,7 +50,7 @@ describe('set selection', () => {
     });
   });
 
-  it('with previous result', () => {
+  it('with previous result', async () => {
     const appState: AppState = {
       ...getInitialState(),
       search: {
@@ -66,9 +68,9 @@ describe('set selection', () => {
         }
       }
     };
+    (snapshot as jest.Mock).mockResolvedValue(appState);
 
-    setSelection({
-      appState,
+    await setSelection({
       item: {
         tmdb_id: 'tmdb_id',
         media_type: 'media_type',

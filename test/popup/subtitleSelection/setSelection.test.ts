@@ -1,5 +1,5 @@
 import { setSelection } from '@/subtitleSelection/setSelection';
-import { AppState, setAppState } from '@/../shared/appState';
+import {AppState, setAppState, snapshot} from '@/../shared/appState';
 import { getInitialState } from '@/../shared/appState/getInitialState';
 import opensubtitles from '../../shared/appstate/opensubtitlesState.json';
 import tmdb from '../../shared/appstate/tmbdState.json';
@@ -7,7 +7,8 @@ import otherTmdb from '../../shared/appstate/tmbdState.json';
 
 jest.mock('@/../shared/appState', () => ({
   __esModule: true,
-  setAppState: jest.fn()
+  setAppState: jest.fn(),
+  snapshot: jest.fn()
 }));
 
 describe('set selection', () => {
@@ -15,7 +16,7 @@ describe('set selection', () => {
     jest.resetAllMocks();
   });
 
-  it('without previous result', () => {
+  it('without previous result', async () => {
     const appState: AppState = {
       ...getInitialState(),
       search: {
@@ -24,9 +25,8 @@ describe('set selection', () => {
         inSelectionTmdb: tmdb
       }
     };
-
-    setSelection({
-      appState,
+    (snapshot as jest.Mock).mockResolvedValue(appState);
+    await setSelection({
       item: {
         LanguageName: 'givenLanguageName',
         SubDownloadLink: 'givenSubDownloadLink',
@@ -58,7 +58,7 @@ describe('set selection', () => {
     });
   });
 
-  it('with previous result', () => {
+  it('with previous result', async () => {
     const appState: AppState = {
       ...getInitialState(),
       state: 'DONE',
@@ -69,9 +69,9 @@ describe('set selection', () => {
         inSelectionTmdb: tmdb
       }
     };
+    (snapshot as jest.Mock).mockResolvedValue(appState);
 
-    setSelection({
-      appState,
+    await setSelection({
       item: {
         LanguageName: 'givenLanguageName',
         SubDownloadLink: 'givenSubDownloadLink',

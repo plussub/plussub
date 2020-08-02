@@ -16,7 +16,7 @@
     </template>
     <template #content>
       <div class="home-content--container">
-        <transition name="fade" appear>
+        <transition name="fade">
           <result-from-search v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'" style="grid-area: current-sub;" @remove="remove"></result-from-search>
           <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'" style="grid-area: current-sub;" @remove="remove"></result-from-file>
           <no-sub v-else style="grid-area: current-sub;"></no-sub>
@@ -29,6 +29,7 @@
     </template>
   </page-layout>
 </template>
+
 
 <script>
 import logo from '@/res/plussub128.png';
@@ -63,15 +64,15 @@ export default {
       default: ''
     }
   },
-  setup() {
-    const appState = reactive(snapshot());
+  async setup() {
+    const appState = reactive(await snapshot());
     useAppStateStorageListener((state) => Object.assign(appState, state))
     return {
       appState,
       logo,
       openOptionPage,
-      remove: () => {
-        return Object.assign(appState, remove({appState}));
+      remove: async () => {
+        return Object.assign(appState, await remove());
       }
     };
   }

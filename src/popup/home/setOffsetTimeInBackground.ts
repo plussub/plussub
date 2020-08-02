@@ -5,5 +5,5 @@ interface Payload {
 }
 
 export const setOffsetTimeInBackground = async (payload: Payload): Promise<void> => {
-  (await getBackgroundPage()).plussub.setOffsetTime(payload);
+  await (await getBackgroundPage()).plussub.setOffsetTime(payload);
 };

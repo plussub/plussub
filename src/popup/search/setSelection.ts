@@ -1,11 +1,11 @@
-import {TmdbState, setAppState, AppState} from '@/../shared/appState';
+import {TmdbState, setAppState, AppState, snapshot} from '@/../shared/appState';
 
 interface Payload {
-  item: TmdbState,
-  appState: AppState
+  item: TmdbState
 }
 
-export const setSelection = ({item, appState}: Payload): AppState => {
+export const setSelection = async ({item}: Payload): Promise<AppState> => {
+  const appState = await snapshot();
   return setAppState({
     ...appState,
     search: {

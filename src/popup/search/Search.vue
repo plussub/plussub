@@ -33,7 +33,6 @@ import posterFallback from '@/res/posterFallback.png';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import {setSelection} from "@/search/setSelection";
-import {snapshot} from "../../shared/appState";
 
 export default {
   components: {
@@ -61,8 +60,8 @@ export default {
       onSearchResults(entries) {
         state.entries = entries;
       },
-      select(item) {
-        setSelection({item, appState: snapshot()});
+      async select(item) {
+        await setSelection({item});
         this.$router.replace({ name: 'subtitleSelection', params: { tmdb_id: item.tmdb_id, media_type: item.media_type, searchQuery: state.query, contentTransitionName: 'content-navigate-deeper' } });
       }
     };

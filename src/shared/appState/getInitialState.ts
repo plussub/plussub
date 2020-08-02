@@ -9,6 +9,7 @@ export const getInitialState = (): AppState => ({
   search: null,
   filePick: null,
   offsetTime: 0,
+  targetSrc: null,
   srt: {
     raw: null,
     parsed: [],

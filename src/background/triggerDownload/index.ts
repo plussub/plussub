@@ -1,9 +1,9 @@
-import { setAppState, setAppStatePartial, snapshot } from '../../shared/appState';
+import { setAppStatePartial, snapshot } from '../../shared/appState';
 import { parse } from '#/parse';
 import JSZip from 'jszip';
 
 export const triggerDownload = async (): Promise<void> => {
-  const { search } = snapshot();
+  const { search } = await snapshot();
   const link = search?.opensubtitles?.ZipDownloadLink;
   const fileName = search?.opensubtitles?.SubFileName;
   if (!link || !fileName) {
@@ -16,15 +16,12 @@ export const triggerDownload = async (): Promise<void> => {
     .then((zip) => zip.file(fileName))
     .then((zipFile) => zipFile?.async('string') ?? '');
 
-  // get a new snapshot because maybe has something change in the meantime
-  const appState = snapshot();
-  setAppState({
-    ...appState,
+  await setAppStatePartial({
     srt: {
       raw,
       parsed: [],
       withOffsetParsed: []
     }
   });
-  parse()
+  await parse()
 };

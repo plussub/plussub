@@ -1,11 +1,11 @@
 <template>
   <div class="toolbar">
-    <transition name="toolbar-transition" appear>
+    <transition name="toolbar-transition">
       <slot name="toolbar" />
     </transition>
   </div>
 
-  <transition :name="contentTransitionName" appear>
+  <transition :name="contentTransitionName">
     <div class="content">
       <slot name="content" />
     </div>

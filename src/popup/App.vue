@@ -1,14 +1,22 @@
 <template>
   <div class="app--container">
-    <router-view v-slot="{ Component }">
-      <component :is="Component" />
-    </router-view>
+    <Suspense>
+      <template #default>
+        <router-view v-slot="{ Component }">
+          <component :is="Component"/>
+        </router-view>
+      </template>
+      <template #fallback>
+        <div> loading </div>
+      </template>
+    </Suspense>
   </div>
 </template>
 
 <script>
 export default {
-  setup() {}
+  setup() {
+  }
 };
 </script>
 
@@ -58,9 +66,11 @@ body {
 .content-navigate-deeper-enter-active {
   transition: all 0.1s ease;
 }
+
 .content-navigate-deeper-leave-active {
   transition: all 0.1s ease;
 }
+
 .content-navigate-deeper-enter-from,
 .content-navigate-deeper-leave-to {
   transform: scale3d(.3, .3, .3);
@@ -71,9 +81,11 @@ body {
   opacity: 1;
   transition: all 0.1s ease;
 }
+
 .content-navigate-shallow-leave-active {
   transition: all 0.1s ease;
 }
+
 .content-navigate-shallow-enter-from,
 .content-navigate-shallow-leave-to {
   transform: scale3d(1.3, 1.3, 1.3);

@@ -31,7 +31,7 @@
     "typeface-rubik": "0.0.72",
     "url-loader": "^4.1.0",
     "uuid": "^8.3.0",
-    "vue": "^3.0.0-rc.4"
+    "vue": "^3.0.0-rc.5"
   },
   "engine": "node >= 0.10",
   "devDependencies": {
@@ -73,7 +73,7 @@
     "ts-loader": "^8.0.1",
     "typescript": "^3.9.7",
     "vue-loader": "^16.0.0-beta.4",
-    "vue-router": "^4.0.0-beta.3",
+    "vue-router": "^4.0.0-beta.4",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.17.1",

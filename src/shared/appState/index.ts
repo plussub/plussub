@@ -26,22 +26,15 @@ const load = (): AppState => {
   return parsedLoadedState;
 };
 
-export const snapshot = (): AppState => load();
+export const snapshot = async (): Promise<AppState> => load();
 
-export const setAppState = (state: AppState): AppState => {
+export const setAppState = async (state: AppState): Promise<AppState> => {
   localStorage.setItem('appState', JSON.stringify(state));
   return state;
 };
-export const setAppStatePartial = (state: Partial<AppState>): AppState => {
-  const newState = {...snapshot(), ...state};
+export const setAppStatePartial = async (state: Partial<AppState>): Promise<AppState> => {
+  const newState = {...(await snapshot()), ...state};
+  console.warn(newState);
   localStorage.setItem('appState', JSON.stringify(newState));
   return newState;
 };
-
-// watch(
-//   () => appState,
-//   (change) => console.warn('persist'),
-//   {
-//     deep: true
-//   }
-// );

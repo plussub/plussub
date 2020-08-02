@@ -6,8 +6,8 @@ import { createContextMenu } from 'contextMenu';
 declare global {
   interface Window {
     plussub: {
-      parse: () => void;
-      setOffsetTime: ({ offsetTime }: { offsetTime: number }) => void;
+      parse: () => Promise<void>;
+      setOffsetTime: ({ offsetTime }: { offsetTime: number }) => Promise<void>;
       triggerDownload: () => Promise<void>;
     };
   }

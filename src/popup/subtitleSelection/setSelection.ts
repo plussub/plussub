@@ -1,11 +1,11 @@
-import { AppState, OpensubtitlesState, setAppState } from '@/../shared/appState';
+import {AppState, OpensubtitlesState, setAppState, snapshot} from '@/../shared/appState';
 
 interface Payload {
   item: OpensubtitlesState;
-  appState: AppState;
 }
 
-export const setSelection = ({item, appState}: Payload): AppState => {
+export const setSelection = async ({item}: Payload): Promise<AppState> => {
+  const appState = await snapshot();
   return setAppState({
     ...appState,
     state: 'SELECTED',

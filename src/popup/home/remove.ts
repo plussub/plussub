@@ -1,12 +1,7 @@
-import {AppState, setAppState} from '@/../shared/appState';
+import {AppState, setAppStatePartial} from '@/../shared/appState';
 
-interface Payload {
-  appState: AppState
-}
-
-export const remove = ({appState}: Payload): AppState => {
-  return setAppState({
-    ...appState,
+export const remove = async (): Promise<AppState> => {
+  return setAppStatePartial({
     state: 'NONE',
     src: 'NONE',
     srt: {

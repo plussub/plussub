@@ -49,5 +49,6 @@ export interface AppState {
   search: SearchState | null;
   filePick: FilePick | null;
   offsetTime: number;
+  targetSrc: string | null;
   srt: SrtState;
 }

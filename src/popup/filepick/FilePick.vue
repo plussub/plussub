@@ -47,7 +47,7 @@ export default {
         reader.readAsText(this.$refs['fileInput'].files[0]);
         reader.onload = async () => {
           const filename = this.$refs['fileInput'].files[0].name;
-          setSelection({ filename, rawSrt: reader.result, appState: snapshot() });
+          await setSelection({ filename, rawSrt: reader.result});
           parseInBackground();
           this.$router.replace({ name: 'home' });
         };

@@ -1,10 +1,11 @@
 import { setSelection } from '@/filepick/setSelection';
-import {AppState, setAppState} from '@/../shared/appState';
+import { AppState, setAppStatePartial, snapshot } from '@/../shared/appState';
 import { getInitialState } from '@/../shared/appState/getInitialState';
 
 jest.mock('@/../shared/appState', () => ({
   __esModule: true,
-  setAppState: jest.fn()
+  setAppStatePartial: jest.fn(),
+  snapshot: jest.fn()
 }));
 
 describe('set selection', () => {
@@ -12,16 +13,13 @@ describe('set selection', () => {
     jest.resetAllMocks();
   });
 
-  it('without previous result', () => {
-    const appState: AppState = {
-      ...getInitialState(),
-      offsetTime: 12
-    };
+  it('without previous result', async () => {
+    const appState: AppState = getInitialState();
+    (snapshot as jest.Mock).mockResolvedValue(appState);
 
-    setSelection({filename: 'given filename', rawSrt: 'given srt', appState});
+    await setSelection({ filename: 'given filename', rawSrt: 'given srt' });
 
-    expect(setAppState).toHaveBeenCalledWith({
-      ...getInitialState(),
+    expect(setAppStatePartial).toHaveBeenCalledWith({
       src: 'FILE',
       state: 'SELECTED',
       filePick: {
@@ -31,8 +29,7 @@ describe('set selection', () => {
         raw: 'given srt',
         parsed: [],
         withOffsetParsed: []
-      },
-      offsetTime: 12
+      }
     });
   });
 });

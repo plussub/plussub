@@ -36,8 +36,8 @@ export default {
   components: {
     Divider
   },
-  setup() {
-    const appState = reactive(snapshot());
+  async setup() {
+    const appState = reactive(await snapshot());
     useAppStateStorageListener((state) => Object.assign(appState, state));
     return {
       appState,

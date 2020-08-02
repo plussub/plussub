@@ -1,18 +1,18 @@
 import { setAppState, setAppStatePartial, snapshot } from '../../shared/appState';
 import { parse as srtVttParse } from '@plussub/srt-vtt-parser';
 
-export const parse = (): void => {
-  setAppStatePartial({ state: 'PARSING' });
+export const parse = async (): Promise<void> => {
+  await setAppStatePartial({ state: 'PARSING' });
   const {
     srt: { raw }
-  } = snapshot();
+  } = await snapshot();
   if (!raw) {
     return;
   }
   const parsed = srtVttParse(raw);
   // get a new snapshot because maybe has something change in the meantime
-  const appState = snapshot();
-  setAppState({
+  const appState = await snapshot();
+  await setAppState({
     ...appState,
     state: 'DONE',
     srt: {

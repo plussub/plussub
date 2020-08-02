@@ -24,9 +24,8 @@ import {setAppStatePartial} from "@/../shared/appState";
 import {addSubtitleInCurrentTab} from 'addSubtitleInCurrentTab';
 
 export default {
-  setup: function () {
-    const state = reactive({videos: []});
-    findVideosInCurrentTab().then(({videos}) => state.videos = videos)
+  async setup () {
+    const state = reactive({videos: (await findVideosInCurrentTab().catch(() => ({videos: []}))).videos});
     return {
       state,
       addSubTo: (targetSrc) => {

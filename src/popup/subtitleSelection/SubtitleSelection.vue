@@ -46,7 +46,6 @@ import { reactive, ref, watch } from 'vue';
 import { searchRequest } from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
-import { setAppState, snapshot } from '../../shared/appState';
 import {setSelection} from "@/subtitleSelection/setSelection";
 import {triggerDownload} from "@/subtitleSelection/triggerDownloadInBackground";
 
@@ -104,8 +103,8 @@ export default {
       backFn() {
         this.$router.replace({ name: 'search', params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' } });
       },
-      select(item) {
-        setSelection({item, appState: snapshot()});
+      async select(item) {
+        await setSelection({item});
         triggerDownload();
         this.$router.replace({ name: 'home', params: { contentTransitionName: 'content-navigate-deeper' } });
       }
