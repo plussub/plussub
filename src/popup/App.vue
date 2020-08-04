@@ -1,12 +1,39 @@
 <template>
   <knopf-css/>
-  <div class="app--container">
+  <div v-if="state.selected === 'SEARCH'" class="app--container">
     <Suspense>
       <template #default>
-        <home v-if="selected === 'HOME'"/>
-        <file-pick v-else-if="selected === 'FILE-PICK'"/>
-        <search v-else-if="selected === 'SEARCH'"/>
-        <subtitle-selection v-else-if="selected === 'SUBTITLE-SELECTION'"/>
+        <search @navigate="navigate" v-bind="state.selectedParams"/>
+      </template>
+      <template #fallback>
+        <div> loading</div>
+      </template>
+    </Suspense>
+  </div>
+  <div v-else-if="state.selected === 'SUBTITLE-SELECTION'" class="app--container">
+    <Suspense>
+      <template #default>
+        <subtitle-selection @navigate="navigate" v-bind="state.selectedParams"/>
+      </template>
+      <template #fallback>
+        <div> loading</div>
+      </template>
+    </Suspense>
+  </div>
+  <div v-else-if="state.selected === 'FILE-PICK'" class="app--container">
+    <Suspense>
+      <template #default>
+        <file-pick @navigate="navigate" v-bind="state.selectedParams"/>
+      </template>
+      <template #fallback>
+        <div> loading</div>
+      </template>
+    </Suspense>
+  </div>
+  <div class="app--container" v-else>
+    <Suspense>
+      <template #default>
+        <home @navigate="navigate" v-bind="state.selectedParams"/>
       </template>
       <template #fallback>
         <div> loading</div>
@@ -17,11 +44,11 @@
 
 <script>
 import KnopfCss from '@/./KnopfCss.vue';
-
 import Home from '@/home/Home.vue';
 import Search from '@/search/Search.vue';
 import SubtitleSelection from '@/subtitleSelection/SubtitleSelection.vue';
 import FilePick from '@/filepick/FilePick.vue';
+import {reactive} from "@vue/reactivity";
 
 export default {
   components: {
@@ -32,8 +59,14 @@ export default {
     SubtitleSelection
   },
   setup() {
+    const state = reactive({selected: 'HOME', selectedParams: {}});
     return {
-      selected: 'HOME'
+      state,
+      navigate(event) {
+        state.selectedParams = event.params;
+        state.selected = event.name;
+        console.warn(event);
+      }
     }
   }
 };
@@ -62,12 +95,13 @@ export default {
   --card-header-font-family: 'Rubik', sans-serif;
   --card-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   --card-lr-space: 16px;
-
+}
+.app--container {
   --knopf-hue: 194;
   --knopf-saturation: 66.5%;
   --knopf-luminosity: 61.4%;
-
   font-size: 12pt;
+
 }
 
 .buttonOnPrimary {

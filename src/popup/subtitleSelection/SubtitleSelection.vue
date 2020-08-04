@@ -2,9 +2,9 @@
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div class="subtitle-selection-toolbar--container--content">
-        <toolbar-back-btn style="grid-area: back;" :back-fn="backFn" />
-        <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;" />
-        <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;" />
+        <toolbar-back-btn style="grid-area: back;" :back-fn="backFn"/>
+        <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;"/>
+        <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;"/>
       </div>
     </template>
     <template #content>
@@ -13,7 +13,8 @@
         <div style="grid-area: search-results; display: grid;">
           <div v-for="item in state.filteredEntries" class="subtitle-selection-content--container--card">
             <div style="grid-area: card-header; overflow: hidden; text-overflow: ellipsis;">{{ item.SubFileName }}</div>
-            <div style="grid-area: card-content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
+            <div
+                style="grid-area: card-content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
               <div style="grid-column: 1 / 2;">subRating:</div>
               <div style="grid-column: 2 / 3;">{{ item.SubRating }}</div>
               <div style="grid-column: 1 / 2;">subFormat:</div>
@@ -22,7 +23,7 @@
               <div style="grid-column: 2 / 3;">{{ item.LanguageName }}</div>
             </div>
             <div style="grid-area: card-divider; align-self: end;">
-              <divider />
+              <divider/>
             </div>
             <div style="grid-area: card-action; justify-self: end;">
               <a class="knopf flat block end small" style="width: 100%;" @click="select(item)">Select</a>
@@ -42,8 +43,8 @@
 import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import LanguageAccordion from '@/subtitleSelection/LanguageAccordion.vue';
 import FilterBar from '@/subtitleSelection/filterBar';
-import { reactive, ref, watch } from 'vue';
-import { searchRequest } from '@/subtitleSelection/searchRequest';
+import {reactive, ref, watch} from 'vue';
+import {searchRequest} from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import {setSelection} from "@/subtitleSelection/setSelection";
@@ -66,12 +67,12 @@ export default {
     tmdb_id: String,
     media_type: String
   },
-  setup(props) {
-    const state = reactive({ entries: [], filteredEntries: [], selectedLanguage: 'en', filter: '' });
+  setup(props, {emit}) {
+    const state = reactive({entries: [], filteredEntries: [], selectedLanguage: 'en', filter: ''});
     const dataReady = ref(false);
 
     const setFiltered = () => {
-      state.filteredEntries = state.entries.filter(({ SubFileName }) => {
+      state.filteredEntries = state.entries.filter(({SubFileName}) => {
         if (state.filter === '') {
           return true;
         }
@@ -80,33 +81,36 @@ export default {
     };
 
     const triggerSearch = () =>
-      searchRequest({ ...props, language: state.selectedLanguage }).then((result) => {
-        dataReady.value = true;
-        state.entries = result.data.subtitleSearch.entries;
-        setFiltered();
-      });
+        searchRequest({...props, language: state.selectedLanguage}).then((result) => {
+          dataReady.value = true;
+          state.entries = result.data.subtitleSearch.entries;
+          setFiltered();
+        });
 
     triggerSearch();
 
     watch(() => state.filter, setFiltered);
     watch(
-      () => state.selectedLanguage,
-      () => {
-        dataReady.value = false;
-        triggerSearch();
-      }
+        () => state.selectedLanguage,
+        () => {
+          dataReady.value = false;
+          triggerSearch();
+        }
     );
 
     return {
       dataReady,
       state,
       backFn() {
-        this.$router.replace({ name: 'search', params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' } });
+        emit('navigate', {
+          name: 'SEARCH',
+          params: {query: props.searchQuery, contentTransitionName: 'content-navigate-shallow'}
+        })
       },
       async select(item) {
         await setSelection({item});
         triggerDownload();
-        this.$router.replace({ name: 'home', params: { contentTransitionName: 'content-navigate-deeper' } });
+        emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-deeper'}})
       }
     };
   }
@@ -158,7 +162,7 @@ export default {
   margin-bottom: 8px;
 }
 </style>
-<style>
+<style>/* plussub header */
 .toolbar {
   --toolbar-height: auto;
 }

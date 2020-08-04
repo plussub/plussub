@@ -6,11 +6,11 @@ export default {
   props: {
     backFn: Function
   },
-  setup(props) {
+  setup(props, {emit}) {
     return {
       backFn: props.backFn,
       backFallbackFn () {
-        this.$router.replace({ name: 'home', params: { contentTransitionName: 'content-navigate-shallow'} })
+        emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-shallow' } })
       }
     }
   }

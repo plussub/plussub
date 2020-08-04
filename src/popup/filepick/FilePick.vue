@@ -2,7 +2,7 @@
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div style="display: flex;">
-        <toolbar-back-btn style="height: 100%;" />
+        <toolbar-back-btn style="height: 100%;" @navigate="(event) => $emit('navigate', event)"/>
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px;">
           Pick a file
         </div>
@@ -11,10 +11,12 @@
     <template #content>
       <div class="filepicker-content--container">
         <div class="filepicker-content--container--card" style="grid-area: filepicker;">
-          <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
+          <div
+              style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
             Pick a .srt/.vtt file
           </div>
-          <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput" accept="text/plain" />
+          <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput"
+                 accept="text/plain"/>
         </div>
         <div style="grid-area: spacer;">&nbsp;</div>
       </div>
@@ -25,9 +27,8 @@
 <script>
 import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import PageLayout from '@/components/PageLayout';
-import { setSelection } from '@/filepick/setSelection';
-import { parseInBackground } from './parseInBackground';
-import { snapshot } from '@/../shared/appState';
+import {setSelection} from '@/filepick/setSelection';
+import {parseInBackground} from './parseInBackground';
 
 export default {
   components: {
@@ -40,16 +41,17 @@ export default {
       default: ''
     }
   },
-  setup() {
+  setup(props, {emit}) {
     return {
       fileSelected() {
         const reader = new FileReader();
         reader.readAsText(this.$refs['fileInput'].files[0]);
         reader.onload = async () => {
           const filename = this.$refs['fileInput'].files[0].name;
-          await setSelection({ filename, rawSrt: reader.result});
+          await setSelection({filename, rawSrt: reader.result});
           parseInBackground();
-          this.$router.replace({ name: 'home' });
+          emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-shallow'}});
+          this.$router.replace({name: 'home'});
         };
       }
     };

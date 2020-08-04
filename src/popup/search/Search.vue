@@ -2,7 +2,7 @@
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div style="display: flex;">
-        <toolbar-back-btn style="height: 100%;" />
+        <toolbar-back-btn style="height: 100%;" @navigate="(event) => $emit('navigate', event)"/>
         <search-bar v-model:query="state.query" v-model:loading="state.loading" @on-search-results="onSearchResults" style="flex-grow: 1; align-content: center;" />
       </div>
     </template>
@@ -49,7 +49,7 @@ export default {
       default: ''
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const state = reactive({ query: props.query ?? '', entries: [], loading: false });
     return {
       props,
@@ -62,7 +62,7 @@ export default {
       },
       async select(item) {
         await setSelection({item});
-        this.$router.replace({ name: 'subtitleSelection', params: { tmdb_id: item.tmdb_id, media_type: item.media_type, searchQuery: state.query, contentTransitionName: 'content-navigate-deeper' } });
+        emit('navigate', {name: 'SUBTITLE-SELECTION', params: { tmdb_id: item.tmdb_id, media_type: item.media_type, searchQuery: state.query, contentTransitionName: 'content-navigate-deeper' }});
       }
     };
   }

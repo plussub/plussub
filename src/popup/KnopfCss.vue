@@ -6,6 +6,7 @@
   --knopf-hue: 218;
   --knopf-saturation: 77%;
   --knopf-luminosity: 37%;
+
   --knopf-font-size-base: 1rem;
   --knopf-font-size-small: calc(var(--knopf-font-size-base) - 0.25rem);
   --knopf-font-size-large: calc(var(--knopf-font-size-base) + 0.2rem);

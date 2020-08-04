@@ -5,11 +5,11 @@
         <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;"/>
         <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
           <a class="knopf flat pill small buttonOnPrimary"
-             @click="this.$router.replace({ name: 'search', params: { contentTransitionName: 'content-navigate-deeper' } })">
+             @click="$emit('navigate', { name: 'SEARCH', params: { contentTransitionName: 'content-navigate-deeper' } })">
             <i class="fa fa-search fa-lg"></i>
           </a>
           <a class="knopf flat pill small buttonOnPrimary"
-             @click="this.$router.replace({ name: 'filepick', params: { contentTransitionName: 'content-navigate-deeper' } })">
+             @click="$emit('navigate', { name: 'FILE-PICK', params: { contentTransitionName: 'content-navigate-deeper' } })">
             <i class="fa fa-upload fa-lg"></i>
           </a>
           <a class="knopf flat pill small buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
