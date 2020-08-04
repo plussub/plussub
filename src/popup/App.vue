@@ -111,11 +111,8 @@ export default {
   --knopf-luminosity: 100%;
 }
 
+.content-navigate-deeper-leave-active,
 .content-navigate-deeper-enter-active {
-  transition: all 0.2s ease;
-}
-
-.content-navigate-deeper-leave-active {
   transition: all 0.2s ease;
 }
 
@@ -142,12 +139,9 @@ export default {
   opacity: 0;
 }
 
+.content-navigate-shallow-leave-active,
 .content-navigate-shallow-enter-active {
   transition: all 0.2s ease;
-}
-
-.content-navigate-shallow-leave-active {
-  transition: all 0.1s ease;
 }
 
 .content-navigate-shallow-enter-from {
@@ -160,14 +154,14 @@ export default {
 
 .toolbar-transition-enter-active,
 .toolbar-transition-leave-active {
-  transition-duration: 0.3s;
-  transition-property: opacity;
-  transition-timing-function: ease;
+  transition: all 0.2s ease;
 }
 
-.toolbar-transition-enter-from,
-.toolbar-transition-leave-active {
+.toolbar-transition-enter-from{
   opacity: 0;
+}
+.toolbar-transition-leave-to{
+  opacity: 1;
 }
 </style>
 
