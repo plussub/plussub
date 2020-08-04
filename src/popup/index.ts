@@ -48,46 +48,57 @@ const prependLink = (target: HTMLElement | ShadowRoot, { href, integrity, crosso
 document.body.prepend(appShadowDiv);
 app.mount(appDiv);
 
-setTimeout(() => dragElement(appShadowDiv), 1000)
-function dragElement(elmnt) {
-  var pos1 = 0,
-    pos2 = 0,
-    pos3 = 0,
-    pos4 = 0;
-
-  elmnt.shadowRoot.querySelector('.toolbar').onmousedown = dragMouseDown;
-  // @ts-ignore
-  // const toolbar = appShadowDiv.shadowRoot.querySelector('div > .toolbar');
-  // @ts-ignore
-  // toolbar.onmousedown = dragMouseDown
-
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
+setTimeout(() =>{
+  if(!appShadowDiv.shadowRoot){
+    return;
+  }
+  const toolbar = appShadowDiv.shadowRoot.querySelector('.toolbar');
+  if(!toolbar){
+    return;
   }
 
-  function elementDrag(e) {
-    e = e || window.event;
+  let position = {
+    x:{
+      current: 0,
+      last: 0
+    },
+    y: {
+      current: 0,
+      last: 0
+    }
+  }
+  const closeDragElement = () => {
+    document.removeEventListener('mouseUp', closeDragElement);
+    document.removeEventListener('mousemove', elementDrag);
+  };
+
+  const elementDrag = (e) => {
     e.preventDefault();
     // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = elmnt.offsetTop - pos2 + 'px';
-    elmnt.style.left = elmnt.offsetLeft - pos1 + 'px';
+    position = {
+      x: {
+        current: position.x.last -  e.clientX,
+        last:  e.clientX
+      },
+      y: {
+        current: position.y.last -  e.clientY,
+        last:  e.clientY
+      }
+    }
+    appShadowDiv.style.top = `${appShadowDiv.offsetTop - position.y.current}px`;
+    appShadowDiv.style.left = `${appShadowDiv.offsetLeft - position.x.current}px`;
   }
 
-  function closeDragElement() {
-    // stop moving when mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
+  const dragMouseDown = e => {
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    position.x.last = e.clientX;
+    position.y.last = e.clientY;
+    document.addEventListener('mouseup', closeDragElement);
+    document.addEventListener('mousemove', elementDrag);
+  };
+
+
+  toolbar.addEventListener('mousedown', dragMouseDown);
+
+}, 1000)
