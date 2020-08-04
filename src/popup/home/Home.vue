@@ -12,7 +12,7 @@
              @click="$emit('navigate', { name: 'FILE-PICK', params: { contentTransitionName: 'content-navigate-deeper' } })">
             <i class="fa fa-upload fa-lg"></i>
           </a>
-          <a class="knopf flat pill buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
+          <a class="knopf flat pill buttonOnPrimary" @click="openOptionPage"><i class="fa fa-times fa-lg"></i></a>
         </div>
       </div>
     </template>

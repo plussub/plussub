@@ -1,7 +1,7 @@
 <template>
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <div style="display: flex;">
+      <div style="display: flex; height: 40px;">
         <toolbar-back-btn style="height: 100%;" @navigate="(event) => $emit('navigate', event)"/>
         <search-bar v-model:query="state.query" v-model:loading="state.loading" @on-search-results="onSearchResults" style="flex-grow: 1; align-content: center;" />
       </div>

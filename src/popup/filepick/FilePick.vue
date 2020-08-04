@@ -1,7 +1,7 @@
 <template>
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <div style="display: flex;">
+      <div style="display: flex; height: 40px">
         <toolbar-back-btn style="height: 100%;" @navigate="(event) => $emit('navigate', event)"/>
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px;">
           Pick a file
