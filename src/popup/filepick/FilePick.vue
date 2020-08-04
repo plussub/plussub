@@ -50,7 +50,7 @@ export default {
           const filename = this.$refs['fileInput'].files[0].name;
           await setSelection({filename, rawSrt: reader.result});
           parseInBackground();
-          emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-shallow'}});
+          emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-select-to-home'}});
           this.$router.replace({name: 'home'});
         };
       }

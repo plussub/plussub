@@ -110,7 +110,7 @@ export default {
       async select(item) {
         await setSelection({item});
         triggerDownload();
-        emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-deeper'}})
+        emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-select-to-home'}})
       }
     };
   }
