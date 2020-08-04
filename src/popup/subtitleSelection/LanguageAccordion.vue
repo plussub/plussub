@@ -6,7 +6,7 @@
       <div v-show="state.showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px;">
         <input ref="input" style="grid-area: search-bar;" placeholder="Search language" type="text" v-model="state.query" />
         <div style="grid-area: content; overflow-y: auto;">
-          <a class="knopf flat block small" style="width: 100%;" v-for="lang in state.languageList" :key="lang.iso639_2" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
+          <a class="knopf flat block" style="width: 100%;" v-for="lang in state.languageList" :key="lang.iso639_2" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
         </div>
       </div>
     </transition>

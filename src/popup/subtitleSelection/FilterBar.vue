@@ -1,7 +1,7 @@
 <template>
   <div class="knopf-group" style="display: flex;">
     <input autofocus style="flex-grow: 1;" placeholder="Filter subtitle result" id="search" type="text" v-model="state.filter" />
-    <a class="knopf flat pill small sharp buttonOnPrimary" style="width: 40px;"><i class="fa fa-filter fa-sm"></i></a>
+    <a class="knopf flat pill sharp buttonOnPrimary" style="width: 40px;"><i class="fa fa-filter fa-sm"></i></a>
   </div>
 </template>
 

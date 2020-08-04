@@ -21,8 +21,8 @@
     <div style="grid-area: card-divider; align-self: end;">
       <divider/>
     </div>
-    <div style="grid-area: card-action; justify-self: end;">
-      <a class="knopf flat block end small" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
+    <div style="grid-area: card-action; justify-self: end; align-self: center;">
+      <a class="knopf flat block end large" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
     </div>
   </div>
 </template>
@@ -64,7 +64,7 @@ export default {
     '. card-content .'
     'card-divider card-divider card-divider'
     '. card-action .';
-  grid-template-rows: auto 16px 1fr 16px auto;
+  grid-template-rows: auto 16px 1fr 16px 50px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
 }

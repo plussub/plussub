@@ -1,5 +1,5 @@
 <template>
-  <a class="knopf flat pill small sharp buttonOnPrimary" @click="backFn ? backFn() : backFallbackFn() "><i class="fa fa-chevron-left fa-lg"></i></a>
+  <a class="knopf flat pill sharp buttonOnPrimary" @click="backFn ? backFn() : backFallbackFn() "><i class="fa fa-chevron-left fa-lg"></i></a>
 </template>
 <script>
 export default {

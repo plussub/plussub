@@ -4,15 +4,15 @@
       <div class="home-toolbar--container--content">
         <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;"/>
         <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
-          <a class="knopf flat pill small buttonOnPrimary"
+          <a class="knopf flat pill buttonOnPrimary"
              @click="$emit('navigate', { name: 'SEARCH', params: { contentTransitionName: 'content-navigate-deeper' } })">
             <i class="fa fa-search fa-lg"></i>
           </a>
-          <a class="knopf flat pill small buttonOnPrimary"
+          <a class="knopf flat pill buttonOnPrimary"
              @click="$emit('navigate', { name: 'FILE-PICK', params: { contentTransitionName: 'content-navigate-deeper' } })">
             <i class="fa fa-upload fa-lg"></i>
           </a>
-          <a class="knopf flat pill small buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
+          <a class="knopf flat pill buttonOnPrimary" @click="openOptionPage"><i class="fa fa-cog fa-lg"></i></a>
         </div>
       </div>
     </template>
