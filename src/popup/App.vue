@@ -139,6 +139,18 @@ export default {
   transform: scale3d(1.3, 1.3, 1.3);
   opacity: 0;
 }
+
+.toolbar-transition-enter-active,
+.toolbar-transition-leave-active {
+  transition-duration: 0.3s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.toolbar-transition-enter-from,
+.toolbar-transition-leave-active {
+  opacity: 0;
+}
 </style>
 
 <style scoped>/* plussub header */

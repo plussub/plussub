@@ -1,13 +1,13 @@
 <template>
   <div class="toolbar">
-    <transition name="toolbar-transition">
-      <slot name="toolbar" />
-    </transition>
+<!--    <transition name="toolbar-transition" appear>-->
+      <slot name="toolbar"/>
+<!--    </transition>-->
   </div>
 
-  <transition :name="contentTransitionName">
+  <transition :name="contentTransitionName" appear>
     <div class="content">
-      <slot name="content" />
+      <slot name="content"/>
     </div>
   </transition>
 </template>
@@ -34,6 +34,7 @@ export default {
   height: var(--toolbar-height);
   box-shadow: var(--toolbar-shadow);
 }
+
 .content {
   grid-area: content;
   overflow-y: auto;
@@ -41,17 +42,5 @@ export default {
   padding-top: 12px;
   width: 100%;
   max-width: 100%;
-}
-
-.toolbar-transition-enter-active,
-.toolbar-transition-leave-active {
-  transition-duration: 0.3s;
-  transition-property: opacity;
-  transition-timing-function: ease;
-}
-
-.toolbar-transition-enter-from,
-.toolbar-transition-leave-active {
-  opacity: 0;
 }
 </style>
