@@ -2,7 +2,7 @@
   <div class="loader">Loading...</div>
 </template>
 
-<style>
+<style>/* plussub header */
   .loader {
     color: var(--primary);
     text-indent: -9999em;

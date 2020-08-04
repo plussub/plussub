@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>/* plussub header */
 .no-sub--container--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);

@@ -69,7 +69,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped>/* plussub header */
 .search-content--container {
   width: 100%;
   height: 100%;

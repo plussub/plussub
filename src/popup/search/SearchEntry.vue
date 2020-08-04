@@ -54,7 +54,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style scoped>/* plussub header */
 .search-content--container--card {
   --image-height: 120px;
   background-color: var(--surface-color);

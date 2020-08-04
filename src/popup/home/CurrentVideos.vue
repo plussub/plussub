@@ -39,7 +39,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped>/* plussub header */
 .videos--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);

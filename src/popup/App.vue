@@ -1,27 +1,46 @@
 <template>
+  <knopf-css/>
   <div class="app--container">
     <Suspense>
       <template #default>
-        <router-view v-slot="{ Component }">
-          <component :is="Component"/>
-        </router-view>
+        <home v-if="selected === 'HOME'"/>
+        <file-pick v-else-if="selected === 'FILE-PICK'"/>
+        <search v-else-if="selected === 'SEARCH'"/>
+        <subtitle-selection v-else-if="selected === 'SUBTITLE-SELECTION'"/>
       </template>
       <template #fallback>
-        <div> loading </div>
+        <div> loading</div>
       </template>
     </Suspense>
   </div>
 </template>
 
 <script>
+import KnopfCss from '@/./KnopfCss.vue';
+
+import Home from '@/home/Home.vue';
+import Search from '@/search/Search.vue';
+import SubtitleSelection from '@/subtitleSelection/SubtitleSelection.vue';
+import FilePick from '@/filepick/FilePick.vue';
+
 export default {
+  components: {
+    KnopfCss,
+    Home,
+    FilePick,
+    Search,
+    SubtitleSelection
+  },
   setup() {
+    return {
+      selected: 'HOME'
+    }
   }
 };
 </script>
 
-<style>
-:root {
+<style>/* plussub header */
+:host {
   --primary: #5bc0de;
   --onPrimary: #ffffff;
   --on-surface: var(--default-text-color);
@@ -44,16 +63,11 @@ export default {
   --card-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   --card-lr-space: 16px;
 
-  font-size: 18pt;
-}
-
-body {
   --knopf-hue: 194;
   --knopf-saturation: 66.5%;
   --knopf-luminosity: 61.4%;
-  font-family: 'Roboto', sans-serif;
-  margin: 0;
-  color: var(--default-text-color);
+
+  font-size: 12pt;
 }
 
 .buttonOnPrimary {
@@ -93,8 +107,13 @@ body {
 }
 </style>
 
-<style scoped>
+<style scoped>/* plussub header */
 .app--container {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  color: var(--default-text-color);
+  background-color: var(--background-color);
+
   max-width: 400px;
   width: 400px;
   max-height: 500px;

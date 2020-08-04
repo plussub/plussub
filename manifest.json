@@ -13,7 +13,7 @@
     "default_icon": {
       "19": "res/icons/browseraction.png"
     },
-    "default_popup": "dist/popup.html"
+    "default_popup": "dist/extensionPopup.html"
   },
   "background": {
     "page": "dist/background.html",

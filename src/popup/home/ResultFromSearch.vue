@@ -67,7 +67,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>/* plussub header */
 .result-from-search--card {
   --image-height: 150px;
   background-color: var(--surface-color);

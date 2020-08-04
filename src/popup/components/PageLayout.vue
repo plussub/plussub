@@ -23,7 +23,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped>/* plussub header */
 .toolbar {
   grid-area: toolbar;
   z-index: 1000;

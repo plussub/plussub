@@ -85,7 +85,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped>/* plussub header */
 .home-toolbar--container--content {
   box-shadow: var(--toolbar-shadow);
   display: grid;

@@ -56,7 +56,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style scoped>/* plussub header */
 .filepicker-content--container {
   width: 100%;
   display: grid;

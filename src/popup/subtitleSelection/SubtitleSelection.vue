@@ -113,7 +113,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped>/* plussub header */
 .subtitle-selection-toolbar--container--content {
   display: grid;
   grid-template-areas:

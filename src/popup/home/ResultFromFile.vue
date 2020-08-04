@@ -52,7 +52,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>/* plussub header */
 .result-from-file--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);
