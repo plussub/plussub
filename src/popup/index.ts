@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createApp } from 'vue';
-
-
 import App from './App.vue';
 const app = createApp(App);
 
@@ -45,60 +43,6 @@ const prependLink = (target: HTMLElement | ShadowRoot, { href, integrity, crosso
 [fontAwesome].forEach((entry) => prependLink(shadow, entry));
 [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('/* plussub header */')).forEach((style) => shadow.prepend(style));
 
+
 document.body.prepend(appShadowDiv);
 app.mount(appDiv);
-
-setTimeout(() =>{
-  if(!appShadowDiv.shadowRoot){
-    return;
-  }
-  const toolbar = appShadowDiv.shadowRoot.querySelector('.toolbar');
-  if(!toolbar){
-    return;
-  }
-
-  let position = {
-    x:{
-      current: 0,
-      last: 0
-    },
-    y: {
-      current: 0,
-      last: 0
-    }
-  }
-  const closeDragElement = () => {
-    document.removeEventListener('mouseUp', closeDragElement);
-    document.removeEventListener('mousemove', elementDrag);
-  };
-
-  const elementDrag = (e) => {
-    e.preventDefault();
-    // calculate the new cursor position:
-    position = {
-      x: {
-        current: position.x.last -  e.clientX,
-        last:  e.clientX
-      },
-      y: {
-        current: position.y.last -  e.clientY,
-        last:  e.clientY
-      }
-    }
-    appShadowDiv.style.top = `${appShadowDiv.offsetTop - position.y.current}px`;
-    appShadowDiv.style.left = `${appShadowDiv.offsetLeft - position.x.current}px`;
-  }
-
-  const dragMouseDown = e => {
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    position.x.last = e.clientX;
-    position.y.last = e.clientY;
-    document.addEventListener('mouseup', closeDragElement);
-    document.addEventListener('mousemove', elementDrag);
-  };
-
-
-  toolbar.addEventListener('mousedown', dragMouseDown);
-
-}, 1000)

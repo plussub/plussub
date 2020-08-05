@@ -1,7 +1,7 @@
 <template>
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <div class="home-toolbar--container--content">
+      <div ref="draggableAreaRef" class="home-toolbar--container--content">
         <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;"/>
         <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
           <a class="knopf flat pill buttonOnPrimary"
@@ -36,6 +36,7 @@
 
 
 <script>
+import {ref} from "vue";
 import logo from '@/res/plussub128.png';
 import {openOptionPage} from 'openOptionPage';
 import Divider from '@/components/Divider';
@@ -50,6 +51,7 @@ import {remove} from '@/home/remove';
 import {reactive} from "@vue/reactivity";
 import OffsetTime from "@/home/OffsetTime";
 import Debug from "@/home/Debug";
+import {useDraggableArea} from "@/composables";
 
 export default {
   components: {
@@ -69,11 +71,15 @@ export default {
     }
   },
   async setup() {
+    const draggableAreaRef = ref(null);
+
+    useDraggableArea({draggableAreaRef});
     const appState = reactive({});
     useAppStateStorageListener((state) => Object.assign(appState, state));
     Object.assign(appState, await snapshot());
 
     return {
+      draggableAreaRef,
       appState,
       logo,
       openOptionPage,

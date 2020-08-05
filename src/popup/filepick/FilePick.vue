@@ -1,7 +1,7 @@
 <template>
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <div style="display: flex; height: 40px">
+      <div ref="draggableAreaRef" style="display: flex; height: 40px">
         <toolbar-back-btn style="height: 100%;" @navigate="(event) => $emit('navigate', event)"/>
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px;">
           Pick a file
@@ -29,6 +29,8 @@ import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import PageLayout from '@/components/PageLayout';
 import {setSelection} from '@/filepick/setSelection';
 import {parseInBackground} from './parseInBackground';
+import {useDraggableArea} from "@/composables";
+import {ref} from "vue";
 
 export default {
   components: {
@@ -42,7 +44,10 @@ export default {
     }
   },
   setup(props, {emit}) {
+    const draggableAreaRef = ref(null);
+    useDraggableArea({draggableAreaRef})
     return {
+      draggableAreaRef,
       fileSelected() {
         const reader = new FileReader();
         reader.readAsText(this.$refs['fileInput'].files[0]);

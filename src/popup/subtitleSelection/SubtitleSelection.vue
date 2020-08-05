@@ -2,9 +2,9 @@
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div class="subtitle-selection-toolbar--container--content">
-        <toolbar-back-btn style="grid-area: back;" :back-fn="backFn"/>
+        <toolbar-back-btn ref="backBtnRef" style="grid-area: back;" :back-fn="backFn"/>
         <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;"/>
-        <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;"/>
+        <language-accordion ref="languageAccordionRef" v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;"/>
       </div>
     </template>
     <template #content>
@@ -49,6 +49,7 @@ import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import {setSelection} from "@/subtitleSelection/setSelection";
 import {triggerDownload} from "@/subtitleSelection/triggerDownloadInBackground";
+import {useDraggableArea} from "@/composables";
 
 export default {
   components: {
@@ -68,6 +69,11 @@ export default {
     media_type: String
   },
   setup(props, {emit}) {
+    const backBtnRef = ref(null);
+    const languageAccordionRef = ref(null);
+    useDraggableArea({draggableAreaRef: backBtnRef});
+    useDraggableArea({draggableAreaRef: languageAccordionRef});
+
     const state = reactive({entries: [], filteredEntries: [], selectedLanguage: 'en', filter: ''});
     const dataReady = ref(false);
 
@@ -99,6 +105,8 @@ export default {
     );
 
     return {
+      backBtnRef,
+      languageAccordionRef,
       dataReady,
       state,
       backFn() {

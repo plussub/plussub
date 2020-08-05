@@ -2,8 +2,8 @@
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div style="display: flex; height: 40px;">
-        <toolbar-back-btn style="height: 100%;" @navigate="(event) => $emit('navigate', event)"/>
-        <search-bar v-model:query="state.query" v-model:loading="state.loading" @on-search-results="onSearchResults" style="flex-grow: 1; align-content: center;" />
+        <toolbar-back-btn ref="draggableAreaRef" style="height: 100%;" @navigate="(event) => $emit('navigate', event)"/>
+        <search-bar v-model:query="state.query" v-model:loading="state.loading" @on-search-results="onSearchResults" style="flex-grow: 1; align-content: center; z-index: 10000;" />
       </div>
     </template>
     <template #content>
@@ -33,6 +33,8 @@ import posterFallback from '@/res/posterFallback.png';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import {setSelection} from "@/search/setSelection";
+import {useDraggableArea} from "@/composables";
+import {ref} from "vue";
 
 export default {
   components: {
@@ -50,8 +52,11 @@ export default {
     }
   },
   setup(props, {emit}) {
+    const draggableAreaRef = ref(null);
+    useDraggableArea({draggableAreaRef});
     const state = reactive({ query: props.query ?? '', entries: [], loading: false });
     return {
+      draggableAreaRef,
       props,
       static: {
         posterFallback

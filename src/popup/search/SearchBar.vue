@@ -2,7 +2,7 @@
   <div class="knopf-group" style="display: grid; grid-template-areas: 'bar button'; grid-template-columns: 1fr auto; grid-template-rows: 30px;">
     <spinner v-show="loading && state.query" style="grid-area: bar; justify-self: end; align-self: center; font-size: 12px; margin-right: 12px;" />
     <input autofocus style="grid-area: bar;" placeholder="Search movie or series" id="search" type="text" v-model="state.query" />
-    <a class="knopf flat pill sharp buttonOnPrimary" style="grid-area: button; width: 40px;"><i class="fa fa-search fa-lg"></i></a>
+    <a ref="draggableAreaRef" class="knopf flat pill sharp buttonOnPrimary" style="grid-area: button; width: 40px;"><i class="fa fa-search fa-lg"></i></a>
   </div>
 </template>
 
@@ -11,6 +11,8 @@ import { reactive, watch, watchEffect } from 'vue';
 import { debounce } from '@/composables';
 import { searchRequest } from '@/search/searchRequest';
 import Spinner from '@/components/Spinner';
+import {useDraggableArea} from "@/composables";
+import {ref} from "vue";
 
 export default {
   components: {
@@ -21,6 +23,8 @@ export default {
     loading: Boolean
   },
   setup(props, { emit }) {
+    const draggableAreaRef = ref(null);
+    useDraggableArea({draggableAreaRef});
     const state = reactive({ query: props.query });
     const { fn: req, result: queryResult, loading } = debounce({
       fn: searchRequest,
@@ -42,6 +46,7 @@ export default {
     watch(queryResult, (result) => emit('on-search-results', result?.data?.videoSearch?.entries ?? []));
 
     return {
+      draggableAreaRef,
       state,
       queryResult,
       loading,

@@ -65,7 +65,6 @@ export default {
       navigate(event) {
         state.selectedParams = event.params;
         state.selected = event.name;
-        console.warn(event);
       }
     }
   }
