@@ -18,7 +18,7 @@
     </template>
     <template #content>
       <div class="home-content--container">
-        <transition name="fade">
+        <transition name="fade" mode="out-in">
           <result-from-search v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
                               style="grid-area: current-sub;" @remove="remove"></result-from-search>
           <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
@@ -114,16 +114,5 @@ export default {
   grid-template-rows: auto auto auto auto auto;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
   row-gap: 16px;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  height: 130px;
 }
 </style>
