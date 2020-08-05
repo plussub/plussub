@@ -12,7 +12,7 @@
              @click="$emit('navigate', { name: 'FILE-PICK', params: { contentTransitionName: 'content-navigate-deeper' } })">
             <i class="fa fa-upload fa-lg"></i>
           </a>
-          <a class="knopf flat pill buttonOnPrimary" @click="openOptionPage"><i class="fa fa-times fa-lg"></i></a>
+          <a class="knopf flat pill buttonOnPrimary" @click="close"><i class="fa fa-times fa-lg"></i></a>
         </div>
       </div>
     </template>
@@ -38,7 +38,6 @@
 <script>
 import {ref} from "vue";
 import logo from '@/res/plussub128.png';
-import {openOptionPage} from 'openOptionPage';
 import Divider from '@/components/Divider';
 import {useAppStateStorageListener} from 'useAppStateStorageListener';
 import PageLayout from '@/components/PageLayout';
@@ -82,9 +81,11 @@ export default {
       draggableAreaRef,
       appState,
       logo,
-      openOptionPage,
-      remove: async () => {
+      async remove() {
         return Object.assign(appState, await remove());
+      },
+      close() {
+        document.getElementById('plussubShadow').remove();
       }
     };
   }

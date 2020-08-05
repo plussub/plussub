@@ -19,7 +19,6 @@ module.exports = {
       // extra re-export somehow causes webpack to always invalidate the module
       // on the first HMR update and causes the page to reload.
       'vue': '@vue/runtime-dom',
-      'openOptionPage': `${path.resolve(__dirname)}/platform/openOptionPage/chrome/index.ts`,
       'useAppStateStorageListener': `${path.resolve(__dirname)}/platform/useAppStateStorageListener/chrome/index.ts`,
       'getBackgroundPage': `${path.resolve(__dirname)}/platform/getBackgroundPage/chrome/index.ts`,
       'findVideosInCurrentTab': `${path.resolve(__dirname)}/platform/findVideosInCurrentTab/chrome/index.ts`,

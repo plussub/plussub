@@ -6,11 +6,9 @@
   "scripts": {
     "eslint": "eslint . --ext .ts",
     "build:popup": "webpack --config src/popup/webpack.config.js --display-module",
-    "build:extensionPopup": "webpack --config src/extensionPopup/webpack.config.js --display-module",
     "build:background": "webpack --config src/background/webpack.config.js --display-module",
     "build:addSubtitleInCurrentTab": "webpack --config src/addSubtitleInCurrentTab/webpack.config.js --display-module",
     "build:contentScripts": "cp src/contentScripts/* dist/",
-    "build:option": "webpack --config src/option/webpack.config.js --display-module",
     "build": "npm run build:app && npm run build:background && npm run build:content && npm run build:content",
     "zip": "rm -f ../plussub.zip && bestzip plussub.zip manifest.json src/ res/",
     "test": "jest --no-cache",
