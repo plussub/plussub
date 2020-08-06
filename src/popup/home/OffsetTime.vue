@@ -30,7 +30,7 @@ import {reactive} from "@vue/reactivity";
 import {snapshot} from "../../shared/appState";
 import {useAppStateStorageListener} from 'useAppStateStorageListener';
 import Divider from "../components/Divider";
-import {setOffsetTimeInBackground} from "./setOffsetTimeInBackground";
+import {setOffsetTime} from "./setOffsetTime";
 
 export default {
   components: {
@@ -44,10 +44,10 @@ export default {
     return {
       appState,
       setOffsetTime() {
-        setOffsetTimeInBackground({offsetTime: parseInt(this.$refs.input.value, 10)});
+        setOffsetTime({offsetTime: parseInt(this.$refs.input.value, 10)});
       },
       reset(){
-        setOffsetTimeInBackground({offsetTime: 0});
+        setOffsetTime({offsetTime: 0});
       }
     };
   }

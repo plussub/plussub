@@ -28,8 +28,8 @@
 import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import PageLayout from '@/components/PageLayout';
 import {setSelection} from '@/filepick/setSelection';
-import {parseInBackground} from './parseInBackground';
 import {useDraggableArea} from "@/composables";
+import {parse} from "@/parse";
 import {ref} from "vue";
 
 export default {
@@ -54,7 +54,7 @@ export default {
         reader.onload = async () => {
           const filename = this.$refs['fileInput'].files[0].name;
           await setSelection({filename, rawSrt: reader.result});
-          parseInBackground();
+          parse();
           emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-select-to-home'}});
           this.$router.replace({name: 'home'});
         };

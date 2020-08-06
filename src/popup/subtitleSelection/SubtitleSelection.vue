@@ -48,7 +48,7 @@ import {searchRequest} from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import {setSelection} from "@/subtitleSelection/setSelection";
-import {triggerDownload} from "@/subtitleSelection/triggerDownloadInBackground";
+import {triggerDownload} from "@/subtitleSelection/triggerDownload";
 import {useDraggableArea} from "@/composables";
 
 export default {

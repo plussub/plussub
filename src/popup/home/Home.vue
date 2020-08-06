@@ -47,7 +47,7 @@ import NoSub from '@/home/NoSub';
 import CurrentVideos from '@/home/CurrentVideos';
 import {snapshot} from '@/../shared/appState';
 import {remove} from '@/home/remove';
-import {reactive} from "@vue/reactivity";
+import {computed, reactive} from "@vue/reactivity";
 import OffsetTime from "@/home/OffsetTime";
 import Debug from "@/home/Debug";
 import {useDraggableArea} from "@/composables";

@@ -58,8 +58,10 @@ export default {
     Spinner
   },
   async setup() {
-    const appState = reactive(await snapshot());
+    const appState = reactive({});
     useAppStateStorageListener((state) => Object.assign(appState, state));
+    Object.assign(appState, await snapshot());
+
     return {
       appState,
       currentState: computed(() => `${appState.state.charAt(0).toUpperCase()}${appState.state.slice(1).toLowerCase()}`)

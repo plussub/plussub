@@ -13,6 +13,8 @@ module.exports = {
     alias: {
       '#': path.resolve(__dirname),
       'contextMenu': `${path.resolve(__dirname)}/platform/contextMenu/chrome/index.ts`,
+      'onInstalled': `${path.resolve(__dirname)}/platform/onInstalled/chrome/index.ts`,
+      'onPageActionClicked': `${path.resolve(__dirname)}/platform/onPageActionClicked/chrome/index.ts`,
       'storage': `${path.resolve(__dirname)}/../shared/platform/storage/chrome/index.ts`
     }
   },

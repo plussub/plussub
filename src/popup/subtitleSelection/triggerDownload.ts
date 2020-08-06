@@ -1,5 +1,5 @@
-import { setAppStatePartial, snapshot } from '../../shared/appState';
-import { parse } from '#/parse';
+import { setAppStatePartial, snapshot } from '@/../shared/appState';
+import { parse } from '@/parse';
 import JSZip from 'jszip';
 
 export const triggerDownload = async (): Promise<void> => {
@@ -23,5 +23,5 @@ export const triggerDownload = async (): Promise<void> => {
       withOffsetParsed: []
     }
   });
-  await parse()
+  await parse();
 };
