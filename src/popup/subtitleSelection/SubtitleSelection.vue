@@ -1,10 +1,10 @@
 <template>
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <div class="subtitle-selection-toolbar--container--content">
-        <toolbar-back-btn ref="backBtnRef" style="grid-area: back;" :back-fn="backFn"/>
+      <div ref="draggableAreaRef" class="subtitle-selection-toolbar--container--content">
+        <toolbar-back-btn style="grid-area: back;" :back-fn="backFn"/>
         <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;"/>
-        <language-accordion ref="languageAccordionRef" v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;"/>
+        <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;"/>
       </div>
     </template>
     <template #content>
@@ -69,10 +69,8 @@ export default {
     media_type: String
   },
   setup(props, {emit}) {
-    const backBtnRef = ref(null);
-    const languageAccordionRef = ref(null);
-    useDraggableArea({draggableAreaRef: backBtnRef});
-    useDraggableArea({draggableAreaRef: languageAccordionRef});
+    const draggableAreaRef = ref(null);
+    useDraggableArea({draggableAreaRef: draggableAreaRef});
 
     const state = reactive({entries: [], filteredEntries: [], selectedLanguage: 'en', filter: ''});
     const dataReady = ref(false);
@@ -105,8 +103,7 @@ export default {
     );
 
     return {
-      backBtnRef,
-      languageAccordionRef,
+      draggableAreaRef,
       dataReady,
       state,
       backFn() {

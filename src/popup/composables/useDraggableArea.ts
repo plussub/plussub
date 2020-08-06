@@ -26,35 +26,50 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
   const appShadowDiv = getShadowDiv();
 
   const closeDragElement = () => {
+    document.removeEventListener('touchstart', closeDragElement);
+    document.removeEventListener('touchmove', elementDragTouch);
+
     document.removeEventListener('mouseUp', closeDragElement);
-    document.removeEventListener('mousemove', elementDrag);
+    document.removeEventListener('mousemove', elementDragMouse);
+  };
+  const elementDragMouse = (e: MouseEvent) => {
+    e.preventDefault();
+    elementDrag(e);
   };
 
-  const elementDrag = (e: MouseEvent) => {
+  const elementDragTouch = (e: TouchEvent) => {
     e.preventDefault();
-    // calculate the new cursor position:
+    elementDrag(e.touches[0]);
+  };
+
+  const elementDrag = ({ clientX, clientY}: {clientX: number, clientY: number }) => {
     position = {
       x: {
-        current: position.x.last - e.clientX,
-        last: e.clientX
+        current: position.x.last - clientX,
+        last: clientX
       },
       y: {
-        current: position.y.last - e.clientY,
-        last: e.clientY
+        current: position.y.last - clientY,
+        last: clientY
       }
     };
     appShadowDiv.style.top = `${appShadowDiv.offsetTop - position.y.current}px`;
     appShadowDiv.style.left = `${appShadowDiv.offsetLeft - position.x.current}px`;
   };
 
-  const dragMouseDown = (e) => {
-    e.preventDefault();
-    // get the mouse cursor position at startup:
+  const dragTouch = (e: TouchEvent) => {
+    position.x.last = e.touches[0].clientX;
+    position.y.last = e.touches[0].clientY;
+    document.addEventListener('touchend', closeDragElement);
+    document.addEventListener('touchmove', elementDragTouch, {passive: false});
+  };
+
+  const dragMouse = (e: MouseEvent) => {
     position.x.last = e.clientX;
     position.y.last = e.clientY;
     document.addEventListener('mouseup', closeDragElement);
-    document.addEventListener('mousemove', elementDrag);
-  };
+    document.addEventListener('mousemove', elementDragMouse);
+  }
 
   onMounted(() => {
     const appShadowDiv = getShadowDiv();
@@ -62,16 +77,20 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
       return;
     }
     if(draggableAreaRef.value.$el){
-      draggableAreaRef.value.$el.addEventListener('mousedown', dragMouseDown);
+      draggableAreaRef.value.$el.addEventListener('touchstart', dragTouch, {passive:false});
+      draggableAreaRef.value.$el.addEventListener('mousedown', dragMouse, {passive:false});
     } else {
-      draggableAreaRef.value.addEventListener('mousedown', dragMouseDown);
+      draggableAreaRef.value.addEventListener('touchstart', dragTouch, {passive:false});
+      draggableAreaRef.value.addEventListener('mousedown', dragMouse, {passive:false});
     }
   });
   onUnmounted(() => {
     if(draggableAreaRef.value.$el){
-      draggableAreaRef.value.$el.removeEventListener('mousedown', dragMouseDown);
+      draggableAreaRef.value.$el.removeEventListener('touchstart', dragTouch);
+      draggableAreaRef.value.$el.removeEventListener('mousedown', dragMouse);
     } else {
-      draggableAreaRef.value.removeEventListener('mousedown', dragMouseDown);
+      draggableAreaRef.value.removeEventListener('touchstart', dragTouch);
+      draggableAreaRef.value.removeEventListener('mousedown', dragMouse);
     }
   });
 };
