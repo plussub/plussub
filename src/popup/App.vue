@@ -91,7 +91,8 @@ export default {
   --content-lr-space: 8px;
 
   --card-padding-top: 16px;
-  --card-header-font-size: 1.4em;
+  --card-header-font-size: 1.6em;
+  --card-sub-header-font-size: 1.2em;
   --card-header-font-family: 'Rubik', sans-serif;
   --card-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   --card-lr-space: 16px;
@@ -167,6 +168,26 @@ export default {
 }
 .fade-enter-from, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+.menu-more-enter-active {
+  transition: all 0.3s linear;
+  transform: rotate(180deg);
+}
+
+.menu-less-enter-active {
+  transition: all 0.3s linear;
+  transform: rotate(-180deg);
+}
+
+.menu-more-leave-active,
+.menu-less-leave-active {
+  display: none;
+}
+
+.menu-more-enter-to,
+.menu-less-enter-to {
+  transform: rotate(0deg);
 }
 </style>
 

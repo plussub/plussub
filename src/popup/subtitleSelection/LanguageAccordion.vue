@@ -1,7 +1,10 @@
 <template>
   <div class="knopf-group" style="display: flex; position: relative;">
     <a class="knopf even active flat subtitle-dropdown-label sharp start" style="flex-grow: 1; margin-left: -7px;" @click="toggleLanguageSelection">Subtitle language: {{ state.prettySelected }}</a>
-    <a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px;" @click="toggleLanguageSelection"><i class="fa fa-chevron-down fa-lg"></i></a>
+    <transition :name="state.showLanguageSelection ? 'menu-more' : 'menu-less'">
+      <span v-if="state.showLanguageSelection"><a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px;" @click="toggleLanguageSelection"><i class="fa fa-chevron-up fa-lg"></i></a></span>
+      <span v-else><a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px;" @click="toggleLanguageSelection"><i class="fa fa-chevron-down fa-lg"></i></a></span>
+    </transition>
     <transition name="slide-down">
       <div v-show="state.showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px;">
         <input ref="input" style="grid-area: search-bar;" placeholder="Search language" type="text" v-model="state.query" />

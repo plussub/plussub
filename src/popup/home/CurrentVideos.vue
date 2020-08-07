@@ -1,13 +1,15 @@
 <template>
   <div class="videos--card">
-    <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
+    <div
+        style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
       Founded videos on this site
     </div>
     <div style="grid-area: card-content;">
       <div style="font-size: 0.75em;">You must first add a subtitle before you can add it to the video</div>
       <div v-for="video in state.videos" v-if="state.videos.length">
         {{ video.src }}
-        <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.src)"><i class="fa fa-sm fa-minus"></i></a>
+        <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.src)"><i
+            class="fa fa-sm fa-minus"></i></a>
         <a v-else class="knopf flat small" @click="addSubTo(video.src)"><i class="fa fa-sm fa-plus"></i></a>
       </div>
       <div v-else>
@@ -23,20 +25,16 @@ import {setAppStatePartial} from "@/../shared/appState";
 import {addSubtitleInCurrentTab} from 'addSubtitleInCurrentTab';
 
 export default {
-   setup () {
-    const findVideosInCurrentTab = () => [...document.querySelectorAll('video')].map((el) => {
-      console.warn(el);
-      return ({
-        src: el.src,
-        hasSubtitle: el.classList.contains('plussub')
-      });
-    });
-    console.warn(findVideosInCurrentTab());
+  setup() {
+    const findVideosInCurrentTab = () => [...document.querySelectorAll('video')].map((el) => ({
+      src: el.src,
+      hasSubtitle: el.classList.contains('plussub')
+    }));
 
     const state = reactive({videos: (findVideosInCurrentTab())});
     return {
       state,
-      async addSubTo(targetSrc){
+      async addSubTo(targetSrc) {
         await setAppStatePartial({targetSrc});
         addSubtitleInCurrentTab();
       },
