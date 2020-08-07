@@ -81,20 +81,4 @@ export default {
 .active.subtitle-dropdown-label {
   --knopf-text-color: var(--onPrimary);
 }
-
-.slide-down-leave-active,
-.slide-down-enter-active {
-  transition-duration: 0.3s;
-  transition-timing-function: linear;
-}
-
-.slide-down-enter-to, .slide-down-leave {
-  max-height: 100px;
-  overflow: hidden;
-}
-
-.slide-down-enter-from, .slide-down-leave-to {
-  overflow: hidden;
-  max-height: 0;
-}
 </style>

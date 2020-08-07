@@ -6,37 +6,38 @@
         Subtitle Setting
       </div>
       <transition :name="show ? 'menu-more' : 'menu-less'">
-        <span v-if="show"><a class="knopf flat pill sharp"><i class="fa fa-chevron-up fa-lg"></i></a></span>
-        <span v-else><a class="knopf flat pill sharp"><i class="fa fa-chevron-down fa-lg"></i></a></span>
+        <span v-if="show"><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-up fa-lg"></i></a></span>
+        <span v-else><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-down fa-lg"></i></a></span>
       </transition>
     </div>
-    <div>
-      <!--      v-show="show"-->
-      <div>
-        <div>Offset time</div>
-        <div style="display: flex; width: 100%;">
-          <div>
-            <span style="font-size: 0.8em;">Actual</span>
-            <input style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" :value="12"
-                   type="text" disabled/>
-          </div>
-          <div>
-            <span style="font-size: 0.8em;">New</span>
-            <input ref="input" style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" type="text"/>
-          </div>
-        </div>
-        <div>Preview</div>
-        <textarea disabled style="width: 100%; resize: none; height: 150px" :value="excerpt">
-        </textarea>
+    <transition name="slide">
+      <div v-show="show">
         <div>
-          <a class="knopf flat small" @click="setOffsetTime">Apply</a>
-          <a class="knopf flat small" @click="reset">Reset</a>
+          <div>Offset time</div>
+          <div style="display: flex; width: 100%;">
+            <div>
+              <span style="font-size: 0.8em;">Actual</span>
+              <input style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" :value="12"
+                     type="text" disabled/>
+            </div>
+            <div>
+              <span style="font-size: 0.8em;">New</span>
+              <input ref="input" style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" type="text"/>
+            </div>
+          </div>
+          <div>Preview</div>
+          <textarea disabled style="width: 100%; resize: none; height: 150px" :value="excerpt">
+        </textarea>
+          <div>
+            <a class="knopf flat small" @click="setOffsetTime">Apply</a>
+            <a class="knopf flat small" @click="reset">Reset</a>
+          </div>
+        </div>
+        <div>
+          Position
         </div>
       </div>
-      <div>
-        Position
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -98,3 +99,31 @@ Do you understand?
   }
 }
 </script>
+
+<style scoped>/* plussub header */
+.knopf.menu-dropdown-chevron:hover,
+.knopf.menu-dropdown-chevron {
+  --knopf-text-color: var(--default-header-text-color);
+  --knopf-background-color: transparent;
+}
+
+.slide-enter-active {
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in;
+}
+
+.slide-leave-active {
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.slide-enter-to, .slide-leave {
+  max-height: 100px;
+  overflow: hidden;
+}
+
+.slide-enter-from, .slide-leave-to {
+  overflow: hidden;
+  max-height: 0;
+}
+</style>

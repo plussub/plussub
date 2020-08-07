@@ -68,7 +68,7 @@ export default {
     '.                settings         .'
     'settings-divider settings-divider settings-divider'
     '.                actions          .';
-  grid-template-rows: auto 16px 1fr 16px 1fr 16px 50px;
+  grid-template-rows: auto 16px auto 16px auto 16px 50px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
 }
