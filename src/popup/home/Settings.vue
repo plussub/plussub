@@ -106,24 +106,4 @@ Do you understand?
   --knopf-text-color: var(--default-header-text-color);
   --knopf-background-color: transparent;
 }
-
-.slide-enter-active {
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in;
-}
-
-.slide-leave-active {
-  transition-duration: 0.3s;
-  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-}
-
-.slide-enter-to, .slide-leave {
-  max-height: 100px;
-  overflow: hidden;
-}
-
-.slide-enter-from, .slide-leave-to {
-  overflow: hidden;
-  max-height: 0;
-}
 </style>

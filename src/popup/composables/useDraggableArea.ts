@@ -85,12 +85,12 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
     }
   });
   onUnmounted(() => {
-    if(draggableAreaRef.value.$el){
+    if(draggableAreaRef.value?.$el){
       draggableAreaRef.value.$el.removeEventListener('touchstart', dragTouch);
       draggableAreaRef.value.$el.removeEventListener('mousedown', dragMouse);
     } else {
-      draggableAreaRef.value.removeEventListener('touchstart', dragTouch);
-      draggableAreaRef.value.removeEventListener('mousedown', dragMouse);
+      draggableAreaRef.value?.removeEventListener('touchstart', dragTouch);
+      draggableAreaRef.value?.removeEventListener('mousedown', dragMouse);
     }
   });
 };

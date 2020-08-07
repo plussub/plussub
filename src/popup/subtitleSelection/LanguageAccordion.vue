@@ -60,7 +60,7 @@ export default {
 .search-toolbar--container--language--accordion {
   --search-bar-size: 25px;
   --accordion-size: 250px;
-  width: 100vw;
+  width: 400px;
   height: var(--accordion-size);
   max-height: 250px;
   background-color: var(--surface-color);
@@ -80,5 +80,25 @@ export default {
 .active.subtitle-dropdown-chevron,
 .active.subtitle-dropdown-label {
   --knopf-text-color: var(--onPrimary);
+}
+
+.slide-down-enter-active {
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in;
+}
+
+.slide-down-leave-active {
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.slide-down-enter-to, .slide-down-leave-from {
+  max-height: 100px;
+  overflow: hidden;
+}
+
+.slide-down-enter-from, .slide-down-leave-to {
+  overflow: hidden;
+  max-height: 0;
 }
 </style>
