@@ -1,10 +1,10 @@
 <template>
   <div class="result-from-file--card" style="position: relative;">
     <div style="position: absolute; top: 8px; right: 16px; display: flex;">
-      <div style="font-size: 0.5em; margin-right: 16px;">{{ currentState }}</div>
+      <div style="font-size: 0.5em; margin-right: 16px;">{{ prettyState }}</div>
       <div style="font-size: 0.5em;">
         <transition name="fade" mode="out-in">
-          <spinner v-if="appState.state !== 'DONE'"/>
+          <spinner v-if="state !== 'DONE'"/>
           <i v-else class="fa fa-check fa-sm"></i>
         </transition>
       </div>
@@ -16,7 +16,7 @@
     <div
         style="grid-area: card-content; width: 100%; font-size: 0.75em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px;">
       <div style="grid-column: 1 / 2;">Filename:</div>
-      <div style="grid-column: 2 / 3;">{{ appState.filePick.filename }}</div>
+      <div style="grid-column: 2 / 3;">{{ filePickState.filename }}</div>
     </div>
     <div style="grid-area: card-divider; align-self: end;">
       <divider/>
@@ -28,25 +28,22 @@
 </template>
 
 <script>
-import {snapshot} from '../../shared/appState';
 import Divider from '@/components/Divider';
 import Spinner from '@/components/Spinner';
-import {computed, reactive} from '@vue/reactivity';
-import {useAppStateStorageListener} from 'useAppStateStorageListener';
+import {computed} from '@vue/reactivity';
 
 export default {
   components: {
     Divider,
     Spinner
   },
-  async setup() {
-    const appState = reactive({});
-    useAppStateStorageListener((state) => Object.assign(appState, state));
-    Object.assign(appState, await snapshot());
-
+  props: {
+    state: String,
+    filePickState: Object
+  },
+  setup(props) {
     return {
-      appState,
-      currentState: computed(() => `${appState.state.charAt(0).toUpperCase()}${appState.state.slice(1).toLowerCase()}`)
+      prettyState: computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`)
     };
   }
 };

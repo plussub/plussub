@@ -74,6 +74,7 @@ export default {
 <style>/* plussub header */
 :host {
   --primary: #5bc0de;
+  --primary50: #e4f7fd;
   --onPrimary: #ffffff;
   --on-surface: var(--default-text-color);
   --secondary: #b0bec5;
@@ -94,13 +95,11 @@ export default {
   --card-header-font-family: 'Rubik', sans-serif;
   --card-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   --card-lr-space: 16px;
-}
-.app--container {
-  --knopf-hue: 194;
-  --knopf-saturation: 66.5%;
-  --knopf-luminosity: 61.4%;
-  font-size: 12pt;
 
+  --knopf-hue: 194 !important;
+  --knopf-saturation: 66.5% !important;
+  --knopf-luminosity: 61.4% !important;
+  --knopf-font-size-base: 16px !important;
 }
 
 .buttonOnPrimary {
@@ -180,8 +179,9 @@ export default {
 
   max-width: 400px;
   width: 400px;
-  max-height: 500px;
-  height: 500px;
+  max-height: 700px;
+  min-height: 400px;
+  height: auto;
   overflow-x: hidden;
   overflow-y: hidden;
   display: grid;

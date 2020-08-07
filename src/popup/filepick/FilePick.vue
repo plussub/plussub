@@ -56,7 +56,6 @@ export default {
           await setSelection({filename, rawSrt: reader.result});
           parse();
           emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-select-to-home'}});
-          this.$router.replace({name: 'home'});
         };
       }
     };

@@ -20,15 +20,20 @@
       <div class="home-content--container">
         <transition name="fade" mode="out-in">
           <result-from-search v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
-                              style="grid-area: current-sub;" @remove="remove"></result-from-search>
+                              style="grid-area: current-sub;"
+                              :state="appState.state"
+                              :search-state="appState.search"
+                              @remove="remove"/>
           <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
-                            style="grid-area: current-sub;" @remove="remove"></result-from-file>
-          <no-sub v-else style="grid-area: current-sub;"></no-sub>
+                            style="grid-area: current-sub;"
+                            :state="appState.state"
+                            :file-pick-state="appState.filePick"
+                            @remove="remove"/>
+          <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
         <current-videos style="grid-area: videos;"/>
-        <offset-time style="grid-area: offset;"/>
-        <debug style="grid-area: debug;"/>
-        <div style="grid-area: spacer;">&nbsp;</div>
+<!--        <offset-time style="grid-area: offset;"/>-->
+        <debug v-show="false" style="grid-area: debug;"/>
       </div>
     </template>
   </page-layout>
@@ -47,14 +52,12 @@ import NoSub from '@/home/NoSub';
 import CurrentVideos from '@/home/CurrentVideos';
 import {snapshot} from '@/../shared/appState';
 import {remove} from '@/home/remove';
-import {computed, reactive} from "@vue/reactivity";
-import OffsetTime from "@/home/OffsetTime";
+import {reactive} from "@vue/reactivity";
 import Debug from "@/home/Debug";
 import {useDraggableArea} from "@/composables";
 
 export default {
   components: {
-    OffsetTime,
     Debug,
     Divider,
     PageLayout,
@@ -109,10 +112,8 @@ export default {
   grid-template-areas:
     '. current-sub .'
     '. videos .'
-    '. offset .'
-    '. debug .'
-    '. spacer .';
-  grid-template-rows: auto auto auto auto auto;
+    '. debug .';
+  grid-template-rows: auto auto auto;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
   row-gap: 16px;
 }
