@@ -12,20 +12,20 @@
       <div v-else-if="state.filteredEntries.length" class="subtitle-selection-content--container">
         <div style="grid-area: search-results; display: grid;">
           <div v-for="item in state.filteredEntries" class="subtitle-selection-content--container--card">
-            <div style="grid-area: card-header; overflow: hidden; text-overflow: ellipsis;">{{ item.SubFileName }}</div>
+            <div style="grid-area: header; overflow: hidden; text-overflow: ellipsis; color: black; font-weight: 500; font-family: 'Rubik', sans-serif;">{{ item.SubFileName }}</div>
             <div
-                style="grid-area: card-content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
-              <div style="grid-column: 1 / 2;">subRating:</div>
+                style="grid-area: content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
+              <div style="grid-column: 1 / 2;">subRating</div>
               <div style="grid-column: 2 / 3;">{{ item.SubRating }}</div>
-              <div style="grid-column: 1 / 2;">subFormat:</div>
+              <div style="grid-column: 1 / 2;">subFormat</div>
               <div style="grid-column: 2 / 3;">{{ item.SubFormat }}</div>
-              <div style="grid-column: 1 / 2;">subLang:</div>
+              <div style="grid-column: 1 / 2;">subLang</div>
               <div style="grid-column: 2 / 3;">{{ item.LanguageName }}</div>
             </div>
-            <div style="grid-area: card-divider; align-self: end;">
+            <div style="grid-area: divider; align-self: end;">
               <divider/>
             </div>
-            <div style="grid-area: card-action; justify-self: end; align-self: center;">
+            <div style="grid-area: action; justify-self: end; align-self: center;">
               <a class="knopf flat block end large" style="width: 100%;" @click="select(item)">Select</a>
             </div>
           </div>
@@ -152,15 +152,16 @@ export default {
 .subtitle-selection-content--container--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);
+  border-radius: var(--card-border-radius);
   display: grid;
   grid-template-areas:
-    '. . .'
-    '. card-header .'
-    '. . .'
-    '. card-content .'
-    'card-divider card-divider card-divider'
-    '. card-action .';
-  grid-template-rows: 8px auto 16px 1fr 16px 50px;
+    '.       .       .'
+    '.       header  .'
+    '.       .       .'
+    '.       content .'
+    'divider divider divider'
+    '.       action  .';
+  grid-template-rows: 16px auto 16px 1fr 16px 50px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
   min-width: 100%;

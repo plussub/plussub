@@ -77,6 +77,7 @@ export default {
 .filepicker-content--container--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);
+  border-radius: var(--card-border-radius);
   display: grid;
   padding-top: var(--card-padding-top);
   grid-template-areas:

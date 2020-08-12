@@ -2,23 +2,23 @@
   <div class="search-content--container--card">
     <div style="grid-area: card-header; position: relative;">
       <div class="search-content--container--card--hero">
-        <img :src="props.item.poster_path ?? static.posterFallback" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;" />
+        <img :src="props.item.poster_path ?? static.posterFallback" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius);" />
       </div>
       <div style="position: absolute; color: white; top: 8px; left: 16px; width: calc(100% - 32px);">
         <div style="font-family: var(--card-header-font-family); width: 100%; display: flex; justify-content: space-between;">
           <span>
-            <div style="font-size: var(--card-header-font-size);">
+            <div style="font-size: var(--card-header-font-size); font-weight: 400">
               {{ props.item.title }}
             </div>
-            <div style="font-size: 0.75em;">({{ item.media_type }} {{ item.release_date }})</div>
+            <div style="font-size: 0.75em;">({{ prettyMediaType }} {{ item.release_date }})</div>
           </span>
         </div>
       </div>
-      <div style="font-size: 0.75em; position: absolute; bottom: 12px; right: 16px; color: white;">
-        <div>tmdb: {{ props.item.vote_average }}</div>
+      <div style="font-size: 0.75em; position: absolute; bottom: 12px; right: 16px; color: white;  font-weight: 500">
+        <div>tmdb {{ props.item.vote_average }}</div>
       </div>
     </div>
-    <div style="grid-area: card-content; display: flex; width: 100%; font-size: 0.75em; line-height: 1.6;">
+    <div style="grid-area: card-content; display: flex; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
       {{ props.item.overview }}
     </div>
     <div style="grid-area: card-divider; align-self: end;">
@@ -33,6 +33,7 @@
 <script>
 import posterFallback from '@/res/posterFallback.png';
 import Divider from '@/components/Divider';
+import {computed} from "@vue/reactivity";
 
 export default {
   components: {
@@ -49,7 +50,8 @@ export default {
       props,
       select(selected) {
         this.$emit('select', selected);
-      }
+      },
+      prettyMediaType: computed(() => `${props.item.media_type.charAt(0).toUpperCase()}${props.item.media_type.slice(1).toLowerCase()}`)
     };
   }
 };
@@ -59,6 +61,7 @@ export default {
   --image-height: 120px;
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);
+  border-radius: var(--card-border-radius);
   display: grid;
   grid-template-areas:
     'card-header card-header card-header'
@@ -81,5 +84,7 @@ export default {
   left: 0;
   background: rgba(0, 0, 0, 0.62);
   opacity: 1;
+  border-top-left-radius: var(--card-border-radius);
+  border-top-right-radius: var(--card-border-radius);
 }
 </style>

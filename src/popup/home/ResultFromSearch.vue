@@ -30,7 +30,7 @@
     <div style="grid-area: header; position: relative;">
       <div class="result-from-search--card--hero">
         <img :src="searchState.tmdb.poster_path"
-             style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;"/>
+             style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius);"/>
       </div>
     </div>
     <div style="grid-area: overview; display: flex; width: 100%; font-size: 1em; line-height: 1.6;">
@@ -88,6 +88,7 @@ export default {
   --image-height: 150px;
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);
+  border-radius: var(--card-border-radius);
   display: grid;
   grid-template-areas:
     'header           header           header'
@@ -128,6 +129,8 @@ export default {
   left: 0;
   background: rgba(0, 0, 0, 0.62);
   opacity: 1;
+  border-top-left-radius: var(--card-border-radius);
+  border-top-right-radius: var(--card-border-radius);
 }
 
 .fade-enter-active,

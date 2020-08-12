@@ -94,8 +94,9 @@ export default {
   --card-header-font-size: 27px;
   --card-sub-header-font-size: 20px;
   --card-header-font-family: 'Rubik', sans-serif;
-  --card-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  --card-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
   --card-lr-space: 16px;
+  --card-border-radius: 4px;
 
   --knopf-hue: 194 !important;
   --knopf-saturation: 66.5% !important;
