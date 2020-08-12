@@ -1,4 +1,4 @@
-import {AppState, OpensubtitlesState, setAppState, setAppStatePartial, snapshot} from '@/../shared/appState';
+import {AppState, OpensubtitlesState, setAppStatePartial, snapshot} from '@/appState';
 
 interface Payload {
   item: OpensubtitlesState;

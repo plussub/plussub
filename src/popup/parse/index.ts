@@ -1,4 +1,4 @@
-import { setAppState, setAppStatePartial, snapshot } from '@/../shared/appState';
+import { setAppStatePartial, snapshot } from '@/appState';
 import { parse as srtVttParse } from '@plussub/srt-vtt-parser';
 
 export const parse = async (): Promise<void> => {

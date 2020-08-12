@@ -21,7 +21,7 @@
 
 <script>
 import {reactive} from "@vue/reactivity";
-import {setAppStatePartial} from "@/../shared/appState";
+import {setAppStatePartial} from "@/appState";
 import {addSubtitleInCurrentTab} from 'addSubtitleInCurrentTab';
 
 export default {

@@ -1,4 +1,4 @@
-import { setAppStatePartial, snapshot } from '@/../shared/appState';
+import { setAppStatePartial, snapshot } from '@/appState';
 import { parse } from '@/parse';
 import JSZip from 'jszip';
 

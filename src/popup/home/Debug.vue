@@ -12,7 +12,7 @@
 
 <script>
 
-import {resetAppState} from '@/../shared/appState';
+import {resetAppState} from '@/appState';
 
 export default {
   setup(){

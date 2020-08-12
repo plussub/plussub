@@ -1,4 +1,4 @@
-import {TmdbState, setAppState, AppState, snapshot, setAppStatePartial} from '@/../shared/appState';
+import {TmdbState, AppState, snapshot, setAppStatePartial} from '@/appState';
 
 interface Payload {
   item: TmdbState

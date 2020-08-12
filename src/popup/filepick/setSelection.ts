@@ -1,4 +1,4 @@
-import {AppState, FilePick, setAppStatePartial, SrtState} from '@/../shared/appState';
+import {AppState, FilePick, setAppStatePartial, SrtState} from '@/appState';
 
 interface Payload {
   filename: FilePick['filename'];

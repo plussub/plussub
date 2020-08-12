@@ -1,18 +1,14 @@
 import { remove } from '@/home/remove';
-import {AppState, setAppStatePartial, snapshot} from '@/../shared/appState';
-import { getInitialState } from '@/../shared/appState/getInitialState';
-import opensubtitles from '../../shared/appstate/opensubtitlesState.json';
-import filePick from '../../shared/appstate/filePickState.json';
-import srt from '../../shared/appstate/srtState.json';
-import tmdb from '../../shared/appstate/tmbdState.json';
+import { AppState, setAppStatePartial, snapshot } from '@/appState';
+import { getInitialState } from '@/appState/getInitialState';
 
-jest.mock('@/../shared/appState', () => ({
+jest.mock('@/appState', () => ({
   __esModule: true,
   setAppStatePartial: jest.fn(),
   snapshot: jest.fn()
 }));
 
-describe('set selection', () => {
+describe('remove', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });

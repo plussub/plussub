@@ -1,11 +1,11 @@
 import { setSelection } from '@/subtitleSelection/setSelection';
-import {AppState, setAppStatePartial, snapshot} from '@/../shared/appState';
-import { getInitialState } from '@/../shared/appState/getInitialState';
-import opensubtitles from '../../shared/appstate/opensubtitlesState.json';
-import tmdb from '../../shared/appstate/tmbdState.json';
-import otherTmdb from '../../shared/appstate/tmbdState.json';
+import {AppState, setAppStatePartial, snapshot} from '@/appState';
+import { getInitialState } from '@/appState/getInitialState';
+import opensubtitles from '../appState/opensubtitlesState.json';
+import tmdb from '../appState/tmbdState.json';
+import otherTmdb from '../appState/tmbdState.json';
 
-jest.mock('@/../shared/appState', () => ({
+jest.mock('@/appState', () => ({
   __esModule: true,
   setAppStatePartial: jest.fn(),
   snapshot: jest.fn()

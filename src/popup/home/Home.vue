@@ -57,7 +57,7 @@ import ResultFromSearch from '@/home/ResultFromSearch';
 import ResultFromFile from '@/home/ResultFromFile';
 import NoSub from '@/home/NoSub';
 import CurrentVideos from '@/home/CurrentVideos';
-import {snapshot} from '@/../shared/appState';
+import {snapshot} from '@/appState';
 import {remove} from '@/home/remove';
 import {reactive} from "@vue/reactivity";
 import Debug from "@/home/Debug";

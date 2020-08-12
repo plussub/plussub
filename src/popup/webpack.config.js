@@ -23,7 +23,7 @@ module.exports = {
       'getBackgroundPage': `${path.resolve(__dirname)}/platform/getBackgroundPage/chrome/index.ts`,
       'findVideosInCurrentTab': `${path.resolve(__dirname)}/platform/findVideosInCurrentTab/chrome/index.ts`,
       'addSubtitleInCurrentTab': `${path.resolve(__dirname)}/platform/addSubtitleInCurrentTab/chrome/index.ts`,
-      'storage': `${path.resolve(__dirname)}/../shared/platform/storage/chrome/index.ts`
+      'storage': `${path.resolve(__dirname)}/platform/storage/chrome/index.ts`
     }
   },
   mode: 'development',

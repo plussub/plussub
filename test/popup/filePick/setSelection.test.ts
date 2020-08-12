@@ -1,8 +1,8 @@
 import { setSelection } from '@/filepick/setSelection';
-import { AppState, setAppStatePartial, snapshot } from '@/../shared/appState';
-import { getInitialState } from '@/../shared/appState/getInitialState';
+import { AppState, setAppStatePartial, snapshot } from '@/appState';
+import { getInitialState } from '@/appState/getInitialState';
 
-jest.mock('@/../shared/appState', () => ({
+jest.mock('@/appState', () => ({
   __esModule: true,
   setAppStatePartial: jest.fn(),
   snapshot: jest.fn()

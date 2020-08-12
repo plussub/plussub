@@ -1,4 +1,4 @@
-import {AppState, setAppStatePartial} from '@/../shared/appState';
+import {AppState, setAppStatePartial} from '@/appState';
 
 export const remove = async (): Promise<AppState> => {
   return setAppStatePartial({

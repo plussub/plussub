@@ -1,4 +1,4 @@
-import {TmdbState} from "../../shared/appState";
+import {TmdbState} from "@/appState";
 
 const query = `
 query videoSearch($query: String!)

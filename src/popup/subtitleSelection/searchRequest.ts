@@ -1,4 +1,4 @@
-import {OpensubtitlesState} from "../../shared/appState";
+import {OpensubtitlesState} from "@/appState";
 
 const query = `
 query subtitleSearch($tmdb_id: String!, $language: String!, $media_type: String!)
