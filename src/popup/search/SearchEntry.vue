@@ -1,6 +1,6 @@
 <template>
   <div class="search-content--container--card">
-    <div style="grid-area: card-header; position: relative;">
+    <div style="grid-area: header; position: relative;">
       <div class="search-content--container--card--hero">
         <img :src="props.item.poster_path ?? static.posterFallback" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius);" />
       </div>
@@ -18,15 +18,13 @@
         <div>tmdb {{ props.item.vote_average }}</div>
       </div>
     </div>
-    <div style="grid-area: card-content; display: flex; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
+    <div style="grid-area: content; display: flex; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
       {{ props.item.overview }}
     </div>
-    <div style="grid-area: card-divider; align-self: end;">
-      <divider />
-    </div>
-    <div style="grid-area: card-action; justify-self: end; align-self: center;">
+    <div style="grid-area: action; justify-self: end; align-self: center;">
       <a class="knopf flat block end large" style="width: 100%;" @click="select(item)">Select</a>
     </div>
+    <div style="grid-column: 1/4; grid-row: 5/8; background-color: var(--card-actions-background-color); border-bottom-left-radius: var(--card-border-radius); border-bottom-right-radius: var(--card-border-radius);"/>
   </div>
 </template>
 
@@ -64,12 +62,14 @@ export default {
   border-radius: var(--card-border-radius);
   display: grid;
   grid-template-areas:
-    'card-header card-header card-header'
-    '. . .'
-    '. card-content .'
-    'card-divider card-divider card-divider'
-    '. card-action .';
-  grid-template-rows: var(--image-height) 16px 1fr 16px 50px;
+    'header header  header'
+    '.      .       .'
+    '.      content .'
+    '.      .       .'
+    '.      .       .'
+    '.      action  .'
+    '.      .       .';
+  grid-template-rows: var(--image-height) 16px 1fr 16px 8px 50px 8px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
   margin-bottom: 8px;

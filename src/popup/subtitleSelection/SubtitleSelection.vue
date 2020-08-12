@@ -22,12 +22,10 @@
               <div style="grid-column: 1 / 2;">subLang</div>
               <div style="grid-column: 2 / 3;">{{ item.LanguageName }}</div>
             </div>
-            <div style="grid-area: divider; align-self: end;">
-              <divider/>
-            </div>
             <div style="grid-area: action; justify-self: end; align-self: center;">
               <a class="knopf flat block end large" style="width: 100%;" @click="select(item)">Select</a>
             </div>
+            <div style="grid-column: 1/4; grid-row: 6/9; background-color: var(--card-actions-background-color); border-bottom-left-radius: var(--card-border-radius); border-bottom-right-radius: var(--card-border-radius);"/>
           </div>
         </div>
       </div>
@@ -159,9 +157,11 @@ export default {
     '.       header  .'
     '.       .       .'
     '.       content .'
-    'divider divider divider'
-    '.       action  .';
-  grid-template-rows: 16px auto 16px 1fr 16px 50px;
+    '.       .       .'
+    '.       .       .'
+    '.       action  .'
+    '.       .       .';
+  grid-template-rows: 16px auto 16px 1fr 16px 8px 50px 8px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
   min-width: 100%;

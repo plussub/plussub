@@ -93,6 +93,7 @@ export default {
   --card-padding-top: 16px;
   --card-header-font-size: 27px;
   --card-sub-header-font-size: 20px;
+  --card-actions-background-color: var(--surface-color);
   --card-header-font-family: 'Rubik', sans-serif;
   --card-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
   --card-lr-space: 16px;

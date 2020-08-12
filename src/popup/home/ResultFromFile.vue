@@ -21,12 +21,10 @@
     <div style="grid-area: settings">
       <slot name="settings"/>
     </div>
-    <div style="grid-area: settings-divider; display: flex; align-items: center;">
-      <divider style="flex-grow: 1;"/>
-    </div>
     <div style="grid-area: actions; justify-self: end; align-self: center;">
       <a class="knopf flat block end large" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
     </div>
+    <div style="grid-column: 1/4; grid-row: 7/10; background-color: var(--card-actions-background-color); border-bottom-left-radius: var(--card-border-radius); border-bottom-right-radius: var(--card-border-radius);"/>
   </div>
 </template>
 
@@ -65,9 +63,11 @@ export default {
     '.                details          .'
     '.                .                .'
     '.                settings         .'
-    'settings-divider settings-divider settings-divider'
-    '.                actions          .';
-  grid-template-rows: auto 16px auto 16px auto 16px 50px;
+    '.                .                .'
+    '.                .                .'
+    '.                actions          .'
+    '.                .                .';
+  grid-template-rows: auto 16px auto 16px auto 16px 8px 50px 8px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
 }
