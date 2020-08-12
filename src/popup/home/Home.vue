@@ -23,16 +23,23 @@
                               style="grid-area: current-sub;"
                               :state="appState.state"
                               :search-state="appState.search"
-                              @remove="remove"/>
+                              @remove="remove">
+            <template #settings>
+              <settings :parsed="appState.srt.parsed" @offset-time="setOffsetTime"/>
+            </template>
+          </result-from-search>
           <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
                             style="grid-area: current-sub;"
                             :state="appState.state"
                             :file-pick-state="appState.filePick"
-                            @remove="remove"/>
+                            @remove="remove">
+            <template #settings>
+              <settings :parsed="appState.srt.parsed" @offset-time="setOffsetTime"/>
+            </template>
+          </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
         <current-videos style="grid-area: videos;"/>
-<!--        <offset-time style="grid-area: offset;"/>-->
         <debug v-show="false" style="grid-area: debug;"/>
       </div>
     </template>
@@ -55,6 +62,7 @@ import {remove} from '@/home/remove';
 import {reactive} from "@vue/reactivity";
 import Debug from "@/home/Debug";
 import {useDraggableArea} from "@/composables";
+import Settings from '@/home/Settings';
 
 export default {
   components: {
@@ -64,7 +72,8 @@ export default {
     ResultFromSearch,
     ResultFromFile,
     NoSub,
-    CurrentVideos
+    CurrentVideos,
+    Settings
   },
   props: {
     contentTransitionName: {
@@ -79,13 +88,15 @@ export default {
     const appState = reactive({});
     useAppStateStorageListener((state) => Object.assign(appState, state));
     Object.assign(appState, await snapshot());
-
     return {
       draggableAreaRef,
       appState,
       logo,
       async remove() {
         return Object.assign(appState, await remove());
+      },
+      setOffsetTime(event){
+        console.warn(event);
       },
       close() {
         document.getElementById('plussubShadow').remove();

@@ -91,8 +91,8 @@ export default {
   --content-lr-space: 8px;
 
   --card-padding-top: 16px;
-  --card-header-font-size: 1.6em;
-  --card-sub-header-font-size: 1.2em;
+  --card-header-font-size: 27px;
+  --card-sub-header-font-size: 20px;
   --card-header-font-family: 'Rubik', sans-serif;
   --card-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   --card-lr-space: 16px;

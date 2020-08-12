@@ -18,12 +18,15 @@
       <div style="grid-column: 1 / 2;">Filename:</div>
       <div style="grid-column: 2 / 3;">{{ filePickState.filename }}</div>
     </div>
-
-    <divider style="grid-area: details-divider; align-self: end;"/>
-    <div style="grid-area: settings">
-      <settings />
+    <div style="grid-area: details-divider; display: flex; align-items: center;">
+      <divider style="flex-grow: 1;"/>
     </div>
-    <divider style="grid-area: settings-divider; align-self: end;"/>
+    <div style="grid-area: settings">
+      <slot name="settings"/>
+    </div>
+    <div style="grid-area: settings-divider; display: flex; align-items: center;">
+      <divider style="flex-grow: 1;"/>
+    </div>
     <div style="grid-area: actions; justify-self: end; align-self: center;">
       <a class="knopf flat block end large" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
     </div>
@@ -34,13 +37,11 @@
 import Divider from '@/components/Divider';
 import Spinner from '@/components/Spinner';
 import {computed} from '@vue/reactivity';
-import Settings from '@/home/Settings';
 
 export default {
   components: {
     Divider,
-    Spinner,
-    Settings
+    Spinner
   },
   props: {
     state: String,

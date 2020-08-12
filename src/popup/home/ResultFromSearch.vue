@@ -27,19 +27,32 @@
         <div>tmdb: {{ searchState.tmdb.vote_average }}</div>
       </div>
     </div>
-    <div style="grid-area: card-header; position: relative;">
+    <div style="grid-area: header; position: relative;">
       <div class="result-from-search--card--hero">
         <img :src="searchState.tmdb.poster_path"
              style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;"/>
       </div>
     </div>
-    <div style="grid-area: card-content; display: flex; width: 100%; font-size: 0.75em; line-height: 1.6;">
-      {{ searchState.tmdb.overview }}
+    <div style="grid-area: overview; display: flex; width: 100%; font-size: 0.75em; line-height: 1.6;">
+      <expandable style="width: 100%;">
+        <template #title>
+          Overview
+        </template>
+        <template #content>
+          {{ searchState.tmdb.overview }}
+        </template>
+      </expandable>
     </div>
-    <div style="grid-area: card-divider; align-self: end;">
-      <divider/>
+    <div style="grid-area: overview-divider; display: flex; align-items: center;">
+      <divider style="flex-grow: 1;"/>
     </div>
-    <div style="grid-area: card-action; justify-self: end; align-self: center;">
+    <div style="grid-area: settings">
+      <slot name="settings"/>
+    </div>
+    <div style="grid-area: settings-divider; display: flex; align-items: center;">
+      <divider style="flex-grow: 1;"/>
+    </div>
+    <div style="grid-area: actions; justify-self: end; align-self: center;">
       <a class="knopf flat block end large" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
     </div>
   </div>
@@ -49,11 +62,13 @@
 import Divider from '@/components/Divider';
 import Spinner from '@/components/Spinner';
 import {computed} from '@vue/reactivity';
+import Expandable from '@/components/Expandable';
 
 export default {
   components: {
     Divider,
-    Spinner
+    Spinner,
+    Expandable
   },
   props: {
     state: String,
@@ -73,12 +88,14 @@ export default {
   box-shadow: var(--card-shadow);
   display: grid;
   grid-template-areas:
-    'card-header card-header card-header'
-    '. . .'
-    '. card-content .'
-    'card-divider card-divider card-divider'
-    '. card-action .';
-  grid-template-rows: var(--image-height) 16px 1fr 16px 50px;
+    'header header header'
+    '.                .                .'
+    '.                overview         .'
+    'overview-divider overview-divider overview-divider'
+    '.                settings         .'
+    'settings-divider settings-divider settings-divider'
+    '.                actions          .';
+  grid-template-rows: var(--image-height) 16px auto 16px auto 16px 50px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
 }

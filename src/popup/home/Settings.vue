@@ -1,17 +1,10 @@
 <template>
-  <div style="">
-    <div @click="toggle"
-         style="font-size: var(--card-sub-header-font-size); color: var(--default-header-text-color); display: flex;">
-      <div style="flex-grow: 1">
+  <div>
+    <expandable open>
+      <template #title>
         Subtitle Setting
-      </div>
-      <transition :name="show ? 'menu-more' : 'menu-less'">
-        <span v-if="show"><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-up fa-lg"></i></a></span>
-        <span v-else><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-down fa-lg"></i></a></span>
-      </transition>
-    </div>
-    <transition name="slide">
-      <div v-show="show">
+      </template>
+      <template #content>
         <div>
           <div>Offset time</div>
           <div style="display: flex; width: 100%;">
@@ -22,11 +15,11 @@
             </div>
             <div>
               <span style="font-size: 0.8em;">New</span>
-              <input ref="input" style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" type="text"/>
+              <input ref="input" style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" type="text" v-model="newOffsetTime"/>
             </div>
           </div>
           <div>Preview</div>
-          <textarea disabled style="width: 100%; resize: none; height: 150px" :value="excerpt">
+          <textarea disabled style="width: 100%; resize: none; height: 150px" v-model="excerpt">
         </textarea>
           <div>
             <a class="knopf flat small" @click="setOffsetTime">Apply</a>
@@ -36,74 +29,52 @@
         <div>
           Position
         </div>
-      </div>
-    </transition>
+      </template>
+    </expandable>
   </div>
 </template>
 
 <script>
 import {ref} from 'vue';
+import Expandable from '@/components/Expandable';
+import {computed} from '@vue/reactivity';
 
 export default {
-  setup() {
-    const show = ref(true)
-    const excerpt = `
-1
-00:01:42,821 --> 00:01:44,289
-(SIREN WAILING IN DISTANCE)
+  components: {
+    Expandable
+  },
+  props: {
+    parsed: Array,
+  },
+  setup(props, {emit}) {
+    const parsedPartial = ref(JSON.parse(JSON.stringify(props.parsed.length > 10 ? props.parsed.slice(0, 10) : props.parsed)));
+    console.warn(parsedPartial.value);
+    const newOffsetTime = ref('');
 
-2
-00:01:45,365 --> 00:01:48,084
-<i>DRIVER: There's 100,000 streets in this city.</i>
+    const getTimestamp = ({time, offset}) => {
+      const parsedOffset = parseInt(offset,10);
 
-3
-00:01:49,077 --> 00:01:51,421
-You don't need to know the route.
-
-4
-00:01:52,038 --> 00:01:54,132
-You give me a time and a place,
-
-5
-00:01:54,207 --> 00:01:56,460
-I give you a five-minute window.
-
-6
-00:01:57,168 --> 00:02:00,967
-Anything happens in that five minutes and I'm yours.
-
-7
-00:02:01,046 --> 00:02:02,593
-No matter what.
-
-8
-00:02:02,966 --> 00:02:05,593
-Anything happens a minute either side of that
-
-9
-00:02:05,676 --> 00:02:07,553
-and you're on your own.
-
-10
-00:02:08,178 --> 00:02:09,896
-Do you understand?
-`;
+      const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
+      const milliseconds = parseInt(String(value).slice(-3), 10);
+      const seconds = Math.trunc((value / 1000) % 60) ;
+      const minutes = Math.trunc((value / (1000*60)) % 60);
+      const hours   = Math.trunc((value / (1000*60*60)) % 24);
+      return `${hours > 9 ? '' : '0'}${hours}:${minutes > 9 ? '' : '0'}${minutes}:${seconds > 9 ? '' : '0'}${seconds}.${milliseconds}`
+    }
 
     return {
-      show,
-      excerpt,
-      toggle() {
-        this.show = !this.show;
+      excerpt: computed(() => {
+        return parsedPartial.value.map(({from, to, text}, i) => `${i+1}\n${getTimestamp({time: from, offset: newOffsetTime.value})} --> ${getTimestamp({time: to, offset: newOffsetTime.value})}\n${text}\n`).join('\n');
+      }),
+      newOffsetTime,
+      setOffsetTime(event) {
+        console.log(newOffsetTime.value);
+        console.log(parseInt(newOffsetTime.value));
+        emit('offset-time', {
+          offsetTime: parseInt(newOffsetTime.value)
+        });
       }
     }
   }
 }
 </script>
-
-<style scoped>/* plussub header */
-.knopf.menu-dropdown-chevron:hover,
-.knopf.menu-dropdown-chevron {
-  --knopf-text-color: var(--default-header-text-color);
-  --knopf-background-color: transparent;
-}
-</style>
