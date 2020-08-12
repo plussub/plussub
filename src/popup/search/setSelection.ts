@@ -1,4 +1,4 @@
-import {TmdbState, setAppState, AppState, snapshot} from '@/../shared/appState';
+import {TmdbState, setAppState, AppState, snapshot, setAppStatePartial} from '@/../shared/appState';
 
 interface Payload {
   item: TmdbState
@@ -6,8 +6,7 @@ interface Payload {
 
 export const setSelection = async ({item}: Payload): Promise<AppState> => {
   const appState = await snapshot();
-  return setAppState({
-    ...appState,
+  return setAppStatePartial({
     search: {
       ...(appState.search ?? { opensubtitles: null, tmdb: null }),
       inSelectionTmdb: item

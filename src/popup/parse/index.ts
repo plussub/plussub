@@ -12,8 +12,7 @@ export const parse = async (): Promise<void> => {
   const parsed = srtVttParse(raw);
   // get a new snapshot because maybe has something change in the meantime
   const appState = await snapshot();
-  await setAppState({
-    ...appState,
+  await setAppStatePartial({
     state: 'DONE',
     srt: {
       raw: appState.srt.raw,

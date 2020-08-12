@@ -1,5 +1,5 @@
 import { setSelection } from '@/subtitleSelection/setSelection';
-import {AppState, setAppState, snapshot} from '@/../shared/appState';
+import {AppState, setAppStatePartial, snapshot} from '@/../shared/appState';
 import { getInitialState } from '@/../shared/appState/getInitialState';
 import opensubtitles from '../../shared/appstate/opensubtitlesState.json';
 import tmdb from '../../shared/appstate/tmbdState.json';
@@ -7,7 +7,7 @@ import otherTmdb from '../../shared/appstate/tmbdState.json';
 
 jest.mock('@/../shared/appState', () => ({
   __esModule: true,
-  setAppState: jest.fn(),
+  setAppStatePartial: jest.fn(),
   snapshot: jest.fn()
 }));
 
@@ -38,8 +38,7 @@ describe('set selection', () => {
       }
     });
 
-    expect(setAppState).toHaveBeenCalledWith({
-      ...getInitialState(),
+    expect(setAppStatePartial).toHaveBeenCalledWith({
       src: 'SEARCH',
       state: 'SELECTED',
       search: {
@@ -83,8 +82,7 @@ describe('set selection', () => {
       }
     });
 
-    expect(setAppState).toHaveBeenCalledWith({
-      ...getInitialState(),
+    expect(setAppStatePartial).toHaveBeenCalledWith({
       src: 'SEARCH',
       state: 'SELECTED',
       search: {

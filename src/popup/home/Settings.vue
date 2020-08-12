@@ -6,28 +6,17 @@
       </template>
       <template #content>
         <div>
-          <div>Offset time</div>
+          <div>Offset time (in ms)</div>
           <div style="display: flex; width: 100%;">
+            <input ref="input" style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" type="text" v-model="currentOffsetTime"/>
             <div>
-              <span style="font-size: 0.8em;">Actual</span>
-              <input style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" :value="12"
-                     type="text" disabled/>
-            </div>
-            <div>
-              <span style="font-size: 0.8em;">New</span>
-              <input ref="input" style="height: 1.5em; flex-grow: 1;" placeholder="Offset in ms" type="text" v-model="newOffsetTime"/>
+                <a class="knopf flat small" @click="setOffsetTime">Apply</a>
+                <a class="knopf flat small" @click="reset">Reset</a>
             </div>
           </div>
           <div>Preview</div>
           <textarea disabled style="width: 100%; resize: none; height: 150px" v-model="excerpt">
         </textarea>
-          <div>
-            <a class="knopf flat small" @click="setOffsetTime">Apply</a>
-            <a class="knopf flat small" @click="reset">Reset</a>
-          </div>
-        </div>
-        <div>
-          Position
         </div>
       </template>
     </expandable>
@@ -45,11 +34,11 @@ export default {
   },
   props: {
     parsed: Array,
+    offsetTime: Number
   },
   setup(props, {emit}) {
     const parsedPartial = ref(JSON.parse(JSON.stringify(props.parsed.length > 10 ? props.parsed.slice(0, 10) : props.parsed)));
-    console.warn(parsedPartial.value);
-    const newOffsetTime = ref('');
+    const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '');
 
     const getTimestamp = ({time, offset}) => {
       const parsedOffset = parseInt(offset,10);
@@ -64,15 +53,15 @@ export default {
 
     return {
       excerpt: computed(() => {
-        return parsedPartial.value.map(({from, to, text}, i) => `${i+1}\n${getTimestamp({time: from, offset: newOffsetTime.value})} --> ${getTimestamp({time: to, offset: newOffsetTime.value})}\n${text}\n`).join('\n');
+        return parsedPartial.value.map(({from, to, text}, i) => `${i+1}\n${getTimestamp({time: from, offset: currentOffsetTime.value})} --> ${getTimestamp({time: to, offset: currentOffsetTime.value})}\n${text}\n`).join('\n');
       }),
-      newOffsetTime,
+      currentOffsetTime,
       setOffsetTime(event) {
-        console.log(newOffsetTime.value);
-        console.log(parseInt(newOffsetTime.value));
-        emit('offset-time', {
-          offsetTime: parseInt(newOffsetTime.value)
-        });
+        emit('offset-time', {offsetTime: parseInt(currentOffsetTime.value)});
+      },
+      reset(){
+        currentOffsetTime.value = 0;
+        this.setOffsetTime();
       }
     }
   }

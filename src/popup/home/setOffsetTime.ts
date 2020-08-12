@@ -1,9 +1,8 @@
-import { setAppState, snapshot } from '../../shared/appState';
+import {setAppStatePartial, snapshot} from '../../shared/appState';
 
 export const setOffsetTime = async({ offsetTime }: { offsetTime: number }): Promise<void> => {
   const appState = await snapshot();
-  await setAppState({
-    ...appState,
+  await setAppStatePartial({
     offsetTime,
     srt: {
       raw: appState.srt.raw,

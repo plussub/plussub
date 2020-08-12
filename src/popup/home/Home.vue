@@ -25,7 +25,7 @@
                               :search-state="appState.search"
                               @remove="remove">
             <template #settings>
-              <settings :parsed="appState.srt.parsed" @offset-time="setOffsetTime"/>
+              <settings :parsed="appState.srt.parsed" :offset-time="appState.offsetTime" @offset-time="setOffsetTime"/>
             </template>
           </result-from-search>
           <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
@@ -34,7 +34,7 @@
                             :file-pick-state="appState.filePick"
                             @remove="remove">
             <template #settings>
-              <settings :parsed="appState.srt.parsed" @offset-time="setOffsetTime"/>
+              <settings :parsed="appState.srt.parsed" :offset-time="appState.offsetTime" @offset-time="setOffsetTime"/>
             </template>
           </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
@@ -62,6 +62,7 @@ import {remove} from '@/home/remove';
 import {reactive} from "@vue/reactivity";
 import Debug from "@/home/Debug";
 import {useDraggableArea} from "@/composables";
+import {setOffsetTime} from "@/home/setOffsetTime";
 import Settings from '@/home/Settings';
 
 export default {
@@ -95,9 +96,7 @@ export default {
       async remove() {
         return Object.assign(appState, await remove());
       },
-      setOffsetTime(event){
-        console.warn(event);
-      },
+      setOffsetTime,
       close() {
         document.getElementById('plussubShadow').remove();
       }
