@@ -110,11 +110,11 @@ export default {
   height: 100%;
   color: white;
   grid-template-areas:
+    '.        .        .            .'
+    'title    title    .            .'
+    'subtitle subtitle .            .'
     '. .        .            .'
-    '. title    .            .'
-    '. subtitle .            .'
-    '. .        .            .'
-    '. detail   detail2      .'
+    'detail detail   detail2      .'
     '. .        .            .';
   grid-template-rows: 8px auto auto 1fr auto 8px;
   grid-template-columns: var(--card-lr-space) 1fr auto var(--card-lr-space);
