@@ -47,9 +47,6 @@
         </template>
       </expandable>
     </div>
-    <div style="grid-area: overview-divider; display: flex; align-items: center;">
-      <divider style="flex-grow: 1;"/>
-    </div>
     <div style="grid-area: settings">
       <slot name="settings"/>
     </div>
@@ -93,10 +90,10 @@ export default {
   box-shadow: var(--card-shadow);
   display: grid;
   grid-template-areas:
-    'header header header'
+    'header           header           header'
     '.                .                .'
     '.                overview         .'
-    'overview-divider overview-divider overview-divider'
+    '.                .                .'
     '.                settings         .'
     'settings-divider settings-divider settings-divider'
     '.                actions          .';
