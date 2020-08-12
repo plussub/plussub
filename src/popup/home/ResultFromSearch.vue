@@ -11,7 +11,7 @@
         </div>
       </div>
       <div style="grid-area: title; font-size: var(--card-header-font-size); font-weight: 400">{{ searchState.tmdb.title }}</div>
-      <div style="grid-area: subtitle; font-size: 0.75em; font-weight: 200">
+      <div style="grid-area: subtitle; font-size: 0.75em;">
         ({{ prettyMediaType }} {{ searchState.tmdb.release_date }})
       </div>
       <div
@@ -36,7 +36,7 @@
     <div style="grid-area: overview; display: flex; width: 100%; font-size: 1em; line-height: 1.6;">
       <expandable style="width: 100%;">
         <template #title>
-          <div style="font-weight: 600">
+          <div style="font-weight: 500;  font-family: 'Rubik', sans-serif;">
             Overview
           </div>
         </template>

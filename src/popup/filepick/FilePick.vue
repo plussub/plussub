@@ -12,7 +12,7 @@
       <div class="filepicker-content--container">
         <div class="filepicker-content--container--card" style="grid-area: filepicker;">
           <div
-              style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color);">
+              style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500;">
             Pick a .srt/.vtt file
           </div>
           <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput"
