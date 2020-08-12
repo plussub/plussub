@@ -1,7 +1,7 @@
 <template>
   <div class="result-from-search--card" style="position: relative;">
     <div style="grid-row: 1/2; grid-column: 2/3; z-index: 10;" class="result-from-search--card--hero--text">
-      <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500">
+      <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500;">
         <div style="font-size: 0.65em; margin-right: 16px;">{{ prettyState }}</div>
         <div style="font-size: 0.65em;">
           <transition name="fade" mode="out-in">

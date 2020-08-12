@@ -1,8 +1,8 @@
 <template>
   <div class="result-from-file--card" style="position: relative;">
-    <div style="position: absolute; top: 8px; right: 16px; display: flex;">
-      <div style="font-size: 0.5em; margin-right: 16px;">{{ prettyState }}</div>
-      <div style="font-size: 0.5em;">
+    <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500;">
+      <div style="font-size: 0.65em; margin-right: 16px;">{{ prettyState }}</div>
+      <div style="font-size: 0.65em;">
         <transition name="fade" mode="out-in">
           <spinner v-if="state !== 'DONE'"/>
           <i v-else class="fa fa-check fa-sm"></i>
@@ -10,12 +10,12 @@
       </div>
     </div>
     <div
-        style="grid-area: header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); display: flex;">
+        style="grid-area: header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); display: flex; font-weight: 500;">
       <div>Subtitle via file</div>
     </div>
     <div
-        style="grid-area: details; width: 100%; font-size: 0.75em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px;">
-      <div style="grid-column: 1 / 2;">Filename:</div>
+        style="grid-area: details; width: 100%; font-size: 1em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; font-weight: 300;">
+      <div style="grid-column: 1 / 2;">Filename</div>
       <div style="grid-column: 2 / 3;">{{ filePickState.filename }}</div>
     </div>
     <div style="grid-area: details-divider; display: flex; align-items: center;">
