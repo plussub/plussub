@@ -48,7 +48,7 @@ export default {
       const seconds = Math.trunc((value / 1000) % 60) ;
       const minutes = Math.trunc((value / (1000*60)) % 60);
       const hours   = Math.trunc((value / (1000*60*60)) % 24);
-      return `${hours > 9 ? '' : '0'}${hours}:${minutes > 9 ? '' : '0'}${minutes}:${seconds > 9 ? '' : '0'}${seconds}.${milliseconds}`
+      return `${hours > 9 ? '' : '0'}${hours}:${minutes > 9 ? '' : '0'}${minutes}:${seconds > 9 ? '' : '0'}${seconds}.${milliseconds > 99 ? '' : '0'}${milliseconds > 9 ? '' : '0'}${milliseconds}`
     }
 
     return {
