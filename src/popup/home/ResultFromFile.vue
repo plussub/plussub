@@ -18,9 +18,6 @@
       <div style="grid-column: 1 / 2;">Filename</div>
       <div style="grid-column: 2 / 3;">{{ filePickState.filename }}</div>
     </div>
-    <div style="grid-area: details-divider; display: flex; align-items: center;">
-      <divider style="flex-grow: 1;"/>
-    </div>
     <div style="grid-area: settings">
       <slot name="settings"/>
     </div>
@@ -66,7 +63,7 @@ export default {
     '.                header           .'
     '.                .                .'
     '.                details          .'
-    'details-divider  details-divider  details-divider'
+    '.                .                .'
     '.                settings         .'
     'settings-divider settings-divider settings-divider'
     '.                actions          .';
