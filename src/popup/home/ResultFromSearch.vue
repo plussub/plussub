@@ -1,30 +1,30 @@
 <template>
   <div class="result-from-search--card" style="position: relative;">
     <div style="grid-row: 1/2; grid-column: 2/3; z-index: 10;" class="result-from-search--card--hero--text">
-      <div style="position: absolute; top: 8px; right: 16px; display: flex;">
-        <div style="font-size: 0.5em; margin-right: 16px;">{{ prettyState }}</div>
-        <div style="font-size: 0.5em;">
+      <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500">
+        <div style="font-size: 0.65em; margin-right: 16px;">{{ prettyState }}</div>
+        <div style="font-size: 0.65em;">
           <transition name="fade" mode="out-in">
             <spinner v-if="state !== 'DONE'"/>
             <i v-else class="fa fa-check fa-sm"></i>
           </transition>
         </div>
       </div>
-      <div style="grid-area: title; font-size: var(--card-header-font-size);">{{ searchState.tmdb.title }}</div>
-      <div style="grid-area: subtitle; font-size: 0.75em;">({{ searchState.tmdb.media_type }}
-        {{ searchState.tmdb.release_date }})
+      <div style="grid-area: title; font-size: var(--card-header-font-size); font-weight: 400">{{ searchState.tmdb.title }}</div>
+      <div style="grid-area: subtitle; font-size: 0.75em; font-weight: 200">
+        ({{ prettyMediaType }} {{ searchState.tmdb.release_date }})
       </div>
       <div
-          style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6;">
-        <div style="grid-column: 1 / 2;">subRating:</div>
+          style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6; font-weight: 400">
+        <div style="grid-column: 1 / 2;">subRating</div>
         <div style="grid-column: 2 / 3;">{{ searchState.opensubtitles.SubRating }}</div>
-        <div style="grid-column: 1 / 2;">subFormat:</div>
+        <div style="grid-column: 1 / 2;">subFormat</div>
         <div style="grid-column: 2 / 3;">{{ searchState.opensubtitles.SubFormat }}</div>
-        <div style="grid-column: 1 / 2;">subLang:</div>
+        <div style="grid-column: 1 / 2;">subLang</div>
         <div style="grid-column: 2 / 3;">{{ searchState.opensubtitles.LanguageName }}</div>
       </div>
-      <div style="grid-area: detail2; font-size: 0.75em; align-self: end;">
-        <div>tmdb: {{ searchState.tmdb.vote_average }}</div>
+      <div style="grid-area: detail2; font-size: 0.75em; align-self: end; font-weight: 500">
+        <div>tmdb {{ searchState.tmdb.vote_average }}</div>
       </div>
     </div>
     <div style="grid-area: header; position: relative;">
@@ -33,13 +33,17 @@
              style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover;"/>
       </div>
     </div>
-    <div style="grid-area: overview; display: flex; width: 100%; font-size: 0.75em; line-height: 1.6;">
+    <div style="grid-area: overview; display: flex; width: 100%; font-size: 1em; line-height: 1.6;">
       <expandable style="width: 100%;">
         <template #title>
-          Overview
+          <div style="font-weight: 600">
+            Overview
+          </div>
         </template>
         <template #content>
-          {{ searchState.tmdb.overview }}
+          <div style="font-weight: 300">
+            {{ searchState.tmdb.overview }}
+          </div>
         </template>
       </expandable>
     </div>
@@ -76,7 +80,8 @@ export default {
   },
   setup(props) {
     return {
-      prettyState: computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`)
+      prettyState: computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`),
+      prettyMediaType: computed(() => `${props.searchState.tmdb.media_type.charAt(0).toUpperCase()}${props.searchState.tmdb.media_type.slice(1).toLowerCase()}`)
     };
   }
 };

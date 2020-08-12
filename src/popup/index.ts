@@ -24,8 +24,8 @@ if(!document.querySelector('#plussubShadow')) {
     integrity: 'sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc',
     crossorigin: 'anonymous'
   };
-  const roboto: LinkEntry = {href: 'https://fonts.googleapis.com/css?family=Roboto'};
-  const rubik: LinkEntry = {href: 'https://fonts.googleapis.com/css?family=Rubik'};
+  const roboto: LinkEntry = {href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'};
+  const rubik: LinkEntry = {href: 'https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap'};
 
   const prependLink = (target: HTMLElement | ShadowRoot, {href, integrity, crossorigin}: LinkEntry) => {
     const link = document.createElement('link');

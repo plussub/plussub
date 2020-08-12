@@ -2,7 +2,9 @@
   <div>
     <expandable open>
       <template #title>
-        Subtitle Setting
+        <div style="font-weight: 600">
+          Subtitle Setting
+        </div>
       </template>
       <template #content>
         <div>
