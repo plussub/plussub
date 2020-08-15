@@ -93,9 +93,7 @@ export default {
       draggableAreaRef,
       appState,
       logo,
-      async remove() {
-        return Object.assign(appState, await remove());
-      },
+      remove,
       setOffsetTime,
       close() {
         document.getElementById('plussubShadow').remove();
@@ -115,6 +113,7 @@ export default {
 }
 
 .home-content--container {
+  overflow-y: scroll;
   width: 100%;
   height: 100%;
   display: grid;
