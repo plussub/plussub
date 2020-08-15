@@ -7,7 +7,13 @@
     </transition>
     <transition name="slide-down">
       <div v-show="state.showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px;">
-        <input ref="input" style="grid-area: search-bar;" placeholder="Search language" type="text" v-model="state.query" />
+        <input
+            ref="inputRef"
+            v-on:keydown.prevent="onKeydown"
+            style="grid-area: search-bar;"
+            placeholder="Search language"
+            type="text"
+            v-model="query" />
         <div style="grid-area: content; overflow-y: auto;">
           <a class="knopf flat block" style="width: 100%;" v-for="lang in state.languageList" :key="lang.iso639_2" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
         </div>
@@ -18,39 +24,47 @@
 
 <script>
 import languageList from '@/res/iso639List.json';
-import { computed, reactive } from 'vue';
+import {computed, reactive, ref} from 'vue';
+import {useKeydownPreventInputHandler} from "@/composables";
 
 export default {
   props: {
     selected: String
   },
   setup(props, { emit }) {
+    const query = ref('');
     const state = reactive({
       showLanguageSelection: false,
       prettySelected: computed(() => `${props.selected.charAt(0).toUpperCase()}${props.selected.slice(1)}`),
-      query: '',
       languageList: computed(() => {
-        if (state.query === '') {
+        if (query.value === '') {
           return languageList;
         }
-        const lowerCaseQuery = state.query.toLowerCase();
+        const lowerCaseQuery = query.value.toLowerCase();
         return languageList.filter(({ iso639Name, iso639_2 }) => iso639Name.toLowerCase().startsWith(lowerCaseQuery) || iso639_2.toLowerCase().startsWith(lowerCaseQuery));
       })
     });
+    const inputRef = ref(null);
 
     return {
       state,
-      props,
+      query,
       toggleLanguageSelection() {
         state.showLanguageSelection = !state.showLanguageSelection;
         if(state.showLanguageSelection){
-          this.$refs.input.focus();
+          inputRef.value.focus();
         }
       },
       select({ iso639_2 }) {
         state.showLanguageSelection = false;
         emit('update:selected', iso639_2);
-      }
+      },
+      inputRef,
+      onKeydown: useKeydownPreventInputHandler({
+        allowedInputValue: /^[0-9a-zA-Z]$/,
+        inputRef,
+        valueRef: query
+      })
     };
   }
 };

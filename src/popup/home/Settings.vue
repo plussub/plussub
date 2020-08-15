@@ -10,15 +10,22 @@
         <div class="offset-time--container">
           <div style="grid-area: input-label; font-weight: 500; font-size: 0.75em;">Offset time (in ms)</div>
           <div style="grid-area: input; display: flex; width: 100%;">
-            <input ref="input" style="height: 1.5em; flex-grow: 1; font-size: 1em;" type="text"
+            <input ref="inputRef"
+                   v-on:keydown.prevent="onKeydown"
+                   style="height: 1.5em; flex-grow: 1; font-size: 1em;"
+                   type="text"
                    v-model="currentOffsetTime"/>
             <div>
               <a class="knopf flat small" @click="setOffsetTime">Apply</a>
               <a class="knopf flat small" @click="reset">Reset</a>
             </div>
           </div>
-          <div style="grid-area: preview-label; font-weight: 500; font-size: 0.75em;">Preview <span v-if="notApplied" style="color:#c35e5e;">(not applied)</span></div>
-          <textarea disabled style="grid-area: preview; width: 100%; resize: none; height: 150px; font-size: 0.75em; font-family: Roboto,sans-serif; font-weight: 500;" v-model="excerpt">
+          <div style="grid-area: preview-label; font-weight: 500; font-size: 0.75em;">Preview <span v-if="notApplied"
+                                                                                                    style="color:#c35e5e;">(not applied)</span>
+          </div>
+          <textarea disabled
+                    style="grid-area: preview; width: 100%; resize: none; height: 150px; font-size: 0.75em; font-family: Roboto,sans-serif; font-weight: 500;"
+                    v-model="excerpt">
         </textarea>
         </div>
       </template>
@@ -27,9 +34,10 @@
 </template>
 
 <script>
-import {ref, watch} from 'vue';
+import {ref} from 'vue';
 import Expandable from '@/components/Expandable';
 import {computed} from '@vue/reactivity';
+import {useKeydownPreventInputHandler} from '@/composables';
 
 export default {
   components: {
@@ -53,7 +61,10 @@ export default {
       const hours = Math.trunc((value / (1000 * 60 * 60)) % 24);
       return `${hours > 9 ? '' : '0'}${hours}:${minutes > 9 ? '' : '0'}${minutes}:${seconds > 9 ? '' : '0'}${seconds}.${milliseconds > 99 ? '' : '0'}${milliseconds > 9 ? '' : '0'}${milliseconds}`
     }
+
+    const inputRef = ref(null);
     return {
+      inputRef,
       excerpt: computed(() => {
         return parsedPartial.value.map(({from, to, text}, i) => `${i + 1}\n${getTimestamp({
           time: from,
@@ -69,10 +80,15 @@ export default {
         this.setOffsetTime();
       },
       notApplied: computed(() => {
-        if(!props.offsetTime && !currentOffsetTime.value){
+        if (!props.offsetTime && !currentOffsetTime.value) {
           return false;
         }
         return props.offsetTime !== parseInt(currentOffsetTime.value, 10);
+      }),
+      onKeydown: useKeydownPreventInputHandler({
+        allowedInputValue: /^[0-9]$/,
+        inputRef,
+        valueRef: currentOffsetTime
       })
     }
   }
