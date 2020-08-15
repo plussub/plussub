@@ -33,7 +33,6 @@ export default {
     searchResults: []
   },
   setup(props, {emit}) {
-    const query = ref(props.query);
     const searchResults = computed({
       get: () => props.searchResults,
       set: (val) => {
@@ -52,14 +51,11 @@ export default {
       loadingRef
     });
 
-    watch(query, (query) => {
-          emit('update:query', query);
-          return req(query);
-        },
-        {
-          immediate: true
-        }
-    );
+    const query = computed({
+      get: () => props.query,
+      set: (val) => emit('update:query', val)
+    });
+    watch(query, (query) => req(query), {immediate: true});
 
     const inputRef = ref(null);
 

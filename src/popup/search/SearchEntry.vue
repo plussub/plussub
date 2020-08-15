@@ -2,24 +2,24 @@
   <div class="search-content--container--card">
     <div style="grid-area: header; position: relative;">
       <div class="search-content--container--card--hero">
-        <img :src="props.item.poster_path ?? static.posterFallback" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius);" />
+        <img :src="item.poster_path ?? static.posterFallback" style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius);" />
       </div>
       <div style="position: absolute; color: white; top: 8px; left: 16px; width: calc(100% - 32px);">
         <div style="font-family: var(--card-header-font-family); width: 100%; display: flex; justify-content: space-between;">
           <span>
             <div style="font-size: var(--card-header-font-size); font-weight: 400">
-              {{ props.item.title }}
+              {{ item.title }}
             </div>
             <div style="font-size: 0.75em;">({{ prettyMediaType }} {{ item.release_date }})</div>
           </span>
         </div>
       </div>
       <div style="font-size: 0.75em; position: absolute; bottom: 12px; right: 16px; color: white;  font-weight: 500">
-        <div>tmdb {{ props.item.vote_average }}</div>
+        <div>tmdb {{ item.vote_average }}</div>
       </div>
     </div>
     <div style="grid-area: content; display: flex; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
-      {{ props.item.overview }}
+      {{ item.overview }}
     </div>
     <div style="grid-area: action; justify-self: end; align-self: center;">
       <a class="knopf flat block end large" style="width: 100%;" @click="select(item)">Select</a>
@@ -40,14 +40,13 @@ export default {
   props: {
     item: Object
   },
-  setup(props) {
+  setup(props, {emit}) {
     return {
       static: {
         posterFallback
       },
-      props,
       select(selected) {
-        this.$emit('select', selected);
+        emit('select', selected);
       },
       prettyMediaType: computed(() => `${props.item.media_type.charAt(0).toUpperCase()}${props.item.media_type.slice(1).toLowerCase()}`)
     };
