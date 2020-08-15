@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {ref, watch} from 'vue';
+import {ref, computed} from 'vue';
 import {useKeydownPreventInputHandler} from '@/composables';
 
 export default {
@@ -21,13 +21,10 @@ export default {
     filter: String
   },
   setup(props, { emit }) {
-    const filter = ref(props.filter);
-    watch(
-        filter,
-      (filter) => {
-        emit('update:filter', filter);
-      }
-    );
+    const filter = computed({
+      get: () => props.filter,
+      set: (val) => emit('update:filter', val)
+    });
     const inputRef = ref(null);
 
     return {

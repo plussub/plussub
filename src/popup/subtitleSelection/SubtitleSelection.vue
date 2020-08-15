@@ -3,8 +3,8 @@
     <template #toolbar>
       <div ref="draggableAreaRef" class="subtitle-selection-toolbar--container--content">
         <toolbar-back-btn style="grid-area: back;" :back-fn="backFn"/>
-        <filter-bar v-model:filter="state.filter" style="grid-area: filter-bar;"/>
-        <language-accordion v-model:selected="state.selectedLanguage" style="grid-area: sub-lang-drop-down;"/>
+        <filter-bar v-model:filter="filter" style="grid-area: filter-bar;"/>
+        <language-accordion v-model:selected="language" style="grid-area: sub-lang-drop-down;"/>
       </div>
     </template>
     <template #content>
@@ -12,7 +12,10 @@
       <div v-else-if="filteredEntries.length" class="subtitle-selection-content--container">
         <div style="grid-area: search-results; display: grid;">
           <div v-for="item in filteredEntries" class="subtitle-selection-content--container--card">
-            <div style="grid-area: header; overflow: hidden; text-overflow: ellipsis; color: black; font-weight: 500; font-family: 'Rubik', sans-serif;">{{ item.SubFileName }}</div>
+            <div
+                style="grid-area: header; overflow: hidden; text-overflow: ellipsis; color: black; font-weight: 500; font-family: 'Rubik', sans-serif;">
+              {{ item.SubFileName }}
+            </div>
             <div
                 style="grid-area: content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
               <div style="grid-column: 1 / 2;">subRating</div>
@@ -25,7 +28,8 @@
             <div style="grid-area: action; justify-self: end; align-self: center;">
               <a class="knopf flat block end large" style="width: 100%;" @click="select(item)">Select</a>
             </div>
-            <div style="grid-column: 1/4; grid-row: 6/9; background-color: var(--card-actions-background-color); border-bottom-left-radius: var(--card-border-radius); border-bottom-right-radius: var(--card-border-radius);"/>
+            <div
+                style="grid-column: 1/4; grid-row: 6/9; background-color: var(--card-actions-background-color); border-bottom-left-radius: var(--card-border-radius); border-bottom-right-radius: var(--card-border-radius);"/>
           </div>
         </div>
       </div>
@@ -41,7 +45,7 @@
 import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import LanguageAccordion from '@/subtitleSelection/LanguageAccordion.vue';
 import FilterBar from '@/subtitleSelection/filterBar';
-import {reactive, ref, watch, computed} from 'vue';
+import {ref, watch, computed} from 'vue';
 import {searchRequest} from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
@@ -70,33 +74,31 @@ export default {
     const draggableAreaRef = ref(null);
     useDraggableArea({draggableAreaRef: draggableAreaRef});
 
-    const state = reactive({entries: [], selectedLanguage: 'en', filter: ''});
+    const entries = ref([]);
+    const language = ref('en');
+    const filter = ref('');
     const dataReady = ref(false);
 
-    const filteredEntries = computed(() => state.entries.filter(({SubFileName}) =>
-        state.filter === '' || SubFileName.toLowerCase().includes(state.filter.toLowerCase())));
+    const filteredEntries = computed(() => entries.value.filter(({SubFileName}) =>
+        filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase())));
 
-    const triggerSearch = () =>
-        searchRequest({...props, language: state.selectedLanguage}).then((result) => {
-          dataReady.value = true;
-          state.entries = result.data.subtitleSearch.entries;
-          // setFiltered();
-        });
+    const triggerSearch = () => searchRequest({...props, language: language.value}).then((result) => {
+      dataReady.value = true;
+      entries.value = result.data.subtitleSearch.entries;
+    });
 
     triggerSearch();
 
-    watch(
-        () => state.selectedLanguage,
-        () => {
-          dataReady.value = false;
-          triggerSearch();
-        }
-    );
+    watch(language, () => {
+      dataReady.value = false;
+      triggerSearch();
+    });
 
     return {
       draggableAreaRef,
       dataReady,
-      state,
+      language,
+      filter,
       filteredEntries,
       backFn() {
         emit('navigate', {
