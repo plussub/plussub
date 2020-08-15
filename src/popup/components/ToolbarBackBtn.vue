@@ -8,7 +8,6 @@ export default {
   },
   setup(props, {emit}) {
     return {
-      backFn: props.backFn,
       backFallbackFn () {
         emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-shallow' } })
       }
