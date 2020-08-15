@@ -1,7 +1,7 @@
 <template>
   <div class="knopf-group"
        style="display: grid; grid-template-areas: 'bar button'; grid-template-columns: 1fr auto; grid-template-rows: 30px;">
-    <spinner v-show="loading && query"
+    <spinner v-show="loadingRef && query"
              style="grid-area: bar; justify-self: end; align-self: center; font-size: 12px; margin-right: 12px;"/>
     <input ref="inputRef"
            v-on:keydown.prevent="onKeydown"
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {ref, watch} from 'vue';
+import {ref, watch, computed} from 'vue';
 import {debounce} from '@/composables';
 import {searchRequest} from '@/search/searchRequest';
 import Spinner from '@/components/Spinner';
@@ -29,14 +29,27 @@ export default {
   },
   props: {
     query: String,
-    loading: Boolean
+    loading: Boolean,
+    searchResults: []
   },
   setup(props, {emit}) {
     const query = ref(props.query);
+    const searchResults = computed({
+      get: () => props.searchResults,
+      set: (val) => {
+        emit('update:searchResults', val?.data?.videoSearch?.entries ?? [])
+      }
+    })
+    const loadingRef = computed({
+      get: () => props.loading,
+      set: (val) => emit('update:loading', val)
+    })
 
-    const {fn: req, result: queryResult, loading} = debounce({
+    const {fn: req} = debounce({
       fn: searchRequest,
-      timeout: 1500
+      timeout: 1500,
+      resultRef: searchResults,
+      loadingRef
     });
 
     watch(query, (query) => {
@@ -48,16 +61,11 @@ export default {
         }
     );
 
-    watch(loading, (loading) => emit('update:loading', loading), {immediate: true});
-    watch(queryResult, (result) => emit('update:searchResults', result?.data?.videoSearch?.entries ?? []));
-
     const inputRef = ref(null);
 
     return {
       query,
-      queryResult,
-      loading,
-      props,
+      loadingRef,
       inputRef,
       onKeydown: useKeydownPreventInputHandler({
         allowedInputValue: /^[0-9a-zA-Z _]$/,
