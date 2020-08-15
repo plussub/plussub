@@ -15,7 +15,7 @@
               style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500;">
             Pick a .srt/.vtt file
           </div>
-          <input style="grid-area: card-content;" type="file" @change="fileSelected" ref="fileInput"
+          <input ref="inputRef" style="grid-area: card-content;" type="file" @change="fileSelected"
                  accept="text/plain"/>
         </div>
         <div style="grid-area: spacer;">&nbsp;</div>
@@ -45,18 +45,20 @@ export default {
   },
   setup(props, {emit}) {
     const draggableAreaRef = ref(null);
-    useDraggableArea({draggableAreaRef})
+    useDraggableArea({draggableAreaRef});
+    const inputRef = ref(null);
     return {
       draggableAreaRef,
+      inputRef,
       fileSelected() {
         const reader = new FileReader();
-        reader.readAsText(this.$refs['fileInput'].files[0]);
         reader.onload = async () => {
-          const filename = this.$refs['fileInput'].files[0].name;
+          const filename = inputRef.value.files[0].name;
           await setSelection({filename, rawSrt: reader.result});
           parse();
           emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-select-to-home'}});
         };
+        reader.readAsText(inputRef.value.files[0]);
       }
     };
   }
