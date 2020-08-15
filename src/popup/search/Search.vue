@@ -3,13 +3,13 @@
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px;">
         <toolbar-back-btn style="height: 100%;" @navigate="(event) => $emit('navigate', event)"/>
-        <search-bar v-model:query="query" v-model:loading="loading" @on-search-results="onSearchResults" style="flex-grow: 1; align-content: center; z-index: 10000;" />
+        <search-bar v-model:query="query" v-model:loading="loading" v-model:searchResults="searchResults" style="flex-grow: 1; align-content: center; z-index: 10000;" />
       </div>
     </template>
     <template #content>
       <div class="search-content--container">
-        <div v-if="entries.length" style="grid-area: search-results; display: flex; flex-wrap: wrap;">
-          <search-entry v-for="item in entries" :item="item" @select="(event) => select(event)" />
+        <div v-if="searchResults.length" style="grid-area: search-results; display: flex; flex-wrap: wrap;">
+          <search-entry v-for="item in searchResults" :item="item" @select="(event) => select(event)" />
         </div>
         <div v-else-if="query === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center;">
           After a search, the results are displayed here.
@@ -54,7 +54,7 @@ export default {
     const draggableAreaRef = ref(null);
     useDraggableArea({draggableAreaRef});
 
-    const entries = ref([]);
+    const searchResults = ref([]);
     const query = ref( props.query ?? '');
 
     return {
@@ -64,11 +64,8 @@ export default {
         posterFallback
       },
       query,
-      entries,
+      searchResults,
       loading: ref(false),
-      onSearchResults(newEntries) {
-        entries.value = newEntries;
-      },
       async select(item) {
         await setSelection({item});
         emit('navigate', {name: 'SUBTITLE-SELECTION', params: { tmdb_id: item.tmdb_id, media_type: item.media_type, searchQuery: query, contentTransitionName: 'content-navigate-deeper' }});

@@ -49,7 +49,7 @@ export default {
     );
 
     watch(loading, (loading) => emit('update:loading', loading), {immediate: true});
-    watch(queryResult, (result) => emit('on-search-results', result?.data?.videoSearch?.entries ?? []));
+    watch(queryResult, (result) => emit('update:searchResults', result?.data?.videoSearch?.entries ?? []));
 
     const inputRef = ref(null);
 
