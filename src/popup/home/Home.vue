@@ -83,12 +83,13 @@ export default {
     }
   },
   async setup() {
-    const draggableAreaRef = ref(null);
-
-    useDraggableArea({draggableAreaRef});
     const appState = reactive({});
     useAppStateStorageListener((state) => Object.assign(appState, state));
     Object.assign(appState, await snapshot());
+
+    const draggableAreaRef = ref(null);
+    useDraggableArea({draggableAreaRef});
+
     return {
       draggableAreaRef,
       appState,
