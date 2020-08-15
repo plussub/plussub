@@ -9,9 +9,9 @@
     </template>
     <template #content>
       <div v-if="!dataReady" style="line-height: 3; text-align: center;">Loading subtitles...</div>
-      <div v-else-if="state.filteredEntries.length" class="subtitle-selection-content--container">
+      <div v-else-if="filteredEntries.length" class="subtitle-selection-content--container">
         <div style="grid-area: search-results; display: grid;">
-          <div v-for="item in state.filteredEntries" class="subtitle-selection-content--container--card">
+          <div v-for="item in filteredEntries" class="subtitle-selection-content--container--card">
             <div style="grid-area: header; overflow: hidden; text-overflow: ellipsis; color: black; font-weight: 500; font-family: 'Rubik', sans-serif;">{{ item.SubFileName }}</div>
             <div
                 style="grid-area: content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
@@ -41,7 +41,7 @@
 import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import LanguageAccordion from '@/subtitleSelection/LanguageAccordion.vue';
 import FilterBar from '@/subtitleSelection/filterBar';
-import {reactive, ref, watch} from 'vue';
+import {reactive, ref, watch, computed} from 'vue';
 import {searchRequest} from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
@@ -70,28 +70,21 @@ export default {
     const draggableAreaRef = ref(null);
     useDraggableArea({draggableAreaRef: draggableAreaRef});
 
-    const state = reactive({entries: [], filteredEntries: [], selectedLanguage: 'en', filter: ''});
+    const state = reactive({entries: [], selectedLanguage: 'en', filter: ''});
     const dataReady = ref(false);
 
-    const setFiltered = () => {
-      state.filteredEntries = state.entries.filter(({SubFileName}) => {
-        if (state.filter === '') {
-          return true;
-        }
-        return SubFileName.toLowerCase().includes(state.filter.toLowerCase());
-      });
-    };
+    const filteredEntries = computed(() => state.entries.filter(({SubFileName}) =>
+        state.filter === '' || SubFileName.toLowerCase().includes(state.filter.toLowerCase())));
 
     const triggerSearch = () =>
         searchRequest({...props, language: state.selectedLanguage}).then((result) => {
           dataReady.value = true;
           state.entries = result.data.subtitleSearch.entries;
-          setFiltered();
+          // setFiltered();
         });
 
     triggerSearch();
 
-    watch(() => state.filter, setFiltered);
     watch(
         () => state.selectedLanguage,
         () => {
@@ -104,6 +97,7 @@ export default {
       draggableAreaRef,
       dataReady,
       state,
+      filteredEntries,
       backFn() {
         emit('navigate', {
           name: 'SEARCH',
