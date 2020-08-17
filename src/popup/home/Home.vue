@@ -20,7 +20,7 @@
       <div class="home-content--container">
         <transition name="fade" mode="out-in">
           <result-from-search v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
-                              style="grid-area: current-sub;"
+                              style="grid-area: current-sub; margin-top: 20px;"
                               :state="appState.state"
                               :search-state="appState.search"
                               @remove="remove">
@@ -29,7 +29,7 @@
             </template>
           </result-from-search>
           <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
-                            style="grid-area: current-sub;"
+                            style="grid-area: current-sub; margin-top: 20px;"
                             :state="appState.state"
                             :file-pick-state="appState.filePick"
                             @remove="remove">
@@ -39,7 +39,7 @@
           </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
-        <current-videos style="grid-area: videos;"/>
+        <page-videos style="grid-area: videos;" :subtitle-selected="appState.srt.parsed.length > 0"/>
         <debug v-show="false" style="grid-area: debug;"/>
       </div>
     </template>
@@ -56,7 +56,7 @@ import PageLayout from '@/components/PageLayout';
 import ResultFromSearch from '@/home/ResultFromSearch';
 import ResultFromFile from '@/home/ResultFromFile';
 import NoSub from '@/home/NoSub';
-import CurrentVideos from '@/home/CurrentVideos';
+import PageVideos from '@/home/PageVideos';
 import {snapshot} from '@/appState';
 import {remove} from '@/home/remove';
 import {reactive} from "@vue/reactivity";
@@ -73,7 +73,7 @@ export default {
     ResultFromSearch,
     ResultFromFile,
     NoSub,
-    CurrentVideos,
+    PageVideos,
     Settings
   },
   props: {
@@ -83,12 +83,12 @@ export default {
     }
   },
   async setup() {
+    const draggableAreaRef = ref(null);
+    useDraggableArea({draggableAreaRef});
+
     const appState = reactive({});
     useAppStateStorageListener((state) => Object.assign(appState, state));
     Object.assign(appState, await snapshot());
-
-    const draggableAreaRef = ref(null);
-    useDraggableArea({draggableAreaRef});
 
     return {
       draggableAreaRef,

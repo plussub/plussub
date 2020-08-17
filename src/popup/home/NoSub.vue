@@ -25,15 +25,14 @@ export default {
 <style scoped>/* plussub header */
 .no-sub--container {
   background-color: var(--primary50);
-  /*box-shadow: var(--card-shadow);*/
-  margin-top: -20px;
   display: grid;
   padding-top: var(--card-padding-top);
   grid-template-areas:
+    '.      .       .'
     '.      header  .'
     '.      content .'
    'divider divider divider';
-  grid-template-rows: 25px auto 1px;
+  grid-template-rows: 8px 25px auto 1px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
   grid-row-gap: 8px;

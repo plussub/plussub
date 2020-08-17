@@ -39,7 +39,6 @@ export default {
   grid-area: content;
   overflow-y: auto;
   background-color: var(--background-color);
-  padding-top: 12px;
   width: 100%;
   max-width: 100%;
 }
