@@ -86,7 +86,7 @@ export default {
         return props.offsetTime !== parseInt(currentOffsetTime.value, 10);
       }),
       onKeydown: useKeydownPreventInputHandler({
-        allowedInputValue: /^[0-9]$/,
+        allowedInputValue: /^[0-9-]$/,
         inputRef,
         valueRef: currentOffsetTime
       })
