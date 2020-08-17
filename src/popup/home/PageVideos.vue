@@ -4,16 +4,16 @@
         style="grid-area: header; height: 1px; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500;">
       <div>
         <div>Page Videos</div>
-        <div style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400;" v-if="!subtitleSelected">
+        <div style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400;" v-if="subtitle.length === 0">
           You must first add a subtitle before you can add them to the video
         </div>
       </div>
     </div>
     <div style="grid-area: content;">
-      <div v-for="(video, index) in state.videos" v-if="state.videos.length" style="display: grid; grid-template-columns: 1fr auto;">
+      <div v-for="(video, index) in videos" v-if="videos.length" style="display: grid; grid-template-columns: 1fr auto;">
         <div style="grid-column: 1 / 2; align-self: center;">Video {{ index + 1 }}</div>
-        <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.src)" style="grid-column: 2 / 3;">Remove Sub<i class="fa fa-sm fa-minus"></i></a>
-        <a v-else class="knopf flat small" :class="{ disabled: !subtitleSelected}" @click="addSubTo(video.src)" style="grid-column: 2 / 3;">Add Subtitle</a>
+        <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.el)" style="grid-column: 2 / 3;">Remove Sub</a>
+        <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addSubTo(video.el)" style="grid-column: 2 / 3;">Add Subtitle</a>
       </div>
       <div v-else>
         No videos found in current tab.
@@ -23,29 +23,32 @@
 </template>
 
 <script>
-import {reactive} from "@vue/reactivity";
-import {setAppStatePartial} from "@/appState";
-import {addSubtitleInCurrentTab} from 'addSubtitleInCurrentTab';
+import {ref} from "@vue/reactivity";
+import {addVttTo, removeVttFrom} from '@/home/vttInject';
 
 export default {
   props: {
-    subtitleSelected: Boolean
+    subtitle: Array
   },
-  setup() {
+  setup(props) {
     const findVideosInCurrentTab = () => [...document.querySelectorAll('video')].map((el) => ({
-      src: el.src,
+      el,
       hasSubtitle: el.classList.contains('plussub')
     }));
 
-    const state = reactive({videos: (findVideosInCurrentTab())});
+    const videos = ref(findVideosInCurrentTab());
     return {
-      state,
-      async addSubTo(targetSrc) {
-        console.warn('add');
-        // await setAppStatePartial({targetSrc});
-        // addSubtitleInCurrentTab();
+      videos,
+      async addSubTo(el) {
+        addVttTo({
+          el,
+          subtitle: props.subtitle
+        });
+        videos.value = findVideosInCurrentTab();
       },
-      removeSubFrom: () => {
+      removeSubFrom: (el) => {
+        removeVttFrom({el});
+        videos.value = findVideosInCurrentTab();
       }
     }
   }

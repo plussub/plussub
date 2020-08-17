@@ -39,7 +39,7 @@
           </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
-        <page-videos style="grid-area: videos;" :subtitle-selected="appState.srt.parsed.length > 0"/>
+        <page-videos style="grid-area: videos;" :subtitle="appState.srt.withOffsetParsed"/>
         <debug v-show="false" style="grid-area: debug;"/>
       </div>
     </template>

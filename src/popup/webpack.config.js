@@ -22,7 +22,6 @@ module.exports = {
       'useAppStateStorageListener': `${path.resolve(__dirname)}/platform/useAppStateStorageListener/chrome/index.ts`,
       'getBackgroundPage': `${path.resolve(__dirname)}/platform/getBackgroundPage/chrome/index.ts`,
       'findVideosInCurrentTab': `${path.resolve(__dirname)}/platform/findVideosInCurrentTab/chrome/index.ts`,
-      'addSubtitleInCurrentTab': `${path.resolve(__dirname)}/platform/addSubtitleInCurrentTab/chrome/index.ts`,
       'storage': `${path.resolve(__dirname)}/platform/storage/chrome/index.ts`
     }
   },
