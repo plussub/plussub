@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {ref} from "@vue/reactivity";
+import {ref, watch} from "vue";
 import {addVttTo, removeVttFrom} from '@/home/vttInject';
 
 export default {
@@ -35,8 +35,14 @@ export default {
       el,
       hasSubtitle: el.classList.contains('plussub')
     }));
-
     const videos = ref(findVideosInCurrentTab());
+
+    watch(() => props.subtitle, (subtitle) => {
+      const elements = [...document.querySelectorAll('video.plussub')];
+      elements.forEach(el => removeVttFrom({el}));
+      elements.forEach(el => addVttTo({el, subtitle}));
+    });
+
     return {
       videos,
       async addSubTo(el) {
