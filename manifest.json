@@ -23,7 +23,6 @@
   "permissions": [
     "activeTab",
     "storage",
-    "declarativeContent",
-    "contextMenus"
+    "declarativeContent"
   ]
 }
