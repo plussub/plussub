@@ -1,6 +1,6 @@
 <template>
   <div>
-    <expandable open>
+    <expandable>
       <template #title>
         <div style="font-weight: 500; font-family: 'Rubik', sans-serif">
           Subtitle Setting
