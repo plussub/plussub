@@ -10,10 +10,19 @@
       </div>
     </div>
     <div style="grid-area: content;">
-      <div v-for="(video, index) in videos" v-if="videos.length" style="display: grid; grid-template-columns: 1fr auto;">
-        <div style="grid-column: 1 / 2; align-self: center;">Video {{ index + 1 }}</div>
-        <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.el)" style="grid-column: 2 / 3;">Remove Sub</a>
-        <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addSubTo(video.el)" style="grid-column: 2 / 3;">Add Subtitle</a>
+      <div v-if="videos.length">
+        <div v-for="(video, index) in videos" :key="index" style="display: grid; grid-template-columns: 1fr auto;">
+          <div style="grid-column: 1 / 2; align-self: center;">Video {{ index + 1 }}</div>
+          <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.el)" style="grid-column: 2 / 3;">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addSubTo(video.el)" style="grid-column: 2 / 3;">Add Subtitle</a>
+        </div>
+      </div>
+      <div v-else-if="videosInIframe && videosInIframe.length > 0">
+        <div v-for="(video, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto;">
+          <div style="grid-column: 1 / 2; align-self: center;">Video {{ index + 1 }}</div>
+          <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video)" style="grid-column: 2 / 3;">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addSubToIframe(video)" style="grid-column: 2 / 3;">Add Subtitle</a>
+        </div>
       </div>
       <div v-else>
         No videos found in current tab.
@@ -24,11 +33,12 @@
 
 <script>
 import {ref, watch} from "vue";
-import {addVttTo, removeVttFrom} from '@/home/vttInject';
+import {addVttTo, removeVttFrom, addVttToIframe, removeVttFromIframe} from '@/home/vttInject';
 
 export default {
   props: {
-    subtitle: Array
+    subtitle: Array,
+    videosInIframe: Array
   },
   setup(props) {
     const findVideosInCurrentTab = () => [...document.querySelectorAll('video')].map((el) => ({
@@ -41,6 +51,9 @@ export default {
       const elements = [...document.querySelectorAll('video.plussub')];
       elements.forEach(el => removeVttFrom({el}));
       elements.forEach(el => addVttTo({el, subtitle}));
+      const videoInFrameHasSub = props.videosInIframe.filter(video => video.hasSubtitle === true)
+      videoInFrameHasSub.forEach(video => removeVttFromIframe(video))
+      videoInFrameHasSub.forEach(video => addVttToIframe(video, subtitle))
     });
 
     return {
@@ -55,6 +68,15 @@ export default {
       removeSubFrom: (el) => {
         removeVttFrom({el});
         videos.value = findVideosInCurrentTab();
+      },
+      async addSubToIframe(videoInIframe) {
+        addVttToIframe({
+          videoInIframe,
+          subtitle: props.subtitle
+        });
+      },
+      removeSubFromIframe: (videoInIframe) => {
+        removeVttFromIframe({videoInIframe});
       }
     }
   }

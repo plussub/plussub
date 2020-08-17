@@ -16,7 +16,7 @@
             Pick a .srt/.vtt file
           </div>
           <input ref="inputRef" style="grid-area: card-content;" type="file" @change="fileSelected"
-                 accept="text/plain"/>
+                 accept=".vtt,.srt"/>
         </div>
         <div style="grid-area: spacer;">&nbsp;</div>
       </div>

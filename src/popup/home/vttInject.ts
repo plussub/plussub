@@ -1,4 +1,4 @@
-import { SrtEntry } from '@/appState';
+import { SrtEntry, VideoInIframe } from '@/appState';
 
 interface AddVttToPayload {
   el: HTMLVideoElement;
@@ -7,7 +7,15 @@ interface AddVttToPayload {
 
 interface RemoveVttFromPayload {
   el: HTMLVideoElement;
+}
+
+interface AddVttToIframePayload {
+  videoInIframe: VideoInIframe;
   subtitle: SrtEntry[];
+}
+
+interface RemoveVttFromIframePayload {
+  videoInIframe: VideoInIframe;
 }
 
 export const addVttTo = ({ el, subtitle }: AddVttToPayload): void => {
@@ -24,4 +32,21 @@ export const removeVttFrom = ({ el }: RemoveVttFromPayload): void => {
   Array.from(el.textTracks)
     .filter((track) => track.label === 'Plussub')
     .forEach((track) => (track.mode = 'hidden'));
+};
+
+export const addVttToIframe = ({ videoInIframe, subtitle }: AddVttToIframePayload): void => {
+  console.log(videoInIframe)
+  const iframe = <HTMLIFrameElement>document.querySelector(`iframe[src="${videoInIframe.src}"]`)
+  if (iframe) {
+    iframe.contentWindow?.postMessage({ PlusSubAction: 'addSubtitle', data: JSON.stringify(subtitle) }, '*');
+    videoInIframe.hasSubtitle = false;
+  }
+};
+
+export const removeVttFromIframe = ({ videoInIframe }: RemoveVttFromIframePayload): void => {
+  const iframe =  <HTMLIFrameElement>document.querySelector(`iframe[src="${videoInIframe.src}"]`);
+  if (iframe) {
+    iframe.contentWindow?.postMessage({ PlusSubAction: 'removeSubtitle' }, '*');
+    videoInIframe.hasSubtitle = false;
+  }
 };

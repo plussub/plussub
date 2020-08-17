@@ -1,8 +1,9 @@
 // webpack.config.js
+/* eslint @typescript-eslint/no-var-requires: "off" */
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ExtensionReloader = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
@@ -30,15 +31,13 @@ module.exports = (env, argv) => {
       extensions: ['.ts', '.js', '.vue', '.json'],
       alias: {
         '@': path.resolve(__dirname, 'src/popup'),
+        // '#': path.resolve(__dirname, '/platform/storage/chrome/index.ts'),
         // this isn't technically needed, since the default `vue` entry for bundlers
         // is a simple `export * from '@vue/runtime-dom`. However having this
         // extra re-export somehow causes webpack to always invalidate the module
         // on the first HMR update and causes the page to reload.
-        // '#': path.resolve(__dirname, '/platform/storage/chrome/index.ts'),
         vue: '@vue/runtime-dom',
         useAppStateStorageListener: path.resolve(__dirname, 'src/popup/platform/useAppStateStorageListener/chrome/index.ts'),
-        // getBackgroundPage: path.resolve(__dirname, 'src/popup/platform/getBackgroundPage/chrome/index.ts'),
-        // findVideosInCurrentTab: path.resolve(__dirname, 'src/platform/findVideosInCurrentTab/chrome/index.ts'),
         storage: path.resolve(__dirname, 'src/popup/platform/storage/chrome/index.ts'),
         onInstalled: path.resolve(__dirname, 'src/background/platform/onInstalled/chrome/index.ts'),
         onPageActionClicked: path.resolve(__dirname, 'src/background/platform/onPageActionClicked/chrome/index.ts')
@@ -98,14 +97,13 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new VueLoaderPlugin(),
-      new MiniCssExtractPlugin({
-        filename: '[name].css'
-      }),
+      // new MiniCssExtractPlugin({
+      //   filename: '[name].css'
+      // }),
+      new ExtensionReloader(),
       new CopyPlugin({
         patterns: [
           { from: manifestName, to: 'manifest.json' },
-          { from: 'popup/popup.html', to: 'popup.html' },
-          { from: 'background/background.html', to: 'background.html' },
           { from: 'res', to: 'res' }
         ]
       })
