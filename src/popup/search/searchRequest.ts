@@ -18,7 +18,7 @@ query videoSearch($query: String!)
 `
 
 export const searchRequest = async (queryParam: string): Promise<{entries: TmdbState[]}> => {
-  return await fetch('https://plussub-gql-cf-worker.stefanbreitenstein.workers.dev', {
+  return await fetch('https://gql.plus-sub.com', {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
