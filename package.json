@@ -8,7 +8,7 @@
     "build:popup": "webpack --config src/popup/webpack.config.js --display-module",
     "build:background": "webpack --config src/background/webpack.config.js --display-module",
     "build": "npm run build:popup && npm run build:background",
-    "zip": "rm -f ../plussub.zip && bestzip plussub.zip manifest.json src/ res/",
+    "zip": "rm -f ../plussub.zip && bestzip plussub.zip manifest.json dist/ res/",
     "test": "jest --no-cache",
     "version": "node sync-manifest.js && git add manifest.json"
   },
