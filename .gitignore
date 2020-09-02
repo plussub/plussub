@@ -9,3 +9,5 @@ node_modules/
 plussub.zip
 
 .DS_Store
+
+manifest.json
