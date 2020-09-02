@@ -1,19 +1,20 @@
 // webpack.config.js
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const rootDir = `${path.resolve(__dirname)}/../../`;
 
 module.exports = {
   entry: './src/background/index.ts',
   output: {
     filename: 'background.js',
-    path: `${path.resolve(__dirname)}/../../dist`
+    path: `${rootDir}/../../dist`
   },
   resolve: {
     extensions: ['.ts', '.js', '.json'],
     alias: {
-      '#': path.resolve(__dirname),
-      'onInstalled': `${path.resolve(__dirname)}/platform/onInstalled/chrome/index.ts`,
-      'onPageActionClicked': `${path.resolve(__dirname)}/platform/onPageActionClicked/chrome/index.ts`
+      '#': `${rootDir}`,
+      'onInstalled': `${rootDir}/platform/onInstalled/firefox/index.ts`,
+      'onPageActionClicked': `${rootDir}/platform/onPageActionClicked/firefox/index.ts`
     }
   },
   mode: 'development',
