@@ -27,10 +27,11 @@ export default {
   components: {
     Spinner
   },
+  emits: ['update:searchResults', 'update:loading', 'update:query'],
   props: {
     query: String,
     loading: Boolean,
-    searchResults: []
+    searchResults: Array
   },
   setup(props, {emit}) {
     const searchResults = computed({

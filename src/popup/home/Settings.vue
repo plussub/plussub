@@ -43,6 +43,7 @@ export default {
   components: {
     Expandable
   },
+  emits: ['offset-time'],
   props: {
     parsed: Array,
     offsetTime: Number

@@ -61,6 +61,7 @@ export default {
     Divider,
     PageLayout
   },
+  emits: ['navigate'],
   props: {
     searchQuery: String,
     contentTransitionName: {

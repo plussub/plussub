@@ -43,6 +43,7 @@ export default {
     SearchEntry,
     PageLayout
   },
+  emits: ['navigate'],
   props: {
     query: String,
     contentTransitionName: {

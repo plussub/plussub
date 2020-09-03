@@ -34,6 +34,7 @@ import {computed, ref} from 'vue';
 import {useKeydownPreventInputHandler} from "@/composables";
 
 export default {
+  emits: ['update:selected'],
   props: {
     selected: String
   },

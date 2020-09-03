@@ -1,7 +1,7 @@
 // webpack.config.js
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const rootDir = `${path.resolve(__dirname)}/../../`;
+const rootDir = `${path.resolve(__dirname)}/../..`;
 
 module.exports = {
   entry: './src/background/index.ts',

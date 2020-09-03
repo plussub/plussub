@@ -76,6 +76,7 @@ export default {
     PageVideos,
     Settings
   },
+  emits: ['navigate'],
   props: {
     contentTransitionName: {
       type: String,

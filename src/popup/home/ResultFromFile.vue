@@ -38,6 +38,7 @@ export default {
     Divider,
     Spinner
   },
+  emits: ['remove'],
   props: {
     state: String,
     filePickState: Object

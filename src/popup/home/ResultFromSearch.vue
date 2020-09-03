@@ -69,6 +69,7 @@ export default {
     Spinner,
     Expandable
   },
+  emits: ['remove'],
   props: {
     state: String,
     searchState: Object

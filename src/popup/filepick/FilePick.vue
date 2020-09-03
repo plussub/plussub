@@ -37,6 +37,7 @@ export default {
     ToolbarBackBtn,
     PageLayout
   },
+  emits: ['navigate'],
   props: {
     contentTransitionName: {
       type: String,
