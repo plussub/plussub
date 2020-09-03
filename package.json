@@ -14,7 +14,7 @@
     "build:firefox": "npm run build:manifest:firefox && npm run build:popup && npm run build:background:firefox",
     "zip": "rm -f ../plussub.zip && bestzip plussub.zip manifest.json dist/ res/",
     "test": "jest --no-cache",
-    "version": "node sync-manifest.js && git add manifest.json"
+    "version": "node sync-manifest.js && git add manifestChrome.json && git add manifestFirefox.json"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
