@@ -44,7 +44,7 @@
 <script>
 import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import LanguageAccordion from '@/subtitleSelection/LanguageAccordion.vue';
-import FilterBar from '@/subtitleSelection/filterBar';
+import FilterBar from '@/subtitleSelection/FilterBar';
 import {ref, watch, computed} from 'vue';
 import {searchRequest} from '@/subtitleSelection/searchRequest';
 import Divider from '@/components/Divider';
