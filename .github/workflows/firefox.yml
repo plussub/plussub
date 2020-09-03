@@ -15,10 +15,10 @@ jobs:
         with:
           node-version: '12.x'
       - run: npm ci
-      - run: npm run build:chrome
+      - run: npm run build:firefox
       - run: npm run zip
       - uses: actions/upload-artifact@v2
         with:
-          name: plussub-chrome.zip
+          name: plussub-firefox.zip
           path: plussub.zip
 
