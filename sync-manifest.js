@@ -2,14 +2,17 @@ const fs = require('fs').promises;
 const toJson = (r) => JSON.parse(r);
 
 (async () => {
-    const [package, manifest] = await Promise.all([
+    const [package, manifestChrome, manifestFirefox] = await Promise.all([
         fs.readFile("package.json", "utf-8").then(toJson),
-        fs.readFile("manifest.json", "utf-8").then(toJson)
+        fs.readFile("manifestChrome.json", "utf-8").then(toJson),
+        fs.readFile("manifestFirefox.json", "utf-8").then(toJson)
     ]);
-    const newManifest = {
-        ...manifest,
+    await fs.writeFile("manifestChrome.json", JSON.stringify({
+        ...manifestChrome,
         version: package.version
-    };
-
-    await fs.writeFile("manifest.json", JSON.stringify(newManifest, null, 2));
+    }, null, 2));
+    await fs.writeFile("manifestFirefox.json", JSON.stringify({
+        ...manifestChrome,
+        version: package.version
+    }, null, 2));
 })();
