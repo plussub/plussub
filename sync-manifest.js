@@ -12,7 +12,7 @@ const toJson = (r) => JSON.parse(r);
         version: package.version
     }, null, 2));
     await fs.writeFile("manifestFirefox.json", JSON.stringify({
-        ...manifestChrome,
+        ...manifestFirefox,
         version: package.version
     }, null, 2));
 })();

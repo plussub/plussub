@@ -10,6 +10,7 @@
     "128": "res/icons/plussub128.png"
   },
   "page_action": {
+    "show_matches": ["<all_urls>"],
     "default_icon": {
       "19": "res/icons/browseraction.png"
     }
@@ -23,6 +24,8 @@
   "permissions": [
     "activeTab",
     "storage",
-    "declarativeContent"
+    "https://use.fontawesome.com/releases/v5.14.0/css/all.css",
+    "https://*.plus-sub.com/*",
+    "webRequest"
   ]
 }
