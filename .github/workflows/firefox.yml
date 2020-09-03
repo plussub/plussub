@@ -1,4 +1,4 @@
-name: build and deploy
+name: build and deploy(firefox)
 
 on:
   push:
