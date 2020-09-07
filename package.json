@@ -12,7 +12,7 @@
     "build:background:firefox": "webpack --config src/background/build/firefox/webpack.config.js --display-module",
     "build:chrome": "npm run build:manifest:chrome && npm run build:popup && npm run build:background:chrome",
     "build:firefox": "npm run build:manifest:firefox && npm run build:popup && npm run build:background:firefox",
-    "zip": "rm -f ../plussub.zip && bestzip plussub.zip manifest.json dist/ res/",
+    "zip": "rm -f plussub.zip && bestzip plussub.zip manifest.json dist/ res/",
     "test": "jest --no-cache",
     "version": "node sync-manifest.js && git add manifestChrome.json && git add manifestFirefox.json"
   },
