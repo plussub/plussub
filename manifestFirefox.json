@@ -12,7 +12,7 @@
   "page_action": {
     "show_matches": ["<all_urls>"],
     "default_icon": {
-      "19": "res/icons/browseraction.png"
+      "19": "res/icons/browseraction2.png"
     }
   },
   "background": {
