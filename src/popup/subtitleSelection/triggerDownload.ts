@@ -11,10 +11,15 @@ export const triggerDownload = async (): Promise<void> => {
   }
   await setAppStatePartial({ state: 'DOWNLOADING' });
   const raw = await fetch(link)
-    .then((r) => r.blob())
+    .then((r) => r.arrayBuffer())
     .then((blob) => new JSZip().loadAsync(blob))
     .then((zip) => zip.file(fileName))
-    .then((zipFile) => zipFile?.async('string') ?? '');
+    .then((zipFile) => zipFile?.async('string') ?? '')
+    .catch((e) => {
+      console.warn(e);
+      return Promise.reject(e);
+    });
+  console.warn('downloaded');
 
   await setAppStatePartial({
     srt: {

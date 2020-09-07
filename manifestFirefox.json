@@ -26,6 +26,7 @@
     "storage",
     "https://use.fontawesome.com/releases/v5.14.0/css/all.css",
     "https://*.plus-sub.com/*",
+    "https://dl.opensubtitles.org/**/*",
     "webRequest"
   ]
 }
