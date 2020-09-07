@@ -56,7 +56,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.0.0",
-    "bestzip": "^2.1.6",
+    "bestzip": "^2.1.7",
     "css-loader": "^3.6.0",
     "eslint": "^7.7.0",
     "file-loader": "^6.0.0",
