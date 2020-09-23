@@ -14,11 +14,11 @@ is an extension which adds subtitle to HTML <video> tags via file or subtitle se
 # install dependencies
 npm install
 
-# build all webpack modules
-./build.sh
+# build chrome
+npm run build:chrome
 
-# package project for the chrome webstore
-./package.sh
+# build firefoy
+npm run build:firefox
 ```
 
 
