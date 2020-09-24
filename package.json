@@ -5,14 +5,10 @@
   "author": "Stefan Breitenstein",
   "scripts": {
     "eslint": "eslint . --ext .ts",
-    "testbuild": "webpack",
-    "build:manifest:chrome": "cp manifestChrome.json manifest.json",
-    "build:manifest:firefox": "cp manifestFirefox.json manifest.json",
-    "build:popup": "webpack --config src/popup/webpack.config.js --display-module",
-    "build:background:chrome": "webpack --config src/background/build/chrome/webpack.config.js --display-module",
-    "build:background:firefox": "webpack --config src/background/build/firefox/webpack.config.js --display-module",
-    "build:chrome": "npm run build:manifest:chrome && npm run build:popup && npm run build:background:chrome",
-    "build:firefox": "npm run build:manifest:firefox && npm run build:popup && npm run build:background:firefox",
+    "start": "webpack",
+    "start:firefox": "webpack --browser=firefox",
+    "build": "webpack --browser=chrome --mode=production",
+    "build:firefox": "webpack --browser=firefox --mode=production",
     "zip": "rm -f plussub.zip && bestzip plussub.zip manifest.json dist/ res/",
     "test": "jest --no-cache",
     "version": "node sync-manifest.js && git add manifestChrome.json && git add manifestFirefox.json"
