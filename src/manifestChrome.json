@@ -15,7 +15,7 @@
     }
   },
   "background": {
-    "page": "background.html",
+    "scripts": ["background.js"],
     "persistent": false
   },
   "minimum_chrome_version": "51",

@@ -20,7 +20,7 @@ module.exports = (env, argv) => {
   }
   const config = {
     mode: argv.mode ? argv.mode : 'development',
-    entry: { popup: './popup/index.ts', backgound: './background/index.ts' },
+    entry: { popup: './popup/index.ts', background: './background/index.ts' },
     context: path.resolve(__dirname, 'src'),
     output: {
       filename: '[name].js',
