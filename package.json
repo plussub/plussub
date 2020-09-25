@@ -12,7 +12,7 @@
     "zip": "rm -f plussub-chrome.zip && cd dist-chrome && bestzip ../plussub-chrome.zip *",
     "zip:firefox": "rm -f plussub-firefox.zip && cd dist-firefox && bestzip ../plussub-firefox.zip *",
     "test": "jest --no-cache",
-    "version": "node sync-manifest.js && git add manifestChrome.json && git add manifestFirefox.json"
+    "version": "node sync-manifest.js && git add src/manifestChrome.json && git add src/manifestFirefox.json"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
