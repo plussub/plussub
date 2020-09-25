@@ -4,8 +4,8 @@ const toJson = (r) => JSON.parse(r);
 (async () => {
     const [package, manifestChrome, manifestFirefox] = await Promise.all([
         fs.readFile("package.json", "utf-8").then(toJson),
-        fs.readFile("manifestChrome.json", "utf-8").then(toJson),
-        fs.readFile("manifestFirefox.json", "utf-8").then(toJson)
+        fs.readFile("src/manifestChrome.json", "utf-8").then(toJson),
+        fs.readFile("src/manifestFirefox.json", "utf-8").then(toJson)
     ]);
     await fs.writeFile("manifestChrome.json", JSON.stringify({
         ...manifestChrome,
