@@ -11,3 +11,6 @@ plussub.zip
 .DS_Store
 
 manifest.json
+
+dist
+dist-chrome

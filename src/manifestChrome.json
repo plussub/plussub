@@ -9,20 +9,16 @@
     "48": "res/icons/plussub48.png",
     "128": "res/icons/plussub128.png"
   },
-  "page_action": {
+  "browser_action": {
     "default_icon": {
       "19": "res/icons/browseraction.png"
     }
   },
   "background": {
-    "page": "dist/background.html",
+    "scripts": ["background.js"],
     "persistent": false
   },
   "minimum_chrome_version": "51",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "permissions": [
-    "activeTab",
-    "storage",
-    "declarativeContent"
-  ]
+  "permissions": ["activeTab", "storage", "declarativeContent"]
 }
