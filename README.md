@@ -1,12 +1,8 @@
 # +Sub Chrome Extension
-[![Build Status](https://travis-ci.org/ste-xx/plussub.svg?branch=master)](https://travis-ci.org/plussub/chrome-extension)
-is an extension which adds subtitle to HTML <video> tags via file or subtitle search powered by tmbd & opensubtitles.org.
-## Quickstart
+![build(chrome)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(chrome)/badge.svg)
+![build(firefox)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(firefox)/badge.svg)
 
-### Prerequisite
-- npm
-- bash
-- zip
+is an extension which adds subtitle to HTML <video> tags via file or subtitle search powered by tmbd & opensubtitles.org.
 
 ### Build Project
 
@@ -15,10 +11,10 @@ is an extension which adds subtitle to HTML <video> tags via file or subtitle se
 npm install
 
 # build chrome
-npm run build:chrome
+npm run start
 
 # build firefoy
-npm run build:firefox
+npm run start:firefox
 ```
 
 
@@ -26,7 +22,7 @@ npm run build:firefox
 1) Type in Chrome address bar: chrome://extensions/
 2) Active developer mode
 3) Load unpacked extension...
-4) Select +Sub Chrome-Extension root folder
+4) Select plussub-root-folder/dist-chrome
 
 ## Run tests
 ```

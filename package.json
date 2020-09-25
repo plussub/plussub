@@ -9,7 +9,8 @@
     "start:firefox": "webpack --browser=firefox",
     "build": "webpack --browser=chrome --mode=production",
     "build:firefox": "webpack --browser=firefox --mode=production",
-    "zip": "rm -f plussub.zip && bestzip plussub.zip manifest.json dist/ res/",
+    "zip": "rm -f plussub-chrome.zip && cd dist-chrome && bestzip ../plussub-chrome.zip *",
+    "zip:firefox": "rm -f plussub-firefox.zip && cd dist-firefox && bestzip ../plussub-firefox.zip *",
     "test": "jest --no-cache",
     "version": "node sync-manifest.js && git add manifestChrome.json && git add manifestFirefox.json"
   },
