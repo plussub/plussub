@@ -1,7 +1,6 @@
 // webpack.config.js
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -37,8 +36,6 @@ module.exports = (env, argv) => {
         // '#': path.resolve(__dirname, '/platform/storage/chrome/index.ts'),
         vue: '@vue/runtime-dom',
         useAppStateStorageListener: path.resolve(__dirname, 'src/popup/platform/useAppStateStorageListener/chrome/index.ts'),
-        // getBackgroundPage: path.resolve(__dirname, 'src/popup/platform/getBackgroundPage/chrome/index.ts'),
-        // findVideosInCurrentTab: path.resolve(__dirname, 'src/platform/findVideosInCurrentTab/chrome/index.ts'),
         storage: path.resolve(__dirname, 'src/popup/platform/storage/chrome/index.ts'),
         onInstalled: path.resolve(__dirname, 'src/background/platform/onInstalled/chrome/index.ts'),
         onPageActionClicked: path.resolve(__dirname, 'src/background/platform/onPageActionClicked/chrome/index.ts')
