@@ -39,7 +39,7 @@
           </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
-        <page-videos style="grid-area: videos;" :subtitle="appState.srt.withOffsetParsed" :videosInIframe="appState.videosInIframe"/>
+        <page-videos style="grid-area: videos;" :subtitle="appState.srt.withOffsetParsed" :videosInIframe="store.state.videoInIframe.videosInIframe"/>
         <debug v-show="false" style="grid-area: debug;"/>
       </div>
     </template>
@@ -64,6 +64,7 @@ import Debug from "@/home/Debug";
 import {useDraggableArea} from "@/composables";
 import {setOffsetTime} from "@/home/setOffsetTime";
 import Settings from '@/home/Settings';
+import { useStore } from '../store/index'
 
 export default {
   components: {
@@ -91,9 +92,12 @@ export default {
     useAppStateStorageListener((state) => Object.assign(appState, state));
     Object.assign(appState, await snapshot());
 
+    const store = useStore()
+
     return {
       draggableAreaRef,
       appState,
+      store,
       logo,
       remove,
       setOffsetTime,

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createApp } from 'vue';
 import App from './App.vue';
-import { createStore } from 'vuex'
+import { store } from './store/index';
 import { SrtEntry } from '@/appState/types';
 import { addVttTo, removeVttFrom } from '@/home/vttInject';
 
@@ -16,13 +16,13 @@ function inIframe() {
 if (inIframe()) {
   const videoEl = document.querySelector('video');
   if (videoEl) {
-    window.parent.postMessage({ PlusSubAction: 'sendiFrameSrc', data: window.location.href }, '*');
+    window.top.postMessage({ plusSubAction: 'sendiFrameSrc', src: window.location.href, hasSubtitle: videoEl.classList.contains('plussub') }, '*');
     window.addEventListener('message', (e) => {
-      const action = e.data.PlusSubAction;
-      if (action === 'addSubtitle') {
-        const subtitle: SrtEntry[] = JSON.parse(e.data.data);
+      const { PlusSubAction, data } = e.data;
+      if (PlusSubAction === 'addSubtitle') {
+        const subtitle: SrtEntry[] = JSON.parse(data);
         addVttTo({ el: videoEl, subtitle });
-      } else if (action === 'removeSubtitle') {
+      } else if (PlusSubAction === 'removeSubtitle') {
         removeVttFrom({ el: videoEl });
       }
     });
@@ -69,20 +69,19 @@ if (inIframe()) {
   [fontAwesome].forEach((entry) => prependLink(shadow, entry));
   [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('/* plussub header */')).forEach((style) => shadow.prepend(style));
 
-  const videosInIframe = [];
-  const handleMessage = function (e) {
-    const action = e.data.PlusSubAction;
-    if (action === 'sendiFrameSrc') {
-      console.log('hello world');
-      if (videosInIframe.findIndex((video) => video.src !== e.data.data) === -1) {
-        videosInIframe.push({ src: e.data.data, hasSubtitle: false });
+  const handleMessage = (e) => {
+    const { plusSubAction, src, hasSubtitle } = e.data;
+    if (plusSubAction === 'sendiFrameSrc') {
+      if (store.state.videoInIframe.videosInIframe.findIndex((video) => video.src === src) === -1) {
+        store.commit('videoInIframe/pushVideosInIframe', { src, hasSubtitle });
       }
-    } else if (action === 'removeMessageEventListener') {
+    } else if (plusSubAction === 'removeMessageEventListener') {
       window.removeEventListener('message', handleMessage);
     }
   };
   window.addEventListener('message', handleMessage);
 
   document.body.prepend(appShadowDiv);
+  app.use(store);
   app.mount(appDiv);
 }

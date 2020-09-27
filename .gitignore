@@ -12,5 +12,4 @@ plussub.zip
 
 manifest.json
 
-dist
-dist-chrome
+dist*

@@ -9,15 +9,14 @@
     "48": "res/icons/plussub48.png",
     "128": "res/icons/plussub128.png"
   },
-  "page_action": {
+  "browser_action": {
     "show_matches": ["<all_urls>"],
     "default_icon": {
       "19": "res/icons/browseraction2.png"
     }
   },
   "background": {
-    "page": "dist/background.html",
-    "persistent": false
+    "scripts": ["background.js"]
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "permissions": ["activeTab", "storage", "https://use.fontawesome.com/releases/v5.14.0/css/all.css", "https://*.plus-sub.com/*", "https://dl.opensubtitles.org/**/*", "webRequest"]

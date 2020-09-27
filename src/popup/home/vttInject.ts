@@ -1,4 +1,5 @@
-import { SrtEntry, VideoInIframe } from '@/appState';
+import { SrtEntry } from '@/appState';
+import { useStore } from '../store/index';
 
 interface AddVttToPayload {
   el: HTMLVideoElement;
@@ -10,12 +11,12 @@ interface RemoveVttFromPayload {
 }
 
 interface AddVttToIframePayload {
-  videoInIframe: VideoInIframe;
+  src: string;
   subtitle: SrtEntry[];
 }
 
 interface RemoveVttFromIframePayload {
-  videoInIframe: VideoInIframe;
+  src: string;
 }
 
 export const addVttTo = ({ el, subtitle }: AddVttToPayload): void => {
@@ -31,22 +32,24 @@ export const removeVttFrom = ({ el }: RemoveVttFromPayload): void => {
   el.classList.remove('plussub');
   Array.from(el.textTracks)
     .filter((track) => track.label === 'Plussub')
-    .forEach((track) => (track.mode = 'hidden'));
+    .forEach((track) => (track.mode = 'disabled'));
+    // hidden cannot work on some website(like yhdm.tv)
 };
 
-export const addVttToIframe = ({ videoInIframe, subtitle }: AddVttToIframePayload): void => {
-  console.log(videoInIframe)
-  const iframe = <HTMLIFrameElement>document.querySelector(`iframe[src="${videoInIframe.src}"]`)
+export const addVttToIframe = ({ src, subtitle }: AddVttToIframePayload): void => {
+  const iframe = <HTMLIFrameElement>document.querySelector(`iframe[src="${src}"]`);
   if (iframe) {
     iframe.contentWindow?.postMessage({ PlusSubAction: 'addSubtitle', data: JSON.stringify(subtitle) }, '*');
-    videoInIframe.hasSubtitle = false;
+    const store = useStore();
+    store.commit('videoInIframe/setSubtitleStatus', { src, hasSubtitle: true });
   }
 };
 
-export const removeVttFromIframe = ({ videoInIframe }: RemoveVttFromIframePayload): void => {
-  const iframe =  <HTMLIFrameElement>document.querySelector(`iframe[src="${videoInIframe.src}"]`);
+export const removeVttFromIframe = ({ src }: RemoveVttFromIframePayload): void => {
+  const iframe = <HTMLIFrameElement>document.querySelector(`iframe[src="${src}"]`);
   if (iframe) {
     iframe.contentWindow?.postMessage({ PlusSubAction: 'removeSubtitle' }, '*');
-    videoInIframe.hasSubtitle = false;
+    const store = useStore();
+    store.commit('videoInIframe/setSubtitleStatus', { src, hasSubtitle: false });
   }
 };
