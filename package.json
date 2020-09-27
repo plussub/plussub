@@ -1,6 +1,6 @@
 {
   "name": "plussub",
-  "version": "4.3.0",
+  "version": "4.5.0",
   "description": "Chrome extension which adds subtitle to html5 videos",
   "author": "Stefan Breitenstein",
   "scripts": {
@@ -9,9 +9,10 @@
     "start:firefox": "webpack --browser=firefox --watch",
     "build": "webpack --mode=production",
     "build:firefox": "webpack --browser=firefox --mode=production",
-    "zip": "rm -f plussub.zip && bestzip plussub.zip manifest.json dist/ res/",
+    "zip": "rm -f plussub-chrome.zip && cd dist-chrome && bestzip ../plussub-chrome.zip *",
+    "zip:firefox": "rm -f plussub-firefox.zip && cd dist-firefox && bestzip ../plussub-firefox.zip *",
     "test": "jest --no-cache",
-    "version": "node sync-manifest.js && git add manifestChrome.json && git add manifestFirefox.json"
+    "version": "node sync-manifest.js && git add src/manifestChrome.json && git add src/manifestFirefox.json"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",

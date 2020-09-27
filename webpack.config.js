@@ -2,7 +2,6 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ExtensionReloader = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 
