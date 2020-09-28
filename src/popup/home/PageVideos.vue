@@ -10,14 +10,12 @@
       </div>
     </div>
     <div style="grid-area: content;">
-      <div v-if="videos.length">
+      <div v-if="videos.length || videosInIframe.length">
         <div v-for="(video, index) in videos" :key="index" style="display: grid; grid-template-columns: 1fr auto;">
           <div style="grid-column: 1 / 2; align-self: center;">Video {{ index + 1 }}</div>
           <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.el)" style="grid-column: 2 / 3;">Remove Sub</a>
           <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addSubTo(video.el)" style="grid-column: 2 / 3;">Add Subtitle</a>
         </div>
-      </div>
-      <div v-else-if="videosInIframe && videosInIframe.length">
         <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto;">
           <div style="grid-column: 1 / 2; align-self: center;">Video {{ videos.length + index + 1 }}</div>
           <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" @click="removeVttFromIframe({src:videoInIframe.src})" style="grid-column: 2 / 3;">Remove Sub</a>
