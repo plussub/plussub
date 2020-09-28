@@ -1,5 +1,5 @@
-import {version} from "../../../package.json";
-import {AppState} from "./types";
+import { version } from '../../../package.json';
+import { AppState } from './types';
 
 export const getInitialState = (): AppState => ({
   debug: true,

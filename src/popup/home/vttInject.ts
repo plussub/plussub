@@ -7,7 +7,6 @@ interface AddVttToPayload {
 
 interface RemoveVttFromPayload {
   el: HTMLVideoElement;
-  subtitle: SrtEntry[];
 }
 
 export const addVttTo = ({ el, subtitle }: AddVttToPayload): void => {
@@ -23,5 +22,6 @@ export const removeVttFrom = ({ el }: RemoveVttFromPayload): void => {
   el.classList.remove('plussub');
   Array.from(el.textTracks)
     .filter((track) => track.label === 'Plussub')
-    .forEach((track) => (track.mode = 'hidden'));
+    .forEach((track) => (track.mode = 'disabled'));
+    // hidden cannot work on some website(like yhdm.tv)
 };

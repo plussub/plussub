@@ -39,7 +39,7 @@
           </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
-        <page-videos style="grid-area: videos;" :subtitle="appState.srt.withOffsetParsed"/>
+        <page-videos style="grid-area: videos;" :subtitle="appState.srt.withOffsetParsed" :videosInIframe="videosInIframe"/>
         <debug v-show="false" style="grid-area: debug;"/>
       </div>
     </template>
@@ -48,7 +48,7 @@
 
 
 <script>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import logo from '@/res/plussub128.png';
 import Divider from '@/components/Divider';
 import {useAppStateStorageListener} from 'useAppStateStorageListener';
@@ -64,6 +64,7 @@ import Debug from "@/home/Debug";
 import {useDraggableArea} from "@/composables";
 import {setOffsetTime} from "@/home/setOffsetTime";
 import Settings from '@/home/Settings';
+import { useStore } from '../store/index'
 
 export default {
   components: {
@@ -81,7 +82,8 @@ export default {
     contentTransitionName: {
       type: String,
       default: ''
-    }
+    },
+    videosInIframe: Array
   },
   async setup() {
     const draggableAreaRef = ref(null);
@@ -99,6 +101,7 @@ export default {
       setOffsetTime,
       close() {
         document.getElementById('plussubShadow').remove();
+        window.postMessage({ PlusSubAction: 'removeMessageEventListener' }, '*');
       }
     };
   }
