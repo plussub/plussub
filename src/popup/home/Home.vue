@@ -39,7 +39,7 @@
           </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
-        <page-videos style="grid-area: videos;" :subtitle="appState.srt.withOffsetParsed" :videosInIframe="store.state.videoInIframe.videosInIframe"/>
+        <page-videos style="grid-area: videos;" :subtitle="appState.srt.withOffsetParsed" :videosInIframe="videosInIframe"/>
         <debug v-show="false" style="grid-area: debug;"/>
       </div>
     </template>
@@ -82,7 +82,8 @@ export default {
     contentTransitionName: {
       type: String,
       default: ''
-    }
+    },
+    videosInIframe: Array
   },
   async setup() {
     const draggableAreaRef = ref(null);
@@ -92,12 +93,9 @@ export default {
     useAppStateStorageListener((state) => Object.assign(appState, state));
     Object.assign(appState, await snapshot());
 
-    const store = useStore()
-
     return {
       draggableAreaRef,
       appState,
-      store,
       logo,
       remove,
       setOffsetTime,

@@ -33,7 +33,7 @@
   <div class="app--container" v-else>
     <Suspense>
       <template #default>
-        <home @navigate="navigate" v-bind="state.selectedParams"/>
+        <home @navigate="navigate" v-bind="state.selectedParams" :videosInIframe="videosInIframe"/>
       </template>
       <template #fallback>
         <div> loading</div>
@@ -49,6 +49,7 @@ import Search from '@/search/Search.vue';
 import SubtitleSelection from '@/subtitleSelection/SubtitleSelection.vue';
 import FilePick from '@/filepick/FilePick.vue';
 import {reactive} from "@vue/reactivity";
+import {ref} from 'vue'
 
 export default {
   components: {
@@ -60,8 +61,23 @@ export default {
   },
   setup() {
     const state = reactive({selected: 'HOME', selectedParams: {}});
+
+    const videosInIframe = ref([])
+    const handleMessage = (e) => {
+      const { plusSubAction, src, hasSubtitle } = e.data;
+      if (plusSubAction === 'sendiFrameSrc') {
+        if (videosInIframe.value.findIndex((video) => video.src === src) === -1) {
+          videosInIframe.value.push({ src, hasSubtitle })
+        }
+      } else if (plusSubAction === 'removeMessageEventListener') {
+        window.removeEventListener('message', handleMessage);
+      }
+    };
+    window.addEventListener('message', handleMessage);
+  
     return {
       state,
+      videosInIframe,
       navigate(event) {
         state.selectedParams = event.params;
         state.selected = event.name;

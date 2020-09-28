@@ -1,5 +1,4 @@
 import { SrtEntry } from '@/appState';
-import { useStore } from '../store/index';
 
 interface AddVttToPayload {
   el: HTMLVideoElement;
@@ -8,15 +7,6 @@ interface AddVttToPayload {
 
 interface RemoveVttFromPayload {
   el: HTMLVideoElement;
-}
-
-interface AddVttToIframePayload {
-  src: string;
-  subtitle: SrtEntry[];
-}
-
-interface RemoveVttFromIframePayload {
-  src: string;
 }
 
 export const addVttTo = ({ el, subtitle }: AddVttToPayload): void => {
@@ -34,22 +24,4 @@ export const removeVttFrom = ({ el }: RemoveVttFromPayload): void => {
     .filter((track) => track.label === 'Plussub')
     .forEach((track) => (track.mode = 'disabled'));
     // hidden cannot work on some website(like yhdm.tv)
-};
-
-export const addVttToIframe = ({ src, subtitle }: AddVttToIframePayload): void => {
-  const iframe = <HTMLIFrameElement>document.querySelector(`iframe[src="${src}"]`);
-  if (iframe) {
-    iframe.contentWindow?.postMessage({ PlusSubAction: 'addSubtitle', data: JSON.stringify(subtitle) }, '*');
-    const store = useStore();
-    store.commit('videoInIframe/setSubtitleStatus', { src, hasSubtitle: true });
-  }
-};
-
-export const removeVttFromIframe = ({ src }: RemoveVttFromIframePayload): void => {
-  const iframe = <HTMLIFrameElement>document.querySelector(`iframe[src="${src}"]`);
-  if (iframe) {
-    iframe.contentWindow?.postMessage({ PlusSubAction: 'removeSubtitle' }, '*');
-    const store = useStore();
-    store.commit('videoInIframe/setSubtitleStatus', { src, hasSubtitle: false });
-  }
 };

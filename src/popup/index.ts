@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createApp } from 'vue';
 import App from './App.vue';
-import { store } from './store/index';
 import { SrtEntry } from '@/appState/types';
 import { addVttTo, removeVttFrom } from '@/home/vttInject';
 
@@ -69,19 +68,6 @@ if (inIframe()) {
   [fontAwesome].forEach((entry) => prependLink(shadow, entry));
   [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('/* plussub header */')).forEach((style) => shadow.prepend(style));
 
-  const handleMessage = (e) => {
-    const { plusSubAction, src, hasSubtitle } = e.data;
-    if (plusSubAction === 'sendiFrameSrc') {
-      if (store.state.videoInIframe.videosInIframe.findIndex((video) => video.src === src) === -1) {
-        store.commit('videoInIframe/pushVideosInIframe', { src, hasSubtitle });
-      }
-    } else if (plusSubAction === 'removeMessageEventListener') {
-      window.removeEventListener('message', handleMessage);
-    }
-  };
-  window.addEventListener('message', handleMessage);
-
   document.body.prepend(appShadowDiv);
-  app.use(store);
   app.mount(appDiv);
 }

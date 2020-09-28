@@ -18,8 +18,8 @@
         </div>
         <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto;">
           <div style="grid-column: 1 / 2; align-self: center;">Video {{ videos.length + index + 1 }}</div>
-          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" @click="removeVttFromIframe({src:videoInIframe.src})" style="grid-column: 2 / 3;">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addVttToIframe({src:videoInIframe.src, subtitle})" style="grid-column: 2 / 3;">Add Subtitle</a>
+          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" @click="removeVttFromIframe(videoInIframe.src)" style="grid-column: 2 / 3;">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addVttToIframe(videoInIframe.src, subtitle)" style="grid-column: 2 / 3;">Add Subtitle</a>
         </div>
       </div>
       <div v-else>
@@ -45,6 +45,27 @@ export default {
     }));
     const videos = ref(findVideosInCurrentTab());
 
+    const addVttToIframe = (src, subtitle) => {
+      const iframe = document.querySelector(`iframe[src="${src}"]`);
+      if (iframe) {
+        iframe.contentWindow?.postMessage({ PlusSubAction: 'addSubtitle', data: JSON.stringify(subtitle) }, '*');
+      }
+      const index = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.src === src);
+      if (index !== -1) {
+        props.videosInIframe[index].hasSubtitle = true;
+      }
+    }
+    const removeVttFromIframe = (src) =>{
+      const iframe = document.querySelector(`iframe[src="${src}"]`);
+      if (iframe) {
+        iframe.contentWindow?.postMessage({ PlusSubAction: 'removeSubtitle'}, '*');
+      }
+      const index = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.src === src);
+      if (index !== -1) {
+        props.videosInIframe[index].hasSubtitle = false;
+      }
+    }
+
     watch(() => props.subtitle, (subtitle) => {
       const elements = [...document.querySelectorAll('video.plussub')];
       elements.forEach(el => removeVttFrom({el}));
@@ -53,8 +74,9 @@ export default {
         .forEach(video => {
           if (video.hasSubtitle) {
             const {src} = video
-            removeVttFromIframe({src})
-            addVttToIframe({src, subtitle})
+            console.log(props.videosInIframe)
+            removeVttFromIframe(src)
+            addVttToIframe(src, subtitle)
           }
         })
     });
