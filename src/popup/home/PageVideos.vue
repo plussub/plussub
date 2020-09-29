@@ -1,37 +1,32 @@
 <template>
   <div class="videos--card">
-    <div
-        style="grid-area: header; height: 1px; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500;">
+    <div style="grid-area: header; height: 1px; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500">
       <div>
         <div>Page Videos</div>
-        <div style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400;" v-if="subtitle.length === 0">
-          You must first add a subtitle before you can add them to the video
-        </div>
+        <div style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400" v-if="subtitle.length === 0">You must first add a subtitle before you can add them to the video</div>
       </div>
     </div>
-    <div style="grid-area: content;">
+    <div style="grid-area: content">
       <div v-if="videos.length || videosInIframe.length">
-        <div v-for="(video, index) in videos" :key="index" style="display: grid; grid-template-columns: 1fr auto;">
-          <div style="grid-column: 1 / 2; align-self: center;">Video {{ index + 1 }}</div>
-          <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.el)" style="grid-column: 2 / 3;">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addSubTo(video.el)" style="grid-column: 2 / 3;">Add Subtitle</a>
+        <div v-for="(video, index) in videos" :key="index" style="display: grid; grid-template-columns: 1fr auto">
+          <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
+          <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.el)" style="grid-column: 2 / 3">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 }" @click="addSubTo(video.el)" style="grid-column: 2 / 3">Add Subtitle</a>
         </div>
-        <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto;">
-          <div style="grid-column: 1 / 2; align-self: center;">Video {{ videos.length + index + 1 }}</div>
-          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" @click="removeVttFromIframe(videoInIframe.src)" style="grid-column: 2 / 3;">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0}" @click="addVttToIframe(videoInIframe.src, subtitle)" style="grid-column: 2 / 3;">Add Subtitle</a>
+        <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto">
+          <div style="grid-column: 1 / 2; align-self: center">Video {{ videos.length + index + 1 }}</div>
+          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" @click="removeVttFromIframe(videoInIframe)" style="grid-column: 2 / 3">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 }" @click="addVttToIframe(videoInIframe, subtitle)" style="grid-column: 2 / 3">Add Subtitle</a>
         </div>
       </div>
-      <div v-else>
-        No videos found in current tab.
-      </div>
+      <div v-else>No videos found in current tab.</div>
     </div>
   </div>
 </template>
 
 <script>
-import {ref, watch} from "vue";
-import {addVttTo, removeVttFrom, addVttToIframe, removeVttFromIframe} from '@/home/vttInject';
+import { ref, watch } from 'vue';
+import { addVttTo, removeVttFrom, addVttToIframe, removeVttFromIframe } from '@/home/vttInject';
 
 export default {
   props: {
@@ -39,47 +34,27 @@ export default {
     videosInIframe: Array
   },
   setup(props) {
-    const findVideosInCurrentTab = () => [...document.querySelectorAll('video')].map((el) => ({
-      el,
-      hasSubtitle: el.classList.contains('plussub')
-    }));
+    const findVideosInCurrentTab = () =>
+      [...document.querySelectorAll('video')].map((el) => ({
+        el,
+        hasSubtitle: el.classList.contains('plussub')
+      }));
     const videos = ref(findVideosInCurrentTab());
 
-    const addVttToIframe = (src, subtitle) => {
-      const iframe = document.querySelector(`iframe[src="${src}"]`);
-      if (iframe) {
-        iframe.contentWindow?.postMessage({ PlusSubAction: 'addSubtitle', data: JSON.stringify(subtitle) }, '*');
-      }
-      const index = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.src === src);
-      if (index !== -1) {
-        props.videosInIframe[index].hasSubtitle = true;
-      }
-    }
-    const removeVttFromIframe = (src) =>{
-      const iframe = document.querySelector(`iframe[src="${src}"]`);
-      if (iframe) {
-        iframe.contentWindow?.postMessage({ PlusSubAction: 'removeSubtitle'}, '*');
-      }
-      const index = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.src === src);
-      if (index !== -1) {
-        props.videosInIframe[index].hasSubtitle = false;
-      }
-    }
-
-    watch(() => props.subtitle, (subtitle) => {
-      const elements = [...document.querySelectorAll('video.plussub')];
-      elements.forEach(el => removeVttFrom({el}));
-      elements.forEach(el => addVttTo({el, subtitle}));
-      props.videosInIframe
-        .forEach(video => {
-          if (video.hasSubtitle) {
-            const {src} = video
-            console.log(props.videosInIframe)
-            removeVttFromIframe(src)
-            addVttToIframe(src, subtitle)
+    watch(
+      () => props.subtitle,
+      (subtitle) => {
+        const elements = [...document.querySelectorAll('video.plussub')];
+        elements.forEach((el) => removeVttFrom({ el }));
+        elements.forEach((el) => addVttTo({ el, subtitle }));
+        props.videosInIframe.forEach((videoInIframe) => {
+          if (videoInIframe.hasSubtitle) {
+            removeVttFromIframe(videoInIframe);
+            addVttToIframe(videoInIframe, subtitle);
           }
-        })
-    });
+        });
+      }
+    );
 
     return {
       videos,
@@ -90,18 +65,19 @@ export default {
         });
         videos.value = findVideosInCurrentTab();
       },
-      removeSubFrom:(el) => {
-        removeVttFrom({el});
+      removeSubFrom: (el) => {
+        removeVttFrom({ el });
         videos.value = findVideosInCurrentTab();
       },
       addVttToIframe,
       removeVttFromIframe
-    }
+    };
   }
-}
+};
 </script>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .videos--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);

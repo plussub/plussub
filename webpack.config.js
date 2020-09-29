@@ -63,7 +63,7 @@ module.exports = (env, argv) => {
           }
         },
         {
-          test: /\.(png|jpe?g|gif)$/i,
+          test: /\.(png|jpe?g|gif|svg)$/i,
           use: [
             // {
             //   loader: 'file-loader',
@@ -96,9 +96,6 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new VueLoaderPlugin(),
-      // new MiniCssExtractPlugin({
-      //   filename: '[name].css'
-      // }),
       new ExtensionReloader(),
       new CopyPlugin({
         patterns: [

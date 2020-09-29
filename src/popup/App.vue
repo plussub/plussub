@@ -30,6 +30,16 @@
       </template>
     </Suspense>
   </div>
+  <div v-else-if="state.selected === 'TRANSCRIPT'" class="app--container">
+    <Suspense>
+      <template #default>
+        <transcript @navigate="navigate" v-bind="state.selectedParams" :videosInIframe="videosInIframe"/>
+      </template>
+      <template #fallback>
+        <div> loading</div>
+      </template>
+    </Suspense>
+  </div>
   <div class="app--container" v-else>
     <Suspense>
       <template #default>
@@ -48,8 +58,9 @@ import Home from '@/home/Home.vue';
 import Search from '@/search/Search.vue';
 import SubtitleSelection from '@/subtitleSelection/SubtitleSelection.vue';
 import FilePick from '@/filepick/FilePick.vue';
-import {reactive} from "@vue/reactivity";
-import {ref} from 'vue'
+import Transcript from '@/transcript/Transcript.vue';
+// import {reactive} from "@vue/reactivity";
+import {ref, reactive} from 'vue'
 
 export default {
   components: {
@@ -57,7 +68,8 @@ export default {
     Home,
     FilePick,
     Search,
-    SubtitleSelection
+    SubtitleSelection,
+    Transcript
   },
   setup() {
     const state = reactive({selected: 'HOME', selectedParams: {}});

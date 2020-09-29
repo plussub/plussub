@@ -2,6 +2,9 @@ const rule1 = {
   conditions: [
     new chrome.declarativeContent.PageStateMatcher({
       css: ['video']
+    }),
+    new chrome.declarativeContent.PageStateMatcher({
+      css: ['iframe']
     })
   ],
   actions: [new chrome.declarativeContent.ShowPageAction()]

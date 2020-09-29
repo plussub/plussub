@@ -1,6 +1,6 @@
 #intellij
 .idea
-chrome ext.iml
+*.iml
 
 #npm & bower
 node_modules/
@@ -13,4 +13,3 @@ plussub.zip
 manifest.json
 
 dist*
-

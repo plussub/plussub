@@ -2,14 +2,15 @@
   <page-layout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" class="home-toolbar--container--content">
-        <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain;"/>
-        <div style="grid-area: buttons; display: flex; justify-content: flex-end;">
-          <a class="knopf flat pill buttonOnPrimary"
-             @click="$emit('navigate', { name: 'SEARCH', params: { contentTransitionName: 'content-navigate-deeper' } })">
+        <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain" />
+        <div style="grid-area: buttons; display: flex; justify-content: flex-end">
+          <a v-if="appState.state !== 'NONE'" class="knopf flat pill buttonOnPrimary" @click="$emit('navigate', { name: 'TRANSCRIPT', params: { contentTransitionName: 'content-navigate-deeper' } })">
+            <img :src="subtitleIcon" style="filter: invert(1)" />
+          </a>
+          <a class="knopf flat pill buttonOnPrimary" @click="$emit('navigate', { name: 'SEARCH', params: { contentTransitionName: 'content-navigate-deeper' } })">
             <i class="fa fa-search fa-lg"></i>
           </a>
-          <a class="knopf flat pill buttonOnPrimary"
-             @click="$emit('navigate', { name: 'FILE-PICK', params: { contentTransitionName: 'content-navigate-deeper' } })">
+          <a class="knopf flat pill buttonOnPrimary" @click="$emit('navigate', { name: 'FILE-PICK', params: { contentTransitionName: 'content-navigate-deeper' } })">
             <i class="fa fa-upload fa-lg"></i>
           </a>
           <a class="knopf flat pill buttonOnPrimary" @click="close"><i class="fa fa-times fa-lg"></i></a>
@@ -19,28 +20,32 @@
     <template #content>
       <div class="home-content--container">
         <transition name="fade" mode="out-in">
-          <result-from-search v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
-                              style="grid-area: current-sub; margin-top: 20px;"
-                              :state="appState.state"
-                              :search-state="appState.search"
-                              @remove="remove">
+          <result-from-search
+            v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
+            style="grid-area: current-sub; margin-top: 20px"
+            :state="appState.state"
+            :search-state="appState.search"
+            @remove="remove"
+          >
             <template #settings>
-              <settings :parsed="appState.srt.parsed" :offset-time="appState.offsetTime" @offset-time="setOffsetTime"/>
+              <settings :parsed="appState.srt.parsed" :offset-time="appState.offsetTime" @offset-time="setOffsetTime" />
             </template>
           </result-from-search>
-          <result-from-file v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
-                            style="grid-area: current-sub; margin-top: 20px;"
-                            :state="appState.state"
-                            :file-pick-state="appState.filePick"
-                            @remove="remove">
+          <result-from-file
+            v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
+            style="grid-area: current-sub; margin-top: 20px"
+            :state="appState.state"
+            :file-pick-state="appState.filePick"
+            @remove="remove"
+          >
             <template #settings>
-              <settings :parsed="appState.srt.parsed" :offset-time="appState.offsetTime" @offset-time="setOffsetTime"/>
+              <settings :parsed="appState.srt.parsed" :offset-time="appState.offsetTime" @offset-time="setOffsetTime" />
             </template>
           </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
-        <page-videos style="grid-area: videos;" :subtitle="appState.srt.withOffsetParsed" :videosInIframe="videosInIframe"/>
-        <debug v-show="false" style="grid-area: debug;"/>
+        <page-videos style="grid-area: videos" :subtitle="appState.srt.withOffsetParsed" :videosInIframe="videosInIframe" />
+        <debug v-show="false" style="grid-area: debug" />
       </div>
     </template>
   </page-layout>
@@ -48,23 +53,24 @@
 
 
 <script>
-import {ref, watch} from "vue";
+import { ref, reactive } from 'vue';
 import logo from '@/res/plussub128.png';
+import subtitleIcon from '@/res/subtitles-24px.svg';
 import Divider from '@/components/Divider';
-import {useAppStateStorageListener} from 'useAppStateStorageListener';
+import { useAppStateStorageListener } from 'useAppStateStorageListener';
 import PageLayout from '@/components/PageLayout';
 import ResultFromSearch from '@/home/ResultFromSearch';
 import ResultFromFile from '@/home/ResultFromFile';
 import NoSub from '@/home/NoSub';
 import PageVideos from '@/home/PageVideos';
-import {snapshot} from '@/appState';
-import {remove} from '@/home/remove';
-import {reactive} from "@vue/reactivity";
-import Debug from "@/home/Debug";
-import {useDraggableArea} from "@/composables";
-import {setOffsetTime} from "@/home/setOffsetTime";
+import { snapshot } from '@/appState';
+import { remove } from '@/home/remove';
+// import {reactive} from "@vue/reactivity";
+import Debug from '@/home/Debug';
+import { useDraggableArea } from '@/composables';
+import { setOffsetTime } from '@/home/setOffsetTime';
 import Settings from '@/home/Settings';
-import { useStore } from '../store/index'
+import { useStore } from '../store/index';
 
 export default {
   components: {
@@ -87,7 +93,7 @@ export default {
   },
   async setup() {
     const draggableAreaRef = ref(null);
-    useDraggableArea({draggableAreaRef});
+    useDraggableArea({ draggableAreaRef });
 
     const appState = reactive({});
     useAppStateStorageListener((state) => Object.assign(appState, state));
@@ -97,18 +103,20 @@ export default {
       draggableAreaRef,
       appState,
       logo,
+      subtitleIcon,
       remove,
       setOffsetTime,
       close() {
         document.getElementById('plussubShadow').remove();
-        window.postMessage({ PlusSubAction: 'removeMessageEventListener' }, '*');
+        window.postMessage({ plusSubAction: 'removeMessageEventListener' }, '*');
       }
     };
   }
 };
 </script>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .home-toolbar--container--content {
   box-shadow: var(--toolbar-shadow);
   display: grid;

@@ -1,28 +1,40 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createApp } from 'vue';
 import App from './App.vue';
-import { SrtEntry } from '@/appState/types';
 import { addVttTo, removeVttFrom } from '@/home/vttInject';
 
-function inIframe() {
+const inIframe = () => {
   try {
     return window.self !== window.top;
   } catch (e) {
     return true;
   }
-}
+};
 
 if (inIframe()) {
   const videoEl = document.querySelector('video');
   if (videoEl) {
     window.top.postMessage({ plusSubAction: 'sendiFrameSrc', src: window.location.href, hasSubtitle: videoEl.classList.contains('plussub') }, '*');
+    const handleTimeUpdate = () => {
+      window.top.postMessage({ plusSubAction: 'currentTime', data: videoEl.currentTime }, '*');
+    };
     window.addEventListener('message', (e) => {
-      const { PlusSubAction, data } = e.data;
-      if (PlusSubAction === 'addSubtitle') {
-        const subtitle: SrtEntry[] = JSON.parse(data);
-        addVttTo({ el: videoEl, subtitle });
-      } else if (PlusSubAction === 'removeSubtitle') {
-        removeVttFrom({ el: videoEl });
+      const { plusSubAction, data } = e.data;
+      switch (plusSubAction) {
+        case 'addSubtitle':
+          addVttTo({ el: videoEl, subtitle: JSON.parse(data) });
+          break;
+        case 'removeSubtitle':
+          removeVttFrom({ el: videoEl });
+          break;
+        case 'startTranscript':
+          videoEl.addEventListener('timeupdate', handleTimeUpdate);
+          break;
+        case 'stopTranscript':
+          window.removeEventListener('message', handleTimeUpdate);
+          break;
+        case 'setCurrentTime':
+          videoEl.currentTime = data / 1000;
       }
     });
   }
@@ -66,7 +78,9 @@ if (inIframe()) {
 
   [roboto, rubik, fontAwesome].forEach((entry) => prependLink(document.head, entry));
   [fontAwesome].forEach((entry) => prependLink(shadow, entry));
-  [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('/* plussub header */')).forEach((style) => shadow.prepend(style));
+  // [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('/* plussub header */')).forEach((style) => shadow.prepend(style));
+  // Change this because when I format the code using prettier, /* plussub header */ will begin in newline
+  [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.match(/^\n?(\/\* plussub header \*\/)/)).forEach((style) => shadow.prepend(style));
 
   document.body.prepend(appShadowDiv);
   app.mount(appDiv);

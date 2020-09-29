@@ -41,11 +41,6 @@ export interface SrtState {
   withOffsetParsed: SrtEntry[];
 }
 
-export interface VideoInIframe {
-  src: string;
-  hasSubtitle: boolean;
-}
-
 export interface AppState {
   version: string;
   debug: boolean;
