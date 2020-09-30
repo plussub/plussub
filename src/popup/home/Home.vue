@@ -5,6 +5,7 @@
         <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain" />
         <div style="grid-area: buttons; display: flex; justify-content: flex-end">
           <a v-if="appState.state !== 'NONE'" class="knopf flat pill buttonOnPrimary" @click="$emit('navigate', { name: 'TRANSCRIPT', params: { contentTransitionName: 'content-navigate-deeper' } })">
+            <!-- This icon comes from material design icons which is under Apache license -->
             <img :src="subtitleIcon" style="filter: invert(1)" />
           </a>
           <a class="knopf flat pill buttonOnPrimary" @click="$emit('navigate', { name: 'SEARCH', params: { contentTransitionName: 'content-navigate-deeper' } })">

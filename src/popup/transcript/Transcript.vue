@@ -45,10 +45,10 @@ export default {
     useDraggableArea({ draggableAreaRef });
 
     const currentTime = ref(0);
-    const getTimeStamp = ({ time, offset }) => {
-      const parsedOffset = parseInt(offset, 10);
-
-      const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
+    const getTimeStamp = (time) => {
+      // const parsedOffset = parseInt(offset, 10);
+      // const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
+      const value = parseInt(time, 10);
       // const milliseconds = parseInt(String(value).slice(-3), 10);
       const seconds = Math.trunc((value / 1000) % 60);
       const minutes = Math.trunc((value / (1000 * 60)) % 60);
@@ -109,9 +109,25 @@ export default {
     const currentPos = ref(-1);
     const transcriptContentContainer = ref(null);
 
+    watch(currentTime, (currentTime) => {
+      const value = parseInt(currentTime, 10);
+      const pos = binarySearch(value * 1000, appState.srt.parsed);
+      if (pos !== -1 && currentPos !== pos) {
+        currentPos.value = pos;
+      }
+      let lastTopPos = -1;
+      if (!transcriptContentContainer.value.matches(':hover')) {
+        const topPos = Math.max(currentPos.value - 3, 0);
+        if (lastTopPos === topPos) return;
+        lastTopPos = topPos;
+        const topElement = transcriptContentContainer.value.querySelector(`:nth-child(${topPos + 1})`);
+        const topOffsetTop = topElement.offsetTop;
+        transcriptContentContainer.value.scrollTop = topOffsetTop;
+      }
+    });
+
     const appState = await snapshot();
     const currentOffsetTime = ref(appState.offsetTime ? appState.offsetTime : '');
-    let lastTopPos = -1;
 
     const setCurrentTime = (index) => {
       const data = appState.srt.parsed[index].from;
@@ -125,23 +141,6 @@ export default {
       }
     };
 
-    watch(currentTime, (currentTime) => {
-      const parsedOffset = parseInt(currentOffsetTime, 10);
-      const value = parseInt(currentTime, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
-      const pos = binarySearch(value * 1000, appState.srt.parsed);
-      if (pos !== -1 && currentPos !== pos) {
-        currentPos.value = pos;
-      }
-      if (!transcriptContentContainer.value.matches(':hover')) {
-        const topPos = Math.max(currentPos.value - 3, 0);
-        if (lastTopPos === topPos) return;
-        lastTopPos = topPos;
-        const topElement = transcriptContentContainer.value.querySelector(`:nth-child(${topPos + 1})`);
-        const topOffsetTop = topElement.offsetTop;
-        transcriptContentContainer.value.scrollTop = topOffsetTop;
-      }
-    });
-
     return {
       draggableAreaRef,
       currentPos,
@@ -149,10 +148,7 @@ export default {
       setCurrentTime,
       subtitleTexts: computed(() => {
         return appState.srt.parsed.map(({ from, text }) => ({
-          timeFrom: getTimeStamp({
-            time: from,
-            offset: currentOffsetTime.value
-          }),
+          timeFrom: getTimeStamp(from),
           text
         }));
       })
@@ -173,7 +169,6 @@ export default {
   /* padding: 7px 0 7px 0; */
   padding: 8px 16px 8px 3px;
   display: flex;
-  text-align: center;
 }
 .transcript-content.selected {
   background-color: rgba(0, 0, 0, 0.05);
@@ -182,13 +177,14 @@ export default {
 .transcript-timefrom {
   width: 60px;
   flex-shrink: 0;
+  text-align: center;
 }
 .transcript-timefrom:hover {
   color: #065fd4;
 }
-/* .transcript-text {
-  margin-right: 10px;
-} */
+.transcript-text {
+  text-align: left;
+}
 .transcript-text:hover {
   background-color: #eeeeee;
   cursor: pointer;

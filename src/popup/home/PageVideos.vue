@@ -11,12 +11,14 @@
         <div v-for="(video, index) in videos" :key="index" style="display: grid; grid-template-columns: 1fr auto">
           <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
           <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.el)" style="grid-column: 2 / 3">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 }" @click="addSubTo(video.el)" style="grid-column: 2 / 3">Add Subtitle</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" @click="addSubTo(video.el)" style="grid-column: 2 / 3">Add Subtitle</a>
         </div>
         <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto">
           <div style="grid-column: 1 / 2; align-self: center">Video {{ videos.length + index + 1 }}</div>
           <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" @click="removeVttFromIframe(videoInIframe)" style="grid-column: 2 / 3">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 }" @click="addVttToIframe(videoInIframe, subtitle)" style="grid-column: 2 / 3">Add Subtitle</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" @click="addVttToIframe(videoInIframe, subtitle)" style="grid-column: 2 / 3"
+            >Add Subtitle</a
+          >
         </div>
       </div>
       <div v-else>No videos found in current tab.</div>
@@ -25,7 +27,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { addVttTo, removeVttFrom, addVttToIframe, removeVttFromIframe } from '@/home/vttInject';
 
 export default {
@@ -40,17 +42,34 @@ export default {
         hasSubtitle: el.classList.contains('plussub')
       }));
     const videos = ref(findVideosInCurrentTab());
+    const pageHasSubtitle = computed(() => document.querySelector('video.plussub') || props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle) !== -1);
+
+    // const videoContentContainer = ref(null);
+    // const enterVideoInTop = (index) => {
+    //   videos.value[index].el.scrollIntoView(false);
+    // };
+    // const enterVideoInIframe = (index) => {
+    //   const iframe = document.querySelector(`iframe[src="${props.videosInIframe[index].src}"]`);
+    //   if (iframe) {
+    //     iframe.scrollIntoView(false);
+    //   }
+    // };
 
     watch(
       () => props.subtitle,
       (subtitle) => {
         const elements = [...document.querySelectorAll('video.plussub')];
         elements.forEach((el) => removeVttFrom({ el }));
-        elements.forEach((el) => addVttTo({ el, subtitle }));
+        if (subtitle.length) {
+          elements.forEach((el) => addVttTo({ el, subtitle }));
+        }
+        videos.value = findVideosInCurrentTab();
         props.videosInIframe.forEach((videoInIframe) => {
           if (videoInIframe.hasSubtitle) {
             removeVttFromIframe(videoInIframe);
-            addVttToIframe(videoInIframe, subtitle);
+            if (subtitle.length) {
+              addVttToIframe(videoInIframe, subtitle);
+            }
           }
         });
       }
@@ -58,6 +77,9 @@ export default {
 
     return {
       videos,
+      pageHasSubtitle,
+      // enterVideoInTop,
+      // enterVideoInIframe,
       async addSubTo(el) {
         addVttTo({
           el,
