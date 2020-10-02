@@ -44,7 +44,7 @@ export interface SrtState {
 export interface AppState {
   version: string;
   debug: boolean;
-  state: 'NONE' | 'SELECTED' | 'DOWNLOADING' | 'PARSING' | 'DONE';
+  state: 'NONE' | 'SELECTED' | 'DOWNLOADING' | 'PARSING' | 'ERROR' | 'DONE';
   src: 'NONE' | 'FILE' | 'SEARCH';
   search: SearchState | null;
   filePick: FilePick | null;

@@ -1,6 +1,6 @@
 {
   "name": "+Sub",
-  "version": "4.5.0",
+  "version": "4.6.0",
   "manifest_version": 2,
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
@@ -9,10 +9,8 @@
     "48": "res/icons/plussub48.png",
     "128": "res/icons/plussub128.png"
   },
-  "page_action": {
-    "show_matches": [
-      "<all_urls>"
-    ],
+  "browser_action": {
+    "show_matches": ["<all_urls>"],
     "default_icon": {
       "19": "res/icons/browseraction2.png"
     }
@@ -21,12 +19,5 @@
     "scripts": ["background.js"]
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "permissions": [
-    "activeTab",
-    "storage",
-    "https://use.fontawesome.com/releases/v5.14.0/css/all.css",
-    "https://*.plus-sub.com/*",
-    "https://dl.opensubtitles.org/**/*",
-    "webRequest"
-  ]
+  "permissions": ["activeTab", "storage", "https://use.fontawesome.com/releases/v5.14.0/css/all.css", "https://*.plus-sub.com/*", "https://dl.opensubtitles.org/**/*", "webRequest"]
 }

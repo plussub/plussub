@@ -44,6 +44,7 @@ if (inIframe()) {
   appShadowDiv.id = 'plussubShadow';
   appShadowDiv.style.cssText = `position:absolute;z-index: 10000; top: ${window.scrollY + 16}px; right: 16px; width: 400px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); font-size: 16px`;
   const shadow = appShadowDiv.attachShadow({ mode: 'open' });
+  // const shadow = appShadowDiv;
 
   const appDiv = document.createElement('div');
   appDiv.id = 'plussub';

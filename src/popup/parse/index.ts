@@ -7,7 +7,7 @@ export const parse = async (): Promise<void> => {
     srt: { raw }
   } = await snapshot();
   if (!raw) {
-    return;
+    return Promise.reject(raw);
   }
   const parsed = srtVttParse(raw);
   // get a new snapshot because maybe has something change in the meantime

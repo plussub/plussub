@@ -1,52 +1,52 @@
 <template>
-  <knopf-css/>
+  <knopf-css />
   <div v-if="state.selected === 'SEARCH'" class="app--container">
     <Suspense>
       <template #default>
-        <search @navigate="navigate" v-bind="state.selectedParams"/>
+        <search v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
-        <div> loading</div>
+        <div>loading</div>
       </template>
     </Suspense>
   </div>
   <div v-else-if="state.selected === 'SUBTITLE-SELECTION'" class="app--container">
     <Suspense>
       <template #default>
-        <subtitle-selection @navigate="navigate" v-bind="state.selectedParams"/>
+        <subtitle-selection v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
-        <div> loading</div>
+        <div>loading</div>
       </template>
     </Suspense>
   </div>
   <div v-else-if="state.selected === 'FILE-PICK'" class="app--container">
     <Suspense>
       <template #default>
-        <file-pick @navigate="navigate" v-bind="state.selectedParams"/>
+        <file-pick v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
-        <div> loading</div>
+        <div>loading</div>
       </template>
     </Suspense>
   </div>
   <div v-else-if="state.selected === 'TRANSCRIPT'" class="app--container">
     <Suspense>
       <template #default>
-        <transcript @navigate="navigate" v-bind="state.selectedParams" :videosInIframe="videosInIframe"/>
+        <transcript :videosInIframe="videosInIframe" v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
-        <div> loading</div>
+        <div>loading</div>
       </template>
     </Suspense>
   </div>
-  <div class="app--container" v-else>
+  <div v-else class="app--container">
     <Suspense>
       <template #default>
-        <home @navigate="navigate" v-bind="state.selectedParams" :videosInIframe="videosInIframe"/>
+        <home :videosInIframe="videosInIframe" v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
-        <div> loading</div>
+        <div>loading</div>
       </template>
     </Suspense>
   </div>
@@ -60,7 +60,7 @@ import SubtitleSelection from '@/subtitleSelection/SubtitleSelection.vue';
 import FilePick from '@/filepick/FilePick.vue';
 import Transcript from '@/transcript/Transcript.vue';
 // import {reactive} from "@vue/reactivity";
-import {ref, reactive} from 'vue'
+import { ref, reactive } from 'vue';
 
 export default {
   components: {
@@ -72,21 +72,21 @@ export default {
     Transcript
   },
   setup() {
-    const state = reactive({selected: 'HOME', selectedParams: {}});
+    const state = reactive({ selected: 'HOME', selectedParams: {} });
 
-    const videosInIframe = ref([])
+    const videosInIframe = ref([]);
     const handleMessage = (e) => {
       const { plusSubAction, src, hasSubtitle } = e.data;
       if (plusSubAction === 'sendiFrameSrc') {
         if (videosInIframe.value.findIndex((video) => video.src === src) === -1) {
-          videosInIframe.value.push({ src, hasSubtitle })
+          videosInIframe.value.push({ src, hasSubtitle });
         }
       } else if (plusSubAction === 'removeMessageEventListener') {
         window.removeEventListener('message', handleMessage);
       }
     };
     window.addEventListener('message', handleMessage);
-  
+
     return {
       state,
       videosInIframe,
@@ -94,13 +94,15 @@ export default {
         state.selectedParams = event.params;
         state.selected = event.name;
       }
-    }
+    };
   }
 };
 </script>
 
-<style>/* plussub header */
+<style>
+/* plussub header */
 :host {
+  /* #plussubShadow { */
   --primary: #5bc0de;
   --primary50: #e4f7fd;
   --onPrimary: #ffffff;
@@ -145,7 +147,7 @@ export default {
   transition: all 0.2s ease;
 }
 
-.content-navigate-deeper-enter-from{
+.content-navigate-deeper-enter-from {
   transform: translate(100%, 0);
 }
 
@@ -175,7 +177,6 @@ export default {
 
 .content-navigate-shallow-enter-from {
   transform: translate(-100%, 0);
-
 }
 .content-navigate-shallow-leave-to {
   transform: translate(100%, 0);
@@ -186,18 +187,20 @@ export default {
   transition: all 0.2s ease;
 }
 
-.toolbar-transition-enter-from{
+.toolbar-transition-enter-from {
   opacity: 0;
 }
-.toolbar-transition-leave-to{
+.toolbar-transition-leave-to {
   opacity: 1;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .25s ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -231,18 +234,21 @@ export default {
   transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
 }
 
-.slide-enter-to, .slide-leave-from {
+.slide-enter-to,
+.slide-leave-from {
   max-height: 100px;
   overflow: hidden;
 }
 
-.slide-enter-from, .slide-leave-to {
+.slide-enter-from,
+.slide-leave-to {
   overflow: hidden;
   max-height: 0;
 }
 </style>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .app--container {
   font-family: 'Roboto', sans-serif;
   margin: 0;
