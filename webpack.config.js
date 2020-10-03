@@ -6,7 +6,7 @@ const ExtensionReloader = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
-  const browser = argv.browser ? argv.browser.toLowerCase() : 'chrome';
+  const browser = argv.browser ? argv.browser.toLowerCase() : 'chrome'; // chrome or firefox
   let manifestName;
   let outputPath;
   switch (browser) {
@@ -36,10 +36,10 @@ module.exports = (env, argv) => {
         // extra re-export somehow causes webpack to always invalidate the module
         // on the first HMR update and causes the page to reload.
         vue: '@vue/runtime-dom',
-        useAppStateStorageListener: path.resolve(__dirname, 'src/popup/platform/useAppStateStorageListener/chrome/index.ts'),
-        storage: path.resolve(__dirname, 'src/popup/platform/storage/chrome/index.ts'),
-        onInstalled: path.resolve(__dirname, 'src/background/platform/onInstalled/chrome/index.ts'),
-        onPageActionClicked: path.resolve(__dirname, 'src/background/platform/onPageActionClicked/chrome/index.ts')
+        useAppStateStorageListener: path.resolve(__dirname, `src/popup/platform/useAppStateStorageListener/${browser}/index.ts`),
+        storage: path.resolve(__dirname, `src/popup/platform/storage/${browser}//index.ts`),
+        onInstalled: path.resolve(__dirname, `src/background/platform/onInstalled/${browser}/index.ts`),
+        onPageActionClicked: path.resolve(__dirname, `src/background/platform/onPageActionClicked/${browser}/index.ts`)
       }
     },
     module: {
