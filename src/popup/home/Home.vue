@@ -71,7 +71,6 @@ import Debug from '@/home/Debug';
 import { useDraggableArea } from '@/composables';
 import { setOffsetTime } from '@/home/setOffsetTime';
 import Settings from '@/home/Settings';
-import { useStore } from '../store/index';
 
 export default {
   components: {
@@ -84,7 +83,6 @@ export default {
     PageVideos,
     Settings
   },
-  emits: ['navigate'],
   props: {
     contentTransitionName: {
       type: String,
@@ -92,6 +90,7 @@ export default {
     },
     videosInIframe: Array
   },
+  emits: ['navigate'],
   async setup() {
     const draggableAreaRef = ref(null);
     useDraggableArea({ draggableAreaRef });

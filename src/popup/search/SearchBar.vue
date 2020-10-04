@@ -74,7 +74,7 @@ export default {
 };
 </script>
 
-<style>/* plussub header */
+<style scoped>/* plussub header */
 .knopf-group.search-bar--container {
   display: grid;
   grid-template-areas: 'bar button';

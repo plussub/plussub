@@ -33,7 +33,7 @@
   <div v-else-if="state.selected === 'TRANSCRIPT'" class="app--container">
     <Suspense>
       <template #default>
-        <transcript :videosInIframe="videosInIframe" v-bind="state.selectedParams" @navigate="navigate" />
+        <transcript :videos-in-iframe="videosInIframe" v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -43,7 +43,7 @@
   <div v-else class="app--container">
     <Suspense>
       <template #default>
-        <home :videosInIframe="videosInIframe" v-bind="state.selectedParams" @navigate="navigate" />
+        <home :videos-in-iframe="videosInIframe" v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -102,7 +102,7 @@ export default {
 <style>
 /* plussub header */
 :host {
-  /* #plussubShadow { */
+/* #plussubShadow { */
   --primary: #5bc0de;
   --primary50: #e4f7fd;
   --onPrimary: #ffffff;
@@ -135,12 +135,16 @@ export default {
   --knopf-font-size-base: 16px !important;
 }
 
+/* #plussubShadow  */
 .buttonOnPrimary {
   --knopf-text-color: --onPrimary;
   --knopf-hue: 0;
   --knopf-saturation: 0%;
   --knopf-luminosity: 100%;
 }
+</style>
+<style scoped>
+/* plussub header */
 
 .content-navigate-deeper-leave-active,
 .content-navigate-deeper-enter-active {
@@ -245,10 +249,7 @@ export default {
   overflow: hidden;
   max-height: 0;
 }
-</style>
 
-<style scoped>
-/* plussub header */
 .app--container {
   font-family: 'Roboto', sans-serif;
   margin: 0;

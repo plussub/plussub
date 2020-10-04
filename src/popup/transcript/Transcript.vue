@@ -10,8 +10,8 @@
       <!-- <textarea readonly style="grid-area: preview; width: 100%; resize: none; height: 100%; font-size: 0.75em; font-family: Roboto, sans-serif; font-weight: 500" v-model="excerpt"> </textarea> -->
       <div id="transcript-content--container" ref="transcriptContentContainer">
         <div v-for="(subtitleText, index) in subtitleTexts" :key="index" class="transcript-content" :class="{ selected: currentPos === index }">
-          <span v-text="subtitleText.timeFrom" class="transcript-timefrom"></span>
-          <span v-text="subtitleText.text" class="transcript-text" @click="setCurrentTime(index)"></span>
+          <span class="transcript-timefrom" v-text="subtitleText.timeFrom"></span>
+          <span class="transcript-text" @click="setCurrentTime(index)" v-text="subtitleText.text"></span>
         </div>
       </div>
       <!-- <div id="button">
@@ -32,7 +32,6 @@ export default {
     ToolbarBackBtn,
     PageLayout
   },
-  emits: ['navigate'],
   props: {
     contentTransitionName: {
       type: String,
@@ -40,25 +39,27 @@ export default {
     },
     videosInIframe: Array
   },
-  async setup(props, { emit }) {
+  emits: ['navigate'],
+  async setup(props) {
     const draggableAreaRef = ref(null);
     useDraggableArea({ draggableAreaRef });
 
     const currentTime = ref(0);
     const getTimeStamp = (time) => {
-      // const parsedOffset = parseInt(offset, 10);
-      // const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
       const value = parseInt(time, 10);
-      // const milliseconds = parseInt(String(value).slice(-3), 10);
       const seconds = Math.trunc((value / 1000) % 60);
-      const minutes = Math.trunc((value / (1000 * 60)) % 60);
-      // const hours = Math.trunc((value / (1000 * 60 * 60)) % 24);
-      // return `${hours > 9 ? '' : '0'}${hours}:${minutes > 9 ? '' : '0'}${minutes}:${seconds > 9 ? '' : '0'}${seconds}.${milliseconds > 99 ? '' : '0'}${milliseconds > 9 ? '' : '0'}${milliseconds}`;
+      const minutes = Math.trunc((value / (1000 * 60)) % 1000);
       return `${minutes > 9 ? '' : '0'}${minutes}:${seconds > 9 ? '' : '0'}${seconds}`;
     };
 
     const videoEl = document.querySelector('video.plussub');
-    let videoInFrameSrc = '';
+    // let videoInFrameSrc = '';
+    const videoInFrameSrc = computed(() => {
+      const videoInFrameIdx = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle !== -1);
+      if (videoInFrameIdx !== -1) {
+        return props.videosInIframe[videoInFrameIdx].src;
+      }
+    });
     const handleTimeUpdate = () => {
       currentTime.value = videoEl.currentTime;
     };
@@ -70,22 +71,18 @@ export default {
     };
     if (videoEl) {
       videoEl.addEventListener('timeupdate', handleTimeUpdate);
-    } else {
-      const videoInFrameIdx = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle);
-      if (videoInFrameIdx !== -1) {
-        videoInFrameSrc = props.videosInIframe[videoInFrameIdx].src;
-        const iframe = document.querySelector(`iframe[src="${videoInFrameSrc}"]`);
-        if (iframe && iframe.contentWindow) {
-          iframe.contentWindow.postMessage({ plusSubAction: 'startTranscript' }, '*');
-          window.addEventListener('message', handleCurrentTimeMessage);
-        }
+    } else if (videoInFrameSrc.value) {
+      const iframe = document.querySelector(`iframe[src="${videoInFrameSrc.value}"]`);
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ plusSubAction: 'startTranscript' }, '*');
+        window.addEventListener('message', handleCurrentTimeMessage);
       }
     }
 
     onUnmounted(() => {
       if (videoEl) {
         videoEl.removeEventListener('timeupdate', handleTimeUpdate);
-      } else if (videoInFrameSrc) {
+      } else if (videoInFrameSrc.value) {
         window.removeEventListener('message', handleCurrentTimeMessage);
       }
     });
@@ -112,7 +109,7 @@ export default {
     watch(currentTime, (currentTime) => {
       const value = parseInt(currentTime, 10);
       const pos = binarySearch(value * 1000, appState.srt.parsed);
-      if (pos !== -1 && currentPos !== pos) {
+      if (pos !== -1 && currentPos.value !== pos) {
         currentPos.value = pos;
       }
       let lastTopPos = -1;
@@ -127,14 +124,13 @@ export default {
     });
 
     const appState = await snapshot();
-    const currentOffsetTime = ref(appState.offsetTime ? appState.offsetTime : '');
 
     const setCurrentTime = (index) => {
       const data = appState.srt.parsed[index].from;
       if (videoEl) {
         videoEl.currentTime = data / 1000;
-      } else if (videoInFrameSrc) {
-        const iframe = document.querySelector(`iframe[src="${videoInFrameSrc}"]`);
+      } else if (videoInFrameSrc.value) {
+        const iframe = document.querySelector(`iframe[src="${videoInFrameSrc.value}"]`);
         if (iframe && iframe.contentWindow) {
           iframe.contentWindow.postMessage({ plusSubAction: 'setCurrentTime', data }, '*');
         }

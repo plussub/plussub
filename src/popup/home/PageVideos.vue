@@ -3,20 +3,20 @@
     <div style="grid-area: header; height: 1px; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500">
       <div>
         <div>Page Videos</div>
-        <div style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400" v-if="subtitle.length === 0">You must first add a subtitle before you can add them to the video</div>
+        <div v-if="subtitle.length === 0" style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400">You must first add a subtitle before you can add them to the video</div>
       </div>
     </div>
     <div style="grid-area: content">
       <div v-if="videos.length || videosInIframe.length">
-        <div v-for="(video, index) in videos" :key="index" style="display: grid; grid-template-columns: 1fr auto">
+        <div v-for="(video, index) in videos" :key="index" style="display: grid; grid-template-columns: 1fr auto" @mouseenter="enterVideoInTop(index)">
           <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
-          <a v-if="video.hasSubtitle" class="knopf flat small" @click="removeSubFrom(video.el)" style="grid-column: 2 / 3">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" @click="addSubTo(video.el)" style="grid-column: 2 / 3">Add Subtitle</a>
+          <a v-if="video.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeSubFrom(video.el)">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" style="grid-column: 2 / 3" @click="addSubTo(video.el)">Add Subtitle</a>
         </div>
-        <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto">
+        <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto" @mouseenter="enterVideoInIframe(index)">
           <div style="grid-column: 1 / 2; align-self: center">Video {{ videos.length + index + 1 }}</div>
-          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" @click="removeVttFromIframe(videoInIframe)" style="grid-column: 2 / 3">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" @click="addVttToIframe(videoInIframe, subtitle)" style="grid-column: 2 / 3"
+          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFromIframe(videoInIframe)">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" style="grid-column: 2 / 3" @click="addVttToIframe(videoInIframe, subtitle)"
             >Add Subtitle</a
           >
         </div>
@@ -29,6 +29,12 @@
 <script>
 import { computed, ref, watch } from 'vue';
 import { addVttTo, removeVttFrom, addVttToIframe, removeVttFromIframe } from '@/home/vttInject';
+
+const isElementNotInViewport = (el) => {
+  const rect = el.getBoundingClientRect();
+
+  return rect.top >= (window.innerHeight || document.documentElement.clientHeight) || rect.bottom <= 0;
+};
 
 export default {
   props: {
@@ -44,16 +50,21 @@ export default {
     const videos = ref(findVideosInCurrentTab());
     const pageHasSubtitle = computed(() => document.querySelector('video.plussub') || props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle) !== -1);
 
-    // const videoContentContainer = ref(null);
-    // const enterVideoInTop = (index) => {
-    //   videos.value[index].el.scrollIntoView(false);
-    // };
-    // const enterVideoInIframe = (index) => {
-    //   const iframe = document.querySelector(`iframe[src="${props.videosInIframe[index].src}"]`);
-    //   if (iframe) {
-    //     iframe.scrollIntoView(false);
-    //   }
-    // };
+    const appShadowDiv = document.getElementById('plussubShadow');
+    const enterVideoInTop = (index) => {
+      const el = videos.value[index].el;
+      if (isElementNotInViewport(el)) {
+        el.scrollIntoView({ block: 'center' });
+        appShadowDiv.style.top = `${(window.scrollY + 30).toString()}px`;
+      }
+    };
+    const enterVideoInIframe = (index) => {
+      const iframe = document.querySelector(`iframe[src="${props.videosInIframe[index].src}"]`);
+      if (iframe && isElementNotInViewport(iframe)) {
+        iframe.scrollIntoView({ block: 'center' });
+        appShadowDiv.style.top = `${(window.scrollY + 30).toString()}px`;
+      }
+    };
 
     watch(
       () => props.subtitle,
@@ -78,8 +89,8 @@ export default {
     return {
       videos,
       pageHasSubtitle,
-      // enterVideoInTop,
-      // enterVideoInIframe,
+      enterVideoInTop,
+      enterVideoInIframe,
       async addSubTo(el) {
         addVttTo({
           el,

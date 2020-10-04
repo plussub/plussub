@@ -15,12 +15,7 @@ export const triggerDownload = async (): Promise<void> => {
     .then((r) => r.arrayBuffer())
     .then((blob) => new JSZip().loadAsync(blob))
     .then((zip) => zip.file(fileName))
-    .then((zipFile) => zipFile?.async('string') ?? '')
-    .catch((e) => {
-      console.warn(e);
-      return Promise.reject(e);
-    });
-  console.warn('downloaded');
+    .then((zipFile) => zipFile?.async('string') ?? '');
 
   await setAppStatePartial({
     srt: {

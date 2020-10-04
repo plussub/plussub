@@ -9,7 +9,7 @@
     "48": "res/icons/plussub48.png",
     "128": "res/icons/plussub128.png"
   },
-  "browser_action": {
+  "page_action": {
     "show_matches": ["<all_urls>"],
     "default_icon": {
       "19": "res/icons/browseraction2.png"

@@ -14,12 +14,19 @@ const inIframe = () => {
 if (inIframe()) {
   const videoEl = document.querySelector('video');
   if (videoEl) {
-    window.top.postMessage({ plusSubAction: 'sendiFrameSrc', src: window.location.href, hasSubtitle: videoEl.classList.contains('plussub') }, '*');
+    let src: string | null;
+    if (window.frameElement) {
+      src = window.frameElement.getAttribute('src');
+    } else {
+      src = window.location.href;
+    }
+    window.top.postMessage({ plusSubAction: 'sendiFrameSrc', src, hasSubtitle: videoEl.classList.contains('plussub') }, '*');
     const handleTimeUpdate = () => {
       window.top.postMessage({ plusSubAction: 'currentTime', data: videoEl.currentTime }, '*');
     };
     window.addEventListener('message', (e) => {
       const { plusSubAction, data } = e.data;
+      console.log(e);
       switch (plusSubAction) {
         case 'addSubtitle':
           addVttTo({ el: videoEl, subtitle: JSON.parse(data) });
@@ -38,11 +45,15 @@ if (inIframe()) {
       }
     });
   }
-} else if (!document.querySelector('#plussubShadow')) {
+} else if (document.getElementById('plussubShadow')) {
+  const appShadowDiv = <HTMLElement>document.getElementById('plussubShadow');
+  appShadowDiv.style.top = `${(window.scrollY + 30).toString()}px`;
+} else {
+  // } else if (!document.getElementById('plussubShadow')) {
   const app = createApp(App);
   const appShadowDiv = document.createElement('div');
   appShadowDiv.id = 'plussubShadow';
-  appShadowDiv.style.cssText = `position:absolute;z-index: 10000; top: ${window.scrollY + 16}px; right: 16px; width: 400px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); font-size: 16px`;
+  appShadowDiv.style.cssText = `position:absolute;z-index: 10000; top: ${window.scrollY + 30}px; right: 16px; width: 400px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); font-size: 16px`;
   const shadow = appShadowDiv.attachShadow({ mode: 'open' });
   // const shadow = appShadowDiv;
 

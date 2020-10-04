@@ -1,10 +1,10 @@
 <!--knopf.css-->
 <!-- change root to :host -->
-<style>
+<style lang="scss">
 /* plussub header */
 /*! knopf v1.0.9 | MIT License | https://knopf.dev/ */
 :host {
-  /* #plussubShadow { */
+  // #plussubShadow {
   --knopf-hue: 218;
   --knopf-saturation: 77%;
   --knopf-luminosity: 37%;
@@ -41,7 +41,7 @@
   --knopf-box-shadow: none;
   --knopf-transition: all 150ms ease-in-out;
 }
-
+// #plussubShadow {
 .knopf.knopf {
   --knopf-color: var(--knopf-hue) var(--knopf-saturation) var(--knopf-luminosity);
   --knopf-hover-color: var(--knopf-hue) var(--knopf-saturation) calc(var(--knopf-luminosity) - 10%);
@@ -326,4 +326,5 @@
 .knopf-group:not(.vertical) > .knopf + .knopf {
   margin-inline-start: calc(var(--knopf-border-width) * -1);
 }
+// }
 </style>
