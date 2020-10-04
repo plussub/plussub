@@ -55,7 +55,7 @@ export default {
     const videoEl = document.querySelector('video.plussub');
     // let videoInFrameSrc = '';
     const videoInFrameSrc = computed(() => {
-      const videoInFrameIdx = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle !== -1);
+      const videoInFrameIdx = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle);
       if (videoInFrameIdx !== -1) {
         return props.videosInIframe[videoInFrameIdx].src;
       }

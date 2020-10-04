@@ -124,6 +124,7 @@ export default {
 
 <style scoped>
 /* plussub header */
+
 .subtitle-selection-toolbar--container--content {
   display: grid;
   grid-template-areas:
@@ -173,8 +174,7 @@ export default {
 </style>
 <style>
 /* plussub header */
-/* #plussubShadow  */
-.toolbar {
+#plussubShadow .toolbar {
   --toolbar-height: auto;
 }
 </style>

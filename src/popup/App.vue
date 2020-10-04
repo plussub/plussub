@@ -101,8 +101,8 @@ export default {
 
 <style>
 /* plussub header */
-:host {
-/* #plussubShadow { */
+/* :host { */
+#plussubShadow {
   --primary: #5bc0de;
   --primary50: #e4f7fd;
   --onPrimary: #ffffff;
@@ -135,17 +135,18 @@ export default {
   --knopf-font-size-base: 16px !important;
 }
 
-/* #plussubShadow  */
-.buttonOnPrimary {
+#plussubShadow .buttonOnPrimary {
   --knopf-text-color: --onPrimary;
   --knopf-hue: 0;
   --knopf-saturation: 0%;
   --knopf-luminosity: 100%;
 }
+#plussubShadow {
+  all: initial;
+}
 </style>
 <style scoped>
 /* plussub header */
-
 .content-navigate-deeper-leave-active,
 .content-navigate-deeper-enter-active {
   transition: all 0.2s ease;
