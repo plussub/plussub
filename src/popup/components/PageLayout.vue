@@ -12,15 +12,10 @@
   </transition>
 </template>
 
-<script>
-export default {
-  props: {
-    contentTransitionName: {
-      type: String,
-      default: ''
-    }
-  }
-};
+<script setup="props" lang="ts">
+declare const props: {
+  contentTransitionName: string
+}
 </script>
 
 <style scoped>

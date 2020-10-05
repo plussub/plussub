@@ -1,66 +1,65 @@
 <template>
-  <page-layout :content-transition-name="contentTransitionName">
+  <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <toolbar-back-btn style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
+        <ToolbarBackBtn style="height: 100%" @navigate="(event) => $emit('navigate', event)"/>
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Pick a file</div>
       </div>
     </template>
     <template #content>
       <div class="filepicker-content--container">
         <div class="filepicker-content--container--card" style="grid-area: filepicker">
-          <div style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500">
+          <div
+              style="grid-area: card-header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500">
             Pick a .srt/.vtt file
           </div>
-          <input ref="inputRef" style="grid-area: card-content" type="file" accept=".vtt,.srt" @change="fileSelected" />
+          <input ref="inputRef" style="grid-area: card-content" type="file" accept=".vtt,.srt" @change="fileSelected"/>
         </div>
         <div style="grid-area: spacer">&nbsp;</div>
       </div>
     </template>
-  </page-layout>
+  </PageLayout>
 </template>
 
-<script>
-import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
-import PageLayout from '@/components/PageLayout';
-import { setSelection } from '@/filepick/setSelection';
-import { useDraggableArea } from '@/composables';
-import { parse } from '@/parse';
-import { ref } from 'vue';
+<script setup="props, { emit }" lang="ts">
+
+import {setSelection} from '@/filepick/setSelection';
+import {useDraggableArea} from '@/composables';
+import {parse} from '@/parse';
+import {ref} from 'vue';
+
+export {default as ToolbarBackBtn} from '@/components/ToolbarBackBtn.vue'
+export {default as PageLayout} from '@/components/PageLayout';
+
+declare const props: {
+  contentTransitionName: string;
+}
 
 export default {
-  components: {
-    ToolbarBackBtn,
-    PageLayout
-  },
-  props: {
-    contentTransitionName: {
-      type: String,
-      default: ''
+  emits: ['navigate']
+};
+
+export const draggableAreaRef = ref(null);
+useDraggableArea({draggableAreaRef});
+
+export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
+
+export const fileSelected = async (): Promise<void> => {
+  const reader = new FileReader();
+  reader.onload = async () => {
+    if(!inputRef.value?.files){
+      return;
     }
-  },
-  emits: ['navigate'],
-  setup(props, { emit }) {
-    const draggableAreaRef = ref(null);
-    useDraggableArea({ draggableAreaRef });
-    const inputRef = ref(null);
-    return {
-      draggableAreaRef,
-      inputRef,
-      fileSelected() {
-        const reader = new FileReader();
-        reader.onload = async () => {
-          const filename = inputRef.value.files[0].name;
-          await setSelection({ filename, rawSrt: reader.result });
-          parse();
-          emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
-        };
-        reader.readAsText(inputRef.value.files[0]);
-      }
-    };
-  }
+    const filename = inputRef.value.files[0].name;
+    // as string because we use readAsText...
+    await setSelection({filename, rawSrt: reader.result as string});
+    parse();
+    emit('navigate', {name: 'HOME', params: {contentTransitionName: 'content-navigate-select-to-home'}});
+  };
+  reader.readAsText(inputRef.value?.files[0] as Blob);
 };
 </script>
+
 <style scoped>
 /* plussub header */
 .filepicker-content--container {
