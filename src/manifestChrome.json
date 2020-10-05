@@ -1,6 +1,6 @@
 {
   "name": "+Sub",
-  "version": "4.6.0",
+  "version": "4.6.5",
   "manifest_version": 2,
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
@@ -9,7 +9,7 @@
     "48": "res/icons/plussub48.png",
     "128": "res/icons/plussub128.png"
   },
-  "page_action": {
+  "browser_action": {
     "default_icon": {
       "19": "res/icons/browseraction.png"
     }

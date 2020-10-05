@@ -17,10 +17,10 @@ import {ref, computed} from 'vue';
 import {useKeydownPreventInputHandler} from '@/composables';
 
 export default {
-  emits: ['update:filter'],
   props: {
     filter: String
   },
+  emits: ['update:filter'],
   setup(props, { emit }) {
     const filter = computed({
       get: () => props.filter,

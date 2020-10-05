@@ -1,13 +1,13 @@
 <template>
-  <div class="toolbar">
-<!--    <transition name="toolbar-transition" appear>-->
-      <slot name="toolbar"/>
-<!--    </transition>-->
+  <div class="plussub-toolbar">
+    <!--    <transition name="toolbar-transition" appear>-->
+    <slot name="toolbar" />
+    <!--    </transition>-->
   </div>
 
   <transition :name="contentTransitionName" appear>
-    <div class="content">
-      <slot name="content"/>
+    <div class="plussub-content">
+      <slot name="content" />
     </div>
   </transition>
 </template>
@@ -23,8 +23,9 @@ export default {
 };
 </script>
 
-<style scoped>/* plussub header */
-.toolbar {
+<style scoped>
+/* plussub header */
+.plussub-toolbar {
   grid-area: toolbar;
   z-index: 1000;
 
@@ -35,7 +36,7 @@ export default {
   box-shadow: var(--toolbar-shadow);
 }
 
-.content {
+.plussub-content {
   grid-area: content;
   overflow-y: auto;
   background-color: var(--background-color);

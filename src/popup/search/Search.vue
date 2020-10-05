@@ -8,8 +8,8 @@
     </template>
     <template #content>
       <div class="search-content--container">
-        <div v-if="searchResults.length" style="grid-area: search-results; display: flex; flex-wrap: wrap">
-          <search-entry v-for="item in searchResults" :item="item" @select="(event) => select(event)" />
+        <div v-if="searchResults.length" style="grid-area: search-results">
+          <search-entry v-for="(item, index) in searchResults" :key="index" :item="item" @select="(event) => select(event)" />
         </div>
         <div v-else-if="query === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">After a search, the results are displayed here.</div>
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
@@ -27,7 +27,7 @@ import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
 import SearchBar from '@/search/SearchBar.vue';
 import SearchEntry from '@/search/SearchEntry.vue';
 import posterFallback from '@/res/posterFallback.png';
-import Divider from '@/components/Divider';
+// import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import { setSelection } from '@/search/setSelection';
 import { useDraggableArea } from '@/composables';
@@ -36,12 +36,11 @@ import { ref } from 'vue';
 export default {
   components: {
     ToolbarBackBtn,
-    Divider,
+    // Divider,
     SearchBar,
     SearchEntry,
     PageLayout
   },
-  emits: ['navigate'],
   props: {
     query: String,
     contentTransitionName: {
@@ -49,6 +48,7 @@ export default {
       default: ''
     }
   },
+  emits: ['navigate'],
   setup(props, { emit }) {
     const draggableAreaRef = ref(null);
     useDraggableArea({ draggableAreaRef });

@@ -27,12 +27,12 @@ export default {
   components: {
     Spinner
   },
-  emits: ['update:searchResults', 'update:loading', 'update:query'],
   props: {
     query: String,
     loading: Boolean,
     searchResults: Array
   },
+  emits: ['update:searchResults', 'update:loading', 'update:query'],
   setup(props, {emit}) {
     const searchResults = computed({
       get: () => props.searchResults,
@@ -74,7 +74,8 @@ export default {
 };
 </script>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .knopf-group.search-bar--container {
   display: grid;
   grid-template-areas: 'bar button';

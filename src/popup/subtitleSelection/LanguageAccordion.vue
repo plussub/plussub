@@ -34,10 +34,10 @@ import {computed, ref} from 'vue';
 import {useKeydownPreventInputHandler} from "@/composables";
 
 export default {
-  emits: ['update:selected'],
   props: {
     selected: String
   },
+  emits: ['update:selected'],
   setup(props, {emit}) {
     const query = ref('');
     const inputRef = ref(null);
@@ -78,7 +78,8 @@ export default {
 };
 </script>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .search-toolbar--container--language--accordion {
   --search-bar-size: 25px;
   --accordion-size: 250px;

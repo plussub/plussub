@@ -1,7 +1,7 @@
 import { onUnmounted, onMounted, Ref } from 'vue';
 
 const getShadowDiv = (): HTMLElement => {
-  const shadowDiv = document.querySelector('#plussubShadow');
+  const shadowDiv = document.getElementById('plussubShadow');
   if (!shadowDiv) {
     throw new Error('ShadowDiv not found');
   }

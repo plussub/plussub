@@ -23,7 +23,8 @@ export default {
 }
 </script>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .debug--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);

@@ -7,15 +7,19 @@
       </div>
     </template>
     <template #content>
-      <!-- <textarea readonly style="grid-area: preview; width: 100%; resize: none; height: 100%; font-size: 0.75em; font-family: Roboto, sans-serif; font-weight: 500" v-model="excerpt"> </textarea> -->
       <div id="transcript-content--container" ref="transcriptContentContainer">
         <div v-for="(subtitleText, index) in subtitleTexts" :key="index" class="transcript-content" :class="{ selected: currentPos === index }">
           <span class="transcript-timefrom" v-text="subtitleText.timeFrom"></span>
-          <span class="transcript-text" @click="setCurrentTime(index)" v-text="subtitleText.text"></span>
+          <span
+            class="transcript-text"
+            :class="{ hovering: textHoverIndex === index && (videoEl || videoInFrameHasSub) }"
+            @mouseenter="textHoverIndex = index"
+            @mouseleave="textHoverIndex = -1"
+            @click="setCurrentTime(index)"
+            v-text="subtitleText.text"
+          ></span>
         </div>
       </div>
-      <!-- <div id="button">
-      </div> -->
     </template>
   </page-layout>
 </template>
@@ -37,7 +41,8 @@ export default {
       type: String,
       default: ''
     },
-    videosInIframe: Array
+    videosInIframe: Array,
+    sourceObj: Object
   },
   emits: ['navigate'],
   async setup(props) {
@@ -53,13 +58,7 @@ export default {
     };
 
     const videoEl = document.querySelector('video.plussub');
-    // let videoInFrameSrc = '';
-    const videoInFrameSrc = computed(() => {
-      const videoInFrameIdx = props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle);
-      if (videoInFrameIdx !== -1) {
-        return props.videosInIframe[videoInFrameIdx].src;
-      }
-    });
+    const videoInFrameHasSub = computed(() => props.videosInIframe.find((videoInIframe) => videoInIframe.hasSubtitle));
     const handleTimeUpdate = () => {
       currentTime.value = videoEl.currentTime;
     };
@@ -71,18 +70,15 @@ export default {
     };
     if (videoEl) {
       videoEl.addEventListener('timeupdate', handleTimeUpdate);
-    } else if (videoInFrameSrc.value) {
-      const iframe = document.querySelector(`iframe[src="${videoInFrameSrc.value}"]`);
-      if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage({ plusSubAction: 'startTranscript' }, '*');
-        window.addEventListener('message', handleCurrentTimeMessage);
-      }
+    } else if (videoInFrameHasSub.value) {
+      props.sourceObj[videoInFrameHasSub.value.src].postMessage({ plusSubAction: 'startTranscript' }, videoInFrameHasSub.value.origin);
+      window.addEventListener('message', handleCurrentTimeMessage);
     }
 
     onUnmounted(() => {
       if (videoEl) {
         videoEl.removeEventListener('timeupdate', handleTimeUpdate);
-      } else if (videoInFrameSrc.value) {
+      } else if (videoInFrameHasSub.value) {
         window.removeEventListener('message', handleCurrentTimeMessage);
       }
     });
@@ -109,17 +105,21 @@ export default {
     watch(currentTime, (currentTime) => {
       const value = parseInt(currentTime, 10);
       const pos = binarySearch(value * 1000, appState.srt.parsed);
-      if (pos !== -1 && currentPos.value !== pos) {
-        currentPos.value = pos;
+      if (pos !== -1) {
+        if (currentPos.value !== pos) {
+          currentPos.value = pos;
+        } else {
+          return;
+        }
+      } else {
+        return;
       }
-      let lastTopPos = -1;
       if (!transcriptContentContainer.value.matches(':hover')) {
         const topPos = Math.max(currentPos.value - 3, 0);
-        if (lastTopPos === topPos) return;
-        lastTopPos = topPos;
         const topElement = transcriptContentContainer.value.querySelector(`:nth-child(${topPos + 1})`);
         const topOffsetTop = topElement.offsetTop;
         transcriptContentContainer.value.scrollTop = topOffsetTop;
+        console.dir(transcriptContentContainer.value);
       }
     });
 
@@ -129,11 +129,8 @@ export default {
       const data = appState.srt.parsed[index].from;
       if (videoEl) {
         videoEl.currentTime = data / 1000;
-      } else if (videoInFrameSrc.value) {
-        const iframe = document.querySelector(`iframe[src="${videoInFrameSrc.value}"]`);
-        if (iframe && iframe.contentWindow) {
-          iframe.contentWindow.postMessage({ plusSubAction: 'setCurrentTime', data }, '*');
-        }
+      } else if (videoInFrameHasSub.value) {
+        props.sourceObj[videoInFrameHasSub.value.src].postMessage({ plusSubAction: 'setCurrentTime', data }, videoInFrameHasSub.value.origin);
       }
     };
 
@@ -142,6 +139,9 @@ export default {
       currentPos,
       transcriptContentContainer,
       setCurrentTime,
+      textHoverIndex: ref(-1),
+      videoEl,
+      videoInFrameHasSub,
       subtitleTexts: computed(() => {
         return appState.srt.parsed.map(({ from, text }) => ({
           timeFrom: getTimeStamp(from),
@@ -156,13 +156,13 @@ export default {
 /* plussub header */
 #transcript-content--container {
   color: #030303;
-  height: 100%;
+  /* height: 100%; */
+  height: auto;
   position: relative;
-  overflow: scroll;
   background-color: #f9f9f9;
+  overflow: auto;
 }
 .transcript-content {
-  /* padding: 7px 0 7px 0; */
   padding: 8px 16px 8px 3px;
   display: flex;
 }
@@ -181,7 +181,7 @@ export default {
 .transcript-text {
   text-align: left;
 }
-.transcript-text:hover {
+.transcript-text.hovering {
   background-color: #eeeeee;
   cursor: pointer;
 }

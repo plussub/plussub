@@ -22,7 +22,8 @@ export default {
 }
 </script>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .no-sub--container {
   background-color: var(--primary50);
   display: grid;

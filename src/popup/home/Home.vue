@@ -45,7 +45,7 @@
           </result-from-file>
           <no-sub v-else style="grid-row: 1/2; grid-column: 1/4"></no-sub>
         </transition>
-        <page-videos style="grid-area: videos" :subtitle="appState.srt.withOffsetParsed" :videosInIframe="videosInIframe" />
+        <page-videos style="grid-area: videos" :subtitle="appState.srt.withOffsetParsed" :videos-in-iframe="videosInIframe" :source-obj="sourceObj" />
         <debug v-show="false" style="grid-area: debug" />
       </div>
     </template>
@@ -57,7 +57,7 @@
 import { ref, reactive } from 'vue';
 import logo from '@/res/plussub128.png';
 import subtitleIcon from '@/res/subtitles-24px.svg';
-import Divider from '@/components/Divider';
+// import Divider from '@/components/Divider';
 import { useAppStateStorageListener } from 'useAppStateStorageListener';
 import PageLayout from '@/components/PageLayout';
 import ResultFromSearch from '@/home/ResultFromSearch';
@@ -75,7 +75,7 @@ import Settings from '@/home/Settings';
 export default {
   components: {
     Debug,
-    Divider,
+    // Divider,
     PageLayout,
     ResultFromSearch,
     ResultFromFile,
@@ -88,7 +88,8 @@ export default {
       type: String,
       default: ''
     },
-    videosInIframe: Array
+    videosInIframe: Array,
+    sourceObj: Object
   },
   emits: ['navigate'],
   async setup() {

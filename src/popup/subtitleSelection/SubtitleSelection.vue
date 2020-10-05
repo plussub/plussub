@@ -11,7 +11,7 @@
       <div v-if="!dataReady" style="line-height: 3; text-align: center">Loading subtitles...</div>
       <div v-else-if="filteredEntries.length" class="subtitle-selection-content--container">
         <div style="grid-area: search-results; display: grid">
-          <div v-for="item in filteredEntries" class="subtitle-selection-content--container--card">
+          <div v-for="(item, index) in filteredEntries" :key="index" class="subtitle-selection-content--container--card">
             <div style="grid-area: header; overflow: hidden; text-overflow: ellipsis; color: black; font-weight: 500; font-family: 'Rubik', sans-serif">
               {{ item.SubFileName }}
             </div>
@@ -52,7 +52,7 @@ import LanguageAccordion from '@/subtitleSelection/LanguageAccordion.vue';
 import FilterBar from '@/subtitleSelection/FilterBar';
 import { ref, watch, computed } from 'vue';
 import { searchRequest } from '@/subtitleSelection/searchRequest';
-import Divider from '@/components/Divider';
+// import Divider from '@/components/Divider';
 import PageLayout from '@/components/PageLayout';
 import { setSelection } from '@/subtitleSelection/setSelection';
 import { triggerDownload } from '@/subtitleSelection/triggerDownload';
@@ -63,10 +63,9 @@ export default {
     ToolbarBackBtn,
     LanguageAccordion,
     FilterBar,
-    Divider,
+    // Divider,
     PageLayout
   },
-  emits: ['navigate'],
   props: {
     searchQuery: String,
     contentTransitionName: {
@@ -76,6 +75,7 @@ export default {
     tmdb_id: String,
     media_type: String
   },
+  emits: ['navigate'],
   setup(props, { emit }) {
     const draggableAreaRef = ref(null);
     useDraggableArea({ draggableAreaRef: draggableAreaRef });
@@ -174,7 +174,7 @@ export default {
 </style>
 <style>
 /* plussub header */
-#plussubShadow .toolbar {
+.plussub-toolbar {
   --toolbar-height: auto;
 }
 </style>

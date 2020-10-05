@@ -15,8 +15,8 @@
         </div>
         <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto" @mouseenter="enterVideoInIframe(index)">
           <div style="grid-column: 1 / 2; align-self: center">Video {{ videos.length + index + 1 }}</div>
-          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFromIframe(videoInIframe)">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" style="grid-column: 2 / 3" @click="addVttToIframe(videoInIframe, subtitle)"
+          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFromIframe(videoInIframe, sourceObj)">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" style="grid-column: 2 / 3" @click="addVttToIframe(videoInIframe, subtitle, sourceObj)"
             >Add Subtitle</a
           >
         </div>
@@ -39,7 +39,8 @@ const isElementNotInViewport = (el) => {
 export default {
   props: {
     subtitle: Array,
-    videosInIframe: Array
+    videosInIframe: Array,
+    sourceObj: Object
   },
   setup(props) {
     const findVideosInCurrentTab = () =>
@@ -50,6 +51,32 @@ export default {
     const videos = ref(findVideosInCurrentTab());
     const pageHasSubtitle = computed(() => document.querySelector('video.plussub') || props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle) !== -1);
 
+    // sometimes the element in video tag is a advertisement, delete in video list if advertisement if removed
+    const observer = new MutationObserver((mutationsList) => {
+      mutationsList.forEach((mutation) => {
+        const nodes = Array.from(mutation.removedNodes);
+        const directMatch = nodes.find((node) => node.tagName === 'video');
+        let childVideo;
+        const parentMatch = nodes.some((parent) => {
+          if (parent.nodeType === Node.TEXT_NODE) return false;
+          childVideo = parent.querySelector('video');
+          if (childVideo) return true;
+        });
+        if (directMatch) {
+          const index = videos.value.findIndex((video) => directMatch.isEqualNode(video.el));
+          if (index > -1) {
+            videos.value.splice(index, 1);
+          }
+        } else if (parentMatch) {
+          const index = videos.value.findIndex((video) => childVideo.isEqualNode(video.el));
+          if (index > -1) {
+            videos.value.splice(index, 1);
+          }
+        }
+      });
+    });
+    observer.observe(document.body, { subtree: true, childList: true });
+
     const appShadowDiv = document.getElementById('plussubShadow');
     const enterVideoInTop = (index) => {
       const el = videos.value[index].el;
@@ -59,6 +86,7 @@ export default {
       }
     };
     const enterVideoInIframe = (index) => {
+      // cannot use sourceObj beacuse of cors
       const iframe = document.querySelector(`iframe[src="${props.videosInIframe[index].src}"]`);
       if (iframe && isElementNotInViewport(iframe)) {
         iframe.scrollIntoView({ block: 'center' });

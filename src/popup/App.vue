@@ -33,7 +33,7 @@
   <div v-else-if="state.selected === 'TRANSCRIPT'" class="app--container">
     <Suspense>
       <template #default>
-        <transcript :videos-in-iframe="videosInIframe" v-bind="state.selectedParams" @navigate="navigate" />
+        <transcript :videos-in-iframe="videosInIframe" :source-obj="sourceObj" v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -43,7 +43,7 @@
   <div v-else class="app--container">
     <Suspense>
       <template #default>
-        <home :videos-in-iframe="videosInIframe" v-bind="state.selectedParams" @navigate="navigate" />
+        <home :videos-in-iframe="videosInIframe" :source-obj="sourceObj" v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -75,11 +75,18 @@ export default {
     const state = reactive({ selected: 'HOME', selectedParams: {} });
 
     const videosInIframe = ref([]);
+    // don't make source(of iframe) reactive as it may cause cors problem
+    const sourceObj = {};
     const handleMessage = (e) => {
-      const { plusSubAction, src, hasSubtitle } = e.data;
+      const {
+        source,
+        origin,
+        data: { plusSubAction, hasSubtitle, src }
+      } = e;
       if (plusSubAction === 'sendiFrameSrc') {
         if (videosInIframe.value.findIndex((video) => video.src === src) === -1) {
-          videosInIframe.value.push({ src, hasSubtitle });
+          sourceObj[src] = source;
+          videosInIframe.value.push({ origin, hasSubtitle, src });
         }
       } else if (plusSubAction === 'removeMessageEventListener') {
         window.removeEventListener('message', handleMessage);
@@ -90,6 +97,7 @@ export default {
     return {
       state,
       videosInIframe,
+      sourceObj,
       navigate(event) {
         state.selectedParams = event.params;
         state.selected = event.name;
@@ -141,12 +149,14 @@ export default {
   --knopf-saturation: 0%;
   --knopf-luminosity: 100%;
 }
+/* use all:initial to prevent inheritance from body */
 #plussubShadow {
   all: initial;
 }
 </style>
 <style scoped>
 /* plussub header */
+/* use all:unset for branch with no shadow dom to solve inheritance problem */
 .content-navigate-deeper-leave-active,
 .content-navigate-deeper-enter-active {
   transition: all 0.2s ease;

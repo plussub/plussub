@@ -26,7 +26,6 @@ if (inIframe()) {
     };
     window.addEventListener('message', (e) => {
       const { plusSubAction, data } = e.data;
-      console.log(e);
       switch (plusSubAction) {
         case 'addSubtitle':
           addVttTo({ el: videoEl, subtitle: JSON.parse(data) });

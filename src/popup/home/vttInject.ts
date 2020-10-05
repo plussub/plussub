@@ -11,6 +11,7 @@ interface RemoveVttFromPayload {
 
 interface VideoInIframe {
   src: string;
+  origin: string;
   hasSubtitle: boolean;
 }
 
@@ -31,18 +32,12 @@ export const removeVttFrom = ({ el }: RemoveVttFromPayload): void => {
   // hidden cannot work on some website(like yhdm.tv)
 };
 
-export const addVttToIframe = (videoInIframe: VideoInIframe, subtitle: SrtEntry[]): void => {
-  const iframe = <HTMLIFrameElement>document.querySelector(`iframe[src="${videoInIframe.src}"]`);
-  if (iframe && iframe.contentWindow) {
-    iframe.contentWindow.postMessage({ plusSubAction: 'addSubtitle', data: JSON.stringify(subtitle) }, '*');
-  }
+export const addVttToIframe = (videoInIframe: VideoInIframe, subtitle: SrtEntry[], sourceObj: { [key: string]: Window }): void => {
+  sourceObj[videoInIframe.src].postMessage({ plusSubAction: 'addSubtitle', data: JSON.stringify(subtitle) }, videoInIframe.origin);
   videoInIframe.hasSubtitle = true;
 };
 
-export const removeVttFromIframe = (videoInIframe: VideoInIframe): void => {
-  const iframe = <HTMLIFrameElement>document.querySelector(`iframe[src="${videoInIframe.src}"]`);
-  if (iframe && iframe.contentWindow) {
-    iframe.contentWindow.postMessage({ plusSubAction: 'removeSubtitle' }, '*');
-  }
+export const removeVttFromIframe = (videoInIframe: VideoInIframe, sourceObj: { src: Window }): void => {
+  sourceObj[videoInIframe.src].postMessage({ plusSubAction: 'removeSubtitle' }, videoInIframe.origin);
   videoInIframe.hasSubtitle = false;
 };
