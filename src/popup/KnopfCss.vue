@@ -4,7 +4,7 @@
 /* plussub header */
 /*! knopf v1.0.9 | MIT License | https://knopf.dev/ */
 // :host {
-#plussubShadow {
+:host {
   --knopf-hue: 218;
   --knopf-saturation: 77%;
   --knopf-luminosity: 37%;
@@ -41,7 +41,7 @@
   --knopf-box-shadow: none;
   --knopf-transition: all 150ms ease-in-out;
 }
-#plussubShadow {
+:host {
   .knopf.knopf {
     --knopf-color: var(--knopf-hue) var(--knopf-saturation) var(--knopf-luminosity);
     --knopf-hover-color: var(--knopf-hue) var(--knopf-saturation) calc(var(--knopf-luminosity) - 10%);
