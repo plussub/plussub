@@ -29,20 +29,20 @@
 </template>
 
 <script>
-import Divider from '@/components/Divider';
+// import Divider from '@/components/Divider';
 import Spinner from '@/components/Spinner';
 import {computed} from '@vue/reactivity';
 
 export default {
   components: {
-    Divider,
+    // Divider,
     Spinner
   },
-  emits: ['remove'],
   props: {
     state: String,
     filePickState: Object
   },
+  emits: ['remove'],
   setup(props) {
     return {
       prettyState: computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`)
@@ -51,7 +51,8 @@ export default {
 };
 </script>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .result-from-file--card {
   background-color: var(--surface-color);
   box-shadow: var(--card-shadow);

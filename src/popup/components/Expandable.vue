@@ -1,24 +1,28 @@
 <template>
   <div>
-    <div @click="toggle" style="font-size: var(--card-sub-header-font-size); color: var(--default-header-text-color); display: flex;">
+    <div style="font-size: var(--card-sub-header-font-size); color: var(--default-header-text-color); display: flex" @click="toggle">
       <div style="flex-grow: 1">
-        <slot name="title"/>
+        <slot name="title" />
       </div>
       <transition :name="show ? 'menu-more' : 'menu-less'">
-        <span v-if="show"><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-up fa-lg"></i></a></span>
-        <span v-else><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-down fa-lg"></i></a></span>
+        <span v-if="show"
+          ><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-up fa-lg"></i></a
+        ></span>
+        <span v-else
+          ><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-down fa-lg"></i></a
+        ></span>
       </transition>
     </div>
     <transition name="slide">
       <div v-show="show">
-        <slot name="content"/>
+        <slot name="content" />
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import {ref} from 'vue';
+import { ref } from 'vue';
 
 export default {
   props: {
@@ -29,18 +33,19 @@ export default {
     }
   },
   setup(props) {
-    const show = ref(props.open)
+    const show = ref(props.open);
     return {
       show,
       toggle() {
         this.show = !this.show;
       }
-    }
+    };
   }
-}
+};
 </script>
 
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .knopf.menu-dropdown-chevron:hover,
 .knopf.menu-dropdown-chevron {
   --knopf-text-color: var(--default-header-text-color);

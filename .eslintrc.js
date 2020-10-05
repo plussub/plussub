@@ -5,8 +5,12 @@ module.exports = {
     browser: true,
     webextensions: true
   },
-  parser: '@typescript-eslint/parser',
+  parser: 'vue-eslint-parser',
   plugins: ['@typescript-eslint'],
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
-  ignorePatterns: ['dist/*']
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:vue/vue3-recommended', 'prettier', 'prettier/vue'],
+  ignorePatterns: ['dist*'],
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    sourceType: 'module'
+  }
 };

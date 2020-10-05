@@ -58,22 +58,22 @@
 </template>
 
 <script>
-import Divider from '@/components/Divider';
+// import Divider from '@/components/Divider';
 import Spinner from '@/components/Spinner';
 import {computed} from '@vue/reactivity';
 import Expandable from '@/components/Expandable';
 
 export default {
   components: {
-    Divider,
+    // Divider,
     Spinner,
     Expandable
   },
-  emits: ['remove'],
   props: {
     state: String,
-    searchState: Object
+    searchState: Object,
   },
+  emits: ['remove'],
   setup(props) {
     return {
       prettyState: computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`),
@@ -82,7 +82,8 @@ export default {
   }
 };
 </script>
-<style scoped>/* plussub header */
+<style scoped>
+/* plussub header */
 .result-from-search--card {
   --image-height: 150px;
   background-color: var(--surface-color);

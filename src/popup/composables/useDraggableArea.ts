@@ -1,7 +1,7 @@
 import { onUnmounted, onMounted, Ref } from 'vue';
 
 const getShadowDiv = (): HTMLElement => {
-  const shadowDiv = document.querySelector('#plussubShadow');
+  const shadowDiv = document.getElementById('plussubShadow');
   if (!shadowDiv) {
     throw new Error('ShadowDiv not found');
   }
@@ -42,7 +42,7 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
     elementDrag(e.touches[0]);
   };
 
-  const elementDrag = ({ clientX, clientY}: {clientX: number, clientY: number }) => {
+  const elementDrag = ({ clientX, clientY }: { clientX: number; clientY: number }) => {
     position = {
       x: {
         current: position.x.last - clientX,
@@ -61,7 +61,7 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
     position.x.last = e.touches[0].clientX;
     position.y.last = e.touches[0].clientY;
     document.addEventListener('touchend', closeDragElement);
-    document.addEventListener('touchmove', elementDragTouch, {passive: false});
+    document.addEventListener('touchmove', elementDragTouch, { passive: false });
   };
 
   const dragMouse = (e: MouseEvent) => {
@@ -69,23 +69,24 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
     position.y.last = e.clientY;
     document.addEventListener('mouseup', closeDragElement);
     document.addEventListener('mousemove', elementDragMouse);
-  }
+  };
 
   onMounted(() => {
     const appShadowDiv = getShadowDiv();
     if (!appShadowDiv.shadowRoot) {
+      // if (!appShadowDiv) {
       return;
     }
-    if(draggableAreaRef.value.$el){
-      draggableAreaRef.value.$el.addEventListener('touchstart', dragTouch, {passive:false});
-      draggableAreaRef.value.$el.addEventListener('mousedown', dragMouse, {passive:false});
+    if (draggableAreaRef.value.$el) {
+      draggableAreaRef.value.$el.addEventListener('touchstart', dragTouch, { passive: false });
+      draggableAreaRef.value.$el.addEventListener('mousedown', dragMouse, { passive: false });
     } else {
-      draggableAreaRef.value.addEventListener('touchstart', dragTouch, {passive:false});
-      draggableAreaRef.value.addEventListener('mousedown', dragMouse, {passive:false});
+      draggableAreaRef.value.addEventListener('touchstart', dragTouch, { passive: false });
+      draggableAreaRef.value.addEventListener('mousedown', dragMouse, { passive: false });
     }
   });
   onUnmounted(() => {
-    if(draggableAreaRef.value?.$el){
+    if (draggableAreaRef.value?.$el) {
       draggableAreaRef.value.$el.removeEventListener('touchstart', dragTouch);
       draggableAreaRef.value.$el.removeEventListener('mousedown', dragMouse);
     } else {

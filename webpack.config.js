@@ -30,14 +30,14 @@ module.exports = (env, argv) => {
       extensions: ['.ts', '.js', '.vue', '.json'],
       alias: {
         '@': path.resolve(__dirname, 'src/popup'),
-        // '#': path.resolve(__dirname, '/platform/storage/chrome/index.ts'),
+        // It seems the problem has been solve. https://github.com/vuejs/vue-cli/pull/5788
         // this isn't technically needed, since the default `vue` entry for bundlers
         // is a simple `export * from '@vue/runtime-dom`. However having this
         // extra re-export somehow causes webpack to always invalidate the module
         // on the first HMR update and causes the page to reload.
-        vue: '@vue/runtime-dom',
+        // vue: '@vue/runtime-dom',
         useAppStateStorageListener: path.resolve(__dirname, `src/popup/platform/useAppStateStorageListener/${browser}/index.ts`),
-        storage: path.resolve(__dirname, `src/popup/platform/storage/${browser}//index.ts`),
+        storage: path.resolve(__dirname, `src/popup/platform/storage/${browser}/index.ts`),
         onInstalled: path.resolve(__dirname, `src/background/platform/onInstalled/${browser}/index.ts`),
         onPageActionClicked: path.resolve(__dirname, `src/background/platform/onPageActionClicked/${browser}/index.ts`)
       }
@@ -53,6 +53,10 @@ module.exports = (env, argv) => {
           use: ['vue-style-loader', 'css-loader']
         },
         {
+          test: /\.scss$/,
+          use: ['vue-style-loader', 'css-loader', 'sass-loader']
+        },
+        {
           test: /\.js$/,
           exclude: /(node_modules|bower_components)/,
           use: {
@@ -63,7 +67,7 @@ module.exports = (env, argv) => {
           }
         },
         {
-          test: /\.(png|jpe?g|gif)$/i,
+          test: /\.(png|jpe?g|gif|svg)$/i,
           use: [
             // {
             //   loader: 'file-loader',
@@ -96,9 +100,6 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new VueLoaderPlugin(),
-      // new MiniCssExtractPlugin({
-      //   filename: '[name].css'
-      // }),
       new ExtensionReloader(),
       new CopyPlugin({
         patterns: [

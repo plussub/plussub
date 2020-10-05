@@ -10,6 +10,7 @@ export const triggerDownload = async (): Promise<void> => {
     return;
   }
   await setAppStatePartial({ state: 'DOWNLOADING' });
+  // TODO: has bug on some file
   const raw = await fetch(link)
     .then((r) => r.arrayBuffer())
     .then((blob) => new JSZip().loadAsync(blob))
