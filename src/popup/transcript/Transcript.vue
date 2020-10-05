@@ -105,12 +105,8 @@ export default {
     watch(currentTime, (currentTime) => {
       const value = parseInt(currentTime, 10);
       const pos = binarySearch(value * 1000, appState.srt.parsed);
-      if (pos !== -1) {
-        if (currentPos.value !== pos) {
-          currentPos.value = pos;
-        } else {
-          return;
-        }
+      if (pos !== -1 && currentPos.value !== pos) {
+        currentPos.value = pos;
       } else {
         return;
       }
@@ -119,7 +115,6 @@ export default {
         const topElement = transcriptContentContainer.value.querySelector(`:nth-child(${topPos + 1})`);
         const topOffsetTop = topElement.offsetTop;
         transcriptContentContainer.value.scrollTop = topOffsetTop;
-        console.dir(transcriptContentContainer.value);
       }
     });
 
@@ -156,11 +151,10 @@ export default {
 /* plussub header */
 #transcript-content--container {
   color: #030303;
-  /* height: 100%; */
-  height: auto;
+  height: 100%;
   position: relative;
   background-color: #f9f9f9;
-  overflow: auto;
+  overflow: scroll;
 }
 .transcript-content {
   padding: 8px 16px 8px 3px;
