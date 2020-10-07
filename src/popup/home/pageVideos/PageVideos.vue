@@ -5,21 +5,25 @@ import { addVttTo, removeVttFrom, addVttToIframe, removeVttFromIframe } from '@/
 
 declare const props: {
   subtitle: [];
-  videosInIframe: [],
-  sourceObj: any,
 }
 
+interface VideoInIFrame {
+  src: string;
+  origin: string;
+  hasSubtitle: boolean;
+}
 // todo: handle lifecylce
-export const videosInIframe = ref([]);
+// use src as key instead array
+export const videosInIframe = ref<VideoInIFrame[]>([]);
 // don't make source(of iframe) reactive as it may cause cors problem
 export const sourceObj: Record<string, MessageEvent['source']> = {};
 
 useWindowMessage({
   [SendIFrame]: ({origin, source, data: {src, hasSubtitle}}) => {
-    // if (videosInIframe.value.findIndex((video) => video.src === src) === -1) {
-      // sourceObj[src] = source;
-    //   videosInIframe.value.push({origin, hasSubtitle, src});
-    // }
+    if (!videosInIframe.value.find((video) => video.src === src)) {
+      sourceObj[src] = source;
+      videosInIframe.value.push({origin, hasSubtitle, src});
+    }
   }
 });
 
@@ -28,7 +32,7 @@ const isElementNotInViewport = (el) => {
   return rect.top >= (window.innerHeight || document.documentElement.clientHeight) || rect.bottom <= 0;
 };
 
-const isElement = (obj: any): obj is HTMLElement => obj instanceof HTMLElement;
+const isElement = (obj: unknown): obj is HTMLElement => obj instanceof HTMLElement;
 
 const findVideosInCurrentTab = () =>
     [...document.querySelectorAll('video')].map((el) => ({

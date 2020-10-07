@@ -48,7 +48,7 @@
           </ResultFromFile>
           <NoSub v-else style="grid-row: 1/2; grid-column: 1/4"></NoSub>
         </transition>
-<!--        <PageVideos style="grid-area: videos" :subtitle="appState.srt.withOffsetParsed"/>-->
+        <PageVideos style="grid-area: videos" :subtitle="appState.srt.withOffsetParsed"/>
         <Debug v-show="false" style="grid-area: debug"/>
       </div>
     </template>
@@ -72,7 +72,7 @@ export {default as PageLayout} from '@/components/PageLayout';
 export {default as ResultFromSearch} from '@/home/resultFromSearch/ResultFromSearch';
 export {default as ResultFromFile} from '@/home/resultFromFile/ResultFromFile';
 export {default as NoSub} from '@/home/noSub/NoSub';
-// export {default as PageVideos} from '@/home/pageVideos/PageVideos';
+export {default as PageVideos} from '@/home/pageVideos/PageVideos';
 export {default as Debug} from '@/home/debug/Debug';
 export {default as Settings} from '@/home/settings/Settings';
 
