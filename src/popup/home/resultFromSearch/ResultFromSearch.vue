@@ -5,7 +5,7 @@
         <div style="font-size: 0.65em; margin-right: 16px;">{{ prettyState }}</div>
         <div style="font-size: 0.65em;">
           <transition name="fade" mode="out-in">
-            <spinner v-if="state !== 'DONE'"/>
+            <Spinner v-if="state !== 'DONE'"/>
             <i v-else class="fa fa-check fa-sm"></i>
           </transition>
         </div>
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div style="grid-area: overview; display: flex; width: 100%; font-size: 1em; line-height: 1.6;">
-      <expandable style="width: 100%;">
+      <Expandable style="width: 100%;">
         <template #title>
           <div style="font-weight: 500;  font-family: 'Rubik', sans-serif;">
             Overview
@@ -45,7 +45,7 @@
             {{ searchState.tmdb.overview }}
           </div>
         </template>
-      </expandable>
+      </Expandable>
     </div>
     <div style="grid-area: settings">
       <slot name="settings"/>
@@ -57,29 +57,22 @@
   </div>
 </template>
 
-<script>
-// import Divider from '@/components/Divider';
-import Spinner from '@/components/Spinner';
+<script setup="props" lang="ts">
 import {computed} from '@vue/reactivity';
-import Expandable from '@/components/Expandable';
+
+declare const props: {
+  state: string;
+  searchState: any;
+}
+
+export {default as Spinner} from '@/components/Spinner';
+export {default as Expandable} from '@/components/Expandable';
+
+export const prettyState = computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`);
+export const prettyMediaType =computed(() => `${props.searchState.tmdb.media_type.charAt(0).toUpperCase()}${props.searchState.tmdb.media_type.slice(1).toLowerCase()}`);
 
 export default {
-  components: {
-    // Divider,
-    Spinner,
-    Expandable
-  },
-  props: {
-    state: String,
-    searchState: Object,
-  },
-  emits: ['remove'],
-  setup(props) {
-    return {
-      prettyState: computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`),
-      prettyMediaType: computed(() => `${props.searchState.tmdb.media_type.charAt(0).toUpperCase()}${props.searchState.tmdb.media_type.slice(1).toLowerCase()}`)
-    };
-  }
+  emits: ['remove']
 };
 </script>
 <style scoped>

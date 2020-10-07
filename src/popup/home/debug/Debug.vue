@@ -10,17 +10,8 @@
   </div>
 </template>
 
-<script>
-
-import {resetAppState} from '@/appState';
-
-export default {
-  setup(){
-    return {
-      resetAppState
-    }
-  }
-}
+<script setup lang="ts">
+export {resetAppState} from '@/appState';
 </script>
 
 <style scoped>

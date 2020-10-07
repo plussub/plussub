@@ -4,7 +4,7 @@
       <div style="font-size: 0.65em; margin-right: 16px;">{{ prettyState }}</div>
       <div style="font-size: 0.65em;">
         <transition name="fade" mode="out-in">
-          <spinner v-if="state !== 'DONE'"/>
+          <Spinner v-if="state !== 'DONE'"/>
           <i v-else class="fa fa-check fa-sm"></i>
         </transition>
       </div>
@@ -28,26 +28,19 @@
   </div>
 </template>
 
-<script>
-// import Divider from '@/components/Divider';
-import Spinner from '@/components/Spinner';
+<script setup="props" lang="ts">
 import {computed} from '@vue/reactivity';
 
+declare const props: {
+  state: string;
+  filePickState: any;
+}
+
+export {default as Spinner} from '@/components/Spinner';
+export const prettyState = computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`);
+
 export default {
-  components: {
-    // Divider,
-    Spinner
-  },
-  props: {
-    state: String,
-    filePickState: Object
-  },
-  emits: ['remove'],
-  setup(props) {
-    return {
-      prettyState: computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`)
-    };
-  }
+  emits: ['remove']
 };
 </script>
 

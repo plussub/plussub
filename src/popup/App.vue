@@ -1,9 +1,9 @@
 <template>
-  <knopf-css />
+  <KnopfCss />
   <div v-if="state.selected === 'SEARCH'" class="app--container">
     <Suspense>
       <template #default>
-        <search v-bind="state.selectedParams" @navigate="navigate" />
+        <Search v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -13,7 +13,7 @@
   <div v-else-if="state.selected === 'SUBTITLE-SELECTION'" class="app--container">
     <Suspense>
       <template #default>
-        <subtitle-selection v-bind="state.selectedParams" @navigate="navigate" />
+        <SubtitleSelection v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -23,7 +23,7 @@
   <div v-else-if="state.selected === 'FILE-PICK'" class="app--container">
     <Suspense>
       <template #default>
-        <file-pick v-bind="state.selectedParams" @navigate="navigate" />
+        <FilePick v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -33,7 +33,7 @@
   <div v-else-if="state.selected === 'TRANSCRIPT'" class="app--container">
     <Suspense>
       <template #default>
-        <transcript :videos-in-iframe="videosInIframe" :source-obj="sourceObj" v-bind="state.selectedParams" @navigate="navigate" />
+        <Transcript :videos-in-iframe="videosInIframe" :source-obj="sourceObj" v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -43,7 +43,7 @@
   <div v-else class="app--container">
     <Suspense>
       <template #default>
-        <home :videos-in-iframe="videosInIframe" :source-obj="sourceObj" v-bind="state.selectedParams" @navigate="navigate" />
+        <Home v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -52,58 +52,19 @@
   </div>
 </template>
 
-<script>
-import KnopfCss from '@/./KnopfCss.vue';
-import Home from '@/home/Home.vue';
-import Search from '@/search/Search.vue';
-import SubtitleSelection from '@/subtitleSelection/SubtitleSelection.vue';
-import FilePick from '@/filepick/FilePick.vue';
-import Transcript from '@/transcript/Transcript.vue';
-// import {reactive} from "@vue/reactivity";
-import { ref, reactive } from 'vue';
+<script setup lang="ts">
+import { reactive } from 'vue';
+export {default as KnopfCss} from '@/KnopfCss.vue';
+export {default as Home} from '@/home/Home.vue';
+export {default as Search} from '@/search/Search.vue';
+export {default as SubtitleSelection} from '@/subtitleSelection/SubtitleSelection.vue';
+export {default as FilePick} from '@/filepick/FilePick.vue';
+export {default as Transcript} from '@/transcript/Transcript.vue';
 
-export default {
-  components: {
-    KnopfCss,
-    Home,
-    FilePick,
-    Search,
-    SubtitleSelection,
-    Transcript
-  },
-  setup() {
-    const state = reactive({ selected: 'HOME', selectedParams: {} });
-
-    const videosInIframe = ref([]);
-    // don't make source(of iframe) reactive as it may cause cors problem
-    const sourceObj = {};
-    const handleMessage = (e) => {
-      const {
-        source,
-        origin,
-        data: { plusSubAction, hasSubtitle, src }
-      } = e;
-      if (plusSubAction === 'sendiFrameSrc') {
-        if (videosInIframe.value.findIndex((video) => video.src === src) === -1) {
-          sourceObj[src] = source;
-          videosInIframe.value.push({ origin, hasSubtitle, src });
-        }
-      } else if (plusSubAction === 'removeMessageEventListener') {
-        window.removeEventListener('message', handleMessage);
-      }
-    };
-    window.addEventListener('message', handleMessage);
-
-    return {
-      state,
-      videosInIframe,
-      sourceObj,
-      navigate(event) {
-        state.selectedParams = event.params;
-        state.selected = event.name;
-      }
-    };
-  }
+export const state = reactive({ selected: 'HOME', selectedParams: {} });
+export const navigate = (event) => {
+  state.selectedParams = event.params;
+  state.selected = event.name;
 };
 </script>
 

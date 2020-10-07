@@ -8,18 +8,12 @@
       <div style="width: 100%;">To search subtitle online use <i class="fa fa-search fa-sm"></i>.</div>
       <div style="width: 100%;">If you want to load a subtitle file use <i class="fa fa-upload fa-sm"></i>.</div>
     </div>
-    <divider style="grid-area: divider"/>
+    <Divider style="grid-area: divider"/>
   </div>
 </template>
 
-<script>
-import Divider from '@/components/Divider'
-
-export default {
-  components: {
-    Divider
-  }
-}
+<script setup lang="ts">
+export {default as Divider} from '@/components/Divider'
 </script>
 
 <style scoped>
