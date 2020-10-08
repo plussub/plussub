@@ -59,17 +59,22 @@
 
 <script setup="props" lang="ts">
 import {computed} from '@vue/reactivity';
+import {SearchState} from "@/appState";
 
 declare const props: {
   state: string;
-  searchState: any;
+  searchState: SearchState;
 }
 
 export {default as Spinner} from '@/components/Spinner';
 export {default as Expandable} from '@/components/Expandable';
 
-export const prettyState = computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`);
-export const prettyMediaType =computed(() => `${props.searchState.tmdb.media_type.charAt(0).toUpperCase()}${props.searchState.tmdb.media_type.slice(1).toLowerCase()}`);
+const prettyPrint = (str: string|undefined) => {
+  return str ? `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}` : ''
+}
+
+export const prettyState = computed(() => prettyPrint(props.state));
+export const prettyMediaType =computed(() => prettyPrint(props.searchState?.tmdb?.media_type));
 
 export default {
   emits: ['remove']

@@ -1,7 +1,7 @@
 <script setup="props" lang="ts">
 import { computed, ref, watch } from 'vue';
 import { SendIFrame, useWindowMessage, useMutationObserver } from '@/composables';
-import { SrtEntry } from '../../appState';
+import { SrtEntry } from "@/appState";
 import { isHTMLElement, isHTMLVideoElement } from '../../types';
 import { addVttToHostVideo, addVttToIFrameVideo, removeVttFromHostVideo, removeVttFromIFrameVideo } from '../../vttInject';
 

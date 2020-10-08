@@ -30,10 +30,11 @@
 
 <script setup="props" lang="ts">
 import {computed} from '@vue/reactivity';
+import {FilePick} from "@/appState";
 
 declare const props: {
   state: string;
-  filePickState: any;
+  filePickState: FilePick;
 }
 
 export {default as Spinner} from '@/components/Spinner';
