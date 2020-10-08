@@ -5,7 +5,7 @@
     <!--    </transition>-->
   </div>
 
-  <transition :name="contentTransitionName" appear>
+  <transition :name="contentTransitionName ? contentTransitionName : ''" appear>
     <div class="plussub-content">
       <slot name="content" />
     </div>
@@ -14,7 +14,7 @@
 
 <script setup="props" lang="ts">
 declare const props: {
-  contentTransitionName: string
+  contentTransitionName?: string
 }
 </script>
 

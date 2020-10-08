@@ -1,3 +1,5 @@
+<template>
+</template>
 <!--knopf.css-->
 <!-- change root to :host -->
 <style lang="scss">

@@ -63,7 +63,7 @@ import {snapshot} from '@/appState';
 import {useDraggableArea} from '@/composables';
 
 declare const props: {
-  contentTransitionName: string;
+  contentTransitionName?: string;
 }
 
 export {default as logo} from '@/res/plussub128.png';
