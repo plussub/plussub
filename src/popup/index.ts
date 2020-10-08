@@ -20,6 +20,7 @@ if (inIframe()) {
     } else {
       src = window.location.href;
     }
+    // here we notifiy the parent container that we found an iframe
     window.top.postMessage({ plusSubAction: 'sendiFrameSrc', src, hasSubtitle: videoEl.classList.contains('plussub') }, '*');
     const handleTimeUpdate = () => {
       window.top.postMessage({ plusSubAction: 'currentTime', data: videoEl.currentTime }, '*');

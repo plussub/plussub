@@ -3,9 +3,10 @@ import { onUnmounted, onMounted } from 'vue';
 export const SendIFrame = 'SEND_I_FRAME_SRC' as const;
 
 export type SendIFrameEvent = {
-  plusSubAction: typeof SendIFrame
-  hasSubtitle: boolean,
-  src: string
+  plusSubAction: typeof SendIFrame;
+  frameSrc: string;
+  src: string;
+  hasSubtitle: boolean;
 };
 type SendIFrameUseWindowMessagePayload = {
   [SendIFrame]: (payload: MessageEvent<SendIFrameEvent>) => void;

@@ -1,125 +1,181 @@
 <script setup="props" lang="ts">
 import { computed, ref } from 'vue';
-import {SendIFrame, useWindowMessage} from '@/composables';
-import { addVttTo, removeVttFrom, addVttToIframe, removeVttFromIframe } from '@/home/vttInject';
+import { SendIFrame, useWindowMessage, useMutationObserver } from '@/composables';
+import { SrtEntry } from '../../appState';
 
 declare const props: {
   subtitle: [];
-}
+};
 
-interface VideoInIFrame {
+type VideoSrc = string;
+
+interface VideoEntry {
   src: string;
+  frameSrc: string;
   origin: string;
   hasSubtitle: boolean;
 }
-// todo: handle lifecylce
-// use src as key instead array
-export const videosInIframe = ref<VideoInIFrame[]>([]);
+
+const findVideosInCurrentTab = (): Record<VideoSrc, VideoEntry> =>
+  [...document.querySelectorAll('video')]
+    .map((el) => ({
+      origin: window.origin,
+      frameSrc: window.location.href,
+      src: el.src,
+      hasSubtitle: el.classList.contains('plussub')
+    }))
+    .reduce((acc, cur) => ({ ...acc, [cur.src]: cur }), {});
+
+export const srcToVideo = ref<Record<VideoSrc, VideoEntry>>(findVideosInCurrentTab());
 // don't make source(of iframe) reactive as it may cause cors problem
-export const sourceObj: Record<string, MessageEvent['source']> = {};
+export const srcToSource: Record<VideoSrc, MessageEvent['source']> = {};
 
 useWindowMessage({
-  [SendIFrame]: ({origin, source, data: {src, hasSubtitle}}) => {
-    if (!videosInIframe.value.find((video) => video.src === src)) {
-      sourceObj[src] = source;
-      videosInIframe.value.push({origin, hasSubtitle, src});
+  [SendIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
+    if (!srcToVideo.value[src]) {
+      srcToSource[src] = source;
+      srcToVideo.value[src] = { origin, hasSubtitle, src, frameSrc };
     }
   }
 });
+
+const isHTMLElement = (node: Node | undefined | null): node is HTMLElement => node !== undefined && node !== null && node.nodeType === Node.ELEMENT_NODE;
+const isHTMLVideoElement = (element: Node | undefined | null): element is HTMLVideoElement => isHTMLElement(element) && (element as HTMLElement).tagName === 'video';
+
+// sometimes the element in video tag is a advertisement, delete in video list if advertisement if removed
+useMutationObserver((mutationsList) =>
+  mutationsList
+    .reduce<string[]>((acc, mutation) => {
+      const nodes = Array.from(mutation.removedNodes);
+      const directMatch = nodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
+      if (directMatch) {
+        return [...acc, directMatch.src];
+      }
+
+      const parentMatches = nodes.reduce<string[]>((acc, parent) => {
+        if (!isHTMLElement(parent)) {
+          return acc;
+        }
+        return [...acc, ...(Array.from<HTMLVideoElement>(parent.querySelectorAll('video')).map(({ src }) => src))];
+      }, []);
+
+      return [...acc, ...parentMatches];
+    }, [])
+    .forEach((src) => delete srcToVideo.value[src])
+);
+
+const srcToVideoWithSubtitle = computed(() =>
+  Object.entries(srcToVideo.value).reduce(
+    (acc, [src, entry]) => ({
+      ...acc,
+      ...(entry.hasSubtitle ? { [src]: entry } : {})
+    }),
+    {}
+  )
+);
+export const videoList = computed(() => Object.values(srcToVideo.value));
+export const pageHasSubtitle = computed(() => Object.keys(srcToVideoWithSubtitle.value).length > 0);
+
+// // todo:
+// watch(
+//   () => props.subtitle,
+//   (subtitle) => {
+//     const entries = Object.values(srcToVideoWithSubtitle.value);
+//     // entries forEach remove Vtt
+//     // entries forEach add
+//
+//     const elements = [...document.querySelectorAll('video.plussub')];
+//     elements.forEach((el) => removeVttFrom({ el }));
+//     if (subtitle.length) {
+//       elements.forEach((el) => addVttTo({ el, subtitle }));
+//     }
+//     videos.value = findVideosInCurrentTab();
+//     props.videosInIframe.forEach((videoInIframe) => {
+//       if (videoInIframe.hasSubtitle) {
+//         removeVttFromIframe(videoInIframe);
+//         if (subtitle.length) {
+//           addVttToIframe(videoInIframe, subtitle);
+//         }
+//       }
+//     });
+//   }
+// );
 
 const isElementNotInViewport = (el) => {
   const rect = el.getBoundingClientRect();
   return rect.top >= (window.innerHeight || document.documentElement.clientHeight) || rect.bottom <= 0;
 };
 
-const isElement = (obj: unknown): obj is HTMLElement => obj instanceof HTMLElement;
-
-const findVideosInCurrentTab = () =>
-    [...document.querySelectorAll('video')].map((el) => ({
-      el,
-      hasSubtitle: el.classList.contains('plussub')
-    }));
-
-// todo: handle lifecylce
-// sometimes the element in video tag is a advertisement, delete in video list if advertisement if removed
-const observer = new MutationObserver((mutationsList) => {
-  mutationsList.forEach((mutation) => {
-    const nodes = Array.from(mutation.removedNodes);
-    const directMatch = nodes.find((node) => (node as Element).tagName === 'video');
-    let childVideo;
-    const parentMatch = nodes.some((parent) => {
-      if (!isElement(parent)) return false;
-      childVideo = parent.querySelector('video');
-      if (childVideo) return true;
-    });
-    if (directMatch) {
-      const index = videos.value.findIndex((video) => directMatch.isEqualNode(video.el));
-      if (index > -1) {
-        videos.value.splice(index, 1);
-      }
-    } else if (parentMatch) {
-      const index = videos.value.findIndex((video) => childVideo.isEqualNode(video.el));
-      if (index > -1) {
-        videos.value.splice(index, 1);
-      }
+export const enterVideo = (videoEntry: VideoEntry): void => {
+  if (videoEntry.origin === window.origin) {
+    const el = document.querySelector(`video[src="${videoEntry.src}"]`);
+    if (el && isElementNotInViewport(el)) {
+      el.scrollIntoView({ block: 'center' });
     }
-  });
-});
-observer.observe(document.body, { subtree: true, childList: true });
-
-// todo:
-// watch(
-//     () => props.subtitle,
-//     (subtitle) => {
-//       const elements = [...document.querySelectorAll('video.plussub')];
-//       elements.forEach((el) => removeVttFrom({ el }));
-//       if (subtitle.length) {
-//         elements.forEach((el) => addVttTo({ el, subtitle }));
-//       }
-//       videos.value = findVideosInCurrentTab();
-//       props.videosInIframe.forEach((videoInIframe) => {
-//         if (videoInIframe.hasSubtitle) {
-//           removeVttFromIframe(videoInIframe);
-//           if (subtitle.length) {
-//             addVttToIframe(videoInIframe, subtitle);
-//           }
-//         }
-//       });
-//     }
-// );
-
-export {addVttToIframe, removeVttFromIframe};
-export const videos =  ref(findVideosInCurrentTab());
-// todo:
-// export const pageHasSubtitle = computed(() => document.querySelector('video.plussub') || props.videosInIframe.findIndex((videoInIframe) => videoInIframe.hasSubtitle) !== -1);
-export const pageHasSubtitle = computed(() => false);
-export const addSubTo = async(el) => {
-  addVttTo({
-    el,
-    subtitle: props.subtitle
-  });
-  videos.value = findVideosInCurrentTab();
-};
-export const removeSubFrom = (el) => {
-  removeVttFrom({ el });
-  videos.value = findVideosInCurrentTab();
+  } else {
+    // cannot use sourceObj beacuse of cors
+    const iframe = document.querySelector(`iframe[src="${videoEntry.frameSrc}"]`);
+    if (iframe && isElementNotInViewport(iframe)) {
+      iframe.scrollIntoView({ block: 'center' });
+    }
+  }
+  const el = document.getElementById('plussubShadow');
+  if (!el) {
+    return;
+  }
+  el.style.top = `${(window.scrollY + 30).toString()}px`;
 };
 
-export const enterVideoInTop = (index) => {
-  const el = videos.value[index].el;
-  if (isElementNotInViewport(el)) {
-    el.scrollIntoView({ block: 'center' });
-    // document.getElementById('plussubShadow').style.top = `${(window.scrollY + 30).toString()}px`;
+interface AddVttToPayload {
+  videoEntry: VideoEntry;
+  sourceObj?: MessageEvent['source'];
+  subtitle: SrtEntry[];
+}
+
+export const addVttTo = ({ videoEntry, sourceObj, subtitle }: AddVttToPayload): void => {
+  if (videoEntry.origin === window.origin) {
+    const el = document.querySelector(`video[src="${videoEntry.src}"]`);
+    if (!isHTMLVideoElement(el)) {
+      return;
+    }
+    const cues = subtitle.map((srt) => new VTTCue(srt.from / 1000, srt.to / 1000, `<c.plussub>${srt.text}</c.plussub>`));
+    Array.from(el.textTracks).forEach((track) => (track.mode = 'hidden'));
+    const track = el.addTextTrack('subtitles', `Plussub`, 'en');
+    cues.forEach((cue) => track.addCue(cue));
+    track.mode = 'showing';
+    el.classList.add('plussub');
+  } else {
+    (sourceObj ? sourceObj[videoEntry.src] : undefined).postMessage(
+      {
+        plusSubAction: 'addSubtitle',
+        data: JSON.stringify(subtitle)
+      },
+      videoEntry.origin
+    );
+    videoEntry.hasSubtitle = true;
   }
 };
 
-export const enterVideoInIframe = (index) => {
-  // cannot use sourceObj beacuse of cors
-  // const iframe = document.querySelector(`iframe[src="${props.videosInIframe[index].src}"]`);
-  // if (iframe && isElementNotInViewport(iframe)) {
-  //   iframe.scrollIntoView({ block: 'center' });
-    // document.getElementById('plussubShadow').style.top = `${(window.scrollY + 30).toString()}px`;
-  // }
+interface RemoveVttFromPayload {
+  videoEntry: VideoEntry;
+  sourceObj?: MessageEvent['source'];
+}
+
+export const removeVttFrom = ({ videoEntry, sourceObj }: RemoveVttFromPayload): void => {
+  if (videoEntry.origin === window.origin) {
+    const el = document.querySelector(`video[src="${videoEntry.src}"]`);
+    if (!isHTMLVideoElement(el)) {
+      return;
+    }
+    el.classList.remove('plussub');
+    Array.from(el.textTracks)
+      .filter((track) => track.label === 'Plussub')
+      .forEach((track) => (track.mode = 'disabled'));
+    // hidden cannot work on some website(like yhdm.tv)
+  } else {
+    (sourceObj ? sourceObj[videoEntry.src] : undefined)?.postMessage({ plusSubAction: 'removeSubtitle' }, videoEntry.origin);
+    videoEntry.hasSubtitle = false;
+  }
 };
 </script>
 
@@ -132,18 +188,11 @@ export const enterVideoInIframe = (index) => {
       </div>
     </div>
     <div style="grid-area: content">
-      <div v-if="videos.length || videosInIframe.length">
-        <div v-for="(video, index) in videos" :key="index" style="display: grid; grid-template-columns: 1fr auto" @mouseenter="enterVideoInTop(index)">
+      <div v-if="videoList.length">
+        <div v-for="(video, index) in videoList" :key="index" style="display: grid; grid-template-columns: 1fr auto" @mouseenter="enterVideo(video)">
           <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
-          <a v-if="video.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeSubFrom(video.el)">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" style="grid-column: 2 / 3" @click="addSubTo(video.el)">Add Subtitle</a>
-        </div>
-        <div v-for="(videoInIframe, index) in videosInIframe" :key="index" style="display: grid; grid-template-columns: 1fr auto" @mouseenter="enterVideoInIframe(index)">
-          <div style="grid-column: 1 / 2; align-self: center">Video {{ videos.length + index + 1 }}</div>
-          <a v-if="videoInIframe.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFromIframe(videoInIframe, sourceObj)">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" style="grid-column: 2 / 3" @click="addVttToIframe(videoInIframe, subtitle, sourceObj)"
-          >Add Subtitle</a
-          >
+          <a v-if="video.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFrom(video)">Remove Sub</a>
+          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" style="grid-column: 2 / 3" @click="addVttTo(video)">Add Subtitle</a>
         </div>
       </div>
       <div v-else>No videos found in current tab.</div>
