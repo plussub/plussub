@@ -50,14 +50,15 @@
 import { ref, watch, computed } from 'vue';
 
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
-export { default as LanguageAccordion } from '@/subtitleSelection/LanguageAccordion.vue';
-export { default as FilterBar } from '@/subtitleSelection/FilterBar';
+export { default as LanguageAccordion } from './LanguageAccordion.vue';
+export { default as FilterBar } from './FilterBar';
 export { default as PageLayout } from '@/components/PageLayout';
 
-import { searchRequest } from '@/subtitleSelection/searchRequest';
-import { setSelection } from '@/subtitleSelection/setSelection';
-import { triggerDownload } from '@/subtitleSelection/triggerDownload';
+import { searchRequest } from './searchRequest';
+import { setSelection } from './setSelection';
+import { triggerDownload } from './triggerDownload';
 import { useDraggableArea } from '@/composables';
+import {OpensubtitlesState} from "../../appState";
 
 declare const props: {
   searchQuery: string;
@@ -86,16 +87,16 @@ export const backFn = (): void => {
   });
 };
 
-export const entries = ref([]);
+export const entries = ref<OpensubtitlesState[]>([]);
 export const language = ref('en');
 export const filter = ref('');
 export const dataReady = ref(false);
 
 export const filteredEntries = computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase())));
 export const triggerSearch = () =>
-  searchRequest({ ...props, language: language.value }).then((result) => {
+  searchRequest({ tmdb_id: props.tmdb_id, media_type: props.media_type, language: language.value }).then((result) => {
     dataReady.value = true;
-    entries.value = result.data.subtitleSearch.entries;
+    entries.value = result;
   });
 triggerSearch();
 

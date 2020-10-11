@@ -1,49 +1,55 @@
 <template>
-  <div class="result-from-file--card" style="position: relative;">
-    <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500;">
-      <div style="font-size: 0.65em; margin-right: 16px;">{{ prettyState }}</div>
-      <div style="font-size: 0.65em;">
+  <div class="result-from-file--card" style="position: relative">
+    <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500">
+      <div style="font-size: 0.65em; margin-right: 16px">{{ prettyState }}</div>
+      <div style="font-size: 0.65em">
         <transition name="fade" mode="out-in">
-          <Spinner v-if="state !== 'DONE'"/>
+          <Spinner v-if="state !== 'DONE'" />
           <i v-else class="fa fa-check fa-sm"></i>
         </transition>
       </div>
     </div>
-    <div
-        style="grid-area: header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); display: flex; font-weight: 500;">
+    <div style="grid-area: header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); display: flex; font-weight: 500">
       <div>Subtitle via file</div>
     </div>
-    <div
-        style="grid-area: details; width: 100%; font-size: 1em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; font-weight: 300;">
-      <div style="grid-column: 1 / 2;">Filename</div>
-      <div style="grid-column: 2 / 3;">{{ filePickState.filename }}</div>
+    <div style="grid-area: details; width: 100%; font-size: 1em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; font-weight: 300">
+      <div style="grid-column: 1 / 2">Filename</div>
+      <div style="grid-column: 2 / 3">{{ filePickState.filename }}</div>
     </div>
     <div style="grid-area: settings">
-      <slot name="settings"/>
+      <slot name="settings" />
     </div>
-    <div style="grid-area: actions; justify-self: end; align-self: center;">
-      <a class="knopf flat block end large" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
+    <div style="grid-area: actions; justify-self: end; align-self: center">
+      <a class="knopf flat block end large" style="width: 100%" @click="$emit('remove')">Remove subtitle</a>
     </div>
-    <div style="grid-column: 1/4; grid-row: 7/10; background-color: var(--card-actions-background-color); border-bottom-left-radius: var(--card-border-radius); border-bottom-right-radius: var(--card-border-radius);"/>
+    <div
+      style="
+        grid-column: 1/4;
+        grid-row: 7/10;
+        background-color: var(--card-actions-background-color);
+        border-bottom-left-radius: var(--card-border-radius);
+        border-bottom-right-radius: var(--card-border-radius);
+      "
+    />
   </div>
 </template>
 
 <script setup="props" lang="ts">
-import {computed} from '@vue/reactivity';
-import {FilePick} from "@/appState";
-import {capitalizeFirst} from "@/util/string";
+import { computed } from '@vue/reactivity';
+import { FilePick } from '@/appState';
+import { capitalizeFirst } from '@/util/string';
 
 declare const props: {
   state: string;
   filePickState: FilePick;
-}
+};
 
-export {default as Spinner} from '@/components/Spinner';
-export const prettyState = computed(() => capitalizeFirst(props.state));
-
+export { default as Spinner } from '@/components/Spinner';
 export default {
   emits: ['remove']
 };
+
+export const prettyState = computed(() => capitalizeFirst(props.state));
 </script>
 
 <style scoped>

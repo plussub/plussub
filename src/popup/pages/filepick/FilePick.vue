@@ -23,7 +23,7 @@
 
 <script setup="props, { emit }" lang="ts">
 
-import {setSelection} from '@/filepick/setSelection';
+import {setSelection} from './setSelection';
 import {useDraggableArea} from '@/composables';
 import {parse} from '@/parse';
 import {ref} from 'vue';

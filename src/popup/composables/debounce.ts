@@ -5,7 +5,7 @@ import {Ref} from "@vue/reactivity";
 interface Payload<T> {
   resultRef: Ref;
   loadingRef: Ref;
-  fn: (...args) => T;
+  fn: (...args) => Promise<T>;
   timeout: number;
 }
 

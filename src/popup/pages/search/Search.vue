@@ -23,16 +23,16 @@
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import { setSelection } from '@/search/setSelection';
-import { searchRequest } from '@/search/searchRequest';
+import { setSelection } from './setSelection';
+import { searchRequest } from './searchRequest';
 import {debounce, useDraggableArea} from '@/composables';
 import {ref, watch} from 'vue';
-import { TmdbState } from '@/appState';
+import {TmdbState} from "@/appState";
 
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
-export { default as SearchBar } from '@/search/SearchBar.vue';
-export { default as SearchEntry } from '@/search/SearchEntry.vue';
+export { default as SearchBar } from './SearchBar.vue';
+export { default as SearchEntry } from './SearchEntry.vue';
 
 declare const props: {
   query?: string;
@@ -51,7 +51,7 @@ export const searchResults = ref([]);
 export const loading = ref(false);
 
 
-const { fn: req } = debounce({
+const { fn: req } = debounce<TmdbState[]>({
   fn: searchRequest,
   timeout: 1500,
   resultRef: searchResults,

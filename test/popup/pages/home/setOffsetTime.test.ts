@@ -1,7 +1,7 @@
 import { AppState, setAppStatePartial, snapshot } from '@/appState';
 import { getInitialState } from '@/appState/getInitialState';
-import {setOffsetTime} from "@/home/setOffsetTime";
-import srt from '../appState/srtState.json';
+import {setOffsetTime} from "@/pages/home/setOffsetTime";
+import srt from '../../appState/srtState.json';
 
 jest.mock('@/appState', () => ({
   __esModule: true,

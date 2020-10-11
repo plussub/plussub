@@ -38,6 +38,11 @@ declare const props: {
 }
 
 export {default as Expandable} from '@/components/Expandable';
+
+export default {
+  emits: ['offset-time'],
+};
+
 export const inputRef = ref(null);
 
 export const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '')
@@ -87,12 +92,6 @@ export const excerpt = computed(() => {
       )
       .join('\n');
 });
-
-
-
-export default {
-  emits: ['offset-time'],
-};
 </script>
 
 <style scoped>

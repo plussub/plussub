@@ -1,4 +1,4 @@
-import { setSelection } from '@/filepick/setSelection';
+import { remove } from '@/pages/home/remove';
 import { AppState, setAppStatePartial, snapshot } from '@/appState';
 import { getInitialState } from '@/appState/getInitialState';
 
@@ -8,7 +8,7 @@ jest.mock('@/appState', () => ({
   snapshot: jest.fn()
 }));
 
-describe('set selection', () => {
+describe('remove', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -17,16 +17,15 @@ describe('set selection', () => {
     const appState: AppState = getInitialState();
     (snapshot as jest.Mock).mockResolvedValue(appState);
 
-    await setSelection({ filename: 'given filename', rawSrt: 'given srt' });
+    await remove();
 
     expect(setAppStatePartial).toHaveBeenCalledWith({
-      src: 'FILE',
-      state: 'SELECTED',
-      filePick: {
-        filename: 'given filename'
-      },
+      state: 'NONE',
+      src: 'NONE',
+      search: null,
+      filePick: null,
       srt: {
-        raw: 'given srt',
+        raw: null,
         parsed: [],
         withOffsetParsed: []
       }

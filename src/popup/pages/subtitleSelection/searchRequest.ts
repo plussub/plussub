@@ -17,7 +17,7 @@ query subtitleSearch($tmdb_id: String!, $language: String!, $media_type: String!
 }
 `
 
-export const searchRequest = async (variables: {tmdb_id: string, language: string, media_type: string}): Promise<{entries: OpensubtitlesState[]}> => {
+export const searchRequest = async (variables: {tmdb_id: string, language: string, media_type: string}): Promise<OpensubtitlesState[]> => {
   return await fetch('https://gql.plus-sub.com', {
     method: 'post',
     headers: {
@@ -27,5 +27,6 @@ export const searchRequest = async (variables: {tmdb_id: string, language: strin
       query,
       variables
     })
-  }).then(r => r.json());
+  }).then(r => r.json())
+    .then(r => r?.data?.subtitleSearch?.entries ?? [])
 }

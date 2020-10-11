@@ -55,11 +55,11 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 export {default as KnopfCss} from '@/KnopfCss.vue';
-export {default as Home} from '@/home/Home.vue';
-export {default as Search} from '@/search/Search.vue';
-export {default as SubtitleSelection} from '@/subtitleSelection/SubtitleSelection.vue';
-export {default as FilePick} from '@/filepick/FilePick.vue';
-export {default as Transcript} from '@/transcript/Transcript.vue';
+export {default as Home} from '@/pages/home/Home.vue';
+export {default as Search} from '@/pages/search/Search.vue';
+export {default as SubtitleSelection} from '@/pages/subtitleSelection/SubtitleSelection.vue';
+export {default as FilePick} from '@/pages/filepick/FilePick.vue';
+export {default as Transcript} from '@/pages/transcript/Transcript.vue';
 
 export const state = reactive({ selected: 'HOME', selectedParams: {} });
 export const navigate = (event) => {

@@ -37,13 +37,13 @@ export default {
 };
 
 export const query = ref('');
-export const inputRef = ref(null);
+export const inputRef = ref<HTMLElement | null>(null);
 export const showLanguageSelectionInternal = ref(false);
 export const showLanguageSelection = computed<boolean>({
   get: () => showLanguageSelectionInternal.value,
   set: (val) => {
     showLanguageSelectionInternal.value = val;
-    if (showLanguageSelectionInternal.value) {
+    if (showLanguageSelectionInternal.value &&  inputRef.value) {
       inputRef.value.focus();
     }
   }

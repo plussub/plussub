@@ -1,8 +1,8 @@
-import { setSelection } from '@/search/setSelection';
+import { setSelection } from '@/pages/search/setSelection';
 import {AppState, setAppStatePartial, snapshot} from '@/appState';
 import { getInitialState } from '@/appState/getInitialState';
-import opensubtitles from '../appState/opensubtitlesState.json';
-import tmdb from '../appState/tmbdState.json';
+import opensubtitles from '../../appState/opensubtitlesState.json';
+import tmdb from '../../appState/tmbdState.json';
 
 jest.mock('@/appState', () => ({
   __esModule: true,
