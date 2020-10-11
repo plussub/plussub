@@ -42,7 +42,7 @@
 <script setup="props, { emit }" lang="ts">
 import { computed } from '@vue/reactivity';
 import { TmdbState } from '@/appState';
-import {capitalizeFirst} from "@/util/string";
+import { capitalizeFirst } from '@/util/string';
 
 export { default as posterFallback } from '@/res/posterFallback.png';
 

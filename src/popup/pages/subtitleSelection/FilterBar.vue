@@ -12,31 +12,27 @@
   </div>
 </template>
 
-<script>
+<script setup="props, { emit }" lang="ts">
 import {ref, computed} from 'vue';
 import {useKeydownPreventInputHandler} from '@/composables';
 
-export default {
-  props: {
-    filter: String
-  },
-  emits: ['update:filter'],
-  setup(props, { emit }) {
-    const filter = computed({
-      get: () => props.filter,
-      set: (val) => emit('update:filter', val)
-    });
-    const inputRef = ref(null);
-
-    return {
-      inputRef,
-      filter,
-      onKeydown: useKeydownPreventInputHandler({
-        allowedInputValue: /^[0-9a-zA-Z _]$/,
-        inputRef,
-        valueRef: filter
-      })
-    };
-  }
+declare const props: {
+  filter: string;
 };
+
+export default {
+  emits: ['update:filter']
+};
+
+export const filter = computed({
+  get: () => props.filter,
+  set: (val) => emit('update:filter', val)
+});
+
+const inputRef = ref(null);
+export const onKeydown = useKeydownPreventInputHandler({
+  allowedInputValue: /^[0-9a-zA-Z _]$/,
+  inputRef,
+  valueRef: filter
+});
 </script>

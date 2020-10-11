@@ -69,15 +69,15 @@ declare const props: {
 export {default as logo} from '@/res/plussub128.png';
 export {default as subtitleIcon} from '@/res/subtitles-24px.svg';
 export {default as PageLayout} from '@/components/PageLayout';
-export {default as ResultFromSearch} from '@/home/resultFromSearch/ResultFromSearch';
-export {default as ResultFromFile} from '@/home/resultFromFile/ResultFromFile';
-export {default as NoSub} from '@/home/noSub/NoSub';
-export {default as PageVideos} from '@/home/pageVideos/PageVideos';
-export {default as Debug} from '@/home/debug/Debug';
-export {default as Settings} from '@/home/settings/Settings';
+export {default as ResultFromSearch} from './components/ResultFromSearch';
+export {default as ResultFromFile} from './components/ResultFromFile';
+export {default as NoSub} from './components/NoSub';
+export {default as PageVideos} from './components/PageVideos';
+export {default as Debug} from './components/Debug';
+export {default as Settings} from './components/Settings';
 
-export {setOffsetTime} from '@/home/setOffsetTime';
-export {remove} from '@/home/remove';
+export {setOffsetTime} from './setOffsetTime';
+export {remove} from './remove';
 
 export const draggableAreaRef = ref(null);
 useDraggableArea({draggableAreaRef});

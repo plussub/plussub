@@ -27,20 +27,19 @@ import { setSelection } from '@/search/setSelection';
 import { useDraggableArea } from '@/composables';
 import { ref } from 'vue';
 
-export {default as ToolbarBackBtn} from '@/components/ToolbarBackBtn.vue'
-export {default as PageLayout } from '@/components/PageLayout';
-export {default as SearchBar} from '@/search/SearchBar.vue';
-export {default as SearchEntry} from '@/search/SearchEntry.vue';
+export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
+export { default as PageLayout } from '@/components/PageLayout';
+export { default as SearchBar } from '@/search/SearchBar.vue';
+export { default as SearchEntry } from '@/search/SearchEntry.vue';
 
 declare const props: {
   query?: string;
   contentTransitionName: string; // default : ''
-}
+};
 
 export default {
   emits: ['navigate']
 };
-
 
 export const draggableAreaRef = ref(null);
 useDraggableArea({ draggableAreaRef });
@@ -51,8 +50,16 @@ export const loading = ref(false);
 
 export const select = async (item) => {
   await setSelection({ item });
-  emit('navigate', { name: 'SUBTITLE-SELECTION', params: { tmdb_id: item.tmdb_id, media_type: item.media_type, searchQuery: internalQuery, contentTransitionName: 'content-navigate-deeper' } });
-}
+  emit('navigate', {
+    name: 'SUBTITLE-SELECTION',
+    params: {
+      tmdb_id: item.tmdb_id,
+      media_type: item.media_type,
+      searchQuery: internalQuery,
+      contentTransitionName: 'content-navigate-deeper'
+    }
+  });
+};
 </script>
 
 <style scoped>

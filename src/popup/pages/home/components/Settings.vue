@@ -30,7 +30,7 @@
 import {ref} from 'vue';
 import {computed} from '@vue/reactivity';
 import {useKeydownPreventInputHandler} from '@/composables';
-import {SrtEntry} from "../../appState";
+import {SrtEntry} from "@/appState";
 
 declare const props: {
   parsed: SrtEntry[];

@@ -31,8 +31,8 @@
 import { computed, ref, watch } from 'vue';
 import { SendIFrame, useWindowMessage, useMutationObserver } from '@/composables';
 import { SrtEntry } from "@/appState";
-import { isHTMLElement, isHTMLVideoElement } from '../../types';
-import { addVttToHostVideo, addVttToIFrameVideo, removeVttFromHostVideo, removeVttFromIFrameVideo } from '../../vttInject';
+import { isHTMLElement, isHTMLVideoElement } from '@/types';
+import { addVttToHostVideo, addVttToIFrameVideo, removeVttFromHostVideo, removeVttFromIFrameVideo } from '@/vttInject';
 
 declare const props: {
   subtitle: SrtEntry[];

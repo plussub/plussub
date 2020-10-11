@@ -1,10 +1,10 @@
 <template>
-  <page-layout :content-transition-name="contentTransitionName">
+  <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" class="subtitle-selection-toolbar--container--content">
-        <toolbar-back-btn style="grid-area: back" :back-fn="backFn" />
-        <filter-bar v-model:filter="filter" style="grid-area: filter-bar" />
-        <language-accordion v-model:selected="language" style="grid-area: sub-lang-drop-down" />
+        <ToolbarBackBtn style="grid-area: back" :back-fn="backFn" />
+        <FilterBar v-model:filter="filter" style="grid-area: filter-bar" />
+        <LanguageAccordion v-model:selected="language" style="grid-area: sub-lang-drop-down" />
       </div>
     </template>
     <template #content>
@@ -43,83 +43,66 @@
         <div>(╯°□°)╯︵ ┻━┻</div>
       </div>
     </template>
-  </page-layout>
+  </PageLayout>
 </template>
 
-<script>
-import ToolbarBackBtn from '@/components/ToolbarBackBtn.vue';
-import LanguageAccordion from '@/subtitleSelection/LanguageAccordion.vue';
-import FilterBar from '@/subtitleSelection/FilterBar';
+<script setup="props, { emit }" lang="ts">
 import { ref, watch, computed } from 'vue';
+
+export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
+export { default as LanguageAccordion } from '@/subtitleSelection/LanguageAccordion.vue';
+export { default as FilterBar } from '@/subtitleSelection/FilterBar';
+export { default as PageLayout } from '@/components/PageLayout';
+
 import { searchRequest } from '@/subtitleSelection/searchRequest';
-// import Divider from '@/components/Divider';
-import PageLayout from '@/components/PageLayout';
 import { setSelection } from '@/subtitleSelection/setSelection';
 import { triggerDownload } from '@/subtitleSelection/triggerDownload';
 import { useDraggableArea } from '@/composables';
 
-export default {
-  components: {
-    ToolbarBackBtn,
-    LanguageAccordion,
-    FilterBar,
-    // Divider,
-    PageLayout
-  },
-  props: {
-    searchQuery: String,
-    contentTransitionName: {
-      type: String,
-      default: ''
-    },
-    tmdb_id: String,
-    media_type: String
-  },
-  emits: ['navigate'],
-  setup(props, { emit }) {
-    const draggableAreaRef = ref(null);
-    useDraggableArea({ draggableAreaRef: draggableAreaRef });
-
-    const entries = ref([]);
-    const language = ref('en');
-    const filter = ref('');
-    const dataReady = ref(false);
-
-    const filteredEntries = computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase())));
-
-    const triggerSearch = () =>
-      searchRequest({ ...props, language: language.value }).then((result) => {
-        dataReady.value = true;
-        entries.value = result.data.subtitleSearch.entries;
-      });
-
-    triggerSearch();
-
-    watch(language, () => {
-      dataReady.value = false;
-      triggerSearch();
-    });
-
-    return {
-      draggableAreaRef,
-      dataReady,
-      language,
-      filter,
-      filteredEntries,
-      backFn() {
-        emit('navigate', {
-          name: 'SEARCH',
-          params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' }
-        });
-      },
-      async select(item) {
-        await setSelection({ item });
-        triggerDownload();
-        emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
-      }
-    };
-  }
+declare const props: {
+  searchQuery: string;
+  contentTransitionName: string; // default : ''
+  tmdb_id: string;
+  media_type: string;
 };
+
+export default {
+  emits: ['navigate']
+};
+
+export const draggableAreaRef = ref(null);
+useDraggableArea({ draggableAreaRef: draggableAreaRef });
+
+export const select = async (item): Promise<void> => {
+  await setSelection({ item });
+  triggerDownload();
+  emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
+};
+
+export const backFn = (): void => {
+  emit('navigate', {
+    name: 'SEARCH',
+    params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' }
+  });
+};
+
+export const entries = ref([]);
+export const language = ref('en');
+export const filter = ref('');
+export const dataReady = ref(false);
+
+export const filteredEntries = computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase())));
+export const triggerSearch = () =>
+  searchRequest({ ...props, language: language.value }).then((result) => {
+    dataReady.value = true;
+    entries.value = result.data.subtitleSearch.entries;
+  });
+triggerSearch();
+
+watch(language, () => {
+  dataReady.value = false;
+  triggerSearch();
+});
 </script>
 
 <style scoped>
