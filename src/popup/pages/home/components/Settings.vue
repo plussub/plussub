@@ -8,18 +8,14 @@
         <div class="offset-time--container">
           <div style="grid-area: input-label; font-weight: 500; font-size: 0.75em">Offset time (in ms)</div>
           <div style="grid-area: input; display: flex; width: 100%">
-            <input ref="inputRef" v-model="currentOffsetTime" style="height: 1.5em; flex-grow: 1; font-size: 1em"
-                   type="text" @keydown.prevent="onKeydown"/>
+            <input ref="inputRef" v-model="currentOffsetTime" style="height: 1.5em; flex-grow: 1; font-size: 1em" type="text" @keydown.prevent="onKeydown" />
             <div>
               <a class="knopf flat small" @click="setOffsetTime">Apply</a>
               <a class="knopf flat small" @click="reset">Reset</a>
             </div>
           </div>
-          <div style="grid-area: preview-label; font-weight: 500; font-size: 0.75em">Preview <span v-if="notApplied"
-                                                                                                   style="color: #c35e5e">(not applied)</span>
-          </div>
-          <textarea v-model="excerpt" disabled
-                    style="grid-area: preview; width: 100%; resize: none; height: 150px; font-size: 0.75em; font-family: Roboto, sans-serif; font-weight: 500"> </textarea>
+          <div style="grid-area: preview-label; font-weight: 500; font-size: 0.75em">Preview <span v-if="notApplied" style="color: #c35e5e">(not applied)</span></div>
+          <textarea v-model="excerpt" disabled style="grid-area: preview; width: 100%; resize: none; height: 150px; font-size: 0.75em; font-family: Roboto, sans-serif; font-weight: 500"> </textarea>
         </div>
       </template>
     </Expandable>
@@ -27,25 +23,26 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import {ref} from 'vue';
-import {computed} from '@vue/reactivity';
-import {useKeydownPreventInputHandler} from '@/composables';
-import {SrtEntry} from "@/appState";
+import { ref } from 'vue';
+import { computed } from '@vue/reactivity';
+import { useKeydownPreventInputHandler } from '@/composables';
+import { SrtEntry } from '@/appState';
+import {formatTime} from "../../../util/time";
 
 declare const props: {
   parsed: SrtEntry[];
-  offsetTime: number|string;
-}
+  offsetTime: number | string;
+};
 
-export {default as Expandable} from '@/components/Expandable';
+export { default as Expandable } from '@/components/Expandable';
 
 export default {
-  emits: ['offset-time'],
+  emits: ['offset-time']
 };
 
 export const inputRef = ref(null);
 
-export const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '')
+export const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '');
 
 export const onKeydown = useKeydownPreventInputHandler({
   allowedInputValue: /^[0-9-]$/,
@@ -53,7 +50,7 @@ export const onKeydown = useKeydownPreventInputHandler({
   valueRef: currentOffsetTime
 });
 
-export const setOffsetTime = () => emit('offset-time', {offsetTime: parseInt(currentOffsetTime.value.toString())});
+export const setOffsetTime = () => emit('offset-time', { offsetTime: parseInt(currentOffsetTime.value.toString()) });
 
 export const reset = () => {
   currentOffsetTime.value = 0;
@@ -70,27 +67,19 @@ export const notApplied = computed(() => {
 
 const getTimestamp = ({time, offset}) => {
   const parsedOffset = parseInt(offset, 10);
-
   const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
-  const milliseconds = parseInt(String(value).slice(-3), 10);
-  const seconds = Math.trunc((value / 1000) % 60);
-  const minutes = Math.trunc((value / (1000 * 60)) % 60);
-  const hours = Math.trunc((value / (1000 * 60 * 60)) % 24);
-  return `${hours > 9 ? '' : '0'}${hours}:${minutes > 9 ? '' : '0'}${minutes}:${seconds > 9 ? '' : '0'}${seconds}.${milliseconds > 99 ? '' : '0'}${milliseconds > 9 ? '' : '0'}${milliseconds}`;
+  return formatTime({time: value, largestUnit: 'HOUR', smallestUnit': MS'});
 };
 
 const parsedPartial = computed(() => JSON.parse(JSON.stringify(props.parsed.length > 10 ? props.parsed.slice(0, 10) : props.parsed)));
 
 export const excerpt = computed(() => {
   return parsedPartial.value
-      .map(
-          ({from, to, text}, i) =>
-              `${i + 1}\n${getTimestamp({
-                time: from,
-                offset: currentOffsetTime.value
-              })} --> ${getTimestamp({time: to, offset: currentOffsetTime.value})}\n${text}\n`
-      )
-      .join('\n');
+    .map(({ from, to, text }, i) => {
+      const value = parseInt(from, 10) + (isNaN(<number>currentOffsetTime.value) ? 0 : currentOffsetTime.value);
+      return `${i + 1}\n${getTimestamp({time: value, offset: currentOffsetTime.value})} --> ${getTimestamp({ time: to, offset: currentOffsetTime.value })}\n${text}\n`;
+    })
+    .join('\n');
 });
 </script>
 

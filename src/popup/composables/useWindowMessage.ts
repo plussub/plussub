@@ -20,15 +20,25 @@ type RemoveMessageEventListenerUseWindowMessagePayload = {
   [RemoveMessageEventListener]: (payload: MessageEvent<RemoveMessageEventListenerEvent>) => void;
 }
 
-export type Actions = typeof SendIFrame | typeof RemoveMessageEventListener;
-export type UseWindowMessagePayload = Partial<SendIFrameUseWindowMessagePayload & RemoveMessageEventListenerUseWindowMessagePayload>
+export const StartTranscript = 'START_TRANSCRIPT' as const;
+export type StartTranscriptEvent = {
+  plusSubAction: typeof StartTranscript
+  currentTime: number
+};
+type StartTranscriptUseWindowMessagePayload = {
+  [StartTranscript]: (payload: MessageEvent<StartTranscriptEvent>) => void;
+}
 
-type AllEvents = SendIFrameEvent | RemoveMessageEventListenerEvent;
 
-type HandleMessageFunction = (e: MessageEvent<SendIFrameEvent | RemoveMessageEventListenerEvent>) => void;
+export type Actions = typeof SendIFrame | typeof RemoveMessageEventListener | typeof StartTranscript;
+export type UseWindowMessagePayload = Partial<SendIFrameUseWindowMessagePayload & RemoveMessageEventListenerUseWindowMessagePayload & StartTranscriptUseWindowMessagePayload>
+
+type AllEvents = SendIFrameEvent | RemoveMessageEventListenerEvent | StartTranscriptEvent;
+
+type HandleMessageFunction = (e: MessageEvent<AllEvents>) => void;
 
 export const useWindowMessage = (useWindowMessagePayload: UseWindowMessagePayload): HandleMessageFunction => {
-  const handleMessage = (e: MessageEvent<SendIFrameEvent | RemoveMessageEventListenerEvent>): void => {
+  const handleMessage = (e: MessageEvent<AllEvents>): void => {
     const {data} = e;
     if(!data.plusSubAction){
       return;
