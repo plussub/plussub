@@ -1,3 +1,32 @@
+<template>
+  <div class="videos--card">
+    <div style="grid-area: header; height: 1px; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500">
+      <div>
+        <div>Page Videos</div>
+        <div v-if="subtitle.length === 0" style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400">You must first add a subtitle before you can add them to the video</div>
+      </div>
+    </div>
+    <div style="grid-area: content">
+      <div v-if="videoList.length">
+        <div v-for="(video, index) in videoList" :key="index" style="display: grid; grid-template-columns: 1fr auto" @mouseenter="enterVideo(video)">
+          <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
+          <a v-if="video.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFrom({ video, source: srcToSource[video.src] })">Remove Sub</a>
+          <a
+              v-else
+              class="knopf flat small"
+              :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }"
+              style="grid-column: 2 / 3"
+              @click="addVttTo({ video, source: srcToSource[video.src], subtitle })"
+          >
+            Add Subtitle</a
+          >
+        </div>
+      </div>
+      <div v-else>No videos found in current tab.</div>
+    </div>
+  </div>
+</template>
+
 <script setup="props" lang="ts">
 import { computed, ref, watch } from 'vue';
 import { SendIFrame, useWindowMessage, useMutationObserver } from '@/composables';
@@ -122,35 +151,6 @@ watch(
 );
 export const pageHasSubtitle = computed(() => videosWithSubtitle.value.length > 0);
 </script>
-
-<template>
-  <div class="videos--card">
-    <div style="grid-area: header; height: 1px; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500">
-      <div>
-        <div>Page Videos</div>
-        <div v-if="subtitle.length === 0" style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400">You must first add a subtitle before you can add them to the video</div>
-      </div>
-    </div>
-    <div style="grid-area: content">
-      <div v-if="videoList.length">
-        <div v-for="(video, index) in videoList" :key="index" style="display: grid; grid-template-columns: 1fr auto" @mouseenter="enterVideo(video)">
-          <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
-          <a v-if="video.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFrom({ video, source: srcToSource[video.src] })">Remove Sub</a>
-          <a
-            v-else
-            class="knopf flat small"
-            :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }"
-            style="grid-column: 2 / 3"
-            @click="addVttTo({ video, source: srcToSource[video.src], subtitle })"
-          >
-            Add Subtitle</a
-          >
-        </div>
-      </div>
-      <div v-else>No videos found in current tab.</div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 /* plussub header */
