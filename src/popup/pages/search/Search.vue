@@ -3,7 +3,7 @@
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
         <ToolbarBackBtn style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
-        <SearchBar v-model:query="internalQuery" v-model:loading="loading" v-model:searchResults="searchResults" style="flex-grow: 1; align-content: center; z-index: 10000" />
+        <SearchBar v-model:query="internalQuery" v-model:loading="loading" style="flex-grow: 1; align-content: center; z-index: 10000" />
       </div>
     </template>
     <template #content>
@@ -24,8 +24,10 @@
 
 <script setup="props, { emit }" lang="ts">
 import { setSelection } from '@/search/setSelection';
-import { useDraggableArea } from '@/composables';
-import { ref } from 'vue';
+import { searchRequest } from '@/search/searchRequest';
+import {debounce, useDraggableArea} from '@/composables';
+import {ref, watch} from 'vue';
+import { TmdbState } from '@/appState';
 
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
@@ -47,6 +49,17 @@ useDraggableArea({ draggableAreaRef });
 export const internalQuery = ref(props.query ?? '');
 export const searchResults = ref([]);
 export const loading = ref(false);
+
+
+const { fn: req } = debounce({
+  fn: searchRequest,
+  timeout: 1500,
+  resultRef: searchResults,
+  loadingRef: loading
+});
+
+watch(internalQuery, (query) => req(query), { immediate: true });
+
 
 export const select = async (item) => {
   await setSelection({ item });
