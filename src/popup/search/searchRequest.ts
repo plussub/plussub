@@ -1,4 +1,4 @@
-import {TmdbState} from "@/appState";
+import { TmdbState } from '@/appState';
 
 const query = `
 query videoSearch($query: String!)
@@ -15,9 +15,9 @@ query videoSearch($query: String!)
     }
   }
 }
-`
+`;
 
-export const searchRequest = async (queryParam: string): Promise<{entries: TmdbState[]}> => {
+export const searchRequest = async (queryParam: string): Promise<TmdbState[]> => {
   return await fetch('https://gql.plus-sub.com', {
     method: 'post',
     headers: {
@@ -29,5 +29,7 @@ export const searchRequest = async (queryParam: string): Promise<{entries: TmdbS
         query: queryParam
       }
     })
-  }).then(r => r.json());
-}
+  })
+    .then((r) => r.json())
+    .then(r => r?.data?.videoSearch?.entries ?? [])
+};

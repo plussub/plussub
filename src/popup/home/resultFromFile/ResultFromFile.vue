@@ -31,6 +31,7 @@
 <script setup="props" lang="ts">
 import {computed} from '@vue/reactivity';
 import {FilePick} from "@/appState";
+import {capitalizeFirst} from "@/util/string";
 
 declare const props: {
   state: string;
@@ -38,7 +39,7 @@ declare const props: {
 }
 
 export {default as Spinner} from '@/components/Spinner';
-export const prettyState = computed(() => `${props.state.charAt(0).toUpperCase()}${props.state.slice(1).toLowerCase()}`);
+export const prettyState = computed(() => capitalizeFirst(props.state));
 
 export default {
   emits: ['remove']

@@ -7,7 +7,7 @@
 <script setup="props, {emit}" lang="ts">
 
 declare const props: {
-  backFn: () => void;
+  backFn?: () => void;
 };
 
 export default {

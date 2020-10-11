@@ -2,7 +2,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import { addVttTo, removeVttFrom } from '@/home/vttInject';
-
+//todo split into 3 files: bootstrap/inIFrame bootstrap/existing bootstrap/initOnHost
+// after refactoring remove addVttTo
 const inIframe = () => {
   try {
     return window.self !== window.top;

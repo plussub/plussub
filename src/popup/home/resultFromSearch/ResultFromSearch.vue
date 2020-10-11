@@ -60,6 +60,7 @@
 <script setup="props" lang="ts">
 import {computed} from '@vue/reactivity';
 import {SearchState} from "@/appState";
+import {capitalizeFirst} from "@/util/string";
 
 declare const props: {
   state: string;
@@ -69,12 +70,8 @@ declare const props: {
 export {default as Spinner} from '@/components/Spinner';
 export {default as Expandable} from '@/components/Expandable';
 
-const prettyPrint = (str: string|undefined) => {
-  return str ? `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}` : ''
-}
-
-export const prettyState = computed(() => prettyPrint(props.state));
-export const prettyMediaType =computed(() => prettyPrint(props.searchState?.tmdb?.media_type));
+export const prettyState = computed(() => capitalizeFirst(props.state));
+export const prettyMediaType =computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type));
 
 export default {
   emits: ['remove']

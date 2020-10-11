@@ -1,6 +1,6 @@
 export interface TmdbState {
   tmdb_id: string;
-  poster_path: string;
+  poster_path: string | null;
   title: string;
   media_type: string;
   release_date: string;

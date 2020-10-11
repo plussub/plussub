@@ -3,7 +3,7 @@
     <div style="grid-area: header; position: relative">
       <div class="search-content--container--card--hero">
         <img
-          :src="item.poster_path ?? static.posterFallback"
+          :src="item.poster_path ?? posterFallback"
           style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius)"
         />
       </div>
@@ -21,11 +21,9 @@
         <div>tmdb {{ item.vote_average }}</div>
       </div>
     </div>
-    <!-- display: flex; -->
     <div style="grid-area: content; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
       {{ item.overview }}
     </div>
-    <!-- justify-self: end; align-self: center -->
     <div style="grid-area: action">
       <a class="knopf flat block end large" style="width: 100%" @click="select(item)">Select</a>
     </div>
@@ -41,31 +39,23 @@
   </div>
 </template>
 
-<script>
-import posterFallback from '@/res/posterFallback.png';
-// import Divider from '@/components/Divider';
+<script setup="props, { emit }" lang="ts">
 import { computed } from '@vue/reactivity';
+import { TmdbState } from '@/appState';
+import {capitalizeFirst} from "@/util/string";
+
+export { default as posterFallback } from '@/res/posterFallback.png';
+
+declare const props: {
+  item: TmdbState;
+};
 
 export default {
-  components: {
-    // Divider
-  },
-  props: {
-    item: Object
-  },
-  emits: ['select'],
-  setup(props, { emit }) {
-    return {
-      static: {
-        posterFallback
-      },
-      select(selected) {
-        emit('select', selected);
-      },
-      prettyMediaType: computed(() => `${props.item.media_type.charAt(0).toUpperCase()}${props.item.media_type.slice(1).toLowerCase()}`)
-    };
-  }
+  emits: ['select']
 };
+
+export const select = (selected) => emit('select', selected);
+export const prettyMediaType = computed(() => capitalizeFirst(props.item.media_type));
 </script>
 <style scoped>
 /* plussub header */
