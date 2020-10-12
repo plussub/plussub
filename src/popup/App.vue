@@ -33,7 +33,7 @@
   <div v-else-if="state.selected === 'TRANSCRIPT'" class="app--container">
     <Suspense>
       <template #default>
-        <Transcript :videos-in-iframe="videosInIframe" :source-obj="sourceObj" v-bind="state.selectedParams" @navigate="navigate" />
+        <Transcript v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -54,6 +54,7 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
+import {init as initVideoState} from '@/videoState';
 export {default as KnopfCss} from '@/KnopfCss.vue';
 export {default as Home} from '@/pages/home/Home.vue';
 export {default as Search} from '@/pages/search/Search.vue';
@@ -66,6 +67,7 @@ export const navigate = (event) => {
   state.selectedParams = event.params;
   state.selected = event.name;
 };
+initVideoState();
 </script>
 
 <style>

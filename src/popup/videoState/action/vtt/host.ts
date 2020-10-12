@@ -1,16 +1,14 @@
 import {SrtEntry} from "@/appState";
 import {isHTMLVideoElement} from "@/types";
+import {Video} from "@/videoState/types";
 
 export interface AddVttToHostVideoPayload {
-  video: {
-    src: string;
-  };
+  video: Pick<Video, 'el'>;
   subtitle: SrtEntry[];
 }
 
-export const addVttToHostVideo = ({ video: {src}, subtitle }: AddVttToHostVideoPayload): void => {
-  const el = document.querySelector(`video[src="${src}"]`);
-  if (!isHTMLVideoElement(el)) {
+export const addVttToHostVideo = ({ video: {el}, subtitle }: AddVttToHostVideoPayload): void => {
+  if (!el) {
     return;
   }
   const cues = subtitle.map((srt) => new VTTCue(srt.from / 1000, srt.to / 1000, `<c.plussub>${srt.text}</c.plussub>`));
@@ -22,14 +20,11 @@ export const addVttToHostVideo = ({ video: {src}, subtitle }: AddVttToHostVideoP
 };
 
 interface RemoveVttFromHostVideoPayload {
-  video: {
-    src: string;
-  };
+  video: Pick<Video, 'el'>;
 }
 
-export const removeVttFromHostVideo = ({ video: {src}}: RemoveVttFromHostVideoPayload): void => {
-  const el = document.querySelector(`video[src="${src}"]`);
-  if (!isHTMLVideoElement(el)) {
+export const removeVttFromHostVideo = ({ video: {el}}: RemoveVttFromHostVideoPayload): void => {
+  if (!el) {
     return;
   }
   el.classList.remove('plussub');

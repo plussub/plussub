@@ -1,67 +1,34 @@
-<template>
-  <PageLayout :content-transition-name="contentTransitionName">
-    <template #toolbar>
-      <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
-        <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Transcript</div>
-      </div>
-    </template>
-    <template #content>
-      <div id="transcript-content--container" ref="transcriptContentContainer">
-        <div v-for="(subtitleText, index) in subtitleTexts" :key="index" class="transcript-content" :class="{ selected: currentPos === index }">
-          <span class="transcript-timefrom" v-text="subtitleText.timeFrom"></span>
-          <span
-            class="transcript-text"
-            :class="{ hovering: textHoverIndex === index && (videoEl || videoInFrameHasSub) }"
-            @mouseenter="textHoverIndex = index"
-            @mouseleave="textHoverIndex = -1"
-            @click="setCurrentTime(index)"
-            v-text="subtitleText.text"
-          ></span>
-        </div>
-      </div>
-    </template>
-  </PageLayout>
-</template>
-
 <script setup="props, { emit }" lang="ts">
-import {StartTranscript, useDraggableArea, useWindowMessage, useTimeUpdate} from '@/composables';
-import {snapshot} from '@/appState';
-import {ref, computed, watch} from 'vue';
-import {formatTime} from '../../util/time';
+import { useDraggableArea, useTimeUpdate } from '@/composables';
+import { snapshot } from '@/appState';
+import { ref, computed, watch } from 'vue';
+import { formatTime } from '../../util/time';
+import { srcToVideo, setCurrentTime as setCurrentTimeState } from '@/videoState';
 
-export {default as ToolbarBackBtn} from '@/components/ToolbarBackBtn.vue';
-export {default as PageLayout} from '@/components/PageLayout';
+export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
+export { default as PageLayout } from '@/components/PageLayout';
 
 declare const props: {
-  videosInIframe: [];
-  sourceObj: object;
   contentTransitionName: string; // default : ''
 };
 
 export default {
-  emits: ['navigate'],
+  emits: ['navigate']
 };
 
 export const draggableAreaRef = ref(null);
-useDraggableArea({draggableAreaRef});
+useDraggableArea({ draggableAreaRef });
 
 const currentTime = ref<number>(0);
 
-export const videoEl = document.querySelector<HTMLVideoElement>('video.plussub');
-export const videoInFrameHasSub = computed(() => props.videosInIframe.find((videoInIframe) => videoInIframe.hasSubtitle));
+export const video = computed(() => Object.values(srcToVideo.value).find((e) => e.hasSubtitle));
 
-if (videoEl) {
+if (video.value) {
   useTimeUpdate({
-    video: videoEl,
-    fn: (): void => {
-      currentTime.value = videoEl.currentTime;
+    video: video.value,
+    fn: ({ currentTime: currentTimeFromVideo }): void => {
+      currentTime.value = currentTimeFromVideo;
     }
-  });
-} else if (videoInFrameHasSub.value) {
-  props.sourceObj[videoInFrameHasSub.value.src].postMessage({plusSubAction: 'startTranscript'}, videoInFrameHasSub.value.origin);
-  useWindowMessage({
-    [StartTranscript]: ({data}) => currentTime.value = data.currentTime
   });
 }
 
@@ -82,49 +49,74 @@ const binarySearch = (target, arr) => {
 };
 
 export const currentPos = ref(-1);
-export const transcriptContentContainer = ref(null);
+export const transcriptContentContainer = ref<HTMLElement | null>(null);
 
 watch(currentTime, (currentTime) => {
   const value = parseInt(currentTime.toString(), 10);
+  // replace with hashmap
   const pos = binarySearch(value * 1000, appState.srt.withOffsetParsed);
   if (pos !== -1 && currentPos.value !== pos) {
     currentPos.value = pos;
   } else {
     return;
   }
-  if (!transcriptContentContainer.value.matches(':hover')) {
+  if (transcriptContentContainer.value && !transcriptContentContainer.value.matches(':hover')) {
     const topPos = Math.max(currentPos.value - 3, 0);
-    const topElement = transcriptContentContainer.value.querySelector(`:nth-child(${topPos + 1})`);
-    const topOffsetTop = topElement.offsetTop;
-    transcriptContentContainer.value.scrollTop = topOffsetTop;
+    const topElement = transcriptContentContainer.value.querySelector<HTMLElement>(`:nth-child(${topPos + 1})`);
+    if (!topElement) {
+      return;
+    }
+    transcriptContentContainer.value.scrollTop = topElement.offsetTop;
   }
 });
 
 const appState = await snapshot();
-
-export const setCurrentTime = (index) => {
-  const data = appState.srt.withOffsetParsed[index].from;
-  if (videoEl) {
-    videoEl.currentTime = data / 1000;
-  } else if (videoInFrameHasSub.value) {
-    props.sourceObj[videoInFrameHasSub.value.src].postMessage(
-        {
-          plusSubAction: 'setCurrentTime',
-          data
-        },
-        videoInFrameHasSub.value.origin
-    );
-  }
-};
-
-export const textHoverIndex = ref(-1);
 export const subtitleTexts = computed(() =>
-    appState.srt.withOffsetParsed.map(({from, text}) => ({
-      timeFrom: formatTime({time: from, largestUnit: 'MINUTE', smallestUnit: 'SECOND'}),
-      text
-    }))
+  appState.srt.withOffsetParsed.map(({ from, text }) => ({
+    formattedFrom: formatTime({ time: from, largestUnit: 'MINUTE', smallestUnit: 'SECOND' }),
+    text,
+    time: from / 1000
+  }))
 );
+
+export const setCurrentTime = ({ time }: {time: number}): void => {
+  if (!video.value) {
+    return;
+  }
+  setCurrentTimeState({
+    video: video.value,
+    time
+  });
+};
+export const textHoverIndex = ref(-1);
+
 </script>
+
+<template>
+  <PageLayout :content-transition-name="contentTransitionName">
+    <template #toolbar>
+      <div ref="draggableAreaRef" style="display: flex; height: 40px">
+        <ToolbarBackBtn style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
+        <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Transcript</div>
+      </div>
+    </template>
+    <template #content>
+      <div id="transcript-content--container" ref="transcriptContentContainer">
+        <div v-for="(subtitleText, index) in subtitleTexts" :key="index" class="transcript-content" :class="{ selected: currentPos === index }" @click="setCurrentTime(subtitleText)">
+          <span class="transcript-timefrom" v-text="subtitleText.formattedFrom"></span>
+          <span
+            class="transcript-text"
+            :class="{ hovering: textHoverIndex === index && video }"
+            @mouseenter="textHoverIndex = index"
+            @mouseleave="textHoverIndex = -1"
+            v-text="subtitleText.text"
+          ></span>
+        </div>
+      </div>
+    </template>
+  </PageLayout>
+</template>
+
 <style scoped>
 /* plussub header */
 #transcript-content--container {

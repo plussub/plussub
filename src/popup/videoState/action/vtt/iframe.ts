@@ -1,12 +1,10 @@
 import { SrtEntry } from '@/appState';
+import {Video} from "@/videoState/types";
 
 export interface AddVttToIFrameVideoPayload {
-  video: {
-    origin: string;
-    src: string;
-  };
-  source?: MessageEvent['source'];
+  video: Pick<Video, 'origin' | 'src'>;
   subtitle: SrtEntry[];
+  source?: MessageEvent['source'];
 }
 
 export const addVttToIFrameVideo = ({ source, video: { src }, subtitle }: AddVttToIFrameVideoPayload): void => {
@@ -17,10 +15,7 @@ export const addVttToIFrameVideo = ({ source, video: { src }, subtitle }: AddVtt
 };
 
 interface RemoveVttFromIFrameVideoPayload {
-  video: {
-    origin: string;
-    src: string;
-  };
+  video: Pick<Video, 'origin' | 'src'>;
   source?: MessageEvent['source'];
 }
 

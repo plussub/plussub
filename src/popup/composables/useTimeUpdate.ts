@@ -1,11 +1,25 @@
 import { onUnmounted, onMounted } from 'vue';
+import { Video } from '@/videoState';
+import { StartTranscript, useWindowMessage } from '@/composables/useWindowMessage';
+
+export interface FnPayload {
+  currentTime: number;
+}
 
 export interface Payload {
-  video: HTMLVideoElement;
-  fn: (ev: Event) => void;
+  video: Video;
+  fn: (event: FnPayload) => void;
 }
 
 export const useTimeUpdate = ({ video, fn }: Payload): void => {
-  onMounted(() => video.addEventListener('timeupdate', fn));
-  onUnmounted(() => video.removeEventListener('timeupdate', fn));
+  if (video.in === 'HOST') {
+    const handler = () => fn({ currentTime: video.el?.currentTime ?? 0 });
+    onMounted(() => video.el?.addEventListener('timeupdate', handler));
+    onUnmounted(() => video.el?.removeEventListener('timeupdate', handler));
+  } else {
+    // props.sourceObj[videoInFrameHasSub.value.src].postMessage({plusSubAction: 'startTranscript'}, videoInFrameHasSub.value.origin);
+    useWindowMessage({
+      [StartTranscript]: ({data: {currentTime}}) => fn({currentTime})
+    });
+  }
 };

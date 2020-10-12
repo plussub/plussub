@@ -1,3 +1,7 @@
+/**
+ * appState
+ * lifecycle: the state will be stored and survived page changes / reload and so on.
+ */
 import { getInitialState } from './getInitialState';
 import { AppState } from './types';
 import {get, set, clear} from 'storage';
