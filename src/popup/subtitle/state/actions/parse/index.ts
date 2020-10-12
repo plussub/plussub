@@ -20,4 +20,5 @@ export const parse = (): void => {
       to: e.to + window.plusSub_subtitle.value.offsetTime
     }))
   };
+  setState({ state: 'DONE' });
 };

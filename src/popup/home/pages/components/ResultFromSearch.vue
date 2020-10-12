@@ -17,11 +17,11 @@
       <div
           style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6; font-weight: 400">
         <div style="grid-column: 1 / 2;">subRating</div>
-        <div style="grid-column: 2 / 3;">{{ searchState.opensubtitles.SubRating }}</div>
+        <div style="grid-column: 2 / 3;">{{ searchState.openSubtitle.SubRating }}</div>
         <div style="grid-column: 1 / 2;">subFormat</div>
-        <div style="grid-column: 2 / 3;">{{ searchState.opensubtitles.SubFormat }}</div>
+        <div style="grid-column: 2 / 3;">{{ searchState.openSubtitle.SubFormat }}</div>
         <div style="grid-column: 1 / 2;">subLang</div>
-        <div style="grid-column: 2 / 3;">{{ searchState.opensubtitles.LanguageName }}</div>
+        <div style="grid-column: 2 / 3;">{{ searchState.openSubtitle.LanguageName }}</div>
       </div>
       <div style="grid-area: detail2; font-size: 0.75em; align-self: end; font-weight: 500">
         <div>tmdb {{ searchState.tmdb.vote_average }}</div>
@@ -69,9 +69,8 @@ declare const props: {
 
 export {default as Spinner} from '@/components/Spinner';
 export {default as Expandable} from '@/components/Expandable';
-
 export const prettyState = computed(() => capitalizeFirst(props.state));
-export const prettyMediaType =computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type));
+export const prettyMediaType =computed(() => "asdf"); // capitalizeFirst(props.searchState?.tmdb?.media_type));
 
 export default {
   emits: ['remove']

@@ -28,7 +28,7 @@
               v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
               style="grid-area: current-sub; margin-top: 20px"
               :state="appState.state"
-              :search-state="appState.search"
+              :search-state="subtitleSearchState"
               @remove="remove"
           >
             <template #settings>
@@ -80,6 +80,7 @@ export {setOffsetTime} from "@/subtitle/state";
 export const fileState = window.plusSub_file;
 export const appState = window.plusSub_app;
 export const subtitleState = window.plusSub_subtitle;
+export const subtitleSearchState = window.plusSub_subtitleSearch;
 
 export default {
   emits: ['navigate']
