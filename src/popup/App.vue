@@ -72,9 +72,9 @@ export const navigate = (event) => {
   state.selected = event.name;
 };
 initAppState();
+initSubtitleState();
 initVideoState();
 initFileState();
-initSubtitleState();
 initSubtitleSearchState();
 </script>
 

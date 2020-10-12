@@ -59,15 +59,6 @@ export const enterVideo = (video: Video): void => {
 };
 
 const videosWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle));
-// move ?
-watch(
-  () => props.subtitle,
-  (subtitle) =>
-    videosWithSubtitle.value.forEach((video) => {
-      removeVttFrom({ video });
-      addVttTo({ video, subtitle });
-    })
-);
 export const pageHasSubtitle = computed(() => videosWithSubtitle.value.length > 0);
 </script>
 

@@ -2,6 +2,8 @@ import {Video, VideoSrc} from "@/video/state/types";
 import {srcToVideo, srcToSource} from "@/video/state/state";
 import {SendIFrame, useMutationObserver, useWindowMessage} from "@/composables";
 import {isHTMLElement, isHTMLVideoElement} from "@/types";
+import {computed, watch} from "vue";
+import {addVttTo, removeVttFrom} from "@/video/state";
 
 const findVideosInCurrentTab = (): Record<VideoSrc, Video> => [...document.querySelectorAll('video')]
   .map((el) => ({
@@ -24,6 +26,17 @@ export const init = (): void => {
       }
     }
   });
+
+
+  const videosWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle));
+  watch(
+    () => window.plusSub_subtitle.value.withOffsetParsed,
+    (subtitle) =>
+      videosWithSubtitle.value.forEach((video) => {
+        removeVttFrom({ video });
+        addVttTo({ video, subtitle });
+      })
+  );
 
 // sometimes the element in video tag is a advertisement, delete in video list if advertisement if removed
   useMutationObserver((mutationsList) =>
