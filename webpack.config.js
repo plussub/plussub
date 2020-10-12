@@ -36,7 +36,6 @@ module.exports = (env, argv) => {
         // extra re-export somehow causes webpack to always invalidate the module
         // on the first HMR update and causes the page to reload.
         // vue: '@vue/runtime-dom',
-        useAppStateStorageListener: path.resolve(__dirname, `src/popup/platform/useAppStateStorageListener/${browser}/index.ts`),
         storage: path.resolve(__dirname, `src/popup/platform/storage/${browser}/index.ts`),
         onInstalled: path.resolve(__dirname, `src/background/platform/onInstalled/${browser}/index.ts`),
         onPageActionClicked: path.resolve(__dirname, `src/background/platform/onPageActionClicked/${browser}/index.ts`)

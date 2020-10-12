@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createApp } from 'vue';
 import App from './App.vue';
-import { addVttTo, removeVttFrom } from '@/pages/home/vttInject';
+import { addVttTo, removeVttFrom } from '@/home/pages/vttInject';
 //todo split into 3 files: bootstrap/inIFrame bootstrap/existing bootstrap/initOnHost
 // after refactoring remove addVttTo
 const inIframe = () => {

@@ -1,5 +1,5 @@
 import { onUnmounted, onMounted } from 'vue';
-import { Video } from '@/videoState';
+import { Video } from '@/video/state';
 import { StartTranscript, useWindowMessage } from '@/composables/useWindowMessage';
 
 export interface FnPayload {

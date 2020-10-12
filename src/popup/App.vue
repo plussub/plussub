@@ -54,20 +54,28 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import {init as initVideoState} from '@/videoState';
+import {init as initAppState} from '@/app/state';
+import {init as initVideoState} from '@/video/state';
+import {init as initFileState} from '@/file/state';
+import {init as initSubtitleState} from '@/subtitle/state';
+import {init as initSubtitleSearchState} from '@/search/state';
 export {default as KnopfCss} from '@/KnopfCss.vue';
-export {default as Home} from '@/pages/home/Home.vue';
-export {default as Search} from '@/pages/search/Search.vue';
-export {default as SubtitleSelection} from '@/pages/subtitleSelection/SubtitleSelection.vue';
-export {default as FilePick} from '@/pages/filepick/FilePick.vue';
-export {default as Transcript} from '@/pages/transcript/Transcript.vue';
+export {default as Home} from '@/home/pages/Home.vue';
+export {default as Search} from '@/search/pages/search/Search.vue';
+export {default as SubtitleSelection} from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
+export {default as FilePick} from '@/file/pages/FilePick.vue';
+export {default as Transcript} from '@/transcript/pages/Transcript.vue';
 
 export const state = reactive({ selected: 'HOME', selectedParams: {} });
 export const navigate = (event) => {
   state.selectedParams = event.params;
   state.selected = event.name;
 };
+initAppState();
 initVideoState();
+initFileState();
+initSubtitleState();
+initSubtitleSearchState();
 </script>
 
 <style>
