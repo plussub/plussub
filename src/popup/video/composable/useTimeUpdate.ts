@@ -1,11 +1,6 @@
 import { onUnmounted, onMounted } from 'vue';
-import {srcToIFrameSource, Video} from '@/video/state';
-import {
-  postWindowMessage,
-  StartTranscript, StopTranscript,
-  useWindowMessage,
-  VideoCurrentTime
-} from '@/composables/useWindowMessage';
+import { srcToIFrameSource, Video } from '@/video/state';
+import { postWindowMessage, StartTranscript, StopTranscript, useWindowMessage, VideoCurrentTime } from '@/composables/useWindowMessage';
 
 export interface FnPayload {
   currentTime: number;
@@ -22,18 +17,15 @@ export const useTimeUpdate = ({ video, fn }: Payload): void => {
     onMounted(() => video.el?.addEventListener('timeupdate', handler));
     onUnmounted(() => video.el?.removeEventListener('timeupdate', handler));
   } else {
+    useWindowMessage({
+      [VideoCurrentTime]: ({ data: { currentTime } }) => fn({ currentTime })
+    });
+
     onMounted(() => {
       const iFrameSource = srcToIFrameSource[video.src];
-      if(!iFrameSource){
+      if (!iFrameSource) {
         return;
       }
-      // props.sourceObj[videoInFrameHasSub.value.src].postMessage({plusSubAction: 'startTranscript'}, videoInFrameHasSub.value.origin);
-      useWindowMessage({
-        [VideoCurrentTime]: ({ data: { currentTime } }) => {
-          console.warn(currentTime);
-          fn({ currentTime });
-        }
-      });
       postWindowMessage({
         window: iFrameSource.window,
         origin: iFrameSource.origin,
@@ -44,7 +36,7 @@ export const useTimeUpdate = ({ video, fn }: Payload): void => {
     });
     onUnmounted(() => {
       const iFrameSource = srcToIFrameSource[video.src];
-      if(!iFrameSource){
+      if (!iFrameSource) {
         return;
       }
       postWindowMessage({

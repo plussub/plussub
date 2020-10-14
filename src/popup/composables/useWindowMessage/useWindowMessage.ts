@@ -16,7 +16,7 @@ export const useWindowMessage = (useWindowMessagePayload: UseWindowMessagePayloa
 
     const cb = useWindowMessagePayload[data.plusSubAction];
     if (cb) {
-      // todo fix type definition
+      // messed up with the typescript types here...
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       cb(e);
