@@ -1,9 +1,15 @@
-<template>
-
-</template>
+<template></template>
 
 <script setup="props" lang="ts">
-import {AddSubtitle, postWindowMessage, useWindowMessage, VideoInIFrame} from "@/composables";
+import {
+  AddSubtitle,
+  postWindowMessage,
+  RemoveSubtitle, SetVideoTime,
+  StartTranscript, StopTranscript,
+  useWindowMessage, VideoCurrentTime,
+  VideoInIFrame
+} from '@/composables';
+import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
 
 declare const props: {
   frameSrc: string;
@@ -11,11 +17,29 @@ declare const props: {
   test: string;
 };
 
+
+const sendTime = () => {
+  postWindowMessage({
+    window: window.top,
+    origin: '*',
+    payload: {
+      plusSubAction: VideoCurrentTime,
+      currentTime: props.videoEl.currentTime,
+    }
+  });
+};
+
 useWindowMessage({
-  [AddSubtitle]: (e) => {
-    console.warn(e);
-  }
-})
+  [AddSubtitle]: (e) =>
+    addVttToHostVideo({
+      video: { el: props.videoEl },
+      subtitle: e.data.subtitle
+    }),
+  [RemoveSubtitle]: () => removeVttFromHostVideo({ video: { el: props.videoEl } }),
+  [StartTranscript]: () => props.videoEl.addEventListener('timeupdate', sendTime),
+  [StopTranscript]: () => props.videoEl.removeEventListener('timeupdate', sendTime),
+  [SetVideoTime]: (e) => props.videoEl.currentTime = e.data.time / 1000
+});
 
 postWindowMessage({
   window: window.top,
@@ -27,5 +51,4 @@ postWindowMessage({
     hasSubtitle: props.videoEl.classList.contains('plussub')
   }
 });
-
 </script>

@@ -24,10 +24,11 @@
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import { useDraggableArea, useTimeUpdate } from '@/composables';
+import { useDraggableArea } from '@/composables';
 import { ref, computed, watch } from 'vue';
 import { formatTime } from '../../util/time';
 import { srcToVideo, setCurrentTime as setCurrentTimeState } from '@/video/state';
+import { useTimeUpdate } from '@/video/composable';
 
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
