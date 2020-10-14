@@ -9,7 +9,7 @@ export const parse = (): void => {
     return;
   }
   const parsed = srtVttParse(raw);
-  // get a new snapshot because maybe has something change in the meantime
+
   window.plusSub_subtitle.value = {
     raw,
     parsed: parsed.entries,

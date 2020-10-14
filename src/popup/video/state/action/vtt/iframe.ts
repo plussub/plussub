@@ -1,27 +1,41 @@
 import { Video } from '@/video/state/types';
 import { SubtitleEntry } from '@/subtitle/state/types';
+import {AddSubtitle, postWindowMessage, RemoveSubtitle} from "@/composables";
 
 export interface AddVttToIFrameVideoPayload {
-  video: Pick<Video, 'origin' | 'src'>;
+  video: Pick<Video, 'origin' | 'frameSrc'>;
   subtitle: SubtitleEntry[];
   source?: MessageEvent['source'];
 }
 
-export const addVttToIFrameVideo = ({ source, video: { src }, subtitle }: AddVttToIFrameVideoPayload): void => {
+export const addVttToIFrameVideo = ({ source, video: { frameSrc }, subtitle }: AddVttToIFrameVideoPayload): void => {
   if (!source) {
     return;
   }
-  source[src].postMessage({ plusSubAction: 'addSubtitle', data: JSON.stringify(subtitle) }, origin);
+  postWindowMessage({
+    window: source[frameSrc],
+    origin,
+    payload: {
+      plusSubAction: AddSubtitle,
+      subtitle
+    }
+  });
 };
 
 interface RemoveVttFromIFrameVideoPayload {
-  video: Pick<Video, 'origin' | 'src'>;
+  video: Pick<Video, 'origin' | 'frameSrc'>;
   source?: MessageEvent['source'];
 }
 
-export const removeVttFromIFrameVideo = ({ video: { src, origin }, source }: RemoveVttFromIFrameVideoPayload): void => {
+export const removeVttFromIFrameVideo = ({ video: { frameSrc, origin }, source }: RemoveVttFromIFrameVideoPayload): void => {
   if (!source) {
     return;
   }
-  source[src].postMessage({ plusSubAction: 'removeSubtitle' }, origin);
+  postWindowMessage({
+    window: source[frameSrc],
+    origin,
+    payload: {
+      plusSubAction: RemoveSubtitle
+    }
+  })
 };

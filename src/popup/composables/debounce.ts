@@ -9,15 +9,13 @@ interface Payload<T> {
   timeout: number;
 }
 
-interface Result<T> {
-  fn: Payload<T>['fn'];
+interface Result {
+  fn: Payload<void>['fn'];
 }
 
-export const debounce = <T> ({ fn, timeout, resultRef, loadingRef }: Payload<T>): Result<T> => {
+export const debounce = <T> ({ fn, timeout, resultRef, loadingRef }: Payload<T>): Result => {
   let isCalled = false;
   let nextFn;
-  // const result = ref({});
-  const loading = ref(false);
 
   const dbFn = async (...args) => {
     loadingRef.value = true;
@@ -40,8 +38,6 @@ export const debounce = <T> ({ fn, timeout, resultRef, loadingRef }: Payload<T>)
   };
 
   return {
-    // @ts-ignore
-    fn: dbFn,
-    loading
+    fn: dbFn
   };
 };

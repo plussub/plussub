@@ -1,6 +1,6 @@
 import {Video, VideoSrc} from "@/video/state/types";
 import {srcToVideo, srcToSource} from "@/video/state/state";
-import {SendIFrame, useMutationObserver, useWindowMessage} from "@/composables";
+import {VideoInIFrame, useMutationObserver, useWindowMessage} from "@/composables";
 import {isHTMLElement, isHTMLVideoElement} from "@/types";
 import {computed, watch} from "vue";
 import {addVttTo, removeVttFrom} from "@/video/state";
@@ -19,7 +19,7 @@ const findVideosInCurrentTab = (): Record<VideoSrc, Video> => [...document.query
 export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
-    [SendIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
+    [VideoInIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
       if (!srcToVideo.value[src]) {
         srcToSource[src] = source;
         srcToVideo.value[src] = { origin, hasSubtitle, src, frameSrc, in: 'I_FRAME' };

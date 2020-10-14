@@ -17,6 +17,7 @@ export const useTimeUpdate = ({ video, fn }: Payload): void => {
     onMounted(() => video.el?.addEventListener('timeupdate', handler));
     onUnmounted(() => video.el?.removeEventListener('timeupdate', handler));
   } else {
+    // todo: impl send
     // props.sourceObj[videoInFrameHasSub.value.src].postMessage({plusSubAction: 'startTranscript'}, videoInFrameHasSub.value.origin);
     useWindowMessage({
       [StartTranscript]: ({data: {currentTime}}) => fn({currentTime})

@@ -1,7 +1,7 @@
 import {
   useWindowMessage,
-  SendIFrame,
-  SendIFrameEvent,
+  VideoInIFrame,
+  VideoInIFrameEvent,
   UseWindowMessagePayload,
   RemoveMessageEventListener
 } from "@/composables/useWindowMessage";
@@ -9,7 +9,7 @@ import {
 describe('window message test', () => {
   it('single callback', () => {
     const payload: UseWindowMessagePayload = {
-      [SendIFrame]: jest.fn(),
+      [VideoInIFrame]: jest.fn(),
       [RemoveMessageEventListener]: jest.fn()
     };
 
@@ -18,16 +18,16 @@ describe('window message test', () => {
     underTest({
       origin: 'origin',
       data: {
-        plusSubAction: 'SEND_I_FRAME_SRC',
+        plusSubAction: VideoInIFrame,
         src: 'test',
         hasSubtitle: true
       }
-    } as MessageEvent<SendIFrameEvent>);
+    } as MessageEvent<VideoInIFrameEvent>);
 
-    expect(payload.SEND_I_FRAME_SRC).toHaveBeenCalledWith({
+    expect(payload[VideoInIFrame]).toHaveBeenCalledWith({
       origin: 'origin',
       data: {
-        plusSubAction: 'SEND_I_FRAME_SRC',
+        plusSubAction: 'VIDEO_IN_I_FRAME',
         src: 'test',
         hasSubtitle: true
       }

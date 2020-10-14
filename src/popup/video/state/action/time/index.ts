@@ -11,6 +11,7 @@ export const setCurrentTime = ({ video, time }: Payload): void => {
       video.el.currentTime = time;
     }
   } else {
+    // todo impl send
     // props.sourceObj[videoInFrameHasSub.value.src].postMessage(
     //   {
     //     plusSubAction: 'setCurrentTime',
