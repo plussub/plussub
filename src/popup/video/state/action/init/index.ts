@@ -20,6 +20,17 @@ export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
     [VideoInIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
+
+      console.warn('vid in iframe incoming to host');
+      console.warn(frameSrc);
+      console.warn(origin);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      source[frameSrc].postMessage({
+        plusSubAction: 'ADD_SUBTITLE',
+        someData: 'lolz'
+      }, origin);
+
       if (!srcToVideo.value[src]) {
         srcToSource[src] = source;
         srcToVideo.value[src] = { origin, hasSubtitle, src, frameSrc, in: 'I_FRAME' };

@@ -12,7 +12,7 @@ export const init = async (): Promise<void> => {
     const appDiv = document.createElement('div');
     appDiv.id = 'plussub';
     shadow.appendChild(appDiv);
-
+    console.warn("iniframe: "+frameSrc);
     const app = createApp(IFrameApp, {
         frameSrc,
         videoEl,

@@ -9,7 +9,6 @@ export const useWindowMessage = (useWindowMessagePayload: UseWindowMessagePayloa
     if (!data.plusSubAction) {
       return;
     }
-    console.warn(e);
 
     if (data.plusSubAction === 'REMOVE_MESSAGE_EVENT_LISTENER') {
       window.removeEventListener('message', handleMessage);
