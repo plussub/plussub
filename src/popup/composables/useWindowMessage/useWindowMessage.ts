@@ -13,6 +13,7 @@ export const useWindowMessage = (useWindowMessagePayload: UseWindowMessagePayloa
     if (data.plusSubAction === 'REMOVE_MESSAGE_EVENT_LISTENER') {
       window.removeEventListener('message', handleMessage);
     }
+
     const cb = useWindowMessagePayload[data.plusSubAction];
     if (cb) {
       // todo fix type definition

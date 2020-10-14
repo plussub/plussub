@@ -1,39 +1,42 @@
 import { Video } from '@/video/state/types';
 import { SubtitleEntry } from '@/subtitle/state/types';
-import {AddSubtitle, postWindowMessage, RemoveSubtitle} from "@/composables";
+import { AddSubtitle, postWindowMessage, RemoveSubtitle } from '@/composables';
+import {srcToIFrameSource} from "@/video/state";
 
 export interface AddVttToIFrameVideoPayload {
-  video: Pick<Video, 'origin' | 'frameSrc'>;
+  video: Pick<Video, 'src'>;
   subtitle: SubtitleEntry[];
-  source?: MessageEvent['source'];
 }
-
-export const addVttToIFrameVideo = ({ source, video: { frameSrc }, subtitle }: AddVttToIFrameVideoPayload): void => {
-  if (!source) {
+export const addVttToIFrameVideo = ({video: { src }, subtitle }: AddVttToIFrameVideoPayload): void => {
+   const iFrameSource = srcToIFrameSource[src];
+  if (!iFrameSource) {
     return;
   }
+
   postWindowMessage({
-    window: source[frameSrc],
-    origin,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    window: iFrameSource.window,
+    origin: iFrameSource.origin,
     payload: {
       plusSubAction: AddSubtitle,
-      subtitle
+      // get rid of all proxies ... dont knnow a better way yet -_(*.*)_-
+      subtitle: JSON.parse(JSON.stringify(subtitle))
     }
   });
 };
 
 interface RemoveVttFromIFrameVideoPayload {
-  video: Pick<Video, 'origin' | 'frameSrc'>;
-  source?: MessageEvent['source'];
+  video: Pick<Video, 'src'>;
 }
 
-export const removeVttFromIFrameVideo = ({ video: { frameSrc, origin }, source }: RemoveVttFromIFrameVideoPayload): void => {
-  if (!source) {
+export const removeVttFromIFrameVideo = ({ video: { src } }: RemoveVttFromIFrameVideoPayload): void => {
+  const iFrameSource = srcToIFrameSource[src];
+  if (!iFrameSource) {
     return;
   }
   postWindowMessage({
-    window: source[frameSrc],
-    origin,
+    window: iFrameSource.window,
+    origin: iFrameSource.origin,
     payload: {
       plusSubAction: RemoveSubtitle
     }

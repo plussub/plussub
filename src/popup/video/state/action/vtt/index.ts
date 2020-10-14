@@ -1,5 +1,4 @@
 import {Video} from "@/video/state/types";
-import {srcToSource} from "@/video/state/state";
 
 import {addVttToHostVideo, removeVttFromHostVideo} from './host';
 import {addVttToIFrameVideo, removeVttFromIFrameVideo} from './iframe';
@@ -14,7 +13,7 @@ export const addVttTo = ({ video, subtitle }: AddVttToPayload): void => {
   if (video.in === 'HOST') {
     addVttToHostVideo({ video, subtitle });
   } else {
-    addVttToIFrameVideo({ video, source: srcToSource[video.src], subtitle });
+    addVttToIFrameVideo({video, subtitle });
   }
   video.hasSubtitle = true;
 };
@@ -27,7 +26,7 @@ export const removeVttFrom = ({ video}: RemoveVttFromPayload): void => {
   if (video.in === 'HOST') {
     removeVttFromHostVideo({ video });
   } else {
-    removeVttFromIFrameVideo({ video, source: srcToSource[video.src] });
+    removeVttFromIFrameVideo({ video });
   }
   video.hasSubtitle = false;
 };

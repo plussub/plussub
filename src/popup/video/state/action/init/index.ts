@@ -1,43 +1,32 @@
-import {Video, VideoSrc} from "@/video/state/types";
-import {srcToVideo, srcToSource} from "@/video/state/state";
-import {VideoInIFrame, useMutationObserver, useWindowMessage} from "@/composables";
-import {isHTMLElement, isHTMLVideoElement} from "@/types";
-import {computed, watch} from "vue";
-import {addVttTo, removeVttFrom} from "@/video/state";
+import { Video, VideoSrc } from '@/video/state/types';
+import { srcToIFrameSource, srcToVideo } from '@/video/state/state';
+import { useMutationObserver, useWindowMessage, VideoInIFrame } from '@/composables';
+import { isHTMLElement, isHTMLVideoElement } from '@/types';
+import { computed, watch } from 'vue';
+import { addVttTo, removeVttFrom } from '@/video/state';
 
-const findVideosInCurrentTab = (): Record<VideoSrc, Video> => [...document.querySelectorAll('video')]
-  .map((el) => ({
-    origin: window.origin,
-    frameSrc: window.location.href,
-    src: el.src,
-    in: 'HOST',
-    hasSubtitle: el.classList.contains('plussub'),
-    el
-  }))
-  .reduce((acc, cur) => ({ ...acc, [cur.src]: cur }), {});
+const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
+  [...document.querySelectorAll('video')]
+    .map(
+      (el): Video => ({
+        src: el.src,
+        in: 'HOST',
+        hasSubtitle: el.classList.contains('plussub'),
+        el
+      })
+    )
+    .reduce((acc, cur) => ({ ...acc, [cur.src]: cur }), {});
 
 export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
     [VideoInIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
-
-      console.warn('vid in iframe incoming to host');
-      console.warn(frameSrc);
-      console.warn(origin);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      source[frameSrc].postMessage({
-        plusSubAction: 'ADD_SUBTITLE',
-        someData: 'lolz'
-      }, origin);
-
       if (!srcToVideo.value[src]) {
-        srcToSource[src] = source;
-        srcToVideo.value[src] = { origin, hasSubtitle, src, frameSrc, in: 'I_FRAME' };
+        srcToIFrameSource[src] = { window: source as Window, frameSrc, origin };
+        srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
       }
     }
   });
-
 
   const videosWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle));
   watch(
@@ -49,7 +38,7 @@ export const init = (): void => {
       })
   );
 
-// sometimes the element in video tag is a advertisement, delete in video list if advertisement if removed
+  // sometimes the element in video tag is a advertisement, delete in video list if advertisement if removed
   useMutationObserver((mutationsList) =>
     mutationsList
       .reduce<string[]>((acc, mutation) => {
@@ -68,4 +57,4 @@ export const init = (): void => {
       }, [])
       .forEach((src) => delete srcToVideo.value[src])
   );
-}
+};

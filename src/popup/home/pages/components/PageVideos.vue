@@ -29,7 +29,7 @@
 
 <script setup="props" lang="ts">
 import { computed, watch } from 'vue';
-import { srcToVideo, Video } from '@/video/state';
+import { srcToVideo, srcToIFrameSource, Video } from '@/video/state';
 import { addVttTo, removeVttFrom} from '@/video/state';
 import {SubtitleEntry} from "@/subtitle/state/types";
 
@@ -47,7 +47,7 @@ const isElementNotInViewport = (el) => {
 };
 
 export const enterVideo = (video: Video): void => {
-  const el = video.in === 'HOST' ? video.el : document.querySelector(`iframe[src="${video.frameSrc}"]`);
+  const el = video.in === 'HOST' ? video.el : document.querySelector(`iframe[src="${srcToIFrameSource[video.src].frameSrc}"]`);
   if (el && isElementNotInViewport(el)) {
     el.scrollIntoView({ block: 'center' });
   }
