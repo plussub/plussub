@@ -11,11 +11,11 @@
         <div v-for="(subtitleText, index) in subtitleTexts" :key="index" class="transcript-content" :class="{ selected: currentPos === index }" @click="setCurrentTime(subtitleText)">
           <span class="transcript-timefrom" v-text="subtitleText.formattedFrom"></span>
           <span
-              class="transcript-text"
-              :class="{ hovering: textHoverIndex === index && video }"
-              @mouseenter="textHoverIndex = index"
-              @mouseleave="textHoverIndex = -1"
-              v-text="subtitleText.text"
+            class="transcript-text"
+            :class="{ hovering: textHoverIndex === index && video }"
+            @mouseenter="textHoverIndex = index"
+            @mouseleave="textHoverIndex = -1"
+            v-text="subtitleText.text"
           ></span>
         </div>
       </div>
@@ -96,14 +96,14 @@ watch(currentTime, (currentTime) => {
 });
 
 export const subtitleTexts = computed(() =>
-    window.plusSub_subtitle.value.withOffsetParsed.map(({ from, text }) => ({
+  window.plusSub_subtitle.value.withOffsetParsed.map(({ from, text }) => ({
     formattedFrom: formatTime({ time: from, largestUnit: 'MINUTE', smallestUnit: 'SECOND' }),
     text,
     time: from / 1000
   }))
 );
 
-export const setCurrentTime = ({ time }: {time: number}): void => {
+export const setCurrentTime = ({ time }: { time: number }): void => {
   if (!video.value) {
     return;
   }
@@ -113,7 +113,6 @@ export const setCurrentTime = ({ time }: {time: number}): void => {
   });
 };
 export const textHoverIndex = ref(-1);
-
 </script>
 
 

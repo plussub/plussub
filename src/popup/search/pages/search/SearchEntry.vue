@@ -24,7 +24,7 @@
     <div style="grid-area: content; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
       {{ item.overview }}
     </div>
-    <div style="grid-area: action">
+    <div style="grid-area: action; justify-self: end; align-self: center">
       <a class="knopf flat block end large" style="width: 100%" @click="select(item)">Select</a>
     </div>
     <div

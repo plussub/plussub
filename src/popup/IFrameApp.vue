@@ -1,7 +1,19 @@
 <template></template>
 
 <script setup="props" lang="ts">
-import { AddSubtitle, postWindowMessage, RemoveSubtitle, SetVideoTime, StartTranscript, StopTranscript, useWindowMessage, VideoCurrentTime, VideoInIFrame } from '@/composables';
+import {
+  AddSubtitle,
+  GetBoundingClientRect,
+  postWindowMessage,
+  RemoveSubtitle,
+  SetVideoTime,
+  StartTranscript,
+  StopTranscript,
+  useWindowMessage,
+  VideoCurrentTime,
+  VideoInIFrame,
+  VideoBoundingClientRect
+} from '@/composables';
 import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
 
 declare const props: {
@@ -21,6 +33,17 @@ const sendTime = () => {
   });
 };
 
+const sendBoundingClientRect = () => {
+  postWindowMessage({
+    window: window.top,
+    origin: '*',
+    payload: {
+      plusSubAction: VideoBoundingClientRect,
+      boundingClientRect: props.videoEl.getBoundingClientRect()
+    }
+  });
+};
+
 useWindowMessage({
   [AddSubtitle]: (e) =>
     addVttToHostVideo({
@@ -30,7 +53,8 @@ useWindowMessage({
   [RemoveSubtitle]: () => removeVttFromHostVideo({ video: { el: props.videoEl } }),
   [StartTranscript]: () => props.videoEl.addEventListener('timeupdate', sendTime),
   [StopTranscript]: () => props.videoEl.removeEventListener('timeupdate', sendTime),
-  [SetVideoTime]: (e) => (props.videoEl.currentTime = e.data.time)
+  [SetVideoTime]: (e) => (props.videoEl.currentTime = e.data.time),
+  [GetBoundingClientRect]: sendBoundingClientRect
 });
 
 postWindowMessage({

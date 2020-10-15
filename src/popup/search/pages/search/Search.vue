@@ -11,12 +11,13 @@
         <div v-if="searchResults.length" style="grid-area: search-results">
           <SearchEntry v-for="(item, index) in searchResults" :key="index" :item="item" @select="(event) => select(event)" />
         </div>
-        <div v-else-if="internalQuery === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">After a search, the results are displayed here.</div>
+        <!-- <div v-else-if="internalQuery === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">After a search, the results are displayed here.</div> -->
+        <FilePick v-else-if="internalQuery === ''" style="grid-area: auto / auto / span 2 / span 3" @navigate="(event) => $emit('navigate', event)" />
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
           <div>Sorry, no movies or tv shows found</div>
           <div>(╯°□°)╯︵ ┻━┻</div>
         </div>
-        <div style="grid-area: spacer">&nbsp;</div>
+        <div v-if="searchResults.length" style="grid-area: spacer">&nbsp;</div>
       </div>
     </template>
   </PageLayout>
@@ -24,11 +25,12 @@
 
 <script setup="props, { emit }" lang="ts">
 import { searchRequest } from './searchRequest';
-import {debounce, useDraggableArea} from '@/composables';
-import {ref, watch} from 'vue';
-import {TmdbState} from "@/search/state/types";
-import {setTmdbInSelection} from "../../state/actions/setTmdbInSelection";
+import { debounce, useDraggableArea } from '@/composables';
+import { ref, watch } from 'vue';
+import { TmdbState } from '@/search/state/types';
+import { setTmdbInSelection } from '../../state/actions/setTmdbInSelection';
 
+export { default as FilePick } from '@/file/pages/FilePick.vue';
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
 export { default as SearchBar } from './SearchBar.vue';
@@ -50,7 +52,6 @@ export const internalQuery = ref(props.query ?? '');
 export const searchResults = ref([]);
 export const loading = ref(false);
 
-
 const { fn: req } = debounce<TmdbState[]>({
   fn: searchRequest,
   timeout: 1500,
@@ -59,7 +60,6 @@ const { fn: req } = debounce<TmdbState[]>({
 });
 
 watch(internalQuery, (query) => req(query), { immediate: true });
-
 
 export const select = (tmdb) => {
   setTmdbInSelection(tmdb);

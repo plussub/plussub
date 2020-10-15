@@ -1,43 +1,35 @@
 <template>
   <div>
-    <div style="font-size: var(--card-sub-header-font-size); color: var(--default-header-text-color); display: flex"
-         @click="toggle">
+    <div style="font-size: var(--card-sub-header-font-size); color: var(--default-header-text-color); display: flex" @click="toggle">
       <div style="flex-grow: 1">
-        <slot name="title"/>
+        <slot name="title" />
       </div>
-      <transition :name="show ? 'menu-more' : 'menu-less'">
-        <span v-if="show"
-        ><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-up fa-lg"></i></a
-        ></span>
-        <span v-else
-        ><a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-down fa-lg"></i></a
-        ></span>
-      </transition>
+      <a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-down fa-lg" :class="{ show: show }"></i></a>
     </div>
     <transition name="slide">
       <div v-show="show">
-        <slot name="content"/>
+        <slot name="content" />
       </div>
     </transition>
   </div>
 </template>
 
 <script setup="props" lang="ts">
-import {ref} from 'vue';
+import { ref } from 'vue';
 
 declare const props: {
-  open: boolean | undefined
+  open: boolean | undefined;
 };
 export const show = ref<boolean>(props.open ?? false);
-export const toggle = (): unknown => show.value = !show.value;
-
+export const toggle = (): unknown => (show.value = !show.value);
 </script>
 
 <style scoped>
 /* plussub header */
-.knopf.menu-dropdown-chevron:hover,
-.knopf.menu-dropdown-chevron {
-  --knopf-text-color: var(--default-header-text-color);
-  --knopf-background-color: transparent;
+.fa.fa-chevron-down.fa-lg {
+  transition: transform 0.4s ease-in-out;
+}
+.fa.fa-chevron-down.fa-lg.show {
+  transform: rotate(-180deg);
 }
 </style>

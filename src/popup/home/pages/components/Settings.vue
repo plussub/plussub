@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Expandable>
+    <Expandable :open="true">
       <template #title>
         <div style="font-weight: 500; font-family: 'Rubik', sans-serif">Subtitle Setting</div>
       </template>
@@ -26,8 +26,8 @@
 import { ref } from 'vue';
 import { computed } from '@vue/reactivity';
 import { useKeydownPreventInputHandler } from '@/composables';
-import {formatTime} from "@/util/time";
-import {SubtitleEntry} from "@/subtitle/state/types";
+import { formatTime } from '@/util/time';
+import { SubtitleEntry } from '@/subtitle/state/types';
 
 declare const props: {
   parsed: SubtitleEntry[];
@@ -64,11 +64,10 @@ export const notApplied = computed(() => {
   return props.offsetTime !== parseInt(currentOffsetTime.value.toString(), 10);
 });
 
-
-const getTimestamp = ({time, offset}): string => {
+const getTimestamp = ({ time, offset }): string => {
   const parsedOffset = parseInt(offset, 10);
   const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
-  return formatTime({time: value, largestUnit: 'HOUR', smallestUnit: 'MS'});
+  return formatTime({ time: value, largestUnit: 'HOUR', smallestUnit: 'MS' });
 };
 
 const parsedPartial = computed(() => JSON.parse(JSON.stringify(props.parsed.length > 10 ? props.parsed.slice(0, 10) : props.parsed)));
@@ -77,7 +76,7 @@ export const excerpt = computed(() => {
   return parsedPartial.value
     .map(({ from, to, text }, i) => {
       const value = parseInt(from, 10); //+ (isNaN(<number>currentOffsetTime.value) ? 0 : currentOffsetTime.value);
-      return `${i + 1}\n${getTimestamp({time: value, offset: currentOffsetTime.value})} --> ${getTimestamp({ time: to, offset: currentOffsetTime.value })}\n${text}\n`;
+      return `${i + 1}\n${getTimestamp({ time: value, offset: currentOffsetTime.value })} --> ${getTimestamp({ time: to, offset: currentOffsetTime.value })}\n${text}\n`;
     })
     .join('\n');
 });
@@ -95,5 +94,11 @@ export const excerpt = computed(() => {
     'preview-label'
     'preview';
   grid-template-rows: 8px auto auto 16px auto auto;
+}
+.fa.fa-chevron-down.fa-lg {
+  transition: transform 0.4s ease-in-out;
+}
+.fa.fa-chevron-down.fa-lg.show {
+  transform: rotate(-180deg);
 }
 </style>
