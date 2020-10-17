@@ -1,5 +1,5 @@
 <template>
-  <div id="filepicker-content--container" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
+  <div id="filepicker-content--container" @mouseenter="enterVideo(videoWithSubtitle)" @mouseleave="leaveVideo" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
     <p class="upload-drag-icon">
       <i class="fa fa-upload fa-lg"></i>
     </p>
@@ -26,15 +26,16 @@
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import { ref } from 'vue';
+import { ref, computed, onUnmounted } from 'vue';
 import { setFilename } from '../state';
 import { setState, setSrc } from '@/app/state';
 import { setRaw, parse } from '@/subtitle/state';
+import { srcToVideo } from '@/video/state';
+export { enterVideo, leaveVideo } from '@/util/hover';
 export { default as xCircleIcon } from '@/res/x-circle.svg';
 
 declare const props: {
   videoName: string;
-  videoNum?: number;
   query: string;
 };
 
@@ -68,7 +69,7 @@ const resetFileErrorMsg = (timeout: number) => {
 };
 export const fileSelected = async (): Promise<void> => {
   if (!inputRef.value?.files) {
-    fileErrorMsg.value = 'Upload file error';
+    fileErrorMsg.value = 'Click to upload file error';
     resetFileErrorMsg(SHOW_MESSAGE_TIME);
     return;
   }
@@ -84,7 +85,7 @@ export const dragleave = (event): void => {
 export const drop = (event): void => {
   let droppedFiles = event.dataTransfer?.files;
   if (!droppedFiles && !droppedFiles.length) {
-    fileErrorMsg.value = 'Drop file error';
+    fileErrorMsg.value = 'Drop to upload file error';
     dragleave(event);
     resetFileErrorMsg(SHOW_MESSAGE_TIME);
     return;
@@ -105,6 +106,11 @@ export const changeQuery = (): void => {
   if (!isNameNotNum) return;
   emit('update:query', props.videoName);
 };
+export const videoWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle)[0]);
+export const videoNum = computed(() => Object.values(srcToVideo.value).length);
+onUnmounted(() => {
+  leaveVideo();
+});
 </script>
 
 <style scoped>

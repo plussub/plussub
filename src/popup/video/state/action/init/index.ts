@@ -12,7 +12,6 @@ export const isValidVideo = (el: HTMLVideoElement, src: string, videoIn: 'I_FRAM
     // for cases that it does not have src first, but will add src after the video is playing. (eg. vimeo.com)
     useMutationObserver(el, { attributes: true, childList: true }, (mutationsList) => {
       for (const mutation of mutationsList) {
-        console.log(mutation);
         if ((mutation.attributeName === 'src' || (mutation.addedNodes.length > 0 && isHTMLElement(mutation.addedNodes[0]) && mutation.addedNodes[0].tagName === 'source')) && !srcToVideo.value[src]) {
           srcToVideo.value[src] = { hasSubtitle: el.classList.contains('plussub'), src, in: videoIn };
         }

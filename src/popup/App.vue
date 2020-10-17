@@ -78,10 +78,6 @@ const navigateToSearch = () => {
   videoName.value = getVideoName();
   Object.values(srcToVideo.value)[0].hasSubtitle = true;
 };
-const navigateToHome = () => {
-  selected.value = 'HOME';
-  videoName.value = '';
-};
 if (videoNum.value === 1) {
   navigateToSearch();
 }
@@ -90,7 +86,7 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
   if (oldVideoNum === 1 && newVideoNum > 1 && selected.value === 'SEARCH' && appState.value.state === 'NONE') {
     // reset the auto selected video to not selected(hasSubtitle means selected actually now)
     Object.values(srcToVideo.value)[0].hasSubtitle = false;
-    navigateToHome();
+    selected.value = 'HOME';
   } else if (newVideoNum === 1 && selected.value === 'HOME' && appState.value.state === 'NONE') {
     navigateToSearch();
   }
@@ -110,7 +106,7 @@ watch(subState, (newState) => {
     } else {
       // The content of home won't change when close and reopen the popup windows and then click "remove subtitle"
       // use this as a pathetic hack
-      navigateToHome();
+      selected.value = 'HOME';
     }
   }
 });
