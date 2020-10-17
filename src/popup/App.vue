@@ -49,6 +49,10 @@ import { init as initVideoState } from '@/video/state';
 import { init as initFileState } from '@/file/state';
 import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
+import { setSrc } from '@/app/state';
+import { reset as resetSearch } from '@/search/state';
+import { reset as resetSubtitle } from '@/subtitle/state';
+import { reset as resetFile } from '@/file/state';
 import { srcToVideo } from '@/video/state';
 import { getVideoName } from '@/util/name';
 export { default as KnopfCss } from '@/KnopfCss.vue';
@@ -89,6 +93,25 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
     navigateToHome();
   } else if (newVideoNum === 1 && selected.value === 'HOME' && appState.value.state === 'NONE') {
     navigateToSearch();
+  }
+});
+
+// use this as remove
+const subState = computed(() => appState.value.state);
+watch(subState, (newState) => {
+  if (newState === 'NONE') {
+    setSrc({ src: 'NONE' });
+    resetSearch();
+    resetSubtitle();
+    resetFile();
+    if (videoNum.value === 1) {
+      Object.values(srcToVideo.value)[0].hasSubtitle = true;
+      navigateToSearch();
+    } else {
+      // The content of home won't change when close and reopen the popup windows and then click "remove subtitle"
+      // use this as a pathetic hack
+      navigateToHome();
+    }
   }
 });
 

@@ -4,7 +4,7 @@ import { useMutationObserver, useWindowMessage, VideoInIFrame } from '@/composab
 import { isHTMLElement, isHTMLVideoElement } from '@/types';
 import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
-import { remove } from '@/util/remove';
+import { setState } from '@/app/state';
 
 export const isValidVideo = (el: HTMLVideoElement, src: string, videoIn: 'I_FRAME' | 'HOST'): boolean => {
   if (!(el.offsetWidth && el.offsetHeight)) return false;
@@ -63,7 +63,7 @@ export const initMutationObserver = (videoIn: 'I_FRAME' | 'HOST', iFrameSrc = ''
       }, [])
       .forEach((srcOfElement) => {
         const src = videoIn === 'HOST' ? srcOfElement : iFrameSrc;
-        if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) remove();
+        if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) setState({ state: 'NONE' });
         delete srcToVideo.value[src];
       })
   );

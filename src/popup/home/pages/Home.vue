@@ -49,10 +49,7 @@
 <script setup="props, {emit}" lang="ts">
 import { ref } from 'vue';
 import { useDraggableArea } from '@/composables';
-import { setState, setSrc } from '@/app/state';
-import { reset as resetSearch } from '@/search/state';
-import { reset as resetSubtitle } from '@/subtitle/state';
-import { reset as resetFile } from '@/file/state';
+import { setState } from '@/app/state';
 
 declare const props: {
   contentTransitionName?: string;
@@ -67,7 +64,6 @@ export { default as NoSub } from './components/NoSub';
 export { default as PageVideos } from './components/PageVideos';
 export { default as Settings } from './components/Settings.vue';
 export { setOffsetTime } from '@/subtitle/state';
-export { remove } from '@/util/remove';
 
 export const fileState = window.plusSub_file;
 export const appState = window.plusSub_app;
@@ -77,6 +73,8 @@ export const subtitleSearchState = window.plusSub_subtitleSearch;
 export default {
   emits: ['navigate']
 };
+
+export const remove = (): void => setState({ state: 'NONE' });
 
 export const draggableAreaRef = ref(null);
 useDraggableArea({ draggableAreaRef });
