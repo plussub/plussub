@@ -19,7 +19,7 @@ import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/
 declare const props: {
   frameSrc: string;
   videoEl: HTMLVideoElement;
-  test: string;
+  // test: string;
 };
 
 const sendTime = () => {
@@ -57,13 +57,18 @@ useWindowMessage({
   [GetBoundingClientRect]: sendBoundingClientRect
 });
 
+// the src here means frameSrc
+// Not use videoEl.src as object key as some video element don't have src and maybe duplicate
+// eg. https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Video_and_audio_APIs
+// may change this if have any bugs
 postWindowMessage({
   window: window.top,
   origin: '*',
   payload: {
     plusSubAction: VideoInIFrame,
-    frameSrc: props.frameSrc,
-    src: props.videoEl.src,
+    // frameSrc: props.frameSrc,
+    // src: props.videoEl.src,
+    src: props.frameSrc,
     hasSubtitle: props.videoEl.classList.contains('plussub')
   }
 });

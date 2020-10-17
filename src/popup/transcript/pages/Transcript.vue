@@ -26,7 +26,7 @@
 <script setup="props, { emit }" lang="ts">
 import { useDraggableArea } from '@/composables';
 import { ref, computed, watch } from 'vue';
-import { formatTime } from '../../util/time';
+import { formatMinute } from '../../util/time';
 import { srcToVideo, setCurrentTime as setCurrentTimeState } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
 
@@ -97,7 +97,7 @@ watch(currentTime, (currentTime) => {
 
 export const subtitleTexts = computed(() =>
   window.plusSub_subtitle.value.withOffsetParsed.map(({ from, text }) => ({
-    formattedFrom: formatTime({ time: from, largestUnit: 'MINUTE', smallestUnit: 'SECOND' }),
+    formattedFrom: formatMinute({ time: from, largestUnit: 'MINUTE', smallestUnit: 'SECOND' }),
     text,
     time: from / 1000
   }))

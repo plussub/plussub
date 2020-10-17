@@ -13,9 +13,9 @@
     </transition>
     <transition name="slide-down">
       <div v-show="showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px">
-        <input ref="inputRef" v-on:keydown.prevent="onKeydown" style="grid-area: search-bar" placeholder="Search language" type="text" v-model="query" />
+        <input ref="inputRef" v-model="query" style="grid-area: search-bar" placeholder="Search language" type="text" @keydown.prevent="onKeydown" />
         <div style="grid-area: content; overflow-y: auto">
-          <a class="knopf flat block" style="width: 100%" v-for="lang in languageList" :key="lang.iso639_2" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
+          <a v-for="lang in languageList" :key="lang.iso639_2" class="knopf flat block" style="width: 100%" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
         </div>
       </div>
     </transition>
@@ -43,7 +43,7 @@ export const showLanguageSelection = computed<boolean>({
   get: () => showLanguageSelectionInternal.value,
   set: (val) => {
     showLanguageSelectionInternal.value = val;
-    if (showLanguageSelectionInternal.value &&  inputRef.value) {
+    if (showLanguageSelectionInternal.value && inputRef.value) {
       inputRef.value.focus();
     }
   }

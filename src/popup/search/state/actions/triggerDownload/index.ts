@@ -13,9 +13,8 @@ export const triggerDownload = async (): Promise<void> => {
   const raw = await fetch(link)
     .then((r) => r.arrayBuffer())
     .then((blob) => new JSZip().loadAsync(blob))
-    // change this because sometimes the SubFileName is different from
-    // the real file name in the zip(maybe a problem of OpenSubtitles or a problem caused by Proxy)
-    // .then((zip) => zip.file(fileName))
+    // change this because sometimes the SubFileName
+    // is different from the real file name in the zip
     .then((zip) => zip.file(/.srt$/)[0])
     .then((zipFile) => zipFile?.async('string') ?? '');
 

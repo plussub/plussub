@@ -21,31 +21,31 @@
     </template>
     <template #content>
       <div :class="{ 'home-content--container': subtitleState.withOffsetParsed.length !== 0 }">
-        <transition name="fade" mode="out-in">
-          <ResultFromSearch
-            v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
-            style="grid-area: current-sub; margin-top: 20px"
-            :state="appState.state"
-            :search-state="subtitleSearchState"
-            @remove="remove"
-          >
-            <template #settings>
-              <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
-            </template>
-          </ResultFromSearch>
-          <ResultFromFile
-            v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
-            style="grid-area: current-sub; margin-top: 20px"
-            :state="appState.state"
-            :file-state="fileState"
-            @remove="remove"
-          >
-            <template #settings>
-              <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
-            </template>
-          </ResultFromFile>
-          <!-- <NoSub v-else style="grid-row: 1/2; grid-column: 1/4"></NoSub> -->
-        </transition>
+        <!-- <transition name="fade" mode="out-in"> -->
+        <ResultFromSearch
+          v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
+          style="grid-area: current-sub; margin-top: 20px"
+          :state="appState.state"
+          :search-state="subtitleSearchState"
+          @remove="remove"
+        >
+          <template #settings>
+            <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
+          </template>
+        </ResultFromSearch>
+        <ResultFromFile
+          v-else-if="appState.state !== 'NONE' && appState.src === 'FILE'"
+          style="grid-area: current-sub; margin-top: 20px"
+          :state="appState.state"
+          :file-state="fileState"
+          @remove="remove"
+        >
+          <template #settings>
+            <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
+          </template>
+        </ResultFromFile>
+        <!-- <NoSub v-else style="grid-row: 1/2; grid-column: 1/4"></NoSub> -->
+        <!-- </transition> -->
         <PageVideos v-show="appState.state === 'NONE'" style="grid-area: videos" :subtitle="subtitleState.withOffsetParsed" @navigate="(event) => $emit('navigate', event)" />
       </div>
     </template>
@@ -53,7 +53,7 @@
 </template>
 
 
-<script setup="props" lang="ts">
+<script setup="props, {emit}" lang="ts">
 import { ref } from 'vue';
 import { useDraggableArea } from '@/composables';
 import { setState, setSrc } from '@/app/state';
@@ -74,6 +74,7 @@ export { default as NoSub } from './components/NoSub';
 export { default as PageVideos } from './components/PageVideos';
 export { default as Settings } from './components/Settings.vue';
 export { setOffsetTime } from '@/subtitle/state';
+export { remove } from '@/util/remove';
 
 export const fileState = window.plusSub_file;
 export const appState = window.plusSub_app;
@@ -84,13 +85,13 @@ export default {
   emits: ['navigate']
 };
 
-export const remove = (): void => {
-  setState({ state: 'NONE' });
-  setSrc({ src: 'NONE' });
-  resetSearch();
-  resetSubtitle();
-  resetFile();
-};
+// export const remove = (): void => {
+//   setState({ state: 'NONE' });
+//   setSrc({ src: 'NONE' });
+//   resetSearch();
+//   resetSubtitle();
+//   resetFile();
+// };
 export const draggableAreaRef = ref(null);
 useDraggableArea({ draggableAreaRef });
 

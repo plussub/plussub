@@ -10,7 +10,8 @@ export const init = async (): Promise<void> => {
     const appShadowDiv = document.createElement('div');
     appShadowDiv.id = 'plussubShadow';
     appShadowDiv.style.cssText = `position:absolute;z-index: 10000; top: ${window.scrollY + 30}px; right: 16px; width: 400px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); font-size: 16px`;
-    const shadow = appShadowDiv.attachShadow({ mode: 'open' });
+    // const shadow = appShadowDiv.attachShadow({ mode: 'open' });
+    const shadow = appShadowDiv;
     const overlayHightlight = document.createElement('div');
     overlayHightlight.id = 'plussub-overlay-highlight';
 
@@ -47,9 +48,7 @@ export const init = async (): Promise<void> => {
 
     [roboto, rubik, fontAwesome].forEach((entry) => prependLink(document.head, entry));
     [fontAwesome].forEach((entry) => prependLink(shadow, entry));
-    // [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('/* plussub header */')).forEach((style) => shadow.prepend(style));
-    // Change this because when I format the code using prettier, /* plussub header */ will begin in newline
-    [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.match(/^\n?(\/\* plussub header \*\/)/)).forEach((style) => shadow.prepend(style));
+    [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('\n/* plussub header */')).forEach((style) => shadow.prepend(style));
 
     document.body.prepend(appShadowDiv);
     document.body.prepend(overlayHightlight);

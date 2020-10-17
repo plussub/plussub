@@ -15,7 +15,7 @@
           class="video-item"
           @mouseenter="enterVideo(video)"
           @mouseleave="leaveVideo"
-          @click="selectVideo(video)"
+          @click="selectVideo(video, index)"
         >
           <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
           <!-- <a v-if="video.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFrom({ video })">Remove Sub</a>
@@ -92,7 +92,7 @@ export const enterVideo = (video: Video): void => {
     window.addEventListener('message', handleMessageInPageVideos);
   }
 };
-export const leaveVideo = () => {
+export const leaveVideo = (): void => {
   if (!overlayHightlight) return;
   overlayHightlight.style.cssText = `width: 0px; height: 0px;`;
 };
@@ -102,9 +102,10 @@ onUnmounted(() => {
 
 const videosWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle));
 export const pageHasSubtitle = computed(() => videosWithSubtitle.value.length > 0);
-export const selectVideo = (video) => {
+export const selectVideo = (video: Video, index: number): void => {
+  // hasSubtitle means selected now
   video.hasSubtitle = true;
-  emit('navigate', { name: 'SEARCH', params: { contentTransitionName: 'content-navigate-deeper' } });
+  emit('navigate', { name: 'SEARCH', params: { videoIndex: index + 1, contentTransitionName: 'content-navigate-deeper' } });
 };
 </script>
 

@@ -1,10 +1,9 @@
 <template></template>
 <!--knopf.css-->
-<!-- change root to :host -->
 <style>
 /* plussub header */
 /*! knopf v1.0.9 | MIT License | https://knopf.dev/ */
-:host {
+#plussubShadow {
   --knopf-hue: 218;
   --knopf-saturation: 77%;
   --knopf-luminosity: 37%;
@@ -42,7 +41,7 @@
   --knopf-transition: all 150ms ease-in-out;
 }
 /* use nesting for a local branch with no shadow dom  */
-:host .knopf.knopf {
+#plussubShadow .knopf.knopf {
   --knopf-color: var(--knopf-hue) var(--knopf-saturation) var(--knopf-luminosity);
   --knopf-hover-color: var(--knopf-hue) var(--knopf-saturation) calc(var(--knopf-luminosity) - 10%);
   --knopf-active-color: var(--knopf-hue) var(--knopf-saturation) calc(var(--knopf-luminosity) - 15%);
@@ -88,7 +87,7 @@
   white-space: nowrap;
 }
 
-:host .knopf.inverse {
+#plussubShadow .knopf.inverse {
   --knopf-background-color: transparent;
   --knopf-text-color: hsl(var(--knopf-color));
   --knopf-hover-background-color: hsl(var(--knopf-color));
@@ -97,7 +96,7 @@
   --knopf-active-text-color: white;
 }
 
-:host .knopf.flat {
+#plussubShadow .knopf.flat {
   --knopf-background-color: transparent;
   --knopf-text-color: hsl(var(--knopf-color));
   --knopf-hover-background-color: hsl(var(--knopf-color) / 15%);
@@ -106,7 +105,7 @@
   --knopf-active-text-color: hsl(var(--knopf-active-color));
 }
 
-:host .knopf.pale {
+#plussubShadow .knopf.pale {
   --knopf-background-color: hsl(var(--knopf-color) / 10%);
   --knopf-text-color: hsl(var(--knopf-color));
   --knopf-hover-background-color: hsl(var(--knopf-color) / 20%);
@@ -115,101 +114,101 @@
   --knopf-active-text-color: hsl(var(--knopf-active-color));
 }
 
-:host .knopf.knopf:disabled,
-:host .knopf.disabled {
+#plussubShadow .knopf.knopf:disabled,
+#plussubShadow .knopf.disabled {
   cursor: default;
   opacity: 40%;
   pointer-events: none;
 }
 
-:host .knopf.knopf:visited {
+#plussubShadow .knopf.knopf:visited {
   color: var(--knopf-text-color);
 }
 
-:host .knopf.knopf:hover,
-:host .knopf.knopf:active {
+#plussubShadow .knopf.knopf:hover,
+#plussubShadow .knopf.knopf:active {
   --knopf-background-color: var(--knopf-hover-background-color);
   --knopf-border-color: var(--knopf-hover-border-color);
   --knopf-text-color: var(--knopf-hover-text-color);
   --knopf-text-decoration-color: var(--knopf-hover-text-decoration-color);
 }
 
-:host .knopf.knopf:focus,
-:host .knopf.knopf:focus-within {
+#plussubShadow .knopf.knopf:focus,
+#plussubShadow .knopf.knopf:focus-within {
   --knopf-box-shadow: 0 0 0 0.15em hsl(var(--knopf-color) / 40%);
   outline: 0;
 }
 
-:host .knopf.active {
+#plussubShadow .knopf.active {
   --knopf-background-color: var(--knopf-active-background-color);
   --knopf-border-color: var(--knopf-active-border-color);
   --knopf-text-color: var(--knopf-active-text-color);
   --knopf-text-decoration-color: var(--knopf-active-text-decoration-color);
 }
 
-:host .knopf.small {
+#plussubShadow .knopf.small {
   --knopf-font-size: var(--knopf-font-size-small);
   --knopf-padding: var(--knopf-padding-small);
   --knopf-icon-size: var(--knopf-icon-size-small);
 }
 
-:host .knopf.large {
+#plussubShadow .knopf.large {
   --knopf-font-size: var(--knopf-font-size-large);
   --knopf-padding: var(--knopf-padding-large);
   --knopf-icon-size: var(--knopf-icon-size-large);
 }
 
-:host .knopf.huge {
+#plussubShadow .knopf.huge {
   --knopf-font-size: var(--knopf-font-size-huge);
   --knopf-padding: var(--knopf-padding-huge);
   --knopf-icon-size: var(--knopf-icon-size-huge);
 }
 
-:host .knopf.traced,
-:host .knopf.outlined {
+#plussubShadow .knopf.traced,
+#plussubShadow .knopf.outlined {
   --knopf-border-color: hsl(var(--knopf-color) / var(--knopf-border-alpha));
   --knopf-hover-border-color: hsl(var(--knopf-color) / var(--knopf-border-alpha));
   --knopf-active-border-color: hsl(var(--knopf-color) / var(--knopf-border-alpha));
 }
 
-:host .knopf.outlined {
+#plussubShadow .knopf.outlined {
   --knopf-border-alpha: 1;
 }
 
-:host .knopf.block {
+#plussubShadow .knopf.block {
   --knopf-display: flex;
   width: 100%;
 }
 
-:host .knopf.start {
+#plussubShadow .knopf.start {
   --knopf-justify-content: flex-start;
 }
 
-:host .knopf.center {
+#plussubShadow .knopf.center {
   --knopf-justify-content: center;
 }
 
-:host .knopf.end {
+#plussubShadow .knopf.end {
   --knopf-justify-content: flex-end;
 }
 
-:host .knopf.even {
+#plussubShadow .knopf.even {
   --knopf-inline-padding: var(--knopf-padding);
 }
 
-:host .knopf.wide {
+#plussubShadow .knopf.wide {
   --knopf-inline-padding: calc(var(--knopf-padding) * 3);
 }
 
-:host .knopf.pill {
+#plussubShadow .knopf.pill {
   --knopf-border-radius: 9999px;
 }
 
-:host .knopf.sharp {
+#plussubShadow .knopf.sharp {
   --knopf-border-radius: 0;
 }
 
-:host .knopf.link {
+#plussubShadow .knopf.link {
   --knopf-border-width: 0;
   --knopf-border-radius: 0;
   --knopf-font-size: 1em;
@@ -229,7 +228,7 @@
   --knopf-active-text-color: hsl(var(--knopf-active-color));
 }
 
-:host .knopf > .icon {
+#plussubShadow .knopf > .icon {
   align-items: center;
   color: inherit;
   display: inline-flex;
@@ -241,28 +240,28 @@
   width: var(--knopf-icon-size);
 }
 
-:host .knopf > .icon.small {
+#plussubShadow .knopf > .icon.small {
   --knopf-icon-size: var(--knopf-icon-size-small);
 }
 
-:host .knopf > .icon.base {
+#plussubShadow .knopf > .icon.base {
   --knopf-icon-size: var(--knopf-icon-size-base);
 }
 
-:host .knopf > .icon.large {
+#plussubShadow .knopf > .icon.large {
   --knopf-icon-size: var(--knopf-icon-size-large);
 }
 
-:host .knopf > .icon.huge {
+#plussubShadow .knopf > .icon.huge {
   --knopf-icon-size: var(--knopf-icon-size-huge);
 }
 
-:host .knopf > .icon:first-child:not(:only-child) {
+#plussubShadow .knopf > .icon:first-child:not(:only-child) {
   margin-inline-start: calc(var(--knopf-inline-padding) * -0.25);
   margin-inline-end: calc(var(--knopf-inline-padding) * 0.5);
 }
 
-:host .knopf > .icon:last-child:not(:only-child) {
+#plussubShadow .knopf > .icon:last-child:not(:only-child) {
   margin-inline-start: calc(var(--knopf-inline-padding) * 0.5);
   margin-inline-end: calc(var(--knopf-inline-padding) * -0.25);
 }
@@ -283,7 +282,7 @@
   }
 }
 
-:host .knopf-group {
+#plussubShadow .knopf-group {
   align-items: stretch;
   display: inline-flex;
   flex-direction: var(--knopf-group-direction);
@@ -291,39 +290,39 @@
   justify-content: center;
 }
 
-:host .knopf-group.vertical {
+#plussubShadow .knopf-group.vertical {
   --knopf-group-direction: column;
 }
 
-:host .knopf-group.vertical > .knopf:first-child:not(:last-child) {
+#plussubShadow .knopf-group.vertical > .knopf:first-child:not(:last-child) {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-:host .knopf-group.vertical > .knopf:last-child:not(:first-child) {
+#plussubShadow .knopf-group.vertical > .knopf:last-child:not(:first-child) {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 
-:host .knopf-group:not(.vertical) > .knopf:first-child:not(:last-child) {
+#plussubShadow .knopf-group:not(.vertical) > .knopf:first-child:not(:last-child) {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
 
-:host .knopf-group:not(.vertical) > .knopf:last-child:not(:first-child) {
+#plussubShadow .knopf-group:not(.vertical) > .knopf:last-child:not(:first-child) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
 
-:host .knopf-group > .knopf:not(:first-child):not(:last-child) {
+#plussubShadow .knopf-group > .knopf:not(:first-child):not(:last-child) {
   --knopf-border-radius: 0;
 }
 
-:host .knopf-group.vertical > .knopf + .knopf {
+#plussubShadow .knopf-group.vertical > .knopf + .knopf {
   margin-block-start: calc(var(--knopf-border-width) * -1);
 }
 
-:host.knopf-group:not(.vertical) > .knopf + .knopf {
+#plussubShadow.knopf-group:not(.vertical) > .knopf + .knopf {
   margin-inline-start: calc(var(--knopf-border-width) * -1);
 }
 </style>

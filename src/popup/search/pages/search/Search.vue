@@ -2,7 +2,8 @@
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
+        <ToolbarBackBtn v-if="videoNum > 1" style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
+        <a v-else class="knopf flat pill sharp buttonOnPrimary" @click="close"><i class="fa fa-times fa-lg"></i></a>
         <SearchBar v-model:query="internalQuery" v-model:loading="loading" style="flex-grow: 1; align-content: center; z-index: 10000" />
       </div>
     </template>
@@ -12,7 +13,14 @@
           <SearchEntry v-for="(item, index) in searchResults" :key="index" :item="item" @select="(event) => select(event)" />
         </div>
         <!-- <div v-else-if="internalQuery === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">After a search, the results are displayed here.</div> -->
-        <FilePick v-else-if="internalQuery === ''" style="grid-area: auto / auto / span 2 / span 3" @navigate="(event) => $emit('navigate', event)" />
+        <FilePick
+          v-else-if="internalQuery === ''"
+          v-model:query="internalQuery"
+          style="grid-area: auto / auto / span 2 / span 3"
+          :video-name="internalVideoName"
+          :video-num="videoNum"
+          @navigate="(event) => $emit('navigate', event)"
+        />
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
           <div>Sorry, no movies or tv shows found</div>
           <div>(╯°□°)╯︵ ┻━┻</div>
@@ -38,7 +46,10 @@ export { default as SearchEntry } from './SearchEntry.vue';
 
 declare const props: {
   query?: string;
-  contentTransitionName: string; // default : ''
+  contentTransitionName?: string; // default : ''
+  videoName: string;
+  videoNum: number;
+  videoIndex?: number;
 };
 
 export default {
@@ -72,6 +83,11 @@ export const select = (tmdb) => {
       contentTransitionName: 'content-navigate-deeper'
     }
   });
+};
+export const internalVideoName = props.videoIndex ? props.videoIndex.toString() : props.videoName;
+export const close = (): void => {
+  document.getElementById('plussubShadow')?.remove();
+  window.postMessage({ plusSubAction: 'removeMessageEventListener' }, '*');
 };
 </script>
 

@@ -28,7 +28,7 @@ type GenericEvent<T extends Actions> = {
 };
 
 export type VideoInIFrameEvent = GenericEvent<typeof VideoInIFrame> & {
-  frameSrc: string;
+  // frameSrc: string;
   src: string;
   hasSubtitle: boolean;
 };

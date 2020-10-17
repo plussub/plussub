@@ -45,7 +45,7 @@ declare const props: {
   fileState: UnwrapRef<FileState>;
 };
 
-export { default as Spinner } from '@/components/Spinner';
+export { default as Spinner } from '@/components/Spinner.vue';
 export default {
   emits: ['remove']
 };
