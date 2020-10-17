@@ -8,13 +8,6 @@
             <!-- This icon comes from material design icons which is under Apache license -->
             <img :src="subtitleIcon" style="filter: invert(1)" />
           </a>
-          <!-- <a class="knopf flat pill buttonOnPrimary" @click="$emit('navigate', { name: 'SEARCH', params: { contentTransitionName: 'content-navigate-deeper' } })">
-            <i class="fa fa-search fa-lg"></i>
-          </a>
-          <a class="knopf flat pill buttonOnPrimary"
-             @click="$emit('navigate', { name: 'FILE-PICK', params: { contentTransitionName: 'content-navigate-deeper' } })">
-            <i class="fa fa-upload fa-lg"></i>
-          </a> -->
           <a class="knopf flat pill buttonOnPrimary" @click="close"><i class="fa fa-times fa-lg"></i></a>
         </div>
       </div>
@@ -85,13 +78,6 @@ export default {
   emits: ['navigate']
 };
 
-// export const remove = (): void => {
-//   setState({ state: 'NONE' });
-//   setSrc({ src: 'NONE' });
-//   resetSearch();
-//   resetSubtitle();
-//   resetFile();
-// };
 export const draggableAreaRef = ref(null);
 useDraggableArea({ draggableAreaRef });
 

@@ -9,4 +9,5 @@ export const remove = (): void => {
   resetSearch();
   resetSubtitle();
   resetFile();
+  console.log('hello world');
 };

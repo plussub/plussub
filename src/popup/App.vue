@@ -92,20 +92,6 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
   }
 });
 
-// can move remove here and use setState as remove
-watch(ref(appState.value.state), (state) => {
-  if (state === 'NONE') {
-    if (videoNum.value === 1) {
-      Object.values(srcToVideo.value)[0].hasSubtitle = true;
-      navigateToSearch();
-    } else {
-      // The content of home won't change when reopen the popup windows and click "remove subtitle"
-      // use this as a pathetic hack
-      navigateToHome();
-    }
-  }
-});
-
 export const state = reactive({ selected, selectedParams: {} });
 export const navigate = (event) => {
   state.selectedParams = event.params;
