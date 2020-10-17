@@ -73,7 +73,7 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
 
   onMounted(() => {
     const appShadowDiv = getShadowDiv();
-    if (!appShadowDiv) {
+    if (!appShadowDiv.shadowRoot) {
       return;
     }
     if (draggableAreaRef.value.$el) {

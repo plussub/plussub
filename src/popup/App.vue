@@ -92,6 +92,7 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
   }
 });
 
+// can move remove here and use setState as remove
 watch(ref(appState.value.state), (state) => {
   if (state === 'NONE') {
     if (videoNum.value === 1) {
@@ -114,7 +115,7 @@ export const navigate = (event) => {
 
 <style>
 /* plussub header */
-#plussubShadow {
+:host {
   --primary: #5bc0de;
   --primary50: #e4f7fd;
   --onPrimary: #ffffff;
@@ -147,14 +148,14 @@ export const navigate = (event) => {
   --knopf-font-size-base: 16px !important;
 }
 
-#plussubShadow .buttonOnPrimary {
+:host .buttonOnPrimary {
   --knopf-text-color: --onPrimary;
   --knopf-hue: 0;
   --knopf-saturation: 0%;
   --knopf-luminosity: 100%;
 }
 /* use all:initial to prevent inheritance from body */
-#plussubShadow {
+:host {
   all: initial;
 }
 </style>
