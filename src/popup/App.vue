@@ -3,7 +3,7 @@
   <div v-if="state.selected === 'SEARCH'" class="app--container">
     <Suspense>
       <template #default>
-        <Search v-bind="state.selectedParams" @navigate="navigate" />
+        <Search v-bind="state.selectedParams" :video-num="videoNum" :video-name="videoName" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -14,16 +14,6 @@
     <Suspense>
       <template #default>
         <SubtitleSelection v-bind="state.selectedParams" @navigate="navigate" />
-      </template>
-      <template #fallback>
-        <div>loading</div>
-      </template>
-    </Suspense>
-  </div>
-  <div v-else-if="state.selected === 'FILE-PICK'" class="app--container">
-    <Suspense>
-      <template #default>
-        <FilePick v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -52,35 +42,88 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { reactive } from 'vue';
-import {init as initAppState} from '@/app/state';
-import {init as initVideoState} from '@/video/state';
-import {init as initFileState} from '@/file/state';
-import {init as initSubtitleState} from '@/subtitle/state';
-import {init as initSubtitleSearchState} from '@/search/state';
-export {default as KnopfCss} from '@/KnopfCss.vue';
-export {default as Home} from '@/home/pages/Home.vue';
-export {default as Search} from '@/search/pages/search/Search.vue';
-export {default as SubtitleSelection} from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
-export {default as FilePick} from '@/file/pages/FilePick.vue';
-export {default as Transcript} from '@/transcript/pages/Transcript.vue';
+<script async setup lang="ts">
+import { ref, reactive, computed, watch } from 'vue';
+import { init as initAppState } from '@/app/state';
+import { init as initVideoState } from '@/video/state';
+import { init as initFileState } from '@/file/state';
+import { init as initSubtitleState } from '@/subtitle/state';
+import { init as initSubtitleSearchState } from '@/search/state';
+import { setSrc } from '@/app/state';
+import { reset as resetSearch } from '@/search/state';
+import { reset as resetSubtitle } from '@/subtitle/state';
+import { reset as resetFile } from '@/file/state';
+import { srcToVideo } from '@/video/state';
+import { getVideoName } from '@/util/name';
+export { default as KnopfCss } from '@/KnopfCss.vue';
+export { default as Home } from '@/home/pages/Home.vue';
+export { default as Search } from '@/search/pages/search/Search.vue';
+export { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
+export { default as FilePick } from '@/file/pages/FilePick.vue';
+export { default as Transcript } from '@/transcript/pages/Transcript.vue';
 
-export const state = reactive({ selected: 'HOME', selectedParams: {} });
-export const navigate = (event) => {
-  state.selectedParams = event.params;
-  state.selected = event.name;
-};
 initAppState();
 initSubtitleState();
 initVideoState();
 initFileState();
 initSubtitleSearchState();
+
+export const appState = window.plusSub_app;
+
+export const videoNum = computed(() => Object.values(srcToVideo.value).length);
+export const videoName = ref('');
+const selected = ref('HOME');
+const navigateToSearch = () => {
+  selected.value = 'SEARCH';
+  videoName.value = getVideoName();
+  Object.values(srcToVideo.value)[0].hasSubtitle = true;
+};
+const navigateToHome = () => {
+  selected.value = 'HOME';
+  videoName.value = '';
+};
+if (videoNum.value === 1) {
+  navigateToSearch();
+}
+
+watch(videoNum, (newVideoNum, oldVideoNum) => {
+  if (oldVideoNum === 1 && newVideoNum > 1 && selected.value === 'SEARCH' && appState.value.state === 'NONE') {
+    // reset the auto selected video to not selected(hasSubtitle means selected actually now)
+    Object.values(srcToVideo.value)[0].hasSubtitle = false;
+    navigateToHome();
+  } else if (newVideoNum === 1 && selected.value === 'HOME' && appState.value.state === 'NONE') {
+    navigateToSearch();
+  }
+});
+
+// use this as remove
+const subState = computed(() => appState.value.state);
+watch(subState, (newState) => {
+  if (newState === 'NONE') {
+    setSrc({ src: 'NONE' });
+    resetSearch();
+    resetSubtitle();
+    resetFile();
+    if (videoNum.value === 1) {
+      Object.values(srcToVideo.value)[0].hasSubtitle = true;
+      navigateToSearch();
+    } else {
+      // The content of home won't change when close and reopen the popup windows and then click "remove subtitle"
+      // use this as a pathetic hack
+      navigateToHome();
+    }
+  }
+});
+
+export const state = reactive({ selected, selectedParams: {} });
+export const navigate = (event) => {
+  state.selectedParams = event.params;
+  state.selected = event.name;
+};
 </script>
 
 <style>
 /* plussub header */
-/* :host { */
 :host {
   --primary: #5bc0de;
   --primary50: #e4f7fd;
@@ -127,7 +170,6 @@ initSubtitleSearchState();
 </style>
 <style scoped>
 /* plussub header */
-/* use all:unset for branch with no shadow dom to solve inheritance problem */
 .content-navigate-deeper-leave-active,
 .content-navigate-deeper-enter-active {
   transition: all 0.2s ease;

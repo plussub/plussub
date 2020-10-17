@@ -19,3 +19,13 @@ export const formatTime = ({ time, largestUnit, smallestUnit }: FormatTimePayloa
 
   return `${hoursPart}${minutesPart}${secondsPart}${msPart}`;
 };
+
+// To show minute correctly when time is more than 60 minutes
+export const formatMinute = ({ time }: FormatTimePayload): string => {
+  const seconds = Math.trunc((time / 1000) % 60);
+  const secondsPart = `${seconds > 9 ? '' : '0'}${seconds}`;
+
+  const minutes = Math.trunc((time / (1000 * 60)) % 1000);
+  const minutesPart = `${minutes > 9 ? '' : '0'}${minutes}:`;
+  return `${minutesPart}${secondsPart}`;
+};

@@ -30,5 +30,5 @@ export const removeVttFromHostVideo = ({ video: { el } }: RemoveVttFromHostVideo
   Array.from(el.textTracks)
     .filter((track) => track.label === 'Plussub')
     .forEach((track) => (track.mode = 'disabled'));
-  // hidden cannot work on some website(like yhdm.tv)
+  // change from hidden to disable as hidden cannot work on some website(eg. yhdm.tv)
 };

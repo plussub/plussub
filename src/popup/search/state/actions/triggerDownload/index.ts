@@ -1,6 +1,6 @@
-import JSZip from "jszip";
-import {setState} from "@/app/state";
-import {parse, setRaw} from "@/subtitle/state";
+import JSZip from 'jszip';
+import { setState } from '@/app/state';
+import { parse, setRaw } from '@/subtitle/state';
 
 export const triggerDownload = async (): Promise<void> => {
   const { openSubtitle } = window.plusSub_subtitleSearch.value;
@@ -10,13 +10,14 @@ export const triggerDownload = async (): Promise<void> => {
     return;
   }
   setState({ state: 'DOWNLOADING' });
-  // TODO: has bug on some file
   const raw = await fetch(link)
     .then((r) => r.arrayBuffer())
     .then((blob) => new JSZip().loadAsync(blob))
-    .then((zip) => zip.file(fileName))
+    // change this because sometimes the SubFileName
+    // is different from the real file name in the zip
+    .then((zip) => zip.file(/.srt$/)[0])
     .then((zipFile) => zipFile?.async('string') ?? '');
 
-  setRaw({raw});
+  setRaw({ raw });
   parse();
 };

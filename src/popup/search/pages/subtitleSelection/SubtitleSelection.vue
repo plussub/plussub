@@ -12,7 +12,7 @@
       <div v-else-if="filteredEntries.length" class="subtitle-selection-content--container">
         <div style="grid-area: search-results; display: grid">
           <div v-for="(item, index) in filteredEntries" :key="index" class="subtitle-selection-content--container--card">
-            <div style="grid-area: header; overflow: hidden; text-overflow: ellipsis; color: black; font-weight: 500; font-family: 'Rubik', sans-serif">
+            <div style="grid-area: header; overflow: hidden; text-overflow: ellipsis; color: black; font-weight: 500; font-family: 'Rubik', sans-serif; word-break; break-all;">
               {{ item.SubFileName }}
             </div>
             <div style="grid-area: content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
@@ -51,14 +51,14 @@ import { ref, watch, computed } from 'vue';
 
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as LanguageAccordion } from './LanguageAccordion.vue';
-export { default as FilterBar } from './FilterBar';
+export { default as FilterBar } from './FilterBar.vue';
 export { default as PageLayout } from '@/components/PageLayout';
 
 import { searchRequest } from './searchRequest';
 import { selectOpenSubtitle, triggerDownload } from '@/search/state';
 import { useDraggableArea } from '@/composables';
-import {setState, setSrc} from "@/app/state";
-import {OpensubtitlesState} from "@/search/state/types";
+import { setState, setSrc } from '@/app/state';
+import { OpensubtitlesState } from '@/search/state/types';
 
 declare const props: {
   searchQuery: string;
@@ -77,7 +77,7 @@ useDraggableArea({ draggableAreaRef: draggableAreaRef });
 export const select = (openSubtitle) => {
   setState({ state: 'SELECTED' });
   setSrc({ src: 'SEARCH' });
-  selectOpenSubtitle(openSubtitle)
+  selectOpenSubtitle(openSubtitle);
   triggerDownload();
   emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
 };

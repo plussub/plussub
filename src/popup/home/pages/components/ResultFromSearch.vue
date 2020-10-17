@@ -1,44 +1,41 @@
 <template>
-  <div class="result-from-search--card" style="position: relative;">
-    <div style="grid-row: 1/2; grid-column: 2/3; z-index: 10;" class="result-from-search--card--hero--text">
-      <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500;">
-        <div style="font-size: 0.65em; margin-right: 16px;">{{ prettyState }}</div>
-        <div style="font-size: 0.65em;">
+  <div class="result-from-search--card" style="position: relative">
+    <div style="grid-row: 1/2; grid-column: 2/3; z-index: 10" class="result-from-search--card--hero--text">
+      <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500">
+        <div style="font-size: 0.65em; margin-right: 16px">{{ prettyState }}</div>
+        <div style="font-size: 0.65em">
           <transition name="fade" mode="out-in">
-            <Spinner v-if="state !== 'DONE'"/>
+            <Spinner v-if="state !== 'DONE'" />
             <i v-else class="fa fa-check fa-sm"></i>
           </transition>
         </div>
       </div>
       <div style="grid-area: title; font-size: var(--card-header-font-size); font-weight: 400">{{ searchState.tmdb.title }}</div>
-      <div style="grid-area: subtitle; font-size: 0.75em;">
-        ({{ prettyMediaType }} {{ searchState.tmdb.release_date }})
-      </div>
-      <div
-          style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6; font-weight: 400">
-        <div style="grid-column: 1 / 2;">subRating</div>
-        <div style="grid-column: 2 / 3;">{{ searchState.openSubtitle.SubRating }}</div>
-        <div style="grid-column: 1 / 2;">subFormat</div>
-        <div style="grid-column: 2 / 3;">{{ searchState.openSubtitle.SubFormat }}</div>
-        <div style="grid-column: 1 / 2;">subLang</div>
-        <div style="grid-column: 2 / 3;">{{ searchState.openSubtitle.LanguageName }}</div>
+      <div style="grid-area: subtitle; font-size: 0.75em">({{ prettyMediaType }} {{ searchState.tmdb.release_date }})</div>
+      <div style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6; font-weight: 400">
+        <div style="grid-column: 1 / 2">subRating</div>
+        <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.SubRating }}</div>
+        <div style="grid-column: 1 / 2">subFormat</div>
+        <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.SubFormat }}</div>
+        <div style="grid-column: 1 / 2">subLang</div>
+        <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.LanguageName }}</div>
       </div>
       <div style="grid-area: detail2; font-size: 0.75em; align-self: end; font-weight: 500">
         <div>tmdb {{ searchState.tmdb.vote_average }}</div>
       </div>
     </div>
-    <div style="grid-area: header; position: relative;">
+    <div style="grid-area: header; position: relative">
       <div class="result-from-search--card--hero">
-        <img :src="searchState.tmdb.poster_path"
-             style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius);"/>
+        <img
+          :src="searchState.tmdb.poster_path"
+          style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius)"
+        />
       </div>
     </div>
-    <div style="grid-area: overview; display: flex; width: 100%; font-size: 1em; line-height: 1.6;">
-      <Expandable style="width: 100%;">
+    <div style="grid-area: overview; display: flex; width: 100%; font-size: 1em; line-height: 1.6">
+      <Expandable style="width: 100%">
         <template #title>
-          <div style="font-weight: 500;  font-family: 'Rubik', sans-serif;">
-            Overview
-          </div>
+          <div style="font-weight: 500; font-family: 'Rubik', sans-serif">Overview</div>
         </template>
         <template #content>
           <div style="font-weight: 300">
@@ -48,29 +45,37 @@
       </Expandable>
     </div>
     <div style="grid-area: settings">
-      <slot name="settings"/>
+      <slot name="settings" />
     </div>
-    <div style="grid-area: actions; justify-self: end; align-self: center;">
-      <a class="knopf flat block end large" style="width: 100%;" @click="$emit('remove')">Remove subtitle</a>
+    <div style="grid-area: actions; justify-self: end; align-self: center">
+      <a class="knopf flat block end large" style="width: 100%" @click="$emit('remove')">Remove subtitle</a>
     </div>
-    <div style="grid-column: 1/4; grid-row: 7/10; background-color: var(--card-actions-background-color); border-bottom-left-radius: var(--card-border-radius); border-bottom-right-radius: var(--card-border-radius);"/>
+    <div
+      style="
+        grid-column: 1/4;
+        grid-row: 7/10;
+        background-color: var(--card-actions-background-color);
+        border-bottom-left-radius: var(--card-border-radius);
+        border-bottom-right-radius: var(--card-border-radius);
+      "
+    />
   </div>
 </template>
 
 <script setup="props" lang="ts">
-import {computed, UnwrapRef} from '@vue/reactivity';
-import {capitalizeFirst} from "@/util/string";
-import {SubtitleSearchState} from "@/search/state/types";
+import { computed, UnwrapRef } from '@vue/reactivity';
+import { capitalizeFirst } from '@/util/string';
+import { SubtitleSearchState } from '@/search/state/types';
 
 declare const props: {
   state: string;
   searchState: UnwrapRef<SubtitleSearchState>;
-}
+};
 
-export {default as Spinner} from '@/components/Spinner';
-export {default as Expandable} from '@/components/Expandable';
+export { default as Spinner } from '@/components/Spinner.vue';
+export { default as Expandable } from '@/components/Expandable';
 export const prettyState = computed(() => capitalizeFirst(props.state));
-export const prettyMediaType =computed(() => "asdf"); // capitalizeFirst(props.searchState?.tmdb?.media_type));
+export const prettyMediaType = computed(() => 'asdf'); // capitalizeFirst(props.searchState?.tmdb?.media_type));
 
 export default {
   emits: ['remove']
