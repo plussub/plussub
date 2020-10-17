@@ -11,8 +11,11 @@ export const init = async (): Promise<void> => {
     appShadowDiv.id = 'plussubShadow';
     appShadowDiv.style.cssText = `position:absolute;z-index: 10000; top: ${window.scrollY + 30}px; right: 16px; width: 400px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); font-size: 16px`;
     const shadow = appShadowDiv.attachShadow({ mode: 'open' });
-    const overlayHightlight = document.createElement('div');
-    overlayHightlight.id = 'plussub-overlay-highlight';
+    if (!document.getElementById('plussub-overlay-highlight')) {
+      const overlayHightlight = document.createElement('div');
+      overlayHightlight.id = 'plussub-overlay-highlight';
+      document.body.prepend(overlayHightlight);
+    }
 
     const appDiv = document.createElement('div');
     appDiv.id = 'plussub';
@@ -50,7 +53,6 @@ export const init = async (): Promise<void> => {
     [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('\n/* plussub header */')).forEach((style) => shadow.prepend(style));
 
     document.body.prepend(appShadowDiv);
-    document.body.prepend(overlayHightlight);
     app.mount(appDiv);
   }
 };

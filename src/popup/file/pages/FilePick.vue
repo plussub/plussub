@@ -31,7 +31,7 @@ import { setFilename } from '../state';
 import { setState, setSrc } from '@/app/state';
 import { setRaw, parse } from '@/subtitle/state';
 import { srcToVideo } from '@/video/state';
-export { enterVideo, leaveVideo } from '@/util/hover';
+import { enterVideo, leaveVideo } from '@/util/hover';
 export { default as xCircleIcon } from '@/res/x-circle.svg';
 
 declare const props: {
@@ -42,7 +42,7 @@ declare const props: {
 export default {
   emits: ['navigate']
 };
-
+export { enterVideo, leaveVideo };
 export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
 const readFile = (file: any): void => {

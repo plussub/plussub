@@ -32,7 +32,7 @@ import { computed, onUnmounted } from 'vue';
 import { srcToVideo, Video } from '@/video/state';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { SubtitleEntry } from '@/subtitle/state/types';
-export { enterVideo, leaveVideo } from '@/util/hover';
+import { enterVideo, leaveVideo } from '@/util/hover';
 
 declare const props: {
   subtitle: SubtitleEntry[];
@@ -43,6 +43,7 @@ export default {
 };
 
 export { addVttTo, removeVttFrom };
+export { enterVideo, leaveVideo };
 
 export const videoList = computed(() => Object.values(srcToVideo.value));
 export const selectVideo = (video: Video, index: number): void => {

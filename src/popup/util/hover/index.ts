@@ -7,6 +7,7 @@ const isElementNotInViewport = (el) => {
 };
 
 export const enterVideo = (video: Video): void => {
+  if (!video) return;
   const el = video.in === 'HOST' ? video.el : document.querySelector(`iframe[src="${srcToIFrameSource[video.src].frameSrc}"]`);
   if (!el) return;
   if (isElementNotInViewport(el)) {
@@ -47,6 +48,7 @@ export const enterVideo = (video: Video): void => {
     window.addEventListener('message', handleMessageInPageVideos);
   }
 };
+
 export const leaveVideo = (): void => {
   const overlayHightlight = document.getElementById('plussub-overlay-highlight');
   if (!overlayHightlight) return;

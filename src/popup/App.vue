@@ -74,11 +74,11 @@ export const videoNum = computed(() => Object.values(srcToVideo.value).length);
 export const videoName = ref('');
 const selected = ref('HOME');
 const navigateToSearch = () => {
-  selected.value = 'SEARCH';
-  videoName.value = getVideoName();
   Object.values(srcToVideo.value)[0].hasSubtitle = true;
+  videoName.value = getVideoName();
+  selected.value = 'SEARCH';
 };
-if (videoNum.value === 1) {
+if (appState.value.state === 'NONE' && videoNum.value === 1) {
   navigateToSearch();
 }
 
@@ -101,7 +101,6 @@ watch(subState, (newState) => {
     resetSubtitle();
     resetFile();
     if (videoNum.value === 1) {
-      Object.values(srcToVideo.value)[0].hasSubtitle = true;
       navigateToSearch();
     } else {
       // The content of home won't change when close and reopen the popup windows and then click "remove subtitle"
