@@ -14,7 +14,6 @@
     </template>
     <template #content>
       <div :class="{ 'home-content--container': subtitleState.withOffsetParsed.length !== 0 }">
-        <!-- <transition name="fade" mode="out-in"> -->
         <ResultFromSearch
           v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
           style="grid-area: current-sub; margin-top: 20px"

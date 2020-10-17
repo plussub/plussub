@@ -26,7 +26,7 @@
 import { ref } from 'vue';
 import { computed } from '@vue/reactivity';
 import { useKeydownPreventInputHandler } from '@/composables';
-import { formatTime } from '@/util/time';
+import { formatBiggestUnitHoursSmallestUnitMilliseconds } from '@/util/time';
 import { SubtitleEntry } from '@/subtitle/state/types';
 
 declare const props: {
@@ -67,7 +67,7 @@ export const notApplied = computed(() => {
 const getTimestamp = ({ time, offset }): string => {
   const parsedOffset = parseInt(offset, 10);
   const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
-  return formatTime({ time: value, largestUnit: 'HOUR', smallestUnit: 'MS' });
+  return formatBiggestUnitHoursSmallestUnitMilliseconds({ time: value });
 };
 
 const parsedPartial = computed(() => JSON.parse(JSON.stringify(props.parsed.length > 10 ? props.parsed.slice(0, 10) : props.parsed)));

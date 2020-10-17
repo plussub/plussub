@@ -64,7 +64,7 @@ export const select = ({ iso639_2 }): void => {
 };
 
 export const onKeydown = useKeydownPreventInputHandler({
-  allowedInputValue: /^[0-9a-zA-Z]$/,
+  allowedInputValue: /^[0-9a-zA-Z _]$/,
   inputRef,
   valueRef: query
 });

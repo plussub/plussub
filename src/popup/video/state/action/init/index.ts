@@ -23,8 +23,12 @@ export const isValidVideo = (el: HTMLVideoElement, src: string, videoIn: 'I_FRAM
   return true;
 };
 
+// todo what happends here ?
 // TODO: it seems that this does not work with video in Iframe
 export const initMutationObserver = (videoIn: 'I_FRAME' | 'HOST', iFrameSrc = ''): void => {
+
+
+  // todo move fn out, both handler used, handler does not know videoiN
   useMutationObserver(document.body, { subtree: true, childList: true }, (mutationsList) =>
     mutationsList
       .reduce<HTMLVideoElement[]>((acc, mutation) => {
