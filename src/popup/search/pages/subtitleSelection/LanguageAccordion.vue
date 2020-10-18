@@ -13,7 +13,7 @@
     </transition>
     <transition name="slide-down">
       <div v-show="showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px">
-        <input ref="inputRef" v-model="query" style="grid-area: search-bar" placeholder="Search language" type="text" @keydown.prevent="onKeydown" />
+        <input ref="inputRef" v-model="query" style="grid-area: search-bar" placeholder="Search language" type="text" @keydown.stop @keypress.stop />
         <div style="grid-area: content; overflow-y: auto">
           <a v-for="lang in languageList" :key="lang.iso639_2" class="knopf flat block" style="width: 100%" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
         </div>
@@ -63,11 +63,11 @@ export const select = ({ iso639_2 }): void => {
   emit('update:selected', iso639_2);
 };
 
-export const onKeydown = useKeydownPreventInputHandler({
-  allowedInputValue: /^[0-9a-zA-Z _]$/,
-  inputRef,
-  valueRef: query
-});
+// export const onKeydown = useKeydownPreventInputHandler({
+//   allowedInputValue: /^[0-9a-zA-Z _]$/,
+//   inputRef,
+//   valueRef: query
+// });
 </script>
 
 <style scoped>

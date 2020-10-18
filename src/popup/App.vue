@@ -76,7 +76,6 @@ export const videoNum = computed(() => Object.values(srcToVideo.value).length);
 const navigateToSearch = () => {
   Object.values(srcToVideo.value)[0].hasSubtitle = true;
   state.selected = 'SEARCH';
-  // TODO: fix videoName does not change after the the src of video change
   state.selectedParams = { videoName: getVideoName(), videoNum };
 };
 if (appState.value.state === 'NONE' && videoNum.value === 1) {

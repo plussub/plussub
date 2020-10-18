@@ -15,8 +15,7 @@ export const triggerDownload = async (): Promise<void> => {
     .then((blob) => new JSZip().loadAsync(blob))
     // change this because sometimes the SubFileName
     // is different from the real file name in the zip
-    // todo: add .vtt support
-    .then((zip) => zip.file(/.srt$/)[0])
+    .then((zip) => zip.file(/\.(srt|vtt)$/)[0])
     .then((zipFile) => zipFile?.async('string') ?? '');
 
   setRaw({ raw });

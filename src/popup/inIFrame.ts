@@ -12,7 +12,7 @@ export const init = async (): Promise<void> => {
   }
   // To get the top iframe if video is in nested iframe
   // const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window);
-  const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window) ?? '';
+  const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window);
   const appShadowDiv = document.createElement('div');
   const shadow = appShadowDiv.attachShadow({ mode: 'open' });
   appShadowDiv.id = 'plussubShadow';

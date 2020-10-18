@@ -6,7 +6,7 @@ import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
 
-// TODO: change video name when change
+// TODO: change video name when src change
 // race competition on all these mutatinobserver
 const changeSrc = (el: HTMLVideoElement, oldSrc: string) => {
   if (srcToVideo.value[oldSrc] && srcToVideo.value[oldSrc].hasSubtitle) reset();
@@ -27,7 +27,6 @@ const isValidVideo = (el: HTMLVideoElement): boolean => {
       for (const mutation of mutationsList) {
         if (mutation.attributeName === 'src') {
           if (inVideoList && src) {
-            // TODO: fix bug that sometimes cannot work unless unopen popup window or reupload subtitle
             changeSrc(el, oldSrc);
             oldSrc = src;
           }
@@ -95,11 +94,11 @@ export const init = (): void => {
 
     return nodes.reduce<HTMLVideoElement[]>((acc, parent) => (isHTMLElement(parent) ? [...acc, ...Array.from<HTMLVideoElement>(parent.querySelectorAll('video'))] : acc), []);
   };
+  // TODO: listen to added and removed video, and src in video in iframe
   useMutationObserver((mutationsList) =>
     mutationsList.forEach((mutation) => {
       findVideoElement(Array.from(mutation.removedNodes)).forEach((el) => {
         const { src } = el;
-        if (!srcToVideo.value[src]) return;
         if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) reset();
         delete srcToVideo.value[src];
       });

@@ -8,14 +8,19 @@
         <div class="offset-time--container">
           <div style="grid-area: input-label; font-weight: 500; font-size: 0.75em">Offset time (in ms)</div>
           <div style="grid-area: input; display: flex; width: 100%">
-            <input ref="inputRef" v-model="currentOffsetTime" style="height: 1.5em; flex-grow: 1; font-size: 1em" type="text" @keydown.prevent="onKeydown" />
+            <input v-model="currentOffsetTime" style="height: 1.5em; flex-grow: 1; font-size: 1em" type="number" step="100" @keydown.stop @keypress.stop />
             <div>
               <a class="knopf flat small" @click="setOffsetTime">Apply</a>
               <a class="knopf flat small" @click="reset">Reset</a>
             </div>
           </div>
           <div style="grid-area: preview-label; font-weight: 500; font-size: 0.75em">Preview <span v-if="notApplied" style="color: #c35e5e">(not applied)</span></div>
-          <textarea v-model="excerpt" disabled style="grid-area: preview; width: 100%; resize: none; height: 150px; font-size: 0.75em; font-family: Roboto, sans-serif; font-weight: 500"> </textarea>
+          <textarea
+            v-model="excerpt"
+            disabled
+            style="grid-area: preview; width: 100%; resize: none; height: 150px; font-size: 0.75em; font-family: Roboto, sans-serif; font-weight: 500; box-sizing: border-box"
+          >
+          </textarea>
         </div>
       </template>
     </Expandable>
@@ -25,7 +30,7 @@
 <script setup="props, {emit}" lang="ts">
 import { ref } from 'vue';
 import { computed } from '@vue/reactivity';
-import { useKeydownPreventInputHandler } from '@/composables';
+// import { useKeydownPreventInputHandler } from '@/composables';
 import { formatBiggestUnitHoursSmallestUnitMilliseconds } from '@/util/time';
 import { SubtitleEntry } from '@/subtitle/state/types';
 
@@ -40,15 +45,15 @@ export default {
   emits: ['offset-time']
 };
 
-export const inputRef = ref(null);
+// export const inputRef = ref(null);
 
 export const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '');
 
-export const onKeydown = useKeydownPreventInputHandler({
-  allowedInputValue: /^[0-9-]$/,
-  inputRef,
-  valueRef: currentOffsetTime
-});
+// export const onKeydown = useKeydownPreventInputHandler({
+//   allowedInputValue: /^[0-9-]$/,
+//   inputRef,
+//   valueRef: currentOffsetTime
+// });
 
 export const setOffsetTime = () => emit('offset-time', { offsetTime: parseInt(currentOffsetTime.value.toString()) });
 
@@ -94,11 +99,5 @@ export const excerpt = computed(() => {
     'preview-label'
     'preview';
   grid-template-rows: 8px auto auto 16px auto auto;
-}
-.fa.fa-chevron-down.fa-lg {
-  transition: transform 0.4s ease-in-out;
-}
-.fa.fa-chevron-down.fa-lg.show {
-  transform: rotate(-180deg);
 }
 </style>

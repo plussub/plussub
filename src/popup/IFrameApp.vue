@@ -68,7 +68,7 @@ postWindowMessage({
     plusSubAction: VideoInIFrame,
     // frameSrc: props.frameSrc,
     // src: props.videoEl.src,
-    // todo: still use framesrc as property name to clarify the meaning
+    // TODO: still use framesrc as property name to clarify the meaning
     src: props.frameSrc,
     hasSubtitle: props.videoEl.classList.contains('plussub')
   }
