@@ -14,7 +14,6 @@ export const init = async (): Promise<void> => {
     const shadow = appShadowDiv.attachShadow({ mode: 'open' });
     const overlayHightlight = document.createElement('div');
     overlayHightlight.id = 'plussub-overlay-highlight';
-    document.body.prepend(overlayHightlight);
 
     const appDiv = document.createElement('div');
     appDiv.id = 'plussub';
@@ -51,6 +50,7 @@ export const init = async (): Promise<void> => {
     [fontAwesome].forEach((entry) => prependLink(shadow, entry));
     [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('\n/* plussub header */')).forEach((style) => shadow.prepend(style));
 
+    document.body.prepend(overlayHightlight);
     document.body.prepend(appShadowDiv);
     app.mount(appDiv);
   }

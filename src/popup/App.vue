@@ -3,7 +3,7 @@
   <div v-if="state.selected === 'SEARCH'" class="app--container">
     <Suspense>
       <template #default>
-        <Search v-bind="state.selectedParams" :video-num="videoNum" :video-name="videoName" @navigate="navigate" />
+        <Search v-bind="state.selectedParams" @navigate="navigate" />
       </template>
       <template #fallback>
         <div>loading</div>
@@ -43,7 +43,7 @@
 </template>
 
 <script async setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue';
+import { reactive, computed, watch } from 'vue';
 import { init as initAppState } from '@/app/state';
 import { init as initVideoState } from '@/video/state';
 import { init as initFileState } from '@/file/state';
@@ -73,11 +73,11 @@ initSubtitleSearchState();
 export const appState = window.plusSub_app;
 
 export const videoNum = computed(() => Object.values(srcToVideo.value).length);
-export const videoName = ref('');
 const navigateToSearch = () => {
   Object.values(srcToVideo.value)[0].hasSubtitle = true;
-  videoName.value = getVideoName();
   state.selected = 'SEARCH';
+  // TODO: fix videoName does not change after the the src of video change
+  state.selectedParams = { videoName: getVideoName(), videoNum };
 };
 if (appState.value.state === 'NONE' && videoNum.value === 1) {
   navigateToSearch();
@@ -89,9 +89,9 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
       // reset the auto selected video to not selected(hasSubtitle means selected actually now)
       Object.values(srcToVideo.value)[0].hasSubtitle = false;
       state.selected = 'HOME';
-    } else if (newVideoNum === 1 && state.selected === 'HOME') {
+    } else if (newVideoNum === 1) {
       navigateToSearch();
-    } else if (newVideoNum === 0 && state.selected === 'SEARCH') {
+    } else if (newVideoNum === 0) {
       state.selected = 'HOME';
     }
   }
