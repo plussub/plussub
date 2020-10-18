@@ -1,6 +1,6 @@
 <template>
   <div class="knopf-group" style="display: flex">
-    <input id="search" ref="inputRef" v-model="filter" autofocus style="flex-grow: 1" placeholder="Filter subtitle result" type="text" @keydown.prevent="onKeydown" />
+    <input ref="inputRef" v-on:keydown.prevent="onKeydown" v-model="internalFilter" autofocus style="flex-grow: 1" placeholder="Filter subtitle result" type="text" />
     <a class="knopf flat pill sharp buttonOnPrimary" style="width: 40px"><i class="fa fa-filter fa-lg"></i></a>
   </div>
 </template>
@@ -17,15 +17,15 @@ export default {
   emits: ['update:filter']
 };
 
-export const filter = computed({
-  get: () => props.filter,
+export const internalFilter = computed({
+  get: () =>  props.filter ?? '',
   set: (val) => emit('update:filter', val)
 });
 
-const inputRef = ref(null);
+export const inputRef = ref(null);
 export const onKeydown = useKeydownPreventInputHandler({
   allowedInputValue: /^[0-9a-zA-Z _]$/,
   inputRef,
-  valueRef: filter
+  valueRef: internalFilter
 });
 </script>

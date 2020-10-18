@@ -10,6 +10,7 @@
 import { ref, computed } from 'vue';
 import { useKeydownPreventInputHandler } from '@/composables/useKeydownPreventInputHandler';
 
+
 export { default as Spinner } from '@/components/Spinner.vue';
 
 declare const props: {
@@ -26,7 +27,11 @@ export const internalQuery = computed({
   set: (val) => emit('update:query', val)
 });
 
-// remove this to allow use ctrl+v and other languages(eg. Japanese) input
+
+// use this to supress page shortcuts like f for fullscreen in youtube
+// todo: support ctrl+v, ctrl+a
+// todo: support other languages
+// todo: find another more robust solution
 export const inputRef = ref(null);
 export const onKeydown = useKeydownPreventInputHandler({
   allowedInputValue: /^[0-9a-zA-Z _]$/,
