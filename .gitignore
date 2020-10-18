@@ -15,5 +15,3 @@ manifest.json
 dist*
 
 src/_locales
-
-src/popup/app.ts

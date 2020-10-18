@@ -72,7 +72,7 @@ initSubtitleSearchState();
 
 export const appState = window.plusSub_app;
 
-// TODO: fix Error: ShadowDiv not found(maybe caused by mutation observer)
+// TODO: fix Error: ShadowDiv not found
 export const videoNum = computed(() => Object.values(srcToVideo.value).length);
 const navigateToSearch = () => {
   Object.values(srcToVideo.value)[0].hasSubtitle = true;

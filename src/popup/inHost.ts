@@ -1,13 +1,14 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-// import { app } from './app';
+import { createApp, App } from 'vue';
+import appComponent from './App.vue';
+
+let app: App;
 
 export const init = async (): Promise<void> => {
   if (document.getElementById('plussubShadow')) {
     const appShadowDiv = <HTMLElement>document.getElementById('plussubShadow');
     appShadowDiv.style.top = `${(window.scrollY + 30).toString()}px`;
   } else {
-    const app = createApp(App);
+    app = createApp(appComponent);
     const appShadowDiv = document.createElement('div');
     appShadowDiv.id = 'plussubShadow';
     appShadowDiv.style.cssText = `position:absolute;z-index: 10000; top: ${window.scrollY + 30}px; right: 16px; width: 400px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); font-size: 16px`;
@@ -54,4 +55,8 @@ export const init = async (): Promise<void> => {
     document.body.prepend(appShadowDiv);
     app.mount(appDiv);
   }
+};
+
+export const useApp = (): App => {
+  return app;
 };
