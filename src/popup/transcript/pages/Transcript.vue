@@ -77,6 +77,7 @@ export const currentPos = ref(-1);
 export const transcriptContentContainer = ref<HTMLElement | null>(null);
 
 watch(currentTime, (currentTime) => {
+  console.log('hello world');
   const value = parseInt(currentTime.toString(), 10);
   // replace with hashmap
   const pos = binarySearch(value * 1000, window.plusSub_subtitle.value.withOffsetParsed);

@@ -62,6 +62,12 @@ export { default as SubtitleSelection } from '@/search/pages/subtitleSelection/S
 export { default as FilePick } from '@/file/pages/FilePick.vue';
 export { default as Transcript } from '@/transcript/pages/Transcript.vue';
 
+export const state = reactive({ selected: 'HOME', selectedParams: {} });
+export const navigate = (event) => {
+  state.selectedParams = event.params;
+  state.selected = event.name;
+};
+
 initAppState();
 initSubtitleState();
 initVideoState();
@@ -72,49 +78,38 @@ export const appState = window.plusSub_app;
 
 export const videoNum = computed(() => Object.values(srcToVideo.value).length);
 export const videoName = ref('');
-const selected = ref('HOME');
 const navigateToSearch = () => {
   Object.values(srcToVideo.value)[0].hasSubtitle = true;
   videoName.value = getVideoName();
-  selected.value = 'SEARCH';
+  state.selected = 'SEARCH';
 };
 if (appState.value.state === 'NONE' && videoNum.value === 1) {
   navigateToSearch();
 }
 
 watch(videoNum, (newVideoNum, oldVideoNum) => {
-  if (oldVideoNum === 1 && newVideoNum > 1 && selected.value === 'SEARCH' && appState.value.state === 'NONE') {
+  if (oldVideoNum === 1 && newVideoNum > 1 && state.selected === 'SEARCH' && appState.value.state === 'NONE') {
     // reset the auto selected video to not selected(hasSubtitle means selected actually now)
     Object.values(srcToVideo.value)[0].hasSubtitle = false;
-    selected.value = 'HOME';
-  } else if (newVideoNum === 1 && selected.value === 'HOME' && appState.value.state === 'NONE') {
+    state.selected = 'HOME';
+  } else if (newVideoNum === 1 && state.selected === 'HOME' && appState.value.state === 'NONE') {
     navigateToSearch();
   }
+  console.log(newVideoNum, oldVideoNum);
 });
 
 // use this as remove
-const subState = computed(() => appState.value.state);
-watch(subState, (newState) => {
-  if (newState === 'NONE') {
-    setSrc({ src: 'NONE' });
-    resetSearch();
-    resetSubtitle();
-    resetFile();
-    if (videoNum.value === 1) {
-      navigateToSearch();
-    } else {
-      // The content of home won't change when close and reopen the popup windows and then click "remove subtitle"
-      // use this as a pathetic hack
-      selected.value = 'HOME';
+watch(
+  () => appState.value.state,
+  (newState) => {
+    if (newState === 'NONE') {
+      setSrc({ src: 'NONE' });
+      resetSearch();
+      resetSubtitle();
+      resetFile();
     }
   }
-});
-
-export const state = reactive({ selected, selectedParams: {} });
-export const navigate = (event) => {
-  state.selectedParams = event.params;
-  state.selected = event.name;
-};
+);
 </script>
 
 <style>
