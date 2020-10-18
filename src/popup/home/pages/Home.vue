@@ -13,7 +13,8 @@
       </div>
     </template>
     <template #content>
-      <div :class="{ 'home-content--container': subtitleState.withOffsetParsed.length !== 0 }">
+      <!--  -->
+      <div :class="{ 'home-content--container': appState.state !== 'NONE' }">
         <ResultFromSearch
           v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
           style="grid-area: current-sub; margin-top: 20px"

@@ -6,12 +6,11 @@ import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
 
-// TODO: change video name when src change
-// race competition on all these mutatinobserver
 const changeSrc = (el: HTMLVideoElement, oldSrc: string) => {
   if (srcToVideo.value[oldSrc] && srcToVideo.value[oldSrc].hasSubtitle) reset();
   delete srcToVideo.value[oldSrc];
   const { src } = el;
+  if (!src) return;
   srcToVideo.value[src] = { el, hasSubtitle: el.classList.contains('plussub'), src, in: 'HOST' };
 };
 
@@ -26,7 +25,7 @@ const isValidVideo = (el: HTMLVideoElement): boolean => {
       const { src } = el;
       for (const mutation of mutationsList) {
         if (mutation.attributeName === 'src') {
-          if (inVideoList && src) {
+          if (inVideoList) {
             changeSrc(el, oldSrc);
             oldSrc = src;
           }
@@ -45,7 +44,7 @@ const isValidVideo = (el: HTMLVideoElement): boolean => {
   useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
     const { src } = el;
     for (const mutation of mutationsList) {
-      if (mutation.attributeName === 'src' && src) {
+      if (mutation.attributeName === 'src') {
         changeSrc(el, oldSrc);
         oldSrc = src;
       }
