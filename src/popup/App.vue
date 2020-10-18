@@ -84,14 +84,17 @@ if (appState.value.state === 'NONE' && videoNum.value === 1) {
 }
 
 watch(videoNum, (newVideoNum, oldVideoNum) => {
-  if (oldVideoNum === 1 && newVideoNum > 1 && state.selected === 'SEARCH' && appState.value.state === 'NONE') {
-    // reset the auto selected video to not selected(hasSubtitle means selected actually now)
-    Object.values(srcToVideo.value)[0].hasSubtitle = false;
-    state.selected = 'HOME';
-  } else if (newVideoNum === 1 && state.selected === 'HOME' && appState.value.state === 'NONE') {
-    navigateToSearch();
+  if (appState.value.state === 'NONE') {
+    if (oldVideoNum === 1 && newVideoNum > 1 && state.selected === 'SEARCH') {
+      // reset the auto selected video to not selected(hasSubtitle means selected actually now)
+      Object.values(srcToVideo.value)[0].hasSubtitle = false;
+      state.selected = 'HOME';
+    } else if (newVideoNum === 1 && state.selected === 'HOME') {
+      navigateToSearch();
+    } else if (newVideoNum === 0 && state.selected === 'SEARCH') {
+      state.selected = 'HOME';
+    }
   }
-  console.log(newVideoNum, oldVideoNum);
 });
 </script>
 

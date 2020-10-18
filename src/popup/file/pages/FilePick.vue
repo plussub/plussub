@@ -61,7 +61,6 @@ const readFile = (file: any): void => {
 };
 export const fileErrorMsg = ref('');
 const SHOW_MESSAGE_TIME = 2000;
-// or use watch
 const resetFileErrorMsg = (timeout: number) => {
   setTimeout(() => {
     fileErrorMsg.value = '';
