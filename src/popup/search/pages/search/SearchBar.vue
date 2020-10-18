@@ -8,7 +8,6 @@
 
 <script setup="props, { emit }" lang="ts">
 import { computed } from 'vue';
-// import { useKeydownPreventInputHandler } from '@/composables/useKeydownPreventInputHandler';
 
 export { default as Spinner } from '@/components/Spinner.vue';
 
@@ -26,12 +25,6 @@ export const internalQuery = computed({
   set: (val) => emit('update:query', val)
 });
 
-// export const inputRef = ref(null);
-// export const onKeydown = useKeydownPreventInputHandler({
-//   allowedInputValue: /^[0-9a-zA-Z _]$/,
-//   inputRef,
-//   valueRef: internalQuery
-// });
 </script>
 
 <style scoped>

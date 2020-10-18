@@ -11,10 +11,12 @@ import {
   StopTranscript,
   useWindowMessage,
   VideoCurrentTime,
-  VideoInIFrame,
+  // VideoInIFrame,
   VideoBoundingClientRect
 } from '@/composables';
+import { isValidVideo, initObserveAddedRemovedVideo } from '@/video/state/action/init';
 import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
+import { addSrcToVideoInIframe } from '@/video/state/action/srcToVideo/iframe';
 
 declare const props: {
   frameSrc: string;
@@ -57,20 +59,9 @@ useWindowMessage({
   [GetBoundingClientRect]: sendBoundingClientRect
 });
 
-// the src here means frameSrc
-// Not use videoEl.src as object key as some video element don't have src and maybe duplicate
-// eg. https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Video_and_audio_APIs
-// may change this if have any bugs
-postWindowMessage({
-  window: window.top,
-  origin: '*',
-  payload: {
-    plusSubAction: VideoInIFrame,
-    // frameSrc: props.frameSrc,
-    // src: props.videoEl.src,
-    // TODO: still use framesrc as property name to clarify the meaning
-    src: props.frameSrc,
-    hasSubtitle: props.videoEl.classList.contains('plussub')
-  }
-});
+if (isValidVideo({ videoIn: 'I_FRAME', el: props.videoEl, frameSrc: props.frameSrc })) {
+  addSrcToVideoInIframe(props.videoEl, props.frameSrc);
+} else {
+  initObserveAddedRemovedVideo({ videoIn: 'I_FRAME', frameSrc: props.frameSrc });
+}
 </script>

@@ -30,7 +30,6 @@
 <script setup="props, {emit}" lang="ts">
 import { ref } from 'vue';
 import { computed } from '@vue/reactivity';
-// import { useKeydownPreventInputHandler } from '@/composables';
 import { formatBiggestUnitHoursSmallestUnitMilliseconds } from '@/util/time';
 import { SubtitleEntry } from '@/subtitle/state/types';
 
@@ -45,15 +44,7 @@ export default {
   emits: ['offset-time']
 };
 
-// export const inputRef = ref(null);
-
 export const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '');
-
-// export const onKeydown = useKeydownPreventInputHandler({
-//   allowedInputValue: /^[0-9-]$/,
-//   inputRef,
-//   valueRef: currentOffsetTime
-// });
 
 export const setOffsetTime = () => emit('offset-time', { offsetTime: parseInt(currentOffsetTime.value.toString()) });
 

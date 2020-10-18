@@ -25,7 +25,6 @@
 <script setup="props, { emit }" lang="ts">
 import iso639List from '@/res/iso639List.json';
 import { computed, ref } from 'vue';
-import { useKeydownPreventInputHandler } from '@/composables';
 import { capitalizeFirst } from '@/util/string';
 
 declare const props: {
@@ -62,12 +61,6 @@ export const select = ({ iso639_2 }): void => {
   showLanguageSelection.value = false;
   emit('update:selected', iso639_2);
 };
-
-// export const onKeydown = useKeydownPreventInputHandler({
-//   allowedInputValue: /^[0-9a-zA-Z _]$/,
-//   inputRef,
-//   valueRef: query
-// });
 </script>
 
 <style scoped>

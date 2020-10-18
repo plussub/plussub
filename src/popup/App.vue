@@ -59,7 +59,7 @@ export { default as FilePick } from '@/file/pages/FilePick.vue';
 export { default as Transcript } from '@/transcript/pages/Transcript.vue';
 
 export const state = reactive({ selected: 'HOME', selectedParams: {} });
-export const navigate = (event) => {
+export const navigate = (event): void => {
   state.selectedParams = event.params;
   state.selected = event.name;
 };
@@ -72,12 +72,18 @@ initSubtitleSearchState();
 
 export const appState = window.plusSub_app;
 
+// TODO: fix Error: ShadowDiv not found(maybe caused by mutation observer)
 export const videoNum = computed(() => Object.values(srcToVideo.value).length);
 const navigateToSearch = () => {
   Object.values(srcToVideo.value)[0].hasSubtitle = true;
-  state.selected = 'SEARCH';
   state.selectedParams = { videoName: getVideoName(), videoNum };
+  state.selected = 'SEARCH';
 };
+const navigateToHome = () => {
+  state.selectedParams = {};
+  state.selected = 'HOME';
+};
+
 if (appState.value.state === 'NONE' && videoNum.value === 1) {
   navigateToSearch();
 }
@@ -87,11 +93,11 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
     if (oldVideoNum === 1 && newVideoNum > 1 && state.selected === 'SEARCH') {
       // reset the auto selected video to not selected(hasSubtitle means selected actually now)
       Object.values(srcToVideo.value)[0].hasSubtitle = false;
-      state.selected = 'HOME';
+      navigateToHome();
     } else if (newVideoNum === 1) {
       navigateToSearch();
     } else if (newVideoNum === 0) {
-      state.selected = 'HOME';
+      navigateToHome();
     }
   }
 });

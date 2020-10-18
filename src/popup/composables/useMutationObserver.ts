@@ -11,5 +11,8 @@ export const useMutationObserver = (callback: MutationCallback): void => {
 export const useElementMutationObserver = (el: HTMLElement, options: MutationObserverInit, callback: MutationCallback): void => {
   const observer = new MutationObserver(callback);
 
-  observer.observe(el, options);
+  // observer.observe(el, options);
+  onMounted(() => observer.observe(el, options));
+
+  onUnmounted(() => observer.disconnect());
 };

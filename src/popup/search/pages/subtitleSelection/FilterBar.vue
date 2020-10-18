@@ -21,10 +21,4 @@ export const internalFilter = computed({
   set: (val) => emit('update:filter', val)
 });
 
-// export const inputRef = ref(null);
-// export const onKeydown = useKeydownPreventInputHandler({
-//   allowedInputValue: /^[0-9a-zA-Z _]$/,
-//   inputRef,
-//   valueRef: internalFilter
-// });
 </script>
