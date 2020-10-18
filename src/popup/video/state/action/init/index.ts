@@ -4,7 +4,7 @@ import { useMutationObserver, useWindowMessage, VideoInIFrame } from '@/composab
 import { isHTMLElement, isHTMLVideoElement } from '@/types';
 import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
-import { setState } from '@/app/state';
+import { reset } from '@/app/state';
 
 const isValidVideo = (el: HTMLVideoElement): boolean => {
   const src = el.src;
@@ -90,7 +90,7 @@ export const init = (): void => {
         return [...acc, ...parentMatches];
       }, [])
       .forEach((src) => {
-        if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) setState({ state: 'NONE' });
+        if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) reset();
         delete srcToVideo.value[src];
       })
   );

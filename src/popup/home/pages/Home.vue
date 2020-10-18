@@ -49,7 +49,7 @@
 <script setup="props, {emit}" lang="ts">
 import { ref } from 'vue';
 import { useDraggableArea } from '@/composables';
-import { setState } from '@/app/state';
+import { reset } from '@/app/state';
 import { srcToVideo } from '@/video/state';
 import { getVideoName } from '@/util/name';
 export { close } from '@/util/close';
@@ -78,7 +78,7 @@ export default {
 };
 
 export const remove = (): void => {
-  setState({ state: 'NONE' });
+  reset();
   if (Object.values(srcToVideo.value).length === 1) {
     emit('navigate', { name: 'SEARCH', params: { videoName: getVideoName(), contentTransitionName: 'content-navigate-deeper' } });
     Object.values(srcToVideo.value)[0].hasSubtitle = true;

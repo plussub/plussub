@@ -49,10 +49,6 @@ import { init as initVideoState } from '@/video/state';
 import { init as initFileState } from '@/file/state';
 import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
-import { setSrc } from '@/app/state';
-import { reset as resetSearch } from '@/search/state';
-import { reset as resetSubtitle } from '@/subtitle/state';
-import { reset as resetFile } from '@/file/state';
 import { srcToVideo } from '@/video/state';
 import { getVideoName } from '@/util/name';
 export { default as KnopfCss } from '@/KnopfCss.vue';
@@ -97,19 +93,6 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
   }
   console.log(newVideoNum, oldVideoNum);
 });
-
-// use this as remove
-watch(
-  () => appState.value.state,
-  (newState) => {
-    if (newState === 'NONE') {
-      setSrc({ src: 'NONE' });
-      resetSearch();
-      resetSubtitle();
-      resetFile();
-    }
-  }
-);
 </script>
 
 <style>
