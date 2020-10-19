@@ -29,10 +29,10 @@
 
 <script setup="props, {emit}" lang="ts">
 import { computed, onUnmounted } from 'vue';
-import { srcToVideo, srcToIFrameSource, Video } from '@/video/state';
+import { srcToVideo, Video } from '@/video/state';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { SubtitleEntry } from '@/subtitle/state/types';
-import { postWindowMessage, GetBoundingClientRect } from '@/composables/useWindowMessage';
+import { enterVideo, leaveVideo } from '@/util/hover';
 
 declare const props: {
   subtitle: SubtitleEntry[];
@@ -43,71 +43,17 @@ export default {
 };
 
 export { addVttTo, removeVttFrom };
+export { enterVideo, leaveVideo };
 
 export const videoList = computed(() => Object.values(srcToVideo.value));
-
-const isElementNotInViewport = (el) => {
-  const rect = el.getBoundingClientRect();
-  return rect.top >= (window.innerHeight || document.documentElement.clientHeight) || rect.bottom <= 0;
-};
-
-const overlayHightlight = document.getElementById('plussub-overlay-highlight');
-export const enterVideo = (video: Video): void => {
-  const el = video.in === 'HOST' ? video.el : document.querySelector(`iframe[src="${srcToIFrameSource[video.src].frameSrc}"]`);
-  if (!el) return;
-  if (isElementNotInViewport(el)) {
-    el.scrollIntoView({ block: 'center' });
-    const plussubShadow = document.getElementById('plussubShadow');
-    if (!plussubShadow) return;
-    plussubShadow.style.top = `${(window.scrollY + 30).toString()}px`;
-  }
-  if (!overlayHightlight) return;
-  if (video.in === 'HOST') {
-    const { top, left, height, width } = el.getBoundingClientRect();
-    overlayHightlight.style.cssText = `position: absolute; z-index: 9999; background-color: rgba(40, 58, 90, 0.8); width: ${width}px; height: ${height}px; top: ${window.scrollY + top}px; left: ${
-      window.scrollX + left
-    }px;`;
-  } else {
-    postWindowMessage({
-      window: srcToIFrameSource[video.src].window,
-      origin: srcToIFrameSource[video.src].origin,
-      payload: {
-        plusSubAction: GetBoundingClientRect
-      }
-    });
-    // todo: implement once for
-    // Not use useWindowMessage as I want to remove event listener immediately
-    const handleMessageInPageVideos = (e) => {
-      const { plusSubAction, boundingClientRect } = e.data;
-      if (plusSubAction === 'Video_Bounding_Client_Rect') {
-        window.removeEventListener('message', handleMessageInPageVideos);
-        const iframeBoundingClientRect = el.getBoundingClientRect();
-        const iFrameTop = iframeBoundingClientRect.top;
-        const iFrameLeft = iframeBoundingClientRect.left;
-        const { top, left, height, width } = boundingClientRect;
-        overlayHightlight.style.cssText = `position: absolute; z-index: 9999; background-color: rgba(40, 58, 90, 0.8); width: ${width}px; height: ${height}px; top: ${
-          window.scrollY + top + iFrameTop
-        }px; left: ${window.scrollX + left + iFrameLeft}px;`;
-      }
-    };
-    window.addEventListener('message', handleMessageInPageVideos);
-  }
-};
-export const leaveVideo = (): void => {
-  if (!overlayHightlight) return;
-  overlayHightlight.style.cssText = `width: 0px; height: 0px;`;
-};
-onUnmounted(() => {
-  leaveVideo();
-});
-
-const videosWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle));
-export const pageHasSubtitle = computed(() => videosWithSubtitle.value.length > 0);
 export const selectVideo = (video: Video, index: number): void => {
   // hasSubtitle means selected now
   video.hasSubtitle = true;
   emit('navigate', { name: 'SEARCH', params: { videoIndex: index + 1, contentTransitionName: 'content-navigate-deeper' } });
 };
+onUnmounted(() => {
+  leaveVideo();
+});
 </script>
 
 <style scoped>

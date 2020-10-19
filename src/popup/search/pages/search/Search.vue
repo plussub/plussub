@@ -18,7 +18,6 @@
           v-model:query="internalQuery"
           style="grid-area: auto / auto / span 2 / span 3"
           :video-name="internalVideoName"
-          :video-num="videoNum"
           @navigate="(event) => $emit('navigate', event)"
         />
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
@@ -38,6 +37,7 @@ import { ref, watch } from 'vue';
 import { TmdbState } from '@/search/state/types';
 import { setTmdbInSelection } from '../../state/actions/setTmdbInSelection';
 
+export { close } from '@/util/close';
 export { default as FilePick } from '@/file/pages/FilePick.vue';
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
@@ -85,10 +85,6 @@ export const select = (tmdb) => {
   });
 };
 export const internalVideoName = props.videoIndex ? props.videoIndex.toString() : props.videoName;
-export const close = (): void => {
-  document.getElementById('plussubShadow')?.remove();
-  window.postMessage({ plusSubAction: 'removeMessageEventListener' }, '*');
-};
 </script>
 
 <style scoped>

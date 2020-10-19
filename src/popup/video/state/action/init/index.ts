@@ -1,81 +1,91 @@
 import { Video, VideoSrc } from '@/video/state/types';
 import { srcToIFrameSource, srcToVideo } from '@/video/state/state';
-import { useMutationObserver, useWindowMessage, VideoInIFrame } from '@/composables';
+import { useMutationObserver, useElementMutationObserver, useWindowMessage, VideoInIFrame, RemoveVideoInIFrame } from '@/composables';
 import { isHTMLElement, isHTMLVideoElement } from '@/types';
 import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
-import { setState } from '@/app/state';
+import { addSrcToVideo, removeSrcToVideo } from '../srcToVideo';
+import { reset } from '@/app/state';
 
-export const isValidVideo = (el: HTMLVideoElement, src: string, videoIn: 'I_FRAME' | 'HOST'): boolean => {
+interface isValidVideoPayload {
+  videoIn: 'HOST' | 'I_FRAME';
+  el: HTMLVideoElement;
+  frameSrc?: string;
+}
+
+export const isValidVideo = ({ videoIn, el, frameSrc }: isValidVideoPayload): boolean => {
   if (!(el.offsetWidth && el.offsetHeight)) return false;
+  let inVideoList = false;
+  let oldSrc = '';
   if (!el.src && !el.querySelector('source')) {
-    // for cases that it does not have src first, but will add src after the video is playing. (eg. vimeo.com)
-    useMutationObserver(el, { attributes: true, childList: true }, (mutationsList) => {
+    // (warning when use with onMount or onUnmount): onMount(onUnmount) is called when there is no active component instance to be associated with.
+    // for cases that video element does not have src first, but will add src after the video is playing. (eg. vimeo.com)
+    useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
+      const { src } = el;
       for (const mutation of mutationsList) {
-        console.log(mutation);
-        if ((mutation.attributeName === 'src' || (mutation.addedNodes.length > 0 && isHTMLElement(mutation.addedNodes[0]) && mutation.addedNodes[0].tagName === 'source')) && !srcToVideo.value[src]) {
-          srcToVideo.value[src] = { hasSubtitle: el.classList.contains('plussub'), src, in: videoIn };
+        if (mutation.attributeName === 'src') {
+          if (inVideoList) {
+            removeSrcToVideo({ videoIn, src: oldSrc });
+            oldSrc = src;
+            if (!src) return;
+            addSrcToVideo({ videoIn, el, frameSrc });
+          }
+          if (!inVideoList && !srcToVideo.value[src]) {
+            inVideoList = true;
+            oldSrc = src;
+            addSrcToVideo({ videoIn, el, frameSrc });
+          }
         }
       }
     });
     return false;
   }
+  oldSrc = el.src;
+  // for cases that the src of video changes (eg. when change video in vimeo.com or bilibil.com)
+  useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (mutation.attributeName === 'src') {
+        removeSrcToVideo({ videoIn, src: oldSrc });
+        oldSrc = el.src;
+        if (!el.src) return;
+        addSrcToVideo({ videoIn, el, frameSrc });
+      }
+    }
+  });
   return true;
 };
 
-// todo what happends here ?
-// TODO: it seems that this does not work with video in Iframe
-export const initMutationObserver = (videoIn: 'I_FRAME' | 'HOST', iFrameSrc = ''): void => {
+const isValidVideoInHost = (el: HTMLVideoElement) => isValidVideo({ videoIn: 'HOST', el });
 
+const findVideoElement = (nodes: Node[]) => {
+  const directMatch = nodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
+  if (directMatch) return [directMatch];
 
-  // todo move fn out, both handler used, handler does not know videoiN
-  useMutationObserver(document.body, { subtree: true, childList: true }, (mutationsList) =>
-    mutationsList
-      .reduce<HTMLVideoElement[]>((acc, mutation) => {
-        const addedNodes = Array.from(mutation.addedNodes);
-        const directMatch = addedNodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
-        if (directMatch) {
-          return [...acc, directMatch];
-        }
+  return nodes.reduce<HTMLVideoElement[]>((acc, parent) => (isHTMLElement(parent) ? [...acc, ...Array.from<HTMLVideoElement>(parent.querySelectorAll('video'))] : acc), []);
+};
 
-        const parentMatches = addedNodes.reduce<HTMLVideoElement[]>((acc, parent) => (isHTMLElement(parent) ? [...acc, ...Array.from<HTMLVideoElement>(parent.querySelectorAll('video'))] : acc), []);
+interface initObserveAddedRemovedVideoPayload {
+  videoIn: 'HOST' | 'I_FRAME';
+  frameSrc?: string;
+}
 
-        return [...acc, ...parentMatches];
-      }, [])
-      .filter((el: HTMLVideoElement) => isValidVideo(el, videoIn === 'HOST' ? el.src : iFrameSrc, videoIn))
-      .forEach((el) => {
-        const src = videoIn === 'HOST' ? el.src : iFrameSrc;
-        srcToVideo.value[src] = { hasSubtitle: el.classList.contains('plussub'), src: src, in: videoIn };
-      })
-  );
-
-  useMutationObserver(document.body, { subtree: true, childList: true }, (mutationsList) =>
-    mutationsList
-      .reduce<string[]>((acc, mutation) => {
-        const removedNodes = Array.from(mutation.removedNodes);
-        const directMatch = removedNodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
-        if (directMatch) {
-          return [...acc, directMatch.src];
-        }
-
-        const parentMatches = removedNodes.reduce<string[]>(
-          (acc, parent) => (isHTMLElement(parent) ? [...acc, ...Array.from<HTMLVideoElement>(parent.querySelectorAll('video')).map(({ src }) => src)] : acc),
-          []
-        );
-
-        return [...acc, ...parentMatches];
-      }, [])
-      .forEach((srcOfElement) => {
-        const src = videoIn === 'HOST' ? srcOfElement : iFrameSrc;
-        if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) setState({ state: 'NONE' });
-        delete srcToVideo.value[src];
-      })
+export const initObserveAddedRemovedVideo = ({ videoIn, frameSrc }: initObserveAddedRemovedVideoPayload): void => {
+  useMutationObserver((mutationsList) =>
+    mutationsList.forEach((mutation) => {
+      findVideoElement(Array.from(mutation.removedNodes)).forEach((el) => {
+        removeSrcToVideo({ videoIn, src: el.src });
+      });
+      findVideoElement(Array.from(mutation.addedNodes)).forEach((el) => {
+        if (!isValidVideoInHost(el)) return;
+        addSrcToVideo({ videoIn, el, frameSrc });
+      });
+    })
   );
 };
 
 const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
   [...document.querySelectorAll('video')]
-    .filter((el: HTMLVideoElement) => isValidVideo(el, el.src, 'HOST'))
+    .filter(isValidVideoInHost)
     .map(
       (el): Video => ({
         src: el.src,
@@ -90,9 +100,18 @@ export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
     [VideoInIFrame]: ({ origin, source, data: { src, hasSubtitle } }) => {
+      console.log('video added');
       if (!srcToVideo.value[src]) {
         srcToIFrameSource[src] = { window: source as Window, frameSrc: src, origin };
         srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
+      }
+    }
+  });
+  useWindowMessage({
+    [RemoveVideoInIFrame]: ({ data: { src } }) => {
+      if (!srcToVideo.value[src]) {
+        if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) reset();
+        delete srcToVideo.value[src];
       }
     }
   });
@@ -106,5 +125,6 @@ export const init = (): void => {
         addVttTo({ video, subtitle });
       })
   );
-  initMutationObserver('HOST');
+
+  initObserveAddedRemovedVideo({ videoIn: 'HOST' });
 };

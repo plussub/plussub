@@ -1,5 +1,4 @@
 import { createApp } from 'vue';
-import { isValidVideo, initMutationObserver } from '@/video/state';
 import IFrameApp from './IFrameApp.vue';
 
 const getIframeSrc = (window: Window) => {
@@ -7,14 +6,13 @@ const getIframeSrc = (window: Window) => {
 };
 
 export const init = async (): Promise<void> => {
-  // To get the top iframe if video is in nested iframe
-  // const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window);
-  const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window) ?? '';
-  // initMutationObserver('I_FRAME', frameSrc);
   const videoEl = document.querySelector('video');
-  if (!videoEl || !isValidVideo(videoEl, frameSrc, 'I_FRAME') || document.getElementById('plussubShadow')) {
+  if (!videoEl || !videoEl.offsetHeight || !videoEl.offsetWidth || (!videoEl.src && !videoEl.querySelector('source')) || document.getElementById('plussubShadow')) {
     return;
   }
+  // To get the top iframe if video is in nested iframe
+  // const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window);
+  const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window);
   const appShadowDiv = document.createElement('div');
   const shadow = appShadowDiv.attachShadow({ mode: 'open' });
   appShadowDiv.id = 'plussubShadow';

@@ -1,5 +1,5 @@
 <template>
-  <div id="filepicker-content--container" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
+  <div id="filepicker-content--container" @mouseenter="enterVideo(videoWithSubtitle)" @mouseleave="leaveVideo" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
     <p class="upload-drag-icon">
       <i class="fa fa-upload fa-lg"></i>
     </p>
@@ -26,22 +26,23 @@
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import { ref } from 'vue';
+import { ref, computed, onUnmounted } from 'vue';
 import { setFilename } from '../state';
 import { setState, setSrc } from '@/app/state';
 import { setRaw, parse } from '@/subtitle/state';
+import { srcToVideo } from '@/video/state';
+import { enterVideo, leaveVideo } from '@/util/hover';
 export { default as xCircleIcon } from '@/res/x-circle.svg';
 
 declare const props: {
   videoName: string;
-  videoNum?: number;
   query: string;
 };
 
 export default {
   emits: ['navigate']
 };
-
+export { enterVideo, leaveVideo };
 export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
 const readFile = (file: any): void => {
@@ -60,7 +61,6 @@ const readFile = (file: any): void => {
 };
 export const fileErrorMsg = ref('');
 const SHOW_MESSAGE_TIME = 2000;
-// or use watch
 const resetFileErrorMsg = (timeout: number) => {
   setTimeout(() => {
     fileErrorMsg.value = '';
@@ -68,7 +68,7 @@ const resetFileErrorMsg = (timeout: number) => {
 };
 export const fileSelected = async (): Promise<void> => {
   if (!inputRef.value?.files) {
-    fileErrorMsg.value = 'Upload file error';
+    fileErrorMsg.value = 'Click to upload file error';
     resetFileErrorMsg(SHOW_MESSAGE_TIME);
     return;
   }
@@ -84,7 +84,7 @@ export const dragleave = (event): void => {
 export const drop = (event): void => {
   let droppedFiles = event.dataTransfer?.files;
   if (!droppedFiles && !droppedFiles.length) {
-    fileErrorMsg.value = 'Drop file error';
+    fileErrorMsg.value = 'Drop to upload file error';
     dragleave(event);
     resetFileErrorMsg(SHOW_MESSAGE_TIME);
     return;
@@ -100,11 +100,17 @@ export const drop = (event): void => {
   readFile(file);
 };
 const nameToInt = parseInt(props.videoName, 10);
+// todo: why magic number 20?
 export const isNameNotNum = isNaN(nameToInt) || nameToInt > 20;
 export const changeQuery = (): void => {
   if (!isNameNotNum) return;
   emit('update:query', props.videoName);
 };
+export const videoWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle)[0]);
+export const videoNum = computed(() => Object.values(srcToVideo.value).length);
+onUnmounted(() => {
+  leaveVideo();
+});
 </script>
 
 <style scoped>
