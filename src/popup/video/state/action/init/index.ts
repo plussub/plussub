@@ -95,10 +95,10 @@ const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
 export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
-    [VideoInIFrame]: ({ origin, source, data: { src, hasSubtitle } }) => {
+    [VideoInIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
       if (!srcToVideo.value[src]) {
-        srcToIFrameSource[src] = { window: source as Window, frameSrc: src, origin };
-        srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
+        srcToIFrameSource[src] = { window: source as Window, frameSrc, origin };
+        srcToVideo.value[src ?? frameSrc] = { hasSubtitle, src, in: 'I_FRAME' };
       }
     },
     [RemoveVideoInIFrame]: ({ data: { src } }) => {

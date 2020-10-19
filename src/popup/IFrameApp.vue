@@ -35,17 +35,6 @@ const sendTime = () => {
   });
 };
 
-const sendBoundingClientRect = () => {
-  postWindowMessage({
-    window: window.top,
-    origin: '*',
-    payload: {
-      plusSubAction: VideoBoundingClientRect,
-      boundingClientRect: props.videoEl.getBoundingClientRect()
-    }
-  });
-};
-
 useWindowMessage({
   [AddSubtitle]: (e) =>
     addVttToHostVideo({
@@ -56,7 +45,16 @@ useWindowMessage({
   [StartTranscript]: () => props.videoEl.addEventListener('timeupdate', sendTime),
   [StopTranscript]: () => props.videoEl.removeEventListener('timeupdate', sendTime),
   [SetVideoTime]: (e) => (props.videoEl.currentTime = e.data.time),
-  [GetBoundingClientRect]: sendBoundingClientRect
+  [GetBoundingClientRect]: () => {
+    postWindowMessage({
+      window: window.top,
+      origin: '*',
+      payload: {
+        plusSubAction: VideoBoundingClientRect,
+        boundingClientRect: props.videoEl.getBoundingClientRect()
+      }
+    });
+  }
 });
 
 // if (isValidVideo({ el: props.videoEl, frameSrc: props.frameSrc })) {

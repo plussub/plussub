@@ -80,7 +80,7 @@ export default {
 export const remove = (): void => {
   reset();
   if (Object.values(srcToVideo.value).length === 1) {
-    emit('navigate', { name: 'SEARCH', params: { videoName: getVideoName(), contentTransitionName: 'content-navigate-deeper' } });
+    emit('navigate', { name: 'SEARCH', params: { videoName: getVideoName(), videoNum: 1, contentTransitionName: 'content-navigate-deeper' } });
     Object.values(srcToVideo.value)[0].hasSubtitle = true;
   } else {
     // The content of home won't change when close and reopen the popup windows and then click "remove subtitle"

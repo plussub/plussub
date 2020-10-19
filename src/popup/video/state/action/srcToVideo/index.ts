@@ -5,10 +5,10 @@ interface addSrcToVideoPayload {
   el: HTMLVideoElement;
   frameSrc?: string;
 }
-const inHost = () => window.self === window.top;
+const inHost = window.self === window.top;
 
 export const addSrcToVideo = ({ el, frameSrc = '' }: addSrcToVideoPayload): void => {
-  if (inHost()) {
+  if (inHost) {
     addSrcToVideoInHost(el);
   } else {
     addSrcToVideoInIframe(el, frameSrc);
@@ -20,7 +20,7 @@ interface removeSrcToVideoPayload {
 }
 
 export const removeSrcToVideo = ({ src }: removeSrcToVideoPayload): void => {
-  if (inHost()) {
+  if (inHost) {
     removeSrcToVideoInHost(src);
   } else {
     removeSrcToVideoInIframe(src);

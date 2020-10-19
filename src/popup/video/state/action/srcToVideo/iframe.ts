@@ -6,10 +6,8 @@ export const addSrcToVideoInIframe = (el: HTMLVideoElement, frameSrc: string): v
     origin: '*',
     payload: {
       plusSubAction: VideoInIFrame,
-      // frameSrc: props.frameSrc,
-      // src: props.videoEl.src,
-      // TODO: still use framesrc as property name to clarify the meaning
-      src: frameSrc,
+      frameSrc,
+      src: el.src,
       hasSubtitle: el.classList.contains('plussub')
     }
   });
