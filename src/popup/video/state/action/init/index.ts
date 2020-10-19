@@ -5,15 +5,13 @@ import { isHTMLElement, isHTMLVideoElement } from '@/types';
 import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { addSrcToVideo, removeSrcToVideo } from '../srcToVideo';
-import { reset } from '@/app/state';
 
 interface isValidVideoPayload {
-  videoIn: 'HOST' | 'I_FRAME';
   el: HTMLVideoElement;
   frameSrc?: string;
 }
 
-export const isValidVideo = ({ videoIn, el, frameSrc }: isValidVideoPayload): boolean => {
+export const isValidVideo = ({ el, frameSrc }: isValidVideoPayload): boolean => {
   if (!el || !el.offsetWidth || !el.offsetHeight) return false;
   let oldSrc = '';
   if (!el.src && !el.querySelector('source')) {
@@ -24,15 +22,15 @@ export const isValidVideo = ({ videoIn, el, frameSrc }: isValidVideoPayload): bo
       for (const mutation of mutationsList) {
         if (mutation.attributeName === 'src') {
           if (inVideoList) {
-            removeSrcToVideo({ videoIn, src: oldSrc });
+            removeSrcToVideo({ src: oldSrc });
             oldSrc = src;
             if (!src) return;
-            addSrcToVideo({ videoIn, el, frameSrc });
+            addSrcToVideo({ el, frameSrc });
           }
           if (!inVideoList && !srcToVideo.value[src]) {
             inVideoList = true;
             oldSrc = src;
-            addSrcToVideo({ videoIn, el, frameSrc });
+            addSrcToVideo({ el, frameSrc });
           }
         }
       }
@@ -44,17 +42,17 @@ export const isValidVideo = ({ videoIn, el, frameSrc }: isValidVideoPayload): bo
   useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
     for (const mutation of mutationsList) {
       if (mutation.attributeName === 'src') {
-        removeSrcToVideo({ videoIn, src: oldSrc });
+        removeSrcToVideo({ src: oldSrc });
         oldSrc = el.src;
         if (!el.src) return;
-        addSrcToVideo({ videoIn, el, frameSrc });
+        addSrcToVideo({ el, frameSrc });
       }
     }
   });
   return true;
 };
 
-const isValidVideoInHost = (el: HTMLVideoElement) => isValidVideo({ videoIn: 'HOST', el });
+const isValidVideoInHost = (el: HTMLVideoElement) => isValidVideo({ el });
 
 const findVideoElement = (nodes: Node[]) => {
   const directMatch = nodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
@@ -64,21 +62,18 @@ const findVideoElement = (nodes: Node[]) => {
 };
 
 interface initObserveAddedRemovedVideoPayload {
-  videoIn: 'HOST' | 'I_FRAME';
   frameSrc?: string;
 }
 
-export const initObserveAddedRemovedVideo = ({ videoIn, frameSrc }: initObserveAddedRemovedVideoPayload): void => {
+export const initObserveAddedRemovedVideo = ({ frameSrc }: initObserveAddedRemovedVideoPayload): void => {
   useMutationObserver((mutationsList) =>
     mutationsList.forEach((mutation) => {
-      // if (videoIn === 'I_FRAME') alert('detect video in iframe!');
       findVideoElement(Array.from(mutation.removedNodes)).forEach((el) => {
-        removeSrcToVideo({ videoIn, src: el.src });
+        removeSrcToVideo({ src: el.src });
       });
       findVideoElement(Array.from(mutation.addedNodes)).forEach((el) => {
-        // if (videoIn === 'I_FRAME') alert('detect video in iframe!');
         if (!isValidVideoInHost(el)) return;
-        addSrcToVideo({ videoIn, el, frameSrc });
+        addSrcToVideo({ el, frameSrc });
       });
     })
   );
@@ -105,14 +100,9 @@ export const init = (): void => {
         srcToIFrameSource[src] = { window: source as Window, frameSrc: src, origin };
         srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
       }
-    }
-  });
-  useWindowMessage({
+    },
     [RemoveVideoInIFrame]: ({ data: { src } }) => {
-      if (!srcToVideo.value[src]) {
-        if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) reset();
-        delete srcToVideo.value[src];
-      }
+      removeSrcToVideo({ src });
     }
   });
 
@@ -126,5 +116,5 @@ export const init = (): void => {
       })
   );
 
-  initObserveAddedRemovedVideo({ videoIn: 'HOST' });
+  initObserveAddedRemovedVideo({});
 };

@@ -14,7 +14,7 @@ import {
   // VideoInIFrame,
   VideoBoundingClientRect
 } from '@/composables';
-import { isValidVideo, initObserveAddedRemovedVideo } from '@/video/state/action/init';
+// import { isValidVideo, initObserveAddedRemovedVideo } from '@/video/state/action/init';
 import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
 import { addSrcToVideoInIframe } from '@/video/state/action/srcToVideo/iframe';
 
@@ -59,9 +59,9 @@ useWindowMessage({
   [GetBoundingClientRect]: sendBoundingClientRect
 });
 
-if (isValidVideo({ videoIn: 'I_FRAME', el: props.videoEl, frameSrc: props.frameSrc })) {
-  addSrcToVideoInIframe(props.videoEl, props.frameSrc);
-} else {
-  initObserveAddedRemovedVideo({ videoIn: 'I_FRAME', frameSrc: props.frameSrc });
-}
+// if (isValidVideo({ el: props.videoEl, frameSrc: props.frameSrc })) {
+addSrcToVideoInIframe(props.videoEl, props.frameSrc);
+// } else {
+//   initObserveAddedRemovedVideo({  frameSrc: props.frameSrc });
+// }
 </script>

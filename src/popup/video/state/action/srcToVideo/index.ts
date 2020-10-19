@@ -2,13 +2,13 @@ import { addSrcToVideoInHost, removeSrcToVideoInHost } from './host';
 import { addSrcToVideoInIframe, removeSrcToVideoInIframe } from './iframe';
 
 interface addSrcToVideoPayload {
-  videoIn: 'HOST' | 'I_FRAME';
   el: HTMLVideoElement;
   frameSrc?: string;
 }
+const inHost = () => window.self === window.top;
 
-export const addSrcToVideo = ({ videoIn, el, frameSrc = '' }: addSrcToVideoPayload): void => {
-  if (videoIn === 'HOST') {
+export const addSrcToVideo = ({ el, frameSrc = '' }: addSrcToVideoPayload): void => {
+  if (inHost()) {
     addSrcToVideoInHost(el);
   } else {
     addSrcToVideoInIframe(el, frameSrc);
@@ -16,12 +16,11 @@ export const addSrcToVideo = ({ videoIn, el, frameSrc = '' }: addSrcToVideoPaylo
 };
 
 interface removeSrcToVideoPayload {
-  videoIn: 'HOST' | 'I_FRAME';
   src: string;
 }
 
-export const removeSrcToVideo = ({ videoIn, src }: removeSrcToVideoPayload): void => {
-  if (videoIn === 'HOST') {
+export const removeSrcToVideo = ({ src }: removeSrcToVideoPayload): void => {
+  if (inHost()) {
     removeSrcToVideoInHost(src);
   } else {
     removeSrcToVideoInIframe(src);
