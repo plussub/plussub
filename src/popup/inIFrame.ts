@@ -7,11 +7,9 @@ const getIframeSrc = (window: Window) => {
 
 export const init = async (): Promise<void> => {
   const videoEl = document.querySelector('video');
-  if (!videoEl || !videoEl.offsetHeight || !videoEl.offsetWidth || (!videoEl.src && !videoEl.querySelector('source')) || document.getElementById('plussubShadow')) {
-    return;
-  }
-  // To get the top iframe if video is in nested iframe
-  // const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window);
+  if (!videoEl || !videoEl.offsetHeight || !videoEl.offsetWidth || (!videoEl.src && !videoEl.querySelector('source'))) return;
+  if (document.getElementById('plussubShadow')) return;
+
   const frameSrc = getIframeSrc(window.parent !== window.top ? window.parent : window);
   const appShadowDiv = document.createElement('div');
   const shadow = appShadowDiv.attachShadow({ mode: 'open' });

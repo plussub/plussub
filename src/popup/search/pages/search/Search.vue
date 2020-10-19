@@ -17,7 +17,7 @@
           v-else-if="internalQuery === ''"
           v-model:query="internalQuery"
           style="grid-area: auto / auto / span 2 / span 3"
-          :video-name="internalVideoName"
+          :video-name="videoName"
           @navigate="(event) => $emit('navigate', event)"
         />
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
@@ -49,7 +49,6 @@ declare const props: {
   contentTransitionName?: string; // default : ''
   videoName: string;
   videoNum: number;
-  videoIndex?: number;
 };
 
 export default {
@@ -84,7 +83,6 @@ export const select = (tmdb) => {
     }
   });
 };
-export const internalVideoName = props.videoIndex ? props.videoIndex.toString() : props.videoName;
 </script>
 
 <style scoped>

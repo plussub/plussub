@@ -14,11 +14,10 @@ interface isValidVideoPayload {
 }
 
 export const isValidVideo = ({ videoIn, el, frameSrc }: isValidVideoPayload): boolean => {
-  if (!(el.offsetWidth && el.offsetHeight)) return false;
-  let inVideoList = false;
+  if (!el || !el.offsetWidth || !el.offsetHeight) return false;
   let oldSrc = '';
   if (!el.src && !el.querySelector('source')) {
-    // (warning when use with onMount or onUnmount): onMount(onUnmount) is called when there is no active component instance to be associated with.
+    let inVideoList = false;
     // for cases that video element does not have src first, but will add src after the video is playing. (eg. vimeo.com)
     useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
       const { src } = el;
@@ -72,10 +71,12 @@ interface initObserveAddedRemovedVideoPayload {
 export const initObserveAddedRemovedVideo = ({ videoIn, frameSrc }: initObserveAddedRemovedVideoPayload): void => {
   useMutationObserver((mutationsList) =>
     mutationsList.forEach((mutation) => {
+      // if (videoIn === 'I_FRAME') alert('detect video in iframe!');
       findVideoElement(Array.from(mutation.removedNodes)).forEach((el) => {
         removeSrcToVideo({ videoIn, src: el.src });
       });
       findVideoElement(Array.from(mutation.addedNodes)).forEach((el) => {
+        // if (videoIn === 'I_FRAME') alert('detect video in iframe!');
         if (!isValidVideoInHost(el)) return;
         addSrcToVideo({ videoIn, el, frameSrc });
       });
@@ -100,7 +101,6 @@ export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
     [VideoInIFrame]: ({ origin, source, data: { src, hasSubtitle } }) => {
-      console.log('video added');
       if (!srcToVideo.value[src]) {
         srcToIFrameSource[src] = { window: source as Window, frameSrc: src, origin };
         srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };

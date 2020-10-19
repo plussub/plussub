@@ -1,7 +1,6 @@
 import { postWindowMessage, VideoInIFrame, RemoveVideoInIFrame } from '@/composables';
 
 export const addSrcToVideoInIframe = (el: HTMLVideoElement, frameSrc: string): void => {
-  console.log('addSrcToVideoInIframe')
   postWindowMessage({
     window: window.top,
     origin: '*',

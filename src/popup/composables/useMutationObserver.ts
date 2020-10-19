@@ -12,4 +12,6 @@ export const useElementMutationObserver = (el: HTMLElement, options: MutationObs
   const observer = new MutationObserver(callback);
 
   observer.observe(el, options);
+
+  // (warning when use with onMount or onUnmount): onMount(onUnmount) is called when there is no active component instance to be associated with.
 };
