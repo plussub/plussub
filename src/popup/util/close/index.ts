@@ -8,5 +8,6 @@ export const close = (): void => {
 
   document.getElementById('plussubShadow')?.remove();
   document.getElementById('plussub-overlay-highlight')?.remove();
+  // todo: use composable/useWindowPostMessage
   window.postMessage({ plusSubAction: 'removeMessageEventListener' }, '*');
 };

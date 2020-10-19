@@ -74,6 +74,7 @@ export const appState = window.plusSub_app;
 
 export const videoNum = computed(() => Object.values(srcToVideo.value).length);
 const navigateToSearch = () => {
+  // todo: write action for that, do not modify state elsewhere
   Object.values(srcToVideo.value)[0].hasSubtitle = true;
   state.selectedParams = { videoName: getVideoName(), videoNum };
   state.selected = 'SEARCH';

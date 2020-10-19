@@ -8,6 +8,7 @@ export const useMutationObserver = (callback: MutationCallback): void => {
   onUnmounted(() => observer.disconnect());
 };
 
+// todo: missing lifecycle methods, who ensures release of the observer
 export const useElementMutationObserver = (el: HTMLElement, options: MutationObserverInit, callback: MutationCallback): void => {
   const observer = new MutationObserver(callback);
 

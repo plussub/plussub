@@ -30,7 +30,6 @@ type GenericEvent<T extends Actions> = {
 };
 
 export type VideoInIFrameEvent = GenericEvent<typeof VideoInIFrame> & {
-  // frameSrc: string;
   src: string;
   hasSubtitle: boolean;
 };
@@ -39,7 +38,6 @@ export type SendIFrameUseWindowMessagePayload = {
 };
 
 export type RemoveVideoInIFrameEvent = GenericEvent<typeof RemoveVideoInIFrame> & {
-  // frameSrc: string;
   src: string;
 };
 export type RemoveVideoInIFrameEventUseWindowMessagePayload = {

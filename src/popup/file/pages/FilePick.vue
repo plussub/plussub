@@ -100,6 +100,7 @@ export const drop = (event): void => {
   readFile(file);
 };
 const nameToInt = parseInt(props.videoName, 10);
+// todo: why magic number 20?
 export const isNameNotNum = isNaN(nameToInt) || nameToInt > 20;
 export const changeQuery = (): void => {
   if (!isNameNotNum) return;
