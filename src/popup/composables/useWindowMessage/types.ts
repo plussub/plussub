@@ -40,6 +40,7 @@ export type SendIFrameUseWindowMessagePayload = {
 
 export type RemoveVideoInIFrameEvent = GenericEvent<typeof RemoveVideoInIFrame> & {
   src: string;
+  frameSrc: string;
 };
 export type RemoveVideoInIFrameEventUseWindowMessagePayload = {
   [RemoveVideoInIFrame]: (payload: MessageEvent<RemoveVideoInIFrameEvent>) => void;

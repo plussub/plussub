@@ -21,7 +21,6 @@ import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/
 declare const props: {
   frameSrc: string;
   videoEl: HTMLVideoElement;
-  // test: string;
 };
 
 const sendTime = () => {
@@ -78,7 +77,8 @@ useVideoElementMutationObserver(({ added, removed }) => {
       origin: '*',
       payload: {
         plusSubAction: RemoveVideoInIFrame,
-        src: props.frameSrc
+        frameSrc: props.frameSrc,
+        src: props.videoEl.src
       }
     })
   );

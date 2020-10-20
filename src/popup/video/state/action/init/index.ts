@@ -23,22 +23,20 @@ const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
 export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
-    [VideoInIFrame]: ({ origin, source, data: { src, hasSubtitle } }) => {
+    [VideoInIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
       if (!srcToVideo.value[src]) {
-        srcToIFrameSource[src] = { window: source as Window, frameSrc: src, origin };
+        srcToIFrameSource[src] = { window: source as Window, frameSrc, origin };
         srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
       }
     }
   });
   useWindowMessage({
-    [RemoveVideoInIFrame]: ({ data: { src } }) => {
-      if (srcToVideo.value[src]) {
-        if (srcToVideo.value[src].hasSubtitle) {
-          reset();
-        }
-        delete srcToVideo.value[src];
-        delete srcToIFrameSource[src];
+    [RemoveVideoInIFrame]: ({ data: { src, frameSrc } }) => {
+      if (srcToVideo.value[src]?.hasSubtitle) {
+        reset();
       }
+      delete srcToVideo.value[src];
+      delete srcToIFrameSource[frameSrc];
     }
   });
 
@@ -68,7 +66,7 @@ export const init = (): void => {
       };
     });
     removed.forEach((el) => {
-      if (srcToVideo.value[el.src] && srcToVideo.value[el.src].hasSubtitle) {
+      if ( srcToVideo.value[el.src]?.hasSubtitle) {
         reset();
       }
       delete srcToVideo.value[el.src];
