@@ -5,7 +5,7 @@
 </template>
 
 <script setup="props" lang="ts">
-export {toHome} from "@/navigation/state/action";
+export {toHome} from "@/navigation/state/actions";
 
 declare const props: {
   backFn?: () => void;

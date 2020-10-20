@@ -16,7 +16,7 @@ import {
   VideoCurrentTime,
   VideoInIFrame
 } from '@/composables';
-import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
+import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/actions/vtt/host';
 
 declare const props: {
   frameSrc: string;

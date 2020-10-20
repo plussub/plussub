@@ -34,7 +34,7 @@ import { debounce, useDraggableArea } from '@/composables';
 import { ref, watch } from 'vue';
 import { TmdbState } from '@/search/state/types';
 import { setTmdbInSelection } from '../../state/actions/setTmdbInSelection';
-import {toSubtitleSelection} from "../../../navigation/state/action/toSubtitleSelection";
+import {toSubtitleSelection} from "../../../navigation/state/actions/toSubtitleSelection";
 
 export { close } from '@/util/close';
 export { default as FilePick } from '@/file/pages/FilePick.vue';

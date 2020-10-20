@@ -23,6 +23,7 @@ import { ref, computed, watch } from 'vue';
 import { formatBiggestUnitMinuteSmallestUnitSeconds } from '../../util/time';
 import { videoList, setCurrentTime as setCurrentTimeState } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
+import { subtitleState } from '@/subtitle/state';
 
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
@@ -67,7 +68,7 @@ export const currentPos = ref(-1);
 export const transcriptContentContainer = ref<HTMLElement | null>(null);
 
 watch(currentTime, (currentTime) => {
-  const pos = binarySearch(Math.ceil(currentTime * 1000), window.plusSub_subtitle.value.withOffsetParsed);
+  const pos = binarySearch(Math.ceil(currentTime * 1000), subtitleState.value.withOffsetParsed);
   if (pos === -1) return;
   currentPos.value = pos;
   if (transcriptContentContainer.value && !transcriptContentContainer.value.matches(':hover')) {
@@ -79,7 +80,7 @@ watch(currentTime, (currentTime) => {
 });
 
 export const subtitleTexts = computed(() =>
-  window.plusSub_subtitle.value.withOffsetParsed.map(({ from, text }) => ({
+    subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
     formattedFrom: formatBiggestUnitMinuteSmallestUnitSeconds({ time: from }),
     text,
     time: from / 1000

@@ -15,14 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watchEffect } from 'vue';
-import { init as initAppState } from '@/app/state';
+import { reactive, watchEffect, computed } from 'vue';
+import { init as initAppState, appState } from '@/app/state';
 import { init as initVideoState, videoCount, videoList } from '@/video/state';
 import { init as initFileState } from '@/file/state';
 import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
-import { navigationState, setCurrentSelectedSrc } from '@/navigation/state';
-import { toSearch } from '@/navigation/state/action/toSearch';
+import { init as initNavigationState, setCurrentSelectedSrc, toSearch, navigationState } from '@/navigation/state';
 
 export { default as KnopfCss } from '@/KnopfCss.vue';
 export { default as Home } from '@/home/pages/Home.vue';
@@ -30,17 +29,16 @@ export { default as Search } from '@/search/pages/search/Search.vue';
 export { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
 export { default as FilePick } from '@/file/pages/FilePick.vue';
 export { default as Transcript } from '@/transcript/pages/Transcript.vue';
-export { navigationState };
 
+export {navigationState};
 export const state = reactive({ selected: 'HOME', selectedParams: {} });
 
 initAppState();
+initNavigationState();
 initSubtitleState();
 initVideoState();
 initFileState();
 initSubtitleSearchState();
-
-export const appState = window.plusSub_app;
 
 watchEffect(() => {
   // auto navigate if only 1 video exists
