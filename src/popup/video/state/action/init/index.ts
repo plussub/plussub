@@ -1,6 +1,6 @@
 import { Video, VideoSrc } from '@/video/state/types';
 import { srcToIFrameSource, srcToVideo } from '@/video/state/state';
-import { useMutationObserver, useElementMutationObserver, useWindowMessage, VideoInIFrame, RemoveVideoInIFrame } from '@/composables';
+import { RemoveVideoInIFrame, useElementMutationObserver, useMutationObserver, useWindowMessage, VideoInIFrame } from '@/composables';
 import { isHTMLElement, isHTMLVideoElement } from '@/types';
 import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
@@ -14,7 +14,9 @@ interface isValidVideoPayload {
 }
 
 export const isValidVideo = ({ videoIn, el, frameSrc }: isValidVideoPayload): boolean => {
-  if (!(el.offsetWidth && el.offsetHeight)) return false;
+  if (!el.offsetWidth || !el.offsetHeight) {
+    return false;
+  }
   let inVideoList = false;
   let oldSrc = '';
   if (!el.src && !el.querySelector('source')) {
@@ -59,9 +61,18 @@ const isValidVideoInHost = (el: HTMLVideoElement) => isValidVideo({ videoIn: 'HO
 
 const findVideoElement = (nodes: Node[]) => {
   const directMatch = nodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
-  if (directMatch) return [directMatch];
-
+  if (directMatch) {
+    return [directMatch];
+  }
   return nodes.reduce<HTMLVideoElement[]>((acc, parent) => (isHTMLElement(parent) ? [...acc, ...Array.from<HTMLVideoElement>(parent.querySelectorAll('video'))] : acc), []);
+};
+
+const addedVideoElements = (mutationsList: MutationRecord[]): HTMLVideoElement[] => {
+  return mutationsList.flatMap((mutation) => findVideoElement(Array.from(mutation.addedNodes)));
+};
+
+const removedVideoElements = (mutationsList: MutationRecord[]): HTMLVideoElement[] => {
+  return mutationsList.flatMap((mutation) => findVideoElement(Array.from(mutation.removedNodes)));
 };
 
 interface initObserveAddedRemovedVideoPayload {
@@ -70,17 +81,10 @@ interface initObserveAddedRemovedVideoPayload {
 }
 
 export const initObserveAddedRemovedVideo = ({ videoIn, frameSrc }: initObserveAddedRemovedVideoPayload): void => {
-  useMutationObserver((mutationsList) =>
-    mutationsList.forEach((mutation) => {
-      findVideoElement(Array.from(mutation.removedNodes)).forEach((el) => {
-        removeSrcToVideo({ videoIn, src: el.src });
-      });
-      findVideoElement(Array.from(mutation.addedNodes)).forEach((el) => {
-        if (!isValidVideoInHost(el)) return;
-        addSrcToVideo({ videoIn, el, frameSrc });
-      });
-    })
-  );
+  useMutationObserver((mutationsList) => {
+    addedVideoElements(mutationsList).forEach((el) => addSrcToVideo({ videoIn, el, frameSrc }));
+    removedVideoElements(mutationsList).forEach((el) => removeSrcToVideo({ videoIn, src: el.src }));
+  });
 };
 
 const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
@@ -100,7 +104,6 @@ export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
     [VideoInIFrame]: ({ origin, source, data: { src, hasSubtitle } }) => {
-      console.log('video added');
       if (!srcToVideo.value[src]) {
         srcToIFrameSource[src] = { window: source as Window, frameSrc: src, origin };
         srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
@@ -109,8 +112,10 @@ export const init = (): void => {
   });
   useWindowMessage({
     [RemoveVideoInIFrame]: ({ data: { src } }) => {
-      if (!srcToVideo.value[src]) {
-        if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) reset();
+      if (srcToVideo.value[src]) {
+        if (srcToVideo.value[src].hasSubtitle) {
+          reset();
+        }
         delete srcToVideo.value[src];
       }
     }
