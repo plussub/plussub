@@ -4,7 +4,7 @@
       <div ref="draggableAreaRef" class="home-toolbar--container--content">
         <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain" />
         <div style="grid-area: buttons; display: flex; justify-content: flex-end">
-          <a v-if="appState.state !== 'NONE'" class="knopf flat pill buttonOnPrimary" @click="$emit('navigate', { name: 'TRANSCRIPT', params: { contentTransitionName: 'content-navigate-deeper' } })">
+          <a v-if="appState.state !== 'NONE'" class="knopf flat pill buttonOnPrimary" @click="toTranscript">
             <!-- This icon comes from material design icons which is under Apache license -->
             <img :src="subtitleIcon" style="filter: invert(1)" />
           </a>
@@ -36,18 +36,18 @@
             <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
           </template>
         </ResultFromFile>
-        <PageVideos v-show="appState.state === 'NONE'" style="grid-area: videos"/>
+        <PageVideos v-show="appState.state === 'NONE'" style="grid-area: videos" @selected-src="selectedSrc" />
       </div>
     </template>
   </PageLayout>
 </template>
 
-
 <script setup="props, {emit}" lang="ts">
 import { ref } from 'vue';
 import { useDraggableArea } from '@/composables';
 import { reset } from '@/app/state';
-import { setCurrentSelectedSrc } from "@/navigation/state";
+import { setCurrentSelectedSrc, toSearch } from '@/navigation/state';
+
 export { close } from '@/util/close';
 
 declare const props: {
@@ -62,16 +62,21 @@ export { default as ResultFromFile } from './components/ResultFromFile.vue';
 export { default as PageVideos } from './components/PageVideos';
 export { default as Settings } from './components/Settings.vue';
 export { setOffsetTime } from '@/subtitle/state';
+export { toTranscript } from '@/navigation/state';
 
 export const fileState = window.plusSub_file;
 export const appState = window.plusSub_app;
 export const subtitleState = window.plusSub_subtitle;
 export const subtitleSearchState = window.plusSub_subtitleSearch;
 
-
 export const remove = (): void => {
   reset();
   setCurrentSelectedSrc(null);
+};
+
+export const selectedSrc = (src: string): void => {
+  setCurrentSelectedSrc(src);
+  toSearch();
 };
 
 export const draggableAreaRef = ref(null);

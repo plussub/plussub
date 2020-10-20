@@ -2,7 +2,7 @@
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn v-if="videoCount > 1" style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
+        <ToolbarBackBtn v-if="videoCount > 1" style="height: 100%" />
         <a v-else class="knopf flat pill sharp buttonOnPrimary" @click="close"><i class="fa fa-times fa-lg"></i></a>
         <SearchBar v-model:query="internalQuery" v-model:loading="loading" style="flex-grow: 1; align-content: center; z-index: 10000" />
       </div>
@@ -10,7 +10,7 @@
     <template #content>
       <div class="search-content--container">
         <div v-if="searchResults.length" style="grid-area: search-results">
-          <SearchEntry v-for="(item, index) in searchResults" :key="index" :item="item" @select="(event) => select(event)" />
+          <SearchEntry v-for="(item, index) in searchResults" :key="index" :item="item" @select="select" />
         </div>
         <!-- <div v-else-if="internalQuery === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">After a search, the results are displayed here.</div> -->
         <FilePick
@@ -34,6 +34,7 @@ import { debounce, useDraggableArea } from '@/composables';
 import { ref, watch } from 'vue';
 import { TmdbState } from '@/search/state/types';
 import { setTmdbInSelection } from '../../state/actions/setTmdbInSelection';
+import {toSubtitleSelection} from "../../../navigation/state/action/toSubtitleSelection";
 
 export { close } from '@/util/close';
 export { default as FilePick } from '@/file/pages/FilePick.vue';
@@ -46,10 +47,6 @@ export { videoCount } from '@/video/state';
 declare const props: {
   query?: string;
   contentTransitionName?: string; // default : ''
-};
-
-export default {
-  emits: ['navigate']
 };
 
 export const draggableAreaRef = ref(null);
@@ -68,16 +65,13 @@ const { fn: req } = debounce<TmdbState[]>({
 
 watch(internalQuery, (query) => req(query), { immediate: true });
 
-export const select = (tmdb) => {
+export const select = (tmdb: TmdbState) => {
   setTmdbInSelection(tmdb);
-  emit('navigate', {
-    name: 'SUBTITLE-SELECTION',
-    params: {
-      tmdb_id: tmdb.tmdb_id,
-      media_type: tmdb.media_type,
-      searchQuery: internalQuery,
-      contentTransitionName: 'content-navigate-deeper'
-    }
+  toSubtitleSelection({
+    tmdb_id: tmdb.tmdb_id,
+    media_type: tmdb.media_type,
+    searchQuery: internalQuery.value,
+    contentTransitionName: 'content-navigate-deeper'
   });
 };
 </script>

@@ -28,15 +28,17 @@
 import { onUnmounted } from 'vue';
 import { Video } from '@/video/state';
 import { leaveVideo } from '@/util/hover';
-import { setCurrentSelectedSrc, toSearch } from '@/navigation/state/action';
 
 export { enterVideo } from '@/util/hover';
 export { videoList } from '@/video/state';
 export { leaveVideo };
 
+export default {
+  emits: ['selected-src']
+};
+
 export const selectVideo = (video: Video): void => {
-  setCurrentSelectedSrc(video.src);
-  toSearch();
+  emit('selected-src', video.src);
 };
 onUnmounted(() => {
   leaveVideo();

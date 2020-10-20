@@ -2,7 +2,7 @@
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
+        <ToolbarBackBtn style="height: 100%"/>
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Transcript</div>
       </div>
     </template>
@@ -29,10 +29,6 @@ export { default as PageLayout } from '@/components/PageLayout';
 
 declare const props: {
   contentTransitionName: string; // default : ''
-};
-
-export default {
-  emits: ['navigate']
 };
 
 export const draggableAreaRef = ref(null);
