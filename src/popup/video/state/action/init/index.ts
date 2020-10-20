@@ -1,9 +1,16 @@
 import { Video, VideoSrc } from '@/video/state/types';
-import { srcToIFrameSource, srcToIFrameVideo, srcToHostVideo, videosWithSubtitle } from '@/video/state/state';
+import {
+  srcToIFrameSource,
+  srcToIFrameVideo,
+  srcToHostVideo,
+  videosWithSubtitle,
+  srcToGlobalVideo
+} from '@/video/state/state';
 import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideoInIFrame } from '@/composables';
-import { watch } from 'vue';
+import { watch, watchEffect } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
+import { currentSelectedVideoSrc } from "@/navigation/state";
 
 const isValidVideo = (el: HTMLVideoElement): boolean => el.offsetWidth !== 0 && el.offsetHeight !== 0 && el.currentSrc !== '';
 
@@ -58,6 +65,18 @@ export const init = (): void => {
       delete srcToIFrameSource[frameSrc];
     }
   });
+
+  watchEffect(() => {
+    const src = currentSelectedVideoSrc.value;
+    if(!src){
+      return;
+    }
+    const video = srcToGlobalVideo.value[src];
+    if(video){
+      removeVttFrom({ video });
+      addVttTo({ video, subtitle: window.plusSub_subtitle.value.withOffsetParsed });
+    }
+  })
 
   watch(
     () => window.plusSub_subtitle.value.withOffsetParsed,

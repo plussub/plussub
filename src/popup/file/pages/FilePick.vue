@@ -34,6 +34,9 @@ import { setRaw, parse } from '@/subtitle/state';
 import { leaveVideo } from '@/util/hover';
 import { getVideoName } from '../../util/name';
 import {toHome} from "../../navigation/state/action";
+import {currentSelectedVideoSrc} from "../../navigation/state/state";
+import {srcToGlobalVideo} from "../../video/state/state";
+import {addVttTo} from "../../video/state/action/vtt";
 
 export { default as xCircleIcon } from '@/res/x-circle.svg';
 export { videosWithSubtitle, videoCount } from '@/video/state';

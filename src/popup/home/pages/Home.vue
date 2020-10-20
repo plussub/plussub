@@ -36,7 +36,7 @@
             <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
           </template>
         </ResultFromFile>
-        <PageVideos v-show="appState.state === 'NONE'" style="grid-area: videos" :subtitle="subtitleState.withOffsetParsed" @navigate="(event) => $emit('navigate', event)" />
+        <PageVideos v-show="appState.state === 'NONE'" style="grid-area: videos"/>
       </div>
     </template>
   </PageLayout>
