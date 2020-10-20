@@ -93,20 +93,21 @@ export const init = (): void => {
 
   const findVideoElement = (nodes: Node[]) => {
     const directMatch = nodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
-    if (directMatch) return [directMatch];
-
+    if (directMatch) {
+      return [directMatch];
+    }
     return nodes.reduce<HTMLVideoElement[]>((acc, parent) => (isHTMLElement(parent) ? [...acc, ...Array.from<HTMLVideoElement>(parent.querySelectorAll('video'))] : acc), []);
   };
+  const addedVideoElements = (mutationsList: MutationRecord[]): HTMLVideoElement[] => {
+    return mutationsList.flatMap((mutation) => findVideoElement(Array.from(mutation.addedNodes)));
+  };
 
-  useMutationObserver((mutationsList) =>
-    mutationsList.forEach((mutation) => {
-      findVideoElement(Array.from(mutation.removedNodes)).forEach((el) => {
-        removeSrcToVideoInHost(el.src);
-      });
-      findVideoElement(Array.from(mutation.addedNodes)).forEach((el) => {
-        if (!isValidVideoInHost(el)) return;
-        addSrcToVideoInHost(el);
-      });
-    })
-  );
+  const removedVideoElements = (mutationsList: MutationRecord[]): HTMLVideoElement[] => {
+    return mutationsList.flatMap((mutation) => findVideoElement(Array.from(mutation.removedNodes)));
+  };
+
+  useMutationObserver((mutationsList) => {
+    removedVideoElements(mutationsList).forEach((el) => removeSrcToVideoInHost(el.src));
+    addedVideoElements(mutationsList).filter(isValidVideoInHost).forEach(addSrcToVideoInHost);
+  });
 };
