@@ -61,13 +61,11 @@ export { default as ResultFromSearch } from './components/ResultFromSearch.vue';
 export { default as ResultFromFile } from './components/ResultFromFile.vue';
 export { default as PageVideos } from './components/PageVideos';
 export { default as Settings } from './components/Settings.vue';
-export { setOffsetTime } from '@/subtitle/state';
+export { subtitleState, setOffsetTime } from '@/subtitle/state';
 export { toTranscript } from '@/navigation/state';
-
-export const fileState = window.plusSub_file;
-export const appState = window.plusSub_app;
-export const subtitleState = window.plusSub_subtitle;
-export const subtitleSearchState = window.plusSub_subtitleSearch;
+export { appState } from '@/app/state';
+export { subtitleSearchState } from '@/search/state';
+export { fileState } from '@/file/state';
 
 export const remove = (): void => {
   reset();

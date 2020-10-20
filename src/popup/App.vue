@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watchEffect, computed } from 'vue';
+import { reactive, watchEffect } from 'vue';
 import { init as initAppState, appState } from '@/app/state';
 import { init as initVideoState, videoCount, videoList } from '@/video/state';
 import { init as initFileState } from '@/file/state';
@@ -47,6 +47,7 @@ watchEffect(() => {
     toSearch();
   }
 });
+
 </script>
 
 <style>
