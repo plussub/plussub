@@ -21,7 +21,7 @@
 import { useDraggableArea } from '@/composables';
 import { ref, computed, watch } from 'vue';
 import { formatBiggestUnitMinuteSmallestUnitSeconds } from '../../util/time';
-import { srcToVideo, setCurrentTime as setCurrentTimeState } from '@/video/state';
+import { videoList, setCurrentTime as setCurrentTimeState } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
 
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
@@ -40,7 +40,7 @@ useDraggableArea({ draggableAreaRef });
 
 const currentTime = ref<number>(0);
 
-export const video = computed(() => Object.values(srcToVideo.value).find((e) => e.hasSubtitle));
+export const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
 
 if (video.value) {
   useTimeUpdate({

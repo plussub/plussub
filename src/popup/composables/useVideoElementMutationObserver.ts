@@ -29,14 +29,7 @@ export const useVideoElementMutationObserver = (callback: (payload: CallbackPayl
       removed: removedVideoElements(mutationsList)
     });
   });
+
   onMounted(() => observer.observe(document.body, { subtree: true, childList: true }));
-
   onUnmounted(() => observer.disconnect());
-};
-
-// todo: missing lifecycle methods, who ensures release of the observer
-export const useElementMutationObserver = (el: HTMLElement, options: MutationObserverInit, callback: MutationCallback): void => {
-  const observer = new MutationObserver(callback);
-
-  observer.observe(el, options);
 };

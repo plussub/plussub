@@ -49,7 +49,7 @@ import { init as initVideoState } from '@/video/state';
 import { init as initFileState } from '@/file/state';
 import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
-import { srcToVideo } from '@/video/state';
+import { srcToGlobalVideo } from '@/video/state';
 import { getVideoName } from '@/util/name';
 export { default as KnopfCss } from '@/KnopfCss.vue';
 export { default as Home } from '@/home/pages/Home.vue';
@@ -72,10 +72,10 @@ initSubtitleSearchState();
 
 export const appState = window.plusSub_app;
 
-export const videoNum = computed(() => Object.values(srcToVideo.value).length);
+export const videoNum = computed(() => Object.values(srcToGlobalVideo.value).length);
 const navigateToSearch = () => {
   // todo: write action for that, do not modify state elsewhere
-  Object.values(srcToVideo.value)[0].hasSubtitle = true;
+  Object.values(srcToGlobalVideo.value)[0].hasSubtitle = true;
   state.selectedParams = { videoName: getVideoName(), videoNum };
   state.selected = 'SEARCH';
 };
@@ -94,7 +94,7 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
 
       // reset the auto selected video to not selected(hasSubtitle means selected actually now)
       // todo: write action for that, do not modify state elsewhere
-      Object.values(srcToVideo.value)[0].hasSubtitle = false;
+      Object.values(srcToGlobalVideo.value)[0].hasSubtitle = false;
       navigateToHome();
     } else if (newVideoNum === 1) {
       navigateToSearch();

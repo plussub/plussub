@@ -1,5 +1,5 @@
 <template>
-  <div id="filepicker-content--container" @mouseenter="enterVideo(videoWithSubtitle)" @mouseleave="leaveVideo" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
+  <div id="filepicker-content--container" @mouseenter="enterVideo(videosWithSubtitle[0])" @mouseleave="leaveVideo" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
     <p class="upload-drag-icon">
       <i class="fa fa-upload fa-lg"></i>
     </p>
@@ -19,20 +19,23 @@
       <p class="upload-text">Click or drop file to this area to upload</p>
       <p class="upload-hint">
         Support for a single file upload. Only .srt or .vtt file is acceptable.(Video
-        <span :class="{ 'video-name-string': isNameNotNum }" @click="changeQuery">{{ videoName }}</span> is {{ videoNum === 1 ? 'auto' : '' }} selected)
+        <span :class="{ 'video-name-string': isNameNotNum }" @click="changeQuery">{{ videoName }}</span> is {{ videoCount === 1 ? 'auto' : '' }} selected)
       </p>
     </div>
   </div>
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import { ref, computed, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import { setFilename } from '../state';
 import { setState, setSrc } from '@/app/state';
 import { setRaw, parse } from '@/subtitle/state';
-import { srcToVideo } from '@/video/state';
-import { enterVideo, leaveVideo } from '@/util/hover';
+import { leaveVideo } from '@/util/hover';
+
 export { default as xCircleIcon } from '@/res/x-circle.svg';
+export { videosWithSubtitle, videoCount } from '@/video/state';
+export { enterVideo } from '@/util/hover';
+export { leaveVideo };
 
 declare const props: {
   videoName: string;
@@ -42,7 +45,7 @@ declare const props: {
 export default {
   emits: ['navigate']
 };
-export { enterVideo, leaveVideo };
+
 export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
 const readFile = (file: File): void => {
@@ -108,11 +111,8 @@ export const changeQuery = (): void => {
   if (!isNameNotNum) return;
   emit('update:query', props.videoName);
 };
-export const videoWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle)[0]);
-export const videoNum = computed(() => Object.values(srcToVideo.value).length);
-onUnmounted(() => {
-  leaveVideo();
-});
+
+onUnmounted(() => leaveVideo());
 </script>
 
 <style scoped>

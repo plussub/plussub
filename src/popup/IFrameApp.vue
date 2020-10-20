@@ -65,7 +65,7 @@ useVideoElementMutationObserver(({ added, removed }) => {
       origin: '*',
       payload: {
         plusSubAction: VideoInIFrame,
-        src: props.videoEl.src,
+        currentSrc: props.videoEl.currentSrc,
         frameSrc: props.frameSrc,
         hasSubtitle: el.classList.contains('plussub')
       }
@@ -78,7 +78,7 @@ useVideoElementMutationObserver(({ added, removed }) => {
       payload: {
         plusSubAction: RemoveVideoInIFrame,
         frameSrc: props.frameSrc,
-        src: props.videoEl.src
+        currentSrc: props.videoEl.currentSrc
       }
     })
   );
@@ -90,7 +90,7 @@ postWindowMessage({
   payload: {
     plusSubAction: VideoInIFrame,
     frameSrc: props.frameSrc,
-    src: props.videoEl.src,
+    currentSrc: props.videoEl.currentSrc,
     hasSubtitle: props.videoEl.classList.contains('plussub')
   }
 });

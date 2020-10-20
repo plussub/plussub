@@ -1,46 +1,64 @@
 import { Video, VideoSrc } from '@/video/state/types';
-import { srcToIFrameSource, srcToVideo } from '@/video/state/state';
+import { srcToIFrameSource, srcToIFrameVideo, srcToHostVideo, videosWithSubtitle } from '@/video/state/state';
 import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideoInIFrame } from '@/composables';
-import { computed, watch } from 'vue';
+import { watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
-import { isValidVideo } from '@/video/state/action/isValidVideo';
+
+const isValidVideo = (el: HTMLVideoElement): boolean => el.offsetWidth !== 0 && el.offsetHeight !== 0 && el.currentSrc !== '';
 
 const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
-  [...document.querySelectorAll('video')]
-    .filter((el) => isValidVideo({ videoIn: 'HOST', el }))
-    .map(
-      (el): Video => ({
-        src: el.src,
-        in: 'HOST',
-        hasSubtitle: el.classList.contains('plussub'),
-        el
-      })
-    )
-    .reduce((acc, cur) => ({ ...acc, [cur.src]: cur }), {});
+  Object.fromEntries(
+    [...document.querySelectorAll('video')]
+      .filter((el) => isValidVideo(el))
+      .map((el) => [
+        el.currentSrc,
+        {
+          src: el.currentSrc,
+          in: 'HOST',
+          hasSubtitle: el.classList.contains('plussub'),
+          el
+        }
+      ])
+  );
 
+const resetSrcToHostVideo = () => {
+  srcToHostVideo.value = findVideosInCurrentTab();
+}
 
 export const init = (): void => {
-  srcToVideo.value = findVideosInCurrentTab();
+  resetSrcToHostVideo();
+
+  // handle host videos
+  // handles also if the source or the src changes
+  [...document.querySelectorAll('video')].forEach((el) => el.addEventListener('loadedmetadata', resetSrcToHostVideo));
+  // new videos added to the page
+  useVideoElementMutationObserver(({ added, removed }) => {
+    resetSrcToHostVideo();
+    added.forEach((el) => el.addEventListener('loadedmetadata', resetSrcToHostVideo));
+    if (removed.some((el) => srcToHostVideo.value[el.currentSrc]?.hasSubtitle)) {
+      reset();
+    }
+  });
+
   useWindowMessage({
-    [VideoInIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
-      if (!srcToVideo.value[src]) {
-        srcToIFrameSource[src] = { window: source as Window, frameSrc, origin };
-        srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
+    [VideoInIFrame]: ({ origin, source, data: { currentSrc, frameSrc, hasSubtitle } }) => {
+      if (!srcToHostVideo.value[currentSrc]) {
+        srcToIFrameSource[currentSrc] = { window: source as Window, frameSrc, origin };
+        srcToIFrameVideo.value[currentSrc] = { hasSubtitle, src: currentSrc, in: 'I_FRAME' };
       }
     }
   });
   useWindowMessage({
-    [RemoveVideoInIFrame]: ({ data: { src, frameSrc } }) => {
-      if (srcToVideo.value[src]?.hasSubtitle) {
+    [RemoveVideoInIFrame]: ({ data: { currentSrc, frameSrc } }) => {
+      if (srcToHostVideo.value[currentSrc]?.hasSubtitle) {
         reset();
       }
-      delete srcToVideo.value[src];
+      delete srcToIFrameVideo.value[currentSrc];
       delete srcToIFrameSource[frameSrc];
     }
   });
 
-  const videosWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle));
   watch(
     () => window.plusSub_subtitle.value.withOffsetParsed,
     (subtitle) =>
@@ -49,27 +67,4 @@ export const init = (): void => {
         addVttTo({ video, subtitle });
       })
   );
-
-  // todo video element observer
-  watch(
-    () => srcToVideo.value,
-    () => {}
-  );
-
-  useVideoElementMutationObserver(({ added, removed }) => {
-    added.forEach((el) => {
-      srcToVideo.value[el.src] = {
-        el,
-        hasSubtitle: el.classList.contains('plussub'),
-        src: el.src,
-        in: 'HOST'
-      };
-    });
-    removed.forEach((el) => {
-      if ( srcToVideo.value[el.src]?.hasSubtitle) {
-        reset();
-      }
-      delete srcToVideo.value[el.src];
-    });
-  });
 };

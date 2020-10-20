@@ -16,11 +16,11 @@ export const enterVideo = (video: Video): void => {
     if (!plussubShadow) return;
     plussubShadow.style.top = `${(window.scrollY + 30).toString()}px`;
   }
-  const overlayHightlight = document.getElementById('plussub-overlay-highlight');
-  if (!overlayHightlight) return;
+  const overlayHighlight = document.getElementById('plussub-overlay-highlight');
+  if (!overlayHighlight) return;
   if (video.in === 'HOST') {
     const { top, left, height, width } = el.getBoundingClientRect();
-    overlayHightlight.style.cssText = `position: absolute; z-index: 9999; background-color: rgba(40, 58, 90, 0.8); width: ${width}px; height: ${height}px; top: ${window.scrollY + top}px; left: ${
+    overlayHighlight.style.cssText = `position: absolute; z-index: 9999; background-color: rgba(40, 58, 90, 0.8); width: ${width}px; height: ${height}px; top: ${window.scrollY + top}px; left: ${
       window.scrollX + left
     }px;`;
   } else {
@@ -41,7 +41,7 @@ export const enterVideo = (video: Video): void => {
         const iFrameTop = iframeBoundingClientRect.top;
         const iFrameLeft = iframeBoundingClientRect.left;
         const { top, left, height, width } = boundingClientRect;
-        overlayHightlight.style.cssText = `position: absolute; z-index: 9999; background-color: rgba(40, 58, 90, 0.8); width: ${width}px; height: ${height}px; top: ${
+        overlayHighlight.style.cssText = `position: absolute; z-index: 9999; background-color: rgba(40, 58, 90, 0.8); width: ${width}px; height: ${height}px; top: ${
           window.scrollY + top + iFrameTop
         }px; left: ${window.scrollX + left + iFrameLeft}px;`;
       }

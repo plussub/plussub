@@ -50,7 +50,7 @@
 import { ref } from 'vue';
 import { useDraggableArea } from '@/composables';
 import { reset } from '@/app/state';
-import { srcToVideo } from '@/video/state';
+import { videoCount, srcToGlobalVideo } from '@/video/state';
 import { getVideoName } from '@/util/name';
 export { close } from '@/util/close';
 
@@ -79,10 +79,10 @@ export default {
 
 export const remove = (): void => {
   reset();
-  if (Object.values(srcToVideo.value).length === 1) {
+  if (videoCount.value === 1) {
     emit('navigate', { name: 'SEARCH', params: { videoName: getVideoName(), videoNum: 1, contentTransitionName: 'content-navigate-deeper' } });
     // todo: write action, do not modify state elsewhere but in actions
-    Object.values(srcToVideo.value)[0].hasSubtitle = true;
+    Object.values(srcToGlobalVideo.value)[0].hasSubtitle = true;
   } else {
     // The content of home won't change when close and reopen the popup windows and then click "remove subtitle"
     // use this as a pathetic hack

@@ -19,7 +19,7 @@ describe('window message test', () => {
       origin: 'origin',
       data: {
         plusSubAction: VideoInIFrame,
-        src: 'test',
+        currentSrc: 'test',
         hasSubtitle: true
       }
     } as MessageEvent<VideoInIFrameEvent>);
@@ -28,7 +28,7 @@ describe('window message test', () => {
       origin: 'origin',
       data: {
         plusSubAction: 'VIDEO_IN_I_FRAME',
-        src: 'test',
+        currentSrc: 'test',
         hasSubtitle: true
       }
     });

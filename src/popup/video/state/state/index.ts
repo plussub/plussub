@@ -1,7 +1,8 @@
-import { ref } from 'vue';
+import { computed, ref, Ref } from 'vue';
 import { Video, VideoSrc } from '@/video/state';
 
-export const srcToVideo = ref<Record<VideoSrc, Video>>({});
+export const srcToHostVideo = ref<Record<VideoSrc, Video>>({});
+export const srcToIFrameVideo = ref<Record<VideoSrc, Video>>({});
 
 // don't make source(of iframe) reactive as it will cause cors problem
 export interface IFrameSource {
@@ -11,4 +12,8 @@ export interface IFrameSource {
 }
 
 export const srcToIFrameSource: Record<VideoSrc, IFrameSource> = {};
-export const srcToElementObserver = ref<Record<VideoSrc, () => void>>({});
+
+export const srcToGlobalVideo: Ref<Record<VideoSrc, Video>> = computed(() => ({ ...srcToHostVideo.value, ...srcToIFrameVideo.value }));
+export const videoList: Ref<Video[]> = computed(() =>  Object.values(srcToGlobalVideo.value));
+export const videosWithSubtitle = computed(() => videoList.value.filter((e) => e.hasSubtitle));
+export const videoCount = computed(() => videoList.value.length);

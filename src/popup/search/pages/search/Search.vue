@@ -2,7 +2,7 @@
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn v-if="videoNum > 1" style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
+        <ToolbarBackBtn v-if="videoCount > 1" style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
         <a v-else class="knopf flat pill sharp buttonOnPrimary" @click="close"><i class="fa fa-times fa-lg"></i></a>
         <SearchBar v-model:query="internalQuery" v-model:loading="loading" style="flex-grow: 1; align-content: center; z-index: 10000" />
       </div>
@@ -43,12 +43,12 @@ export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
 export { default as SearchBar } from './SearchBar.vue';
 export { default as SearchEntry } from './SearchEntry.vue';
+export { videoCount } from '@/video/state';
 
 declare const props: {
   query?: string;
   contentTransitionName?: string; // default : ''
   videoName: string;
-  videoNum: number;
 };
 
 export default {
