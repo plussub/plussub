@@ -11,6 +11,7 @@ export const isValidVideo = ({ el }: isValidVideoPayload): boolean => {
 };
 
 export const registerElementMutation = ({ videoIn, el, frameSrc }: isValidVideoPayload): boolean => {
+  return false;
   // if (!el.offsetWidth || !el.offsetHeight) {
   //   return false;
   // }
