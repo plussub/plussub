@@ -32,6 +32,7 @@ export const enterVideo = (video: Video): void => {
       }
     });
     // Not use useWindowMessage as I want to remove event listener immediately
+    // todo: implement once
     const handleMessageInPageVideos = (e) => {
       const { plusSubAction, boundingClientRect } = e.data;
       if (plusSubAction === 'Video_Bounding_Client_Rect') {

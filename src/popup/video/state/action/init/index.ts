@@ -1,6 +1,6 @@
 import { Video, VideoSrc } from '@/video/state/types';
 import { srcToIFrameSource, srcToVideo } from '@/video/state/state';
-import { useMutationObserver, useElementMutationObserver, useWindowMessage, VideoInIFrame } from '@/composables';
+import { RemoveVideoInIFrame, useElementMutationObserver, useMutationObserver, useWindowMessage, VideoInIFrame } from '@/composables';
 import { isHTMLElement, isHTMLVideoElement } from '@/types';
 import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
@@ -57,6 +57,36 @@ export const isValidVideoInHost = (el: HTMLVideoElement): boolean => {
   return true;
 };
 
+const isValidVideoInHost = (el: HTMLVideoElement) => isValidVideo({ videoIn: 'HOST', el });
+
+const findVideoElement = (nodes: Node[]) => {
+  const directMatch = nodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
+  if (directMatch) {
+    return [directMatch];
+  }
+  return nodes.reduce<HTMLVideoElement[]>((acc, parent) => (isHTMLElement(parent) ? [...acc, ...Array.from<HTMLVideoElement>(parent.querySelectorAll('video'))] : acc), []);
+};
+
+const addedVideoElements = (mutationsList: MutationRecord[]): HTMLVideoElement[] => {
+  return mutationsList.flatMap((mutation) => findVideoElement(Array.from(mutation.addedNodes)));
+};
+
+const removedVideoElements = (mutationsList: MutationRecord[]): HTMLVideoElement[] => {
+  return mutationsList.flatMap((mutation) => findVideoElement(Array.from(mutation.removedNodes)));
+};
+
+interface initObserveAddedRemovedVideoPayload {
+  videoIn: 'HOST' | 'I_FRAME';
+  frameSrc?: string;
+}
+
+export const initObserveAddedRemovedVideo = ({ videoIn, frameSrc }: initObserveAddedRemovedVideoPayload): void => {
+  useMutationObserver((mutationsList) => {
+    addedVideoElements(mutationsList).forEach((el) => addSrcToVideo({ videoIn, el, frameSrc }));
+    removedVideoElements(mutationsList).forEach((el) => removeSrcToVideo({ videoIn, src: el.src }));
+  });
+};
+
 const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
   [...document.querySelectorAll('video')]
     .filter(isValidVideoInHost)
@@ -77,6 +107,16 @@ export const init = (): void => {
       if (!srcToVideo.value[src]) {
         srcToIFrameSource[src] = { window: source as Window, frameSrc, origin };
         srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
+      }
+    }
+  });
+  useWindowMessage({
+    [RemoveVideoInIFrame]: ({ data: { src } }) => {
+      if (srcToVideo.value[src]) {
+        if (srcToVideo.value[src].hasSubtitle) {
+          reset();
+        }
+        delete srcToVideo.value[src];
       }
     }
   });

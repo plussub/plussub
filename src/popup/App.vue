@@ -74,6 +74,7 @@ export const appState = window.plusSub_app;
 
 export const videoNum = computed(() => Object.values(srcToVideo.value).length);
 const navigateToSearch = () => {
+  // todo: write action for that, do not modify state elsewhere
   Object.values(srcToVideo.value)[0].hasSubtitle = true;
   state.selectedParams = { videoName: getVideoName(), videoNum };
   state.selected = 'SEARCH';
@@ -90,7 +91,9 @@ if (appState.value.state === 'NONE' && videoNum.value === 1) {
 watch(videoNum, (newVideoNum, oldVideoNum) => {
   if (appState.value.state === 'NONE') {
     if (oldVideoNum === 1 && newVideoNum > 1 && state.selected === 'SEARCH') {
+
       // reset the auto selected video to not selected(hasSubtitle means selected actually now)
+      // todo: write action for that, do not modify state elsewhere
       Object.values(srcToVideo.value)[0].hasSubtitle = false;
       navigateToHome();
     } else if (newVideoNum === 1) {
