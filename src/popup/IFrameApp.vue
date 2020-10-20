@@ -6,17 +6,17 @@ import {
   GetBoundingClientRect,
   postWindowMessage,
   RemoveSubtitle,
+  RemoveVideoInIFrame,
   SetVideoTime,
   StartTranscript,
   StopTranscript,
+  useVideoElementMutationObserver,
   useWindowMessage,
+  VideoBoundingClientRect,
   VideoCurrentTime,
-  // VideoInIFrame,
-  VideoBoundingClientRect
+  VideoInIFrame
 } from '@/composables';
-import { isValidVideo, initObserveAddedRemovedVideo } from '@/video/state/action/init';
 import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
-import { addSrcToVideoInIframe } from '@/video/state/action/srcToVideo/iframe';
 
 declare const props: {
   frameSrc: string;
@@ -59,9 +59,44 @@ useWindowMessage({
   [GetBoundingClientRect]: sendBoundingClientRect
 });
 
-if (isValidVideo({ videoIn: 'I_FRAME', el: props.videoEl, frameSrc: props.frameSrc })) {
-  addSrcToVideoInIframe(props.videoEl, props.frameSrc);
-} else {
-  initObserveAddedRemovedVideo({ videoIn: 'I_FRAME', frameSrc: props.frameSrc });
-}
+useVideoElementMutationObserver(({ added, removed }) => {
+  added.forEach((el) =>
+    postWindowMessage({
+      window: window.top,
+      origin: '*',
+      payload: {
+        plusSubAction: VideoInIFrame,
+        // frameSrc: props.frameSrc,
+        // src: props.videoEl.src,
+        // TODO: still use framesrc as property name to clarify the meaning
+        src: props.frameSrc,
+        hasSubtitle: el.classList.contains('plussub')
+      }
+    })
+  );
+  removed.forEach(() =>
+    postWindowMessage({
+      window: window.top,
+      origin: '*',
+      payload: {
+        plusSubAction: RemoveVideoInIFrame,
+        // TODO: still use framesrc as property name to clarify the meaning
+        src: props.frameSrc
+      }
+    })
+  );
+});
+
+
+// TODO: still use framesrc as property name to clarify the meaning
+// check if valid on host page
+postWindowMessage({
+  window: window.top,
+  origin: '*',
+  payload: {
+    plusSubAction: VideoInIFrame,
+    src: props.frameSrc,
+    hasSubtitle: props.videoEl.classList.contains('plussub')
+  }
+});
 </script>

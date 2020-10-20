@@ -11,3 +11,4 @@ export interface IFrameSource {
 }
 
 export const srcToIFrameSource: Record<VideoSrc, IFrameSource> = {};
+export const srcToElementObserver = ref<Record<VideoSrc, () => void>>({});
