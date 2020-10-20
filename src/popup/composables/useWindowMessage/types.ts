@@ -1,7 +1,6 @@
 import { SubtitleEntry } from '@/subtitle/state/types';
 
 export const VideoInIFrame = 'VIDEO_IN_I_FRAME' as const;
-export const RemoveVideoInIFrame = 'REMOVE_VIDEO_IN_I_FRAME' as const;
 export const RemoveMessageEventListener = 'REMOVE_MESSAGE_EVENT_LISTENER' as const;
 export const StartTranscript = 'START_TRANSCRIPT' as const;
 export const StopTranscript = 'STOP_TRANSCRIPT' as const;
@@ -14,7 +13,6 @@ export const VideoBoundingClientRect = 'Video_Bounding_Client_Rect' as const;
 
 export type Actions =
   | typeof VideoInIFrame
-  | typeof RemoveVideoInIFrame
   | typeof RemoveMessageEventListener
   | typeof StartTranscript
   | typeof RemoveSubtitle
@@ -30,6 +28,7 @@ type GenericEvent<T extends Actions> = {
 };
 
 export type VideoInIFrameEvent = GenericEvent<typeof VideoInIFrame> & {
+  frameSrc: string;
   src: string;
   hasSubtitle: boolean;
 };
@@ -98,7 +97,6 @@ export type SetVideoTimeUseWindowMessagePayload = {
 };
 
 type AllUseWindowMessagePayload = SendIFrameUseWindowMessagePayload &
-  RemoveVideoInIFrameEventUseWindowMessagePayload &
   RemoveMessageEventListenerUseWindowMessagePayload &
   StartTranscriptUseWindowMessagePayload &
   RemoveSubtitleEventUseWindowMessagePayload &
@@ -112,7 +110,6 @@ type AllUseWindowMessagePayload = SendIFrameUseWindowMessagePayload &
 export type UseWindowMessagePayload = Partial<AllUseWindowMessagePayload>;
 export type AllEvents =
   | VideoInIFrameEvent
-  | RemoveVideoInIFrameEvent
   | RemoveMessageEventListenerEvent
   | StartTranscriptEvent
   | StopTranscriptEvent
