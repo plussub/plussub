@@ -10,13 +10,7 @@
       <div id="transcript-content--container" ref="transcriptContentContainer">
         <div v-for="(subtitleText, index) in subtitleTexts" :key="index" class="transcript-content" :class="{ selected: currentPos === index }" @click="setCurrentTime(subtitleText)">
           <span class="transcript-timefrom" v-text="subtitleText.formattedFrom"></span>
-          <span
-            class="transcript-text"
-            :class="{ hovering: textHoverIndex === index && video }"
-            @mouseenter="textHoverIndex = index"
-            @mouseleave="textHoverIndex = -1"
-            v-text="subtitleText.text"
-          ></span>
+          <span class="transcript-text" v-text="subtitleText.text"></span>
         </div>
       </div>
     </template>
@@ -62,9 +56,9 @@ const binarySearch = (target, arr) => {
   let end = arr.length - 1;
   while (start <= end) {
     const mid = parseInt((start + (end - start) / 2).toString(), 10);
-    if (target >= arr[mid].from && target <= arr[mid].to) {
+    if (target >= arr[mid].from && target < arr[mid].to) {
       return mid;
-    } else if (target > arr[mid].to) {
+    } else if (target >= arr[mid].to) {
       start = mid + 1;
     } else {
       end = mid - 1;
@@ -77,20 +71,14 @@ export const currentPos = ref(-1);
 export const transcriptContentContainer = ref<HTMLElement | null>(null);
 
 watch(currentTime, (currentTime) => {
-  const value = parseInt(currentTime.toString(), 10);
-  // replace with hashmap
-  const pos = binarySearch(value * 1000, window.plusSub_subtitle.value.withOffsetParsed);
-  if (pos !== -1 && currentPos.value !== pos) {
-    currentPos.value = pos;
-  } else {
-    return;
-  }
+  // // replace with hashmap
+  const pos = binarySearch(Math.ceil(currentTime * 1000), window.plusSub_subtitle.value.withOffsetParsed);
+  if (pos === -1) return;
+  currentPos.value = pos;
   if (transcriptContentContainer.value && !transcriptContentContainer.value.matches(':hover')) {
     const topPos = Math.max(currentPos.value - 3, 0);
     const topElement = transcriptContentContainer.value.querySelector<HTMLElement>(`:nth-child(${topPos + 1})`);
-    if (!topElement) {
-      return;
-    }
+    if (!topElement) return;
     transcriptContentContainer.value.scrollTop = topElement.offsetTop;
   }
 });
@@ -112,7 +100,6 @@ export const setCurrentTime = ({ time }: { time: number }): void => {
     time
   });
 };
-export const textHoverIndex = ref(-1);
 </script>
 
 
@@ -150,7 +137,7 @@ export const textHoverIndex = ref(-1);
   text-align: left;
 }
 
-.transcript-text.hovering {
+.transcript-text:hover {
   background-color: #eeeeee;
   cursor: pointer;
 }

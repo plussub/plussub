@@ -49,7 +49,7 @@ export const videoList = computed(() => Object.values(srcToVideo.value));
 export const selectVideo = (video: Video, index: number): void => {
   // hasSubtitle means selected now
   video.hasSubtitle = true;
-  emit('navigate', { name: 'SEARCH', params: { videoIndex: index + 1, contentTransitionName: 'content-navigate-deeper' } });
+  emit('navigate', { name: 'SEARCH', params: { videoName: (index + 1).toString(), videoNum: Object.values(srcToVideo.value).length, contentTransitionName: 'content-navigate-deeper' } });
 };
 onUnmounted(() => {
   leaveVideo();

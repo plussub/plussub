@@ -11,12 +11,10 @@ import {
   StopTranscript,
   useWindowMessage,
   VideoCurrentTime,
-  // VideoInIFrame,
+  VideoInIFrame,
   VideoBoundingClientRect
 } from '@/composables';
-import { isValidVideo, initObserveAddedRemovedVideo } from '@/video/state/action/init';
 import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
-import { addSrcToVideoInIframe } from '@/video/state/action/srcToVideo/iframe';
 
 declare const props: {
   frameSrc: string;
@@ -35,17 +33,6 @@ const sendTime = () => {
   });
 };
 
-const sendBoundingClientRect = () => {
-  postWindowMessage({
-    window: window.top,
-    origin: '*',
-    payload: {
-      plusSubAction: VideoBoundingClientRect,
-      boundingClientRect: props.videoEl.getBoundingClientRect()
-    }
-  });
-};
-
 useWindowMessage({
   [AddSubtitle]: (e) =>
     addVttToHostVideo({
@@ -56,12 +43,26 @@ useWindowMessage({
   [StartTranscript]: () => props.videoEl.addEventListener('timeupdate', sendTime),
   [StopTranscript]: () => props.videoEl.removeEventListener('timeupdate', sendTime),
   [SetVideoTime]: (e) => (props.videoEl.currentTime = e.data.time),
-  [GetBoundingClientRect]: sendBoundingClientRect
+  [GetBoundingClientRect]: () => {
+    postWindowMessage({
+      window: window.top,
+      origin: '*',
+      payload: {
+        plusSubAction: VideoBoundingClientRect,
+        boundingClientRect: props.videoEl.getBoundingClientRect()
+      }
+    });
+  }
 });
 
-if (isValidVideo({ videoIn: 'I_FRAME', el: props.videoEl, frameSrc: props.frameSrc })) {
-  addSrcToVideoInIframe(props.videoEl, props.frameSrc);
-} else {
-  initObserveAddedRemovedVideo({ videoIn: 'I_FRAME', frameSrc: props.frameSrc });
-}
+postWindowMessage({
+  window: window.top,
+  origin: '*',
+  payload: {
+    plusSubAction: VideoInIFrame,
+    frameSrc: props.frameSrc,
+    src: props.videoEl.src,
+    hasSubtitle: props.videoEl.classList.contains('plussub')
+  }
+});
 </script>

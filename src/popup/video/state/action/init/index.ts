@@ -4,38 +4,38 @@ import { RemoveVideoInIFrame, useElementMutationObserver, useMutationObserver, u
 import { isHTMLElement, isHTMLVideoElement } from '@/types';
 import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
-import { addSrcToVideo, removeSrcToVideo } from '../srcToVideo';
 import { reset } from '@/app/state';
 
-interface isValidVideoPayload {
-  videoIn: 'HOST' | 'I_FRAME';
-  el: HTMLVideoElement;
-  frameSrc?: string;
-}
+export const addSrcToVideoInHost = (el: HTMLVideoElement): void => {
+  const { src } = el;
+  srcToVideo.value[src] = { el, hasSubtitle: el.classList.contains('plussub'), src, in: 'HOST' };
+};
 
-export const isValidVideo = ({ videoIn, el, frameSrc }: isValidVideoPayload): boolean => {
-  if (!el.offsetWidth || !el.offsetHeight) {
-    return false;
-  }
-  let inVideoList = false;
+export const removeSrcToVideoInHost = (src: string): void => {
+  if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) reset();
+  delete srcToVideo.value[src];
+};
+
+export const isValidVideoInHost = (el: HTMLVideoElement): boolean => {
+  if (!el || !el.offsetWidth || !el.offsetHeight) return false;
   let oldSrc = '';
   if (!el.src && !el.querySelector('source')) {
-    // (warning when use with onMount or onUnmount): onMount(onUnmount) is called when there is no active component instance to be associated with.
+    let inVideoList = false;
     // for cases that video element does not have src first, but will add src after the video is playing. (eg. vimeo.com)
     useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
       const { src } = el;
       for (const mutation of mutationsList) {
         if (mutation.attributeName === 'src') {
           if (inVideoList) {
-            removeSrcToVideo({ videoIn, src: oldSrc });
+            removeSrcToVideoInHost(oldSrc);
             oldSrc = src;
             if (!src) return;
-            addSrcToVideo({ videoIn, el, frameSrc });
+            addSrcToVideoInHost(el);
           }
           if (!inVideoList && !srcToVideo.value[src]) {
             inVideoList = true;
             oldSrc = src;
-            addSrcToVideo({ videoIn, el, frameSrc });
+            addSrcToVideoInHost(el);
           }
         }
       }
@@ -47,10 +47,10 @@ export const isValidVideo = ({ videoIn, el, frameSrc }: isValidVideoPayload): bo
   useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
     for (const mutation of mutationsList) {
       if (mutation.attributeName === 'src') {
-        removeSrcToVideo({ videoIn, src: oldSrc });
+        removeSrcToVideoInHost(oldSrc);
         oldSrc = el.src;
         if (!el.src) return;
-        addSrcToVideo({ videoIn, el, frameSrc });
+        addSrcToVideoInHost(el);
       }
     }
   });
@@ -103,9 +103,9 @@ const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
 export const init = (): void => {
   srcToVideo.value = findVideosInCurrentTab();
   useWindowMessage({
-    [VideoInIFrame]: ({ origin, source, data: { src, hasSubtitle } }) => {
+    [VideoInIFrame]: ({ origin, source, data: { src, frameSrc, hasSubtitle } }) => {
       if (!srcToVideo.value[src]) {
-        srcToIFrameSource[src] = { window: source as Window, frameSrc: src, origin };
+        srcToIFrameSource[src] = { window: source as Window, frameSrc, origin };
         srcToVideo.value[src] = { hasSubtitle, src, in: 'I_FRAME' };
       }
     }
@@ -131,5 +131,22 @@ export const init = (): void => {
       })
   );
 
-  initObserveAddedRemovedVideo({ videoIn: 'HOST' });
+  const findVideoElement = (nodes: Node[]) => {
+    const directMatch = nodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
+    if (directMatch) return [directMatch];
+
+    return nodes.reduce<HTMLVideoElement[]>((acc, parent) => (isHTMLElement(parent) ? [...acc, ...Array.from<HTMLVideoElement>(parent.querySelectorAll('video'))] : acc), []);
+  };
+
+  useMutationObserver((mutationsList) =>
+    mutationsList.forEach((mutation) => {
+      findVideoElement(Array.from(mutation.removedNodes)).forEach((el) => {
+        removeSrcToVideoInHost(el.src);
+      });
+      findVideoElement(Array.from(mutation.addedNodes)).forEach((el) => {
+        if (!isValidVideoInHost(el)) return;
+        addSrcToVideoInHost(el);
+      });
+    })
+  );
 };

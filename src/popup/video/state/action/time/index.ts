@@ -1,5 +1,5 @@
 import {srcToIFrameSource, Video} from '@/video/state';
-import {postWindowMessage, SetVideoTime, StopTranscript} from "@/composables";
+import {postWindowMessage, SetVideoTime} from "@/composables";
 
 interface Payload {
   video: Video;
