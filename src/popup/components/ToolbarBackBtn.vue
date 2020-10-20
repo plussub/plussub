@@ -1,21 +1,14 @@
 <template>
-  <a class="knopf flat pill sharp buttonOnPrimary" @click="backFn ? backFn() : backFallbackFn() ">
+  <a class="knopf flat pill sharp buttonOnPrimary" @click="backFn ? backFn() : toHome() ">
     <i class="fa fa-chevron-left fa-lg"></i>
   </a>
 </template>
 
-<script setup="props, {emit}" lang="ts">
+<script setup="props" lang="ts">
+export {toHome} from "@/navigation/state/action";
 
 declare const props: {
   backFn?: () => void;
 };
 
-export default {
-  emits: ['navigate']
-};
-
-export const backFallbackFn = (): void => emit('navigate', {
-  name: 'HOME',
-  params: {contentTransitionName: 'content-navigate-shallow'}
-});
 </script>

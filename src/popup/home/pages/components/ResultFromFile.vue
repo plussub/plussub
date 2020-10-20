@@ -12,7 +12,7 @@
     <div style="grid-area: header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); display: flex; font-weight: 500">
       <div>Subtitle via file</div>
     </div>
-    <div style="grid-area: details; width: 100%; font-size: 1em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; font-weight: 300">
+    <div style="grid-area: details; width: 100%; font-size: 1em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; font-weight: 300; overflow-x: hidden;">
       <div style="grid-column: 1 / 2">Filename</div>
       <div style="grid-column: 2 / 3">{{ fileState.filename }}</div>
     </div>

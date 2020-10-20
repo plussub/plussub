@@ -1,68 +1,38 @@
 <template>
   <KnopfCss />
-  <div v-if="state.selected === 'SEARCH'" class="app--container">
-    <Suspense>
-      <template #default>
-        <Search v-bind="state.selectedParams" @navigate="navigate" />
-      </template>
-      <template #fallback>
-        <div>loading</div>
-      </template>
-    </Suspense>
+  <div v-if="navigationState.name === 'SEARCH'" class="app--container">
+    <Search v-bind="navigationState.params" />
   </div>
-  <div v-else-if="state.selected === 'SUBTITLE-SELECTION'" class="app--container">
-    <Suspense>
-      <template #default>
-        <SubtitleSelection v-bind="state.selectedParams" @navigate="navigate" />
-      </template>
-      <template #fallback>
-        <div>loading</div>
-      </template>
-    </Suspense>
+  <div v-else-if="navigationState.name === 'SUBTITLE-SELECTION'" class="app--container">
+    <SubtitleSelection v-bind="navigationState.params" />
   </div>
-  <div v-else-if="state.selected === 'TRANSCRIPT'" class="app--container">
-    <Suspense>
-      <template #default>
-        <Transcript v-bind="state.selectedParams" @navigate="navigate" />
-      </template>
-      <template #fallback>
-        <div>loading</div>
-      </template>
-    </Suspense>
+  <div v-else-if="navigationState.name === 'TRANSCRIPT'" class="app--container">
+    <Transcript v-bind="navigationState.params" />
   </div>
   <div v-else class="app--container">
-    <Suspense>
-      <template #default>
-        <Home v-bind="state.selectedParams" @navigate="navigate" />
-      </template>
-      <template #fallback>
-        <div>loading</div>
-      </template>
-    </Suspense>
+    <Home v-bind="navigationState.params" />
   </div>
 </template>
 
-<script async setup lang="ts">
-import { reactive, computed, watch } from 'vue';
+<script setup lang="ts">
+import { reactive, watchEffect } from 'vue';
 import { init as initAppState } from '@/app/state';
-import { init as initVideoState } from '@/video/state';
+import { init as initVideoState, videoCount, videoList } from '@/video/state';
 import { init as initFileState } from '@/file/state';
 import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
-import { srcToGlobalVideo } from '@/video/state';
-import { getVideoName } from '@/util/name';
+import { navigationState, setCurrentSelectedSrc } from '@/navigation/state';
+import { toSearch } from '@/navigation/state/action/toSearch';
+
 export { default as KnopfCss } from '@/KnopfCss.vue';
 export { default as Home } from '@/home/pages/Home.vue';
 export { default as Search } from '@/search/pages/search/Search.vue';
 export { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
 export { default as FilePick } from '@/file/pages/FilePick.vue';
 export { default as Transcript } from '@/transcript/pages/Transcript.vue';
+export { navigationState };
 
 export const state = reactive({ selected: 'HOME', selectedParams: {} });
-export const navigate = (event): void => {
-  state.selectedParams = event.params;
-  state.selected = event.name;
-};
 
 initAppState();
 initSubtitleState();
@@ -72,35 +42,11 @@ initSubtitleSearchState();
 
 export const appState = window.plusSub_app;
 
-export const videoNum = computed(() => Object.values(srcToGlobalVideo.value).length);
-const navigateToSearch = () => {
-  // todo: write action for that, do not modify state elsewhere
-  Object.values(srcToGlobalVideo.value)[0].hasSubtitle = true;
-  state.selectedParams = { videoName: getVideoName(), videoNum };
-  state.selected = 'SEARCH';
-};
-const navigateToHome = () => {
-  state.selectedParams = {};
-  state.selected = 'HOME';
-};
-
-if (appState.value.state === 'NONE' && videoNum.value === 1) {
-  navigateToSearch();
-}
-
-watch(videoNum, (newVideoNum, oldVideoNum) => {
-  if (appState.value.state === 'NONE') {
-    if (oldVideoNum === 1 && newVideoNum > 1 && state.selected === 'SEARCH') {
-
-      // reset the auto selected video to not selected(hasSubtitle means selected actually now)
-      // todo: write action for that, do not modify state elsewhere
-      Object.values(srcToGlobalVideo.value)[0].hasSubtitle = false;
-      navigateToHome();
-    } else if (newVideoNum === 1) {
-      navigateToSearch();
-    } else if (newVideoNum === 0) {
-      navigateToHome();
-    }
+watchEffect(() => {
+  // auto navigate if only 1 video exists
+  if (videoCount.value === 1 && navigationState.value.name === 'HOME' && appState.value.state === 'NONE') {
+    setCurrentSelectedSrc(videoList.value[0].src);
+    toSearch();
   }
 });
 </script>
@@ -146,6 +92,7 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
   --knopf-saturation: 0%;
   --knopf-luminosity: 100%;
 }
+
 /* use all:initial to prevent inheritance from body */
 :host {
   all: initial;
@@ -189,6 +136,7 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
 .content-navigate-shallow-enter-from {
   transform: translate(-100%, 0);
 }
+
 .content-navigate-shallow-leave-to {
   transform: translate(100%, 0);
 }
@@ -201,6 +149,7 @@ watch(videoNum, (newVideoNum, oldVideoNum) => {
 .toolbar-transition-enter-from {
   opacity: 0;
 }
+
 .toolbar-transition-leave-to {
   opacity: 1;
 }

@@ -1,16 +1,10 @@
 import { computed, ref, Ref } from 'vue';
-import { Video, VideoSrc } from '@/video/state';
+import { Video, VideoSrc, IFrameSource} from '@/video/state/types';
 
 export const srcToHostVideo = ref<Record<VideoSrc, Video>>({});
 export const srcToIFrameVideo = ref<Record<VideoSrc, Video>>({});
 
 // don't make source(of iframe) reactive as it will cause cors problem
-export interface IFrameSource {
-  window: Window;
-  frameSrc: string;
-  origin: string;
-}
-
 export const srcToIFrameSource: Record<VideoSrc, IFrameSource> = {};
 
 export const srcToGlobalVideo: Ref<Record<VideoSrc, Video>> = computed(() => ({ ...srcToHostVideo.value, ...srcToIFrameVideo.value }));

@@ -16,10 +16,11 @@
       {{ fileErrorMsg }}
     </div>
     <div style="margin: 0 40px 0 40px">
+      <!--      font-size: 0.85em; line-height: 1.8; font-weight: 300 -->
       <p class="upload-text">Click or drop file to this area to upload</p>
       <p class="upload-hint">
         Support for a single file upload. Only .srt or .vtt file is acceptable.(Video
-        <span :class="{ 'video-name-string': isNameNotNum }" @click="changeQuery">{{ videoName }}</span> is {{ videoCount === 1 ? 'auto' : '' }} selected)
+        <span :class="{ 'video-name-string': getVideoName() !== '1' }" @click="changeQuery">{{ getVideoName() }}</span> is {{ videoCount === 1 ? 'auto' : '' }} selected)
       </p>
     </div>
   </div>
@@ -31,19 +32,21 @@ import { setFilename } from '../state';
 import { setState, setSrc } from '@/app/state';
 import { setRaw, parse } from '@/subtitle/state';
 import { leaveVideo } from '@/util/hover';
+import { getVideoName } from '../../util/name';
+import {toHome} from "../../navigation/state/action";
 
 export { default as xCircleIcon } from '@/res/x-circle.svg';
 export { videosWithSubtitle, videoCount } from '@/video/state';
 export { enterVideo } from '@/util/hover';
+export { getVideoName };
 export { leaveVideo };
 
 declare const props: {
-  videoName: string;
   query: string;
 };
 
 export default {
-  emits: ['navigate']
+  emits: ['update:query']
 };
 
 export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
@@ -58,7 +61,9 @@ const readFile = (file: File): void => {
     setRaw({ raw: reader.result as string });
     parse();
 
-    emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
+    toHome({
+      contentTransitionName: 'content-navigate-select-to-home'
+    });
   };
   reader.readAsText(file);
 };
@@ -104,13 +109,7 @@ export const fileSelected = async (): Promise<void> => {
   readFile(file);
 };
 
-const nameToInt = parseInt(props.videoName, 10);
-// todo: why magic number 20?
-export const isNameNotNum = isNaN(nameToInt) || nameToInt > 20;
-export const changeQuery = (): void => {
-  if (!isNameNotNum) return;
-  emit('update:query', props.videoName);
-};
+export const changeQuery = (): void => emit('update:query', getVideoName());
 
 onUnmounted(() => leaveVideo());
 </script>

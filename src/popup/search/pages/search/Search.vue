@@ -17,8 +17,6 @@
           v-else-if="internalQuery === ''"
           v-model:query="internalQuery"
           style="grid-area: auto / auto / span 2 / span 3"
-          :video-name="videoName"
-          @navigate="(event) => $emit('navigate', event)"
         />
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
           <div>Sorry, no movies or tv shows found</div>
@@ -48,7 +46,6 @@ export { videoCount } from '@/video/state';
 declare const props: {
   query?: string;
   contentTransitionName?: string; // default : ''
-  videoName: string;
 };
 
 export default {

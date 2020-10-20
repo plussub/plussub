@@ -17,7 +17,7 @@
           @click="selectVideo(video, index)"
         >
           <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
-         </div>
+        </div>
       </div>
       <div v-else>No videos found in current tab.</div>
     </div>
@@ -26,26 +26,17 @@
 
 <script setup="props, {emit}" lang="ts">
 import { onUnmounted } from 'vue';
-import { srcToGlobalVideo, Video} from '@/video/state';
-import { SubtitleEntry } from '@/subtitle/state/types';
+import { Video } from '@/video/state';
 import { leaveVideo } from '@/util/hover';
+import { setCurrentSelectedSrc, toSearch } from '@/navigation/state/action';
 
 export { enterVideo } from '@/util/hover';
-export {videoList} from '@/video/state'
-export {leaveVideo};
+export { videoList } from '@/video/state';
+export { leaveVideo };
 
-declare const props: {
-  subtitle: SubtitleEntry[];
-};
-
-export default {
-  emits: ['navigate']
-};
-
-export const selectVideo = (video: Video, index: number): void => {
-  // hasSubtitle means selected now
-  srcToGlobalVideo.value[video.src].hasSubtitle = true;
-  emit('navigate', { name: 'SEARCH', params: { videoName: (index + 1).toString(), contentTransitionName: 'content-navigate-deeper' } });
+export const selectVideo = (video: Video): void => {
+  setCurrentSelectedSrc(video.src);
+  toSearch();
 };
 onUnmounted(() => {
   leaveVideo();
@@ -71,6 +62,7 @@ onUnmounted(() => {
   height: fit-content;
   margin: 10px 8px 0 8px;
 }
+
 .video-item:hover {
   background-color: #eeeeee;
   cursor: pointer;
