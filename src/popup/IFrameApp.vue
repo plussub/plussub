@@ -11,12 +11,10 @@ import {
   StopTranscript,
   useWindowMessage,
   VideoCurrentTime,
-  // VideoInIFrame,
+  VideoInIFrame,
   VideoBoundingClientRect
 } from '@/composables';
-// import { isValidVideo, initObserveAddedRemovedVideo } from '@/video/state/action/init';
 import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
-import { addSrcToVideoInIframe } from '@/video/state/action/srcToVideo/iframe';
 
 declare const props: {
   frameSrc: string;
@@ -57,9 +55,14 @@ useWindowMessage({
   }
 });
 
-// if (isValidVideo({ el: props.videoEl, frameSrc: props.frameSrc })) {
-addSrcToVideoInIframe(props.videoEl, props.frameSrc);
-// } else {
-//   initObserveAddedRemovedVideo({  frameSrc: props.frameSrc });
-// }
+postWindowMessage({
+  window: window.top,
+  origin: '*',
+  payload: {
+    plusSubAction: VideoInIFrame,
+    frameSrc: props.frameSrc,
+    src: props.videoEl.src,
+    hasSubtitle: props.videoEl.classList.contains('plussub')
+  }
+});
 </script>

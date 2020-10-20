@@ -7,7 +7,7 @@
       ref="inputRef"
       type="file"
       title="click or drop file here"
-      accept=".vtt,.srt"
+      accept=".vtt,.srt,.ass"
       style="z-index: 1; opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer"
       @change="fileSelected"
     />
@@ -45,7 +45,7 @@ export default {
 export { enterVideo, leaveVideo };
 export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
-const readFile = (file: any): void => {
+const readFile = (file: File): void => {
   const reader = new FileReader();
   reader.onload = async () => {
     setFilename({ filename: file.name });
@@ -60,45 +60,47 @@ const readFile = (file: any): void => {
   reader.readAsText(file);
 };
 export const fileErrorMsg = ref('');
-const SHOW_MESSAGE_TIME = 2000;
-const resetFileErrorMsg = (timeout: number) => {
+export const dragenter = (event: DragEvent): void => {
+  (event.currentTarget as HTMLElement).classList.add('dragging-over');
+};
+export const dragleave = (event: DragEvent): void => {
+  (event.currentTarget as HTMLElement).classList.remove('dragging-over');
+};
+const showFileErrorMsg = (msg: string, dragEvent: DragEvent | null = null) => {
+  fileErrorMsg.value = msg;
+  if (dragEvent) dragleave(dragEvent);
   setTimeout(() => {
     fileErrorMsg.value = '';
-  }, timeout);
+  }, 2000);
 };
-export const fileSelected = async (): Promise<void> => {
-  if (!inputRef.value?.files) {
-    fileErrorMsg.value = 'Click to upload file error';
-    resetFileErrorMsg(SHOW_MESSAGE_TIME);
+export const drop = (event: DragEvent): void => {
+  let droppedFiles = event.dataTransfer?.files;
+  if (!droppedFiles) {
+    showFileErrorMsg('Drop to upload file error', event);
     return;
   }
-  const file = inputRef.value.files[0];
-  readFile(file);
-};
-export const dragenter = (event): void => {
-  event.currentTarget.classList.add('dragging-over');
-};
-export const dragleave = (event): void => {
-  event.currentTarget.classList.remove('dragging-over');
-};
-export const drop = (event): void => {
-  let droppedFiles = event.dataTransfer?.files;
-  if (!droppedFiles && !droppedFiles.length) {
-    fileErrorMsg.value = 'Drop to upload file error';
-    dragleave(event);
-    resetFileErrorMsg(SHOW_MESSAGE_TIME);
+  if (droppedFiles.length > 1) {
+    showFileErrorMsg('Only a single file is supported', event);
     return;
   }
   const file = droppedFiles[0];
   const filename = file.name;
   if (!filename.endsWith('.srt') && !filename.endsWith('.vtt')) {
-    fileErrorMsg.value = 'Only .srt or .vtt file is acceptable.';
-    dragleave(event);
-    resetFileErrorMsg(SHOW_MESSAGE_TIME);
+    showFileErrorMsg('Only .srt and .vtt file is supported', event);
     return;
   }
   readFile(file);
 };
+
+export const fileSelected = async (): Promise<void> => {
+  if (!inputRef.value?.files) {
+    showFileErrorMsg('Click to upload file error');
+    return;
+  }
+  const file = inputRef.value.files[0];
+  readFile(file);
+};
+
 const nameToInt = parseInt(props.videoName, 10);
 export const isNameNotNum = isNaN(nameToInt) || nameToInt > 20;
 export const changeQuery = (): void => {
