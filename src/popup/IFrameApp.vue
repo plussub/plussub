@@ -66,10 +66,8 @@ useVideoElementMutationObserver(({ added, removed }) => {
       origin: '*',
       payload: {
         plusSubAction: VideoInIFrame,
-        // frameSrc: props.frameSrc,
-        // src: props.videoEl.src,
-        // TODO: still use framesrc as property name to clarify the meaning
-        src: props.frameSrc,
+        src: props.videoEl.src,
+        frameSrc: props.frameSrc,
         hasSubtitle: el.classList.contains('plussub')
       }
     })
@@ -80,22 +78,19 @@ useVideoElementMutationObserver(({ added, removed }) => {
       origin: '*',
       payload: {
         plusSubAction: RemoveVideoInIFrame,
-        // TODO: still use framesrc as property name to clarify the meaning
         src: props.frameSrc
       }
     })
   );
 });
 
-
-// TODO: still use framesrc as property name to clarify the meaning
-// check if valid on host page
 postWindowMessage({
   window: window.top,
   origin: '*',
   payload: {
     plusSubAction: VideoInIFrame,
-    src: props.frameSrc,
+    frameSrc: props.frameSrc,
+    src: props.videoEl.src,
     hasSubtitle: props.videoEl.classList.contains('plussub')
   }
 });

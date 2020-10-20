@@ -10,6 +10,7 @@ export const AddSubtitle = 'ADD_SUBTITLE' as const;
 export const RemoveSubtitle = 'REMOVE_SUBTITLE' as const;
 export const GetBoundingClientRect = 'Get_Bounding_Client_Rect' as const;
 export const VideoBoundingClientRect = 'Video_Bounding_Client_Rect' as const;
+export const RemoveVideoInIFrame = 'REMOVE_VIDEO_IN_I_FRAME' as const;
 
 export type Actions =
   | typeof VideoInIFrame
@@ -21,7 +22,8 @@ export type Actions =
   | typeof StopTranscript
   | typeof GetBoundingClientRect
   | typeof VideoBoundingClientRect
-  | typeof SetVideoTime;
+  | typeof SetVideoTime
+  | typeof RemoveVideoInIFrame;
 
 type GenericEvent<T extends Actions> = {
   plusSubAction: T;
@@ -105,7 +107,8 @@ type AllUseWindowMessagePayload = SendIFrameUseWindowMessagePayload &
   StopTranscriptUseWindowMessagePayload &
   GetBoundingClientRectEventUseWindowMessagePayload &
   VideoBoundingClientRectEventUseWindowMessagePayload &
-  SetVideoTimeUseWindowMessagePayload;
+  SetVideoTimeUseWindowMessagePayload &
+  RemoveVideoInIFrameEventUseWindowMessagePayload;
 
 export type UseWindowMessagePayload = Partial<AllUseWindowMessagePayload>;
 export type AllEvents =
@@ -118,4 +121,5 @@ export type AllEvents =
   | VideoBoundingClientRectEvent
   | AddSubtitleEvent
   | VideoCurrentTimeEvent
-  | SetVideoTimeEvent;
+  | SetVideoTimeEvent
+  | RemoveVideoInIFrameEvent;
