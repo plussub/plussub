@@ -61,7 +61,7 @@ postWindowMessage({
   payload: {
     plusSubAction: VideoInIFrame,
     frameSrc: props.frameSrc,
-    src: props.videoEl.src,
+    src: props.videoEl.src ?? props.videoEl.currentSrc,
     hasSubtitle: props.videoEl.classList.contains('plussub')
   }
 });

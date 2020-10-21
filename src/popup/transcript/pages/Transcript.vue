@@ -56,9 +56,9 @@ const binarySearch = (target, arr) => {
   let end = arr.length - 1;
   while (start <= end) {
     const mid = parseInt((start + (end - start) / 2).toString(), 10);
-    if (target >= arr[mid].from && target < arr[mid].to) {
+    if (target >= arr[mid].from && target <= arr[mid].to) {
       return mid;
-    } else if (target >= arr[mid].to) {
+    } else if (target > arr[mid].to) {
       start = mid + 1;
     } else {
       end = mid - 1;
@@ -95,9 +95,10 @@ export const setCurrentTime = ({ time }: { time: number }): void => {
   if (!video.value) {
     return;
   }
+  // +0.001 because the "from" is often the same as previous "to", use this to advoid showing previous subtitle text
   setCurrentTimeState({
     video: video.value,
-    time
+    time: time + 0.001
   });
 };
 </script>
@@ -135,6 +136,7 @@ export const setCurrentTime = ({ time }: { time: number }): void => {
 
 .transcript-text {
   text-align: left;
+  white-space: pre-line;
 }
 
 .transcript-text:hover {

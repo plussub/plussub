@@ -1,5 +1,13 @@
 <template>
-  <div id="filepicker-content--container" @mouseenter="enterVideo(videoWithSubtitle)" @mouseleave="leaveVideo" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
+  <div
+    id="filepicker-content--container"
+    ref="containerRef"
+    @mouseenter="enterVideo(videoWithSubtitle)"
+    @mouseleave="leaveVideo"
+    @dragenter.prevent="dragenter"
+    @dragleave="dragleave"
+    @drop.prevent="drop"
+  >
     <p class="upload-drag-icon">
       <i class="fa fa-upload fa-lg"></i>
     </p>
@@ -7,7 +15,7 @@
       ref="inputRef"
       type="file"
       title="click or drop file here"
-      accept=".vtt,.srt,.ass"
+      accept=".vtt,.srt,.ass,.ssa"
       style="z-index: 1; opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer"
       @change="fileSelected"
     />
@@ -18,7 +26,7 @@
     <div style="margin: 0 40px 0 40px">
       <p class="upload-text">Click or drop file to this area to upload</p>
       <p class="upload-hint">
-        Support for a single file upload. Only .srt or .vtt file is acceptable.(Video
+        Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable.(Video
         <span :class="{ 'video-name-string': isNameNotNum }" @click="changeQuery">{{ videoName }}</span> is {{ videoNum === 1 ? 'auto' : '' }} selected)
       </p>
     </div>
@@ -33,6 +41,7 @@ import { setRaw, parse } from '@/subtitle/state';
 import { srcToVideo } from '@/video/state';
 import { enterVideo, leaveVideo } from '@/util/hover';
 export { default as xCircleIcon } from '@/res/x-circle.svg';
+import chardet from 'chardet';
 
 declare const props: {
   videoName: string;
@@ -45,48 +54,56 @@ export default {
 export { enterVideo, leaveVideo };
 export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
-const readFile = (file: File): void => {
-  const reader = new FileReader();
-  reader.onload = async () => {
-    setFilename({ filename: file.name });
-    setState({ state: 'SELECTED' });
-    setSrc({ src: 'FILE' });
-    // as string because we use readAsText...
-    setRaw({ raw: reader.result as string });
-    parse();
-
-    emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
-  };
-  reader.readAsText(file);
+export const containerRef = ref();
+export const dragenter = (): void => {
+  containerRef.value.classList.add('dragging-over');
+};
+export const dragleave = (): void => {
+  containerRef.value.classList.remove('dragging-over');
 };
 export const fileErrorMsg = ref('');
-export const dragenter = (event: DragEvent): void => {
-  (event.currentTarget as HTMLElement).classList.add('dragging-over');
-};
-export const dragleave = (event: DragEvent): void => {
-  (event.currentTarget as HTMLElement).classList.remove('dragging-over');
-};
-const showFileErrorMsg = (msg: string, dragEvent: DragEvent | null = null) => {
+const showFileErrorMsg = (msg: string) => {
   fileErrorMsg.value = msg;
-  if (dragEvent) dragleave(dragEvent);
   setTimeout(() => {
     fileErrorMsg.value = '';
   }, 2000);
+  dragleave();
+};
+
+const readFile = (file: File): void => {
+  const arrayBufferReader = new FileReader();
+  arrayBufferReader.readAsArrayBuffer(file);
+  arrayBufferReader.onload = async () => {
+    const encoding = chardet.detect(new Uint8Array(arrayBufferReader.result as ArrayBuffer));
+    const textReader = new FileReader();
+    textReader.readAsText(file, encoding ?? 'UTF-8');
+    textReader.onload = async () => {
+      setFilename({ filename: file.name });
+      setState({ state: 'SELECTED' });
+      setSrc({ src: 'FILE' });
+      // as string because we use readAsText...
+      setRaw({ raw: textReader.result as string });
+      parse(file.name);
+      emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
+    };
+    textReader.onerror = () => showFileErrorMsg('Some error happened when parsing the subtitle');
+  };
+  arrayBufferReader.onerror = () => showFileErrorMsg('Some error happened when parsing the subtitle');
 };
 export const drop = (event: DragEvent): void => {
   let droppedFiles = event.dataTransfer?.files;
   if (!droppedFiles) {
-    showFileErrorMsg('Drop to upload file error', event);
+    showFileErrorMsg('Drop to upload file error');
     return;
   }
   if (droppedFiles.length > 1) {
-    showFileErrorMsg('Only a single file is supported', event);
+    showFileErrorMsg('Only a single file is supported');
     return;
   }
   const file = droppedFiles[0];
   const filename = file.name;
-  if (!filename.endsWith('.srt') && !filename.endsWith('.vtt')) {
-    showFileErrorMsg('Only .srt and .vtt file is supported', event);
+  if (!filename.match(/\.(srt|vtt|ass|ssa)$/)) {
+    showFileErrorMsg('Only .srt, .ass, .ssa and .vtt file is acceptable');
     return;
   }
   readFile(file);

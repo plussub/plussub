@@ -6,63 +6,42 @@ import { computed, watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
 
-export const addSrcToVideoInHost = (el: HTMLVideoElement): void => {
-  const { src } = el;
+export const addSrcToVideo = (el: HTMLVideoElement): void => {
+  const src = el.src ?? el.currentSrc;
   srcToVideo.value[src] = { el, hasSubtitle: el.classList.contains('plussub'), src, in: 'HOST' };
 };
 
-export const removeSrcToVideoInHost = (src: string): void => {
+export const removeSrcToVideo = (src: string): void => {
   if (srcToVideo.value[src] && srcToVideo.value[src].hasSubtitle) reset();
   delete srcToVideo.value[src];
 };
 
-export const isValidVideoInHost = (el: HTMLVideoElement): boolean => {
+export const isValidVideoAndObserveSrcChange = (el: HTMLVideoElement): boolean => {
   if (!el || !el.offsetWidth || !el.offsetHeight) return false;
-  let oldSrc = '';
-  if (!el.src && !el.querySelector('source')) {
-    let inVideoList = false;
-    // for cases that video element does not have src first, but will add src after the video is playing. (eg. vimeo.com)
-    useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
-      const { src } = el;
-      for (const mutation of mutationsList) {
-        if (mutation.attributeName === 'src') {
-          if (inVideoList) {
-            removeSrcToVideoInHost(oldSrc);
-            oldSrc = src;
-            if (!src) return;
-            addSrcToVideoInHost(el);
-          }
-          if (!inVideoList && !srcToVideo.value[src]) {
-            inVideoList = true;
-            oldSrc = src;
-            addSrcToVideoInHost(el);
-          }
-        }
-      }
-    });
-    return false;
-  }
-  oldSrc = el.src;
+  // some video element has src but no currentSrc(eg. vimeo.com)
+  let oldSrc = el.src ?? el.currentSrc;
   // for cases that the src of video changes (eg. when change video in vimeo.com or bilibil.com)
+  // not listen to childlist of <source> currently as I don't find any cases and I don't think any video will change <source>
   useElementMutationObserver(el, { attributes: true }, (mutationsList) => {
     for (const mutation of mutationsList) {
       if (mutation.attributeName === 'src') {
-        removeSrcToVideoInHost(oldSrc);
-        oldSrc = el.src;
-        if (!el.src) return;
-        addSrcToVideoInHost(el);
+        removeSrcToVideo(oldSrc);
+        oldSrc = el.src ?? el.currentSrc;
+        if (!oldSrc) return;
+        addSrcToVideo(el);
       }
     }
   });
+  if (!oldSrc) return false;
   return true;
 };
 
 const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
   [...document.querySelectorAll('video')]
-    .filter(isValidVideoInHost)
+    .filter(isValidVideoAndObserveSrcChange)
     .map(
       (el): Video => ({
-        src: el.src,
+        src: el.src ?? el.currentSrc,
         in: 'HOST',
         hasSubtitle: el.classList.contains('plussub'),
         el
@@ -107,7 +86,7 @@ export const init = (): void => {
   };
 
   useMutationObserver((mutationsList) => {
-    removedVideoElements(mutationsList).forEach((el) => removeSrcToVideoInHost(el.src));
-    addedVideoElements(mutationsList).filter(isValidVideoInHost).forEach(addSrcToVideoInHost);
+    removedVideoElements(mutationsList).forEach((el) => removeSrcToVideo(el.src ?? el.currentSrc));
+    addedVideoElements(mutationsList).filter(isValidVideoAndObserveSrcChange).forEach(addSrcToVideo);
   });
 };
