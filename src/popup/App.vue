@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watchEffect } from 'vue';
+import { reactive, watchEffect, onMounted } from 'vue';
 import { init as initAppState, appState } from '@/app/state';
 import { init as initVideoState, videoCount, videoList } from '@/video/state';
 import { init as initFileState } from '@/file/state';
@@ -30,7 +30,6 @@ export { default as SubtitleSelection } from '@/search/pages/subtitleSelection/S
 export { default as FilePick } from '@/file/pages/FilePick.vue';
 export { default as Transcript } from '@/transcript/pages/Transcript.vue';
 
-export {navigationState};
 export const state = reactive({ selected: 'HOME', selectedParams: {} });
 
 initAppState();
@@ -40,6 +39,8 @@ initVideoState();
 initFileState();
 initSubtitleSearchState();
 
+export { navigationState };
+
 watchEffect(() => {
   // auto navigate if only 1 video exists
   if (videoCount.value === 1 && navigationState.value.name === 'HOME' && appState.value.state === 'NONE') {
@@ -47,7 +48,6 @@ watchEffect(() => {
     toSearch();
   }
 });
-
 </script>
 
 <style>

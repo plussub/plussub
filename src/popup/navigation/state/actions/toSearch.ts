@@ -1,5 +1,4 @@
-import { navigationState } from '@/navigation/state/state';
-import {ToSearchPayload} from "@/navigation/state/types";
+import { ToSearchPayload } from '@/navigation/state/types';
 
 const defaultParams: ToSearchPayload = { contentTransitionName: 'content-navigate-deeper' as const };
 
