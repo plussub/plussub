@@ -1,6 +1,6 @@
 import { SubtitleEntry } from '@/subtitle/state/types';
 
-export const VideoInIFrame = 'VIDEO_IN_I_FRAME' as const;
+export const VideosInIFrame = 'VIDEOS_IN_I_FRAME' as const;
 export const RemoveMessageEventListener = 'REMOVE_MESSAGE_EVENT_LISTENER' as const;
 export const StartTranscript = 'START_TRANSCRIPT' as const;
 export const StopTranscript = 'STOP_TRANSCRIPT' as const;
@@ -13,7 +13,7 @@ export const VideoBoundingClientRect = 'Video_Bounding_Client_Rect' as const;
 export const RemoveVideoInIFrame = 'REMOVE_VIDEO_IN_I_FRAME' as const;
 
 export type Actions =
-  | typeof VideoInIFrame
+  | typeof VideosInIFrame
   | typeof RemoveMessageEventListener
   | typeof StartTranscript
   | typeof RemoveSubtitle
@@ -29,13 +29,15 @@ type GenericEvent<T extends Actions> = {
   plusSubAction: T;
 };
 
-export type VideoInIFrameEvent = GenericEvent<typeof VideoInIFrame> & {
+export type VideosInIFrameEvent = GenericEvent<typeof VideosInIFrame> & {
   frameSrc: string;
-  currentSrc: string;
-  hasSubtitle: boolean;
+  videos: {
+    currentSrc: string;
+    hasSubtitle: boolean;
+  }[]
 };
-export type SendIFrameUseWindowMessagePayload = {
-  [VideoInIFrame]: (payload: MessageEvent<VideoInIFrameEvent>) => void;
+export type VideosInIFrameUseWindowMessagePayload = {
+  [VideosInIFrame]: (payload: MessageEvent<VideosInIFrameEvent>) => void;
 };
 
 export type RemoveVideoInIFrameEvent = GenericEvent<typeof RemoveVideoInIFrame> & {
@@ -99,7 +101,7 @@ export type SetVideoTimeUseWindowMessagePayload = {
   [SetVideoTime]: (payload: MessageEvent<SetVideoTimeEvent>) => void;
 };
 
-type AllUseWindowMessagePayload = SendIFrameUseWindowMessagePayload &
+type AllUseWindowMessagePayload = VideosInIFrameUseWindowMessagePayload &
   RemoveMessageEventListenerUseWindowMessagePayload &
   StartTranscriptUseWindowMessagePayload &
   RemoveSubtitleEventUseWindowMessagePayload &
@@ -113,7 +115,7 @@ type AllUseWindowMessagePayload = SendIFrameUseWindowMessagePayload &
 
 export type UseWindowMessagePayload = Partial<AllUseWindowMessagePayload>;
 export type AllEvents =
-  | VideoInIFrameEvent
+  | VideosInIFrameEvent
   | RemoveMessageEventListenerEvent
   | StartTranscriptEvent
   | StopTranscriptEvent

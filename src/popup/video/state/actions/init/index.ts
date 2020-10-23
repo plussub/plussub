@@ -6,7 +6,7 @@ import {
   videosWithSubtitle,
   srcToGlobalVideo
 } from '@/video/state/state';
-import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideoInIFrame } from '@/composables';
+import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideosInIFrame } from '@/composables';
 import { watch, watchEffect } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
@@ -49,16 +49,18 @@ export const init = (): void => {
   });
 
   useWindowMessage({
-    [VideoInIFrame]: ({ origin, source, data: { currentSrc, frameSrc, hasSubtitle } }) => {
-      if (!srcToHostVideo.value[currentSrc]) {
-        srcToIFrameSource[currentSrc] = { window: source as Window, frameSrc, origin };
-        srcToIFrameVideo.value[currentSrc] = { hasSubtitle, src: currentSrc, in: 'I_FRAME' };
-      }
+    [VideosInIFrame]: ({ origin, source, data: { videos, frameSrc } }) => {
+      videos.forEach((e) => (srcToIFrameSource[e.currentSrc] = { window: source as Window, frameSrc, origin }));
+      Object.assign(srcToIFrameVideo.value, Object.fromEntries(videos.map(e => [e.currentSrc, {
+        hasSubtitle: e.hasSubtitle,
+        src: e.currentSrc,
+        in: 'I_FRAME'
+      }])));
     }
   });
   useWindowMessage({
     [RemoveVideoInIFrame]: ({ data: { currentSrc, frameSrc } }) => {
-      if (srcToHostVideo.value[currentSrc]?.hasSubtitle) {
+      if (srcToIFrameVideo.value[currentSrc]?.hasSubtitle) {
         reset();
       }
       delete srcToIFrameVideo.value[currentSrc];
@@ -66,7 +68,7 @@ export const init = (): void => {
     }
   });
 
-  watchEffect(() => {
+  watch(() => currentSelectedVideoSrc.value, () => {
     const src = currentSelectedVideoSrc.value;
     if(!src){
       return;
