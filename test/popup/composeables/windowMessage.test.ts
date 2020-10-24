@@ -36,6 +36,6 @@ describe('window message test', () => {
         }]
       }
     });
-    expect(payload.REMOVE_MESSAGE_EVENT_LISTENER).not.toHaveBeenCalled();
+    expect(payload.CLOSE).not.toHaveBeenCalled();
   });
 });
