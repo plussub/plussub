@@ -1,16 +1,10 @@
 import { Video, VideoSrc } from '@/video/state/types';
-import {
-  srcToIFrameSource,
-  srcToIFrameVideo,
-  srcToHostVideo,
-  videosWithSubtitle,
-  srcToGlobalVideo
-} from '@/video/state/state';
+import { srcToGlobalVideo, srcToHostVideo, srcToIFrameSource, srcToIFrameVideo, videosWithSubtitle } from '@/video/state/state';
 import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideosInIFrame } from '@/composables';
 import { watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
-import { currentSelectedVideoSrc } from "@/navigation/state";
+import { currentSelectedVideoSrc } from '@/navigation/state';
 
 const isValidVideo = (el: HTMLVideoElement): boolean => el.offsetWidth !== 0 && el.offsetHeight !== 0 && el.currentSrc !== '';
 
@@ -31,7 +25,7 @@ const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
 
 const resetSrcToHostVideo = () => {
   srcToHostVideo.value = findVideosInCurrentTab();
-}
+};
 
 export const init = (): void => {
   resetSrcToHostVideo();
@@ -51,11 +45,19 @@ export const init = (): void => {
   useWindowMessage({
     [VideosInIFrame]: ({ origin, source, data: { videos, frameSrc } }) => {
       videos.forEach((e) => (srcToIFrameSource[e.currentSrc] = { window: source as Window, frameSrc, origin }));
-      Object.assign(srcToIFrameVideo.value, Object.fromEntries(videos.map(e => [e.currentSrc, {
-        hasSubtitle: e.hasSubtitle,
-        src: e.currentSrc,
-        in: 'I_FRAME'
-      }])));
+      Object.assign(
+        srcToIFrameVideo.value,
+        Object.fromEntries(
+          videos.map((e) => [
+            e.currentSrc,
+            {
+              hasSubtitle: e.hasSubtitle,
+              src: e.currentSrc,
+              in: 'I_FRAME'
+            }
+          ])
+        )
+      );
     }
   });
   useWindowMessage({
@@ -68,17 +70,18 @@ export const init = (): void => {
     }
   });
 
-  watch(() => currentSelectedVideoSrc.value, () => {
-    const src = currentSelectedVideoSrc.value;
-    if(!src){
-      return;
+  watch(
+    () => currentSelectedVideoSrc.value,
+    (src, prevSrc) => {
+      if (prevSrc && srcToGlobalVideo.value[prevSrc]) {
+        removeVttFrom({ video: srcToGlobalVideo.value[prevSrc] });
+      }
+      if (src && srcToGlobalVideo.value[src]) {
+        removeVttFrom({ video: srcToGlobalVideo.value[src] });
+        addVttTo({ video: srcToGlobalVideo.value[src], subtitle: window.plusSub_subtitle.value.withOffsetParsed });
+      }
     }
-    const video = srcToGlobalVideo.value[src];
-    if(video){
-      removeVttFrom({ video });
-      addVttTo({ video, subtitle: window.plusSub_subtitle.value.withOffsetParsed });
-    }
-  })
+  );
 
   watch(
     () => window.plusSub_subtitle.value.withOffsetParsed,

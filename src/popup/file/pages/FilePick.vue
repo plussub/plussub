@@ -1,5 +1,12 @@
 <template>
-  <div id="filepicker-content--container" @mouseenter="enterVideo(srcToGlobalVideo[currentSelectedVideoSrc])" @mouseleave="leaveVideo" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
+  <div
+    id="filepicker-content--container"
+    @mouseenter="enterVideo(srcToGlobalVideo[currentSelectedVideoSrc])"
+    @mouseleave="leaveVideo"
+    @dragenter.prevent="dragenter"
+    @dragleave="dragleave"
+    @drop.prevent="drop"
+  >
     <p class="upload-drag-icon">
       <i class="fa fa-upload fa-lg"></i>
     </p>
@@ -20,7 +27,8 @@
       <p class="upload-text">Click or drop file to this area to upload</p>
       <p class="upload-hint">
         Support for a single file upload. Only .srt or .vtt file is acceptable.(Video
-        <span :class="{ 'video-name-string': getVideoName() !== '1' }" @click="changeQuery">{{ getVideoName() }}</span> is {{ videoCount === 1 ? 'auto' : '' }} selected)
+        <span :class="{ 'video-name-string': getVideoName() !== '1' }" @click="changeQuery">{{ getVideoName() }}</span>
+        is {{ videoCount === 1 ? 'auto' : '' }} selected)
       </p>
     </div>
   </div>
@@ -32,10 +40,11 @@ import { setFilename } from '../state';
 import { setState, setSrc } from '@/app/state';
 import { setRaw, parse } from '@/subtitle/state';
 import { leaveVideo } from '@/util/hover';
-import { getVideoName } from '../../util/name';
-import {toHome} from "../../navigation/state/actions";
-export {currentSelectedVideoSrc} from "../../navigation/state/state";
-export {srcToGlobalVideo} from "../../video/state/state";
+import { getVideoName } from '@/util/name';
+import { toHome } from '../../navigation/state/actions';
+
+export { currentSelectedVideoSrc } from '@/navigation/state/state';
+export { srcToGlobalVideo } from '@/video/state/state';
 
 export { default as xCircleIcon } from '@/res/x-circle.svg';
 export { videosWithSubtitle, videoCount } from '@/video/state';
@@ -113,7 +122,6 @@ export const fileSelected = async (): Promise<void> => {
 
 export const changeQuery = (): void => emit('update:query', getVideoName());
 
-
 onUnmounted(() => leaveVideo());
 </script>
 
@@ -130,24 +138,29 @@ onUnmounted(() => leaveVideo());
   flex-direction: column;
   justify-content: space-evenly;
 }
+
 .upload-drag-icon {
   color: #5bc0de;
   font-size: 24px;
   margin: 0;
 }
+
 .upload-text {
   margin: 0 0 4px;
   color: rgba(0, 0, 0, 0.85);
   font-size: 16px;
 }
+
 .upload-hint {
   color: rgba(0, 0, 0, 0.45);
   font-size: 14px;
   margin: 0;
 }
+
 .dragging-over {
   background-color: #9ae6b4;
 }
+
 .video-name-string {
   z-index: 2;
   position: relative;
@@ -155,6 +168,7 @@ onUnmounted(() => leaveVideo());
   text-decoration: underline;
   cursor: pointer;
 }
+
 #file-error-notification {
   position: absolute;
   z-index: 3;
