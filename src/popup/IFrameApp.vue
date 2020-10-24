@@ -2,6 +2,8 @@
 
 <script setup="props" lang="ts">
 import { init as initVideoState } from '@/iframe/video/state';
+import { close } from '@/iframe/util/close';
+import {Close, useWindowMessage} from "@/composables";
 
 initVideoState();
 
@@ -44,16 +46,17 @@ initVideoState();
 //   });
 // };
 //
-// useWindowMessage({
-//   [AddSubtitle]: (e) =>
-//     addVttToHostVideo({
-//       video: { el: props.videoEl },
-//       subtitle: e.data.subtitle
-//     }),
-//   [RemoveSubtitle]: () => removeVttFromHostVideo({ video: { el: props.videoEl } }),
-//   [StartTranscript]: () => props.videoEl.addEventListener('timeupdate', sendTime),
-//   [StopTranscript]: () => props.videoEl.removeEventListener('timeupdate', sendTime),
-//   [SetVideoTime]: (e) => (props.videoEl.currentTime = e.data.time),
-//   [GetBoundingClientRect]: sendBoundingClientRect
-// });
+useWindowMessage({
+  [Close]: () => close()
+  // [AddSubtitle]: (e) =>
+  //   addVttToHostVideo({
+  //     video: { el: props.videoEl },
+  //     subtitle: e.data.subtitle
+  //   }),
+  // [RemoveSubtitle]: () => removeVttFromHostVideo({ video: { el: props.videoEl } }),
+  // [StartTranscript]: () => props.videoEl.addEventListener('timeupdate', sendTime),
+  // [StopTranscript]: () => props.videoEl.removeEventListener('timeupdate', sendTime),
+  // [SetVideoTime]: (e) => (props.videoEl.currentTime = e.data.time),
+  // [GetBoundingClientRect]: sendBoundingClientRect
+});
 </script>

@@ -1,10 +1,6 @@
 import {App, createApp} from 'vue';
 import IFrameApp from './IFrameApp.vue';
 
-const getIframeSrc = (window: Window) => {
-  return window.frameElement ? window.frameElement.getAttribute('src') : window.location.href;
-};
-
 let app: App;
 
 interface LinkEntry {

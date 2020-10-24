@@ -1,19 +1,12 @@
-import { useApp } from '@/inHost';
-import {postWindowMessage} from "@/composables";
+import {useIFrameApp} from "@/inIFrame";
 
 export const close = (): void => {
-  const app = useApp();
+  const app = useIFrameApp();
   const appDiv = document.getElementById('plussubShadow')?.shadowRoot?.getElementById('plussub');
   // unmount app otherwise watch will continue to work
   app.unmount(appDiv as Element);
 
   document.getElementById('plussubShadow')?.remove();
   document.getElementById('plussub-overlay-highlight')?.remove();
-  postWindowMessage({
-    window,
-    origin: '*',
-    payload: {
-      plusSubAction: "CLOSE"
-    }
-  });
+  window.postMessage({ plusSubAction: 'removeMessageEventListener' }, '*');
 };

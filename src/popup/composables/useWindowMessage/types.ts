@@ -1,7 +1,7 @@
 import { SubtitleEntry } from '@/subtitle/state/types';
 
 export const VideosInIFrame = 'VIDEOS_IN_I_FRAME' as const;
-export const RemoveMessageEventListener = 'REMOVE_MESSAGE_EVENT_LISTENER' as const;
+export const Close = 'CLOSE' as const;
 export const StartTranscript = 'START_TRANSCRIPT' as const;
 export const StopTranscript = 'STOP_TRANSCRIPT' as const;
 export const VideoCurrentTime = 'VIDEO_CURRENT_TIME' as const;
@@ -14,7 +14,7 @@ export const RemoveVideoInIFrame = 'REMOVE_VIDEO_IN_I_FRAME' as const;
 
 export type Actions =
   | typeof VideosInIFrame
-  | typeof RemoveMessageEventListener
+  | typeof Close
   | typeof StartTranscript
   | typeof RemoveSubtitle
   | typeof AddSubtitle
@@ -48,9 +48,9 @@ export type RemoveVideoInIFrameEventUseWindowMessagePayload = {
   [RemoveVideoInIFrame]: (payload: MessageEvent<RemoveVideoInIFrameEvent>) => void;
 };
 
-export type RemoveMessageEventListenerEvent = GenericEvent<typeof RemoveMessageEventListener>;
-export type RemoveMessageEventListenerUseWindowMessagePayload = {
-  [RemoveMessageEventListener]: (payload: MessageEvent<RemoveMessageEventListenerEvent>) => void;
+export type CloseEvent = GenericEvent<typeof Close>;
+export type CloseUseWindowMessagePayload = {
+  [Close]: (payload: MessageEvent<CloseEvent>) => void;
 };
 
 export type AddSubtitleEvent = GenericEvent<typeof AddSubtitle> & {
@@ -102,7 +102,7 @@ export type SetVideoTimeUseWindowMessagePayload = {
 };
 
 type AllUseWindowMessagePayload = VideosInIFrameUseWindowMessagePayload &
-  RemoveMessageEventListenerUseWindowMessagePayload &
+  CloseUseWindowMessagePayload &
   StartTranscriptUseWindowMessagePayload &
   RemoveSubtitleEventUseWindowMessagePayload &
   AddSubtitleEventUseWindowMessagePayload &
@@ -116,7 +116,8 @@ type AllUseWindowMessagePayload = VideosInIFrameUseWindowMessagePayload &
 export type UseWindowMessagePayload = Partial<AllUseWindowMessagePayload>;
 export type AllEvents =
   | VideosInIFrameEvent
-  | RemoveMessageEventListenerEvent
+  | RemoveVideoInIFrameEvent
+  | CloseEvent
   | StartTranscriptEvent
   | StopTranscriptEvent
   | RemoveSubtitleEvent
@@ -124,5 +125,4 @@ export type AllEvents =
   | VideoBoundingClientRectEvent
   | AddSubtitleEvent
   | VideoCurrentTimeEvent
-  | SetVideoTimeEvent
-  | RemoveVideoInIFrameEvent;
+  | SetVideoTimeEvent;

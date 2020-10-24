@@ -3,14 +3,14 @@ import {
   VideosInIFrame,
   VideosInIFrameEvent,
   UseWindowMessagePayload,
-  RemoveMessageEventListener
+  Close
 } from "@/composables/useWindowMessage";
 
 describe('window message test', () => {
   it('single callback', () => {
     const payload: UseWindowMessagePayload = {
       [VideosInIFrame]: jest.fn(),
-      [RemoveMessageEventListener]: jest.fn()
+      [Close]: jest.fn()
     };
 
     const underTest = useWindowMessage(payload);
