@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watchEffect, onMounted } from 'vue';
+import { reactive, watch } from 'vue';
 import { init as initAppState, appState } from '@/app/state';
 import { init as initVideoState, videoCount, videoList } from '@/video/state';
 import { init as initFileState } from '@/file/state';
@@ -41,7 +41,7 @@ initSubtitleSearchState();
 
 export { navigationState };
 
-watchEffect(() => {
+watch([videoCount, navigationState, appState], ()=> {
   // auto navigate if only 1 video exists
   if (videoCount.value === 1 && navigationState.value.name === 'HOME' && appState.value.state === 'NONE') {
     setCurrentSelectedSrc(videoList.value[0].src);

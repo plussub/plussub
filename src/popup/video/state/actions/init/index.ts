@@ -7,7 +7,7 @@ import {
   srcToGlobalVideo
 } from '@/video/state/state';
 import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideosInIFrame } from '@/composables';
-import { watch, watchEffect } from 'vue';
+import { watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
 import { currentSelectedVideoSrc } from "@/navigation/state";
