@@ -15,13 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue';
+import { reactive, watch, watchEffect } from 'vue';
 import { init as initAppState, appState } from '@/app/state';
 import { init as initVideoState, videoCount, videoList } from '@/video/state';
 import { init as initFileState } from '@/file/state';
 import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
-import { init as initNavigationState, setCurrentSelectedSrc, toSearch, navigationState } from '@/navigation/state';
+import { init as initNavigationState, setupAutoNavigation, navigationState, toSearch, setCurrentSelectedSrc } from '@/navigation/state';
 
 export { default as KnopfCss } from '@/KnopfCss.vue';
 export { default as Home } from '@/home/pages/Home.vue';
@@ -38,16 +38,9 @@ initSubtitleState();
 initVideoState();
 initFileState();
 initSubtitleSearchState();
+setupAutoNavigation();
 
 export { navigationState };
-
-watch([videoCount, navigationState, appState], ()=> {
-  // auto navigate if only 1 video exists
-  if (videoCount.value === 1 && navigationState.value.name === 'HOME' && appState.value.state === 'NONE') {
-    setCurrentSelectedSrc(videoList.value[0].src);
-    toSearch();
-  }
-});
 </script>
 
 <style>
