@@ -1,5 +1,5 @@
 <template>
-  <div id="filepicker-content--container" @mouseenter="enterVideo(videosWithSubtitle[0])" @mouseleave="leaveVideo" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
+  <div id="filepicker-content--container" @mouseenter="enterVideo(srcToGlobalVideo[currentSelectedVideoSrc])" @mouseleave="leaveVideo" @dragenter.prevent="dragenter" @dragleave="dragleave" @drop.prevent="drop">
     <p class="upload-drag-icon">
       <i class="fa fa-upload fa-lg"></i>
     </p>
@@ -34,9 +34,8 @@ import { setRaw, parse } from '@/subtitle/state';
 import { leaveVideo } from '@/util/hover';
 import { getVideoName } from '../../util/name';
 import {toHome} from "../../navigation/state/actions";
-import {currentSelectedVideoSrc} from "../../navigation/state/state";
-import {srcToGlobalVideo} from "../../video/state/state";
-import {addVttTo} from "../../video/state/actions/vtt";
+export {currentSelectedVideoSrc} from "../../navigation/state/state";
+export {srcToGlobalVideo} from "../../video/state/state";
 
 export { default as xCircleIcon } from '@/res/x-circle.svg';
 export { videosWithSubtitle, videoCount } from '@/video/state';
@@ -113,6 +112,7 @@ export const fileSelected = async (): Promise<void> => {
 };
 
 export const changeQuery = (): void => emit('update:query', getVideoName());
+
 
 onUnmounted(() => leaveVideo());
 </script>
