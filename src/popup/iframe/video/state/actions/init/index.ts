@@ -35,7 +35,8 @@ export const init = (): void => {
   // handles also if the source or the src changes
   [...document.querySelectorAll('video')].forEach((el) => el.addEventListener('loadedmetadata', resetSrcToVideo));
   // new videos added to the page
-  useVideoElementMutationObserver(({ added, removed }) => {
+  useVideoElementMutationObserver(({ added }) => {
+    console.warn('detect change in iframe');
     resetSrcToVideo();
     added.forEach((el) => el.addEventListener('loadedmetadata', resetSrcToVideo));
   });
@@ -55,6 +56,8 @@ export const init = (): void => {
             currentSrc: el.currentSrc,
             hasSubtitle: el.classList.contains('plussub')
           }));
+        console.warn('post');
+        console.warn(videos);
 
         postWindowMessage({
           window: window.top,
@@ -65,13 +68,15 @@ export const init = (): void => {
             videos
           }
         });
-      } else if ( srcToVideoList.length < prevSrcToVideoList.length) {
+      } else if (srcToVideoList.length < prevSrcToVideoList.length) {
         prevSrcToVideoList
-          .filter((e) => !srcToVideoList.includes(e))
+          .filter((e) => !srcToVideoList.some((_e) => _e.src === e.src))
           .filter(notEmpty)
           .map(({ el }) => el)
           .filter(notEmpty)
-          .forEach((el) =>
+          .forEach((el) => {
+            console.warn('send remove: ');
+            console.warn(el);
             postWindowMessage({
               window: window.top,
               origin: '*',
@@ -80,9 +85,10 @@ export const init = (): void => {
                 frameSrc: getIframeSrc() ?? '',
                 currentSrc: el.currentSrc
               }
-            })
-          );
+            });
+          });
       }
-    }, {immediate: true}
+    },
+    { immediate: true }
   );
 };
