@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted } from 'vue';
-import {isHTMLElement, isHTMLVideoElement} from "@/types";
+import { isHTMLElement, isHTMLVideoElement } from '@/types';
 
 const findVideoElement = (nodes: Node[]) => {
   const directMatch = nodes.find((node): node is HTMLVideoElement => isHTMLVideoElement(node));
@@ -24,10 +24,14 @@ interface CallbackPayload {
 
 export const useVideoElementMutationObserver = (callback: (payload: CallbackPayload) => void): void => {
   const observer = new MutationObserver((mutationsList) => {
-    callback({
-      added: addedVideoElements(mutationsList),
-      removed: removedVideoElements(mutationsList)
-    });
+    const added = addedVideoElements(mutationsList);
+    const removed = removedVideoElements(mutationsList);
+    if (added.length || removed.length) {
+      callback({
+        added,
+        removed
+      });
+    }
   });
 
   onMounted(() => observer.observe(document.body, { subtree: true, childList: true }));
