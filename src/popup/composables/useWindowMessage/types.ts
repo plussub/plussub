@@ -16,8 +16,8 @@ export type Actions =
   | typeof VideosInIFrame
   | typeof Close
   | typeof StartTranscript
-  | typeof RemoveSubtitle
   | typeof AddSubtitle
+  | typeof RemoveSubtitle
   | typeof VideoCurrentTime
   | typeof StopTranscript
   | typeof GetBoundingClientRect
@@ -61,7 +61,9 @@ export type AddSubtitleEventUseWindowMessagePayload = {
   [AddSubtitle]: (payload: MessageEvent<AddSubtitleEvent>) => void;
 };
 
-export type RemoveSubtitleEvent = GenericEvent<typeof RemoveSubtitle>;
+export type RemoveSubtitleEvent = GenericEvent<typeof RemoveSubtitle> & {
+  src: string;
+}
 export type RemoveSubtitleEventUseWindowMessagePayload = {
   [RemoveSubtitle]: (payload: MessageEvent<RemoveSubtitleEvent>) => void;
 };

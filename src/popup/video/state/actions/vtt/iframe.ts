@@ -1,14 +1,15 @@
 import { Video } from '@/video/state/types';
 import { SubtitleEntry } from '@/subtitle/state/types';
 import { AddSubtitle, postWindowMessage, RemoveSubtitle } from '@/composables';
-import {srcToIFrameSource} from "@/video/state";
+import { srcToIFrameSource } from '@/video/state';
 
 export interface AddVttToIFrameVideoPayload {
   video: Pick<Video, 'src'>;
   subtitle: SubtitleEntry[];
 }
-export const addVttToIFrameVideo = ({video: { src }, subtitle }: AddVttToIFrameVideoPayload): void => {
-   const iFrameSource = srcToIFrameSource[src];
+
+export const addVttToIFrameVideo = ({ video: { src }, subtitle }: AddVttToIFrameVideoPayload): void => {
+  const iFrameSource = srcToIFrameSource[src];
   if (!iFrameSource) {
     return;
   }
@@ -39,7 +40,8 @@ export const removeVttFromIFrameVideo = ({ video: { src } }: RemoveVttFromIFrame
     window: iFrameSource.window,
     origin: iFrameSource.origin,
     payload: {
-      plusSubAction: RemoveSubtitle
+      plusSubAction: RemoveSubtitle,
+      src
     }
-  })
+  });
 };
