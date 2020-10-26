@@ -28,7 +28,8 @@ export const enterVideo = (video: Video): void => {
       window: srcToIFrameSource[video.src].window,
       origin: srcToIFrameSource[video.src].origin,
       payload: {
-        plusSubAction: GetBoundingClientRect
+        plusSubAction: GetBoundingClientRect,
+        src: video.src
       }
     });
     // Not use useWindowMessage as I want to remove event listener immediately

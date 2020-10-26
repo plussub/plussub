@@ -34,7 +34,7 @@ export type VideosInIFrameEvent = GenericEvent<typeof VideosInIFrame> & {
   videos: {
     currentSrc: string;
     hasSubtitle: boolean;
-  }[]
+  }[];
 };
 export type VideosInIFrameUseWindowMessagePayload = {
   [VideosInIFrame]: (payload: MessageEvent<VideosInIFrameEvent>) => void;
@@ -63,12 +63,14 @@ export type AddSubtitleEventUseWindowMessagePayload = {
 
 export type RemoveSubtitleEvent = GenericEvent<typeof RemoveSubtitle> & {
   src: string;
-}
+};
 export type RemoveSubtitleEventUseWindowMessagePayload = {
   [RemoveSubtitle]: (payload: MessageEvent<RemoveSubtitleEvent>) => void;
 };
 
-export type GetBoundingClientRectEvent = GenericEvent<typeof GetBoundingClientRect>;
+export type GetBoundingClientRectEvent = GenericEvent<typeof GetBoundingClientRect> & {
+  src: string;
+};
 export type GetBoundingClientRectEventUseWindowMessagePayload = {
   [GetBoundingClientRect]: (payload: MessageEvent<GetBoundingClientRectEvent>) => void;
 };
@@ -80,12 +82,16 @@ export type VideoBoundingClientRectEventUseWindowMessagePayload = {
   [VideoBoundingClientRect]: (payload: MessageEvent<VideoBoundingClientRectEvent>) => void;
 };
 
-export type StartTranscriptEvent = GenericEvent<typeof StartTranscript>;
+export type StartTranscriptEvent = GenericEvent<typeof StartTranscript> & {
+  src: string;
+};
 export type StartTranscriptUseWindowMessagePayload = {
   [StartTranscript]: (payload: MessageEvent<StartTranscriptEvent>) => void;
 };
 
-export type StopTranscriptEvent = GenericEvent<typeof StopTranscript>;
+export type StopTranscriptEvent = GenericEvent<typeof StopTranscript> & {
+  src: string;
+};
 export type StopTranscriptUseWindowMessagePayload = {
   [StopTranscript]: (payload: MessageEvent<StopTranscriptEvent>) => void;
 };
@@ -98,6 +104,7 @@ export type VideoCurrentTimeUseWindowMessagePayload = {
 };
 
 export type SetVideoTimeEvent = GenericEvent<typeof SetVideoTime> & {
+  src: string;
   time: number;
 };
 export type SetVideoTimeUseWindowMessagePayload = {

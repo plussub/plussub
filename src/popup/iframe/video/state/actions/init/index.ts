@@ -36,7 +36,6 @@ export const init = (): void => {
   [...document.querySelectorAll('video')].forEach((el) => el.addEventListener('loadedmetadata', resetSrcToVideo));
   // new videos added to the page
   useVideoElementMutationObserver(({ added }) => {
-    console.warn('detect change in iframe');
     resetSrcToVideo();
     added.forEach((el) => el.addEventListener('loadedmetadata', resetSrcToVideo));
   });
@@ -56,8 +55,6 @@ export const init = (): void => {
             currentSrc: el.currentSrc,
             hasSubtitle: el.classList.contains('plussub')
           }));
-        console.warn('post');
-        console.warn(videos);
 
         postWindowMessage({
           window: window.top,
@@ -74,9 +71,7 @@ export const init = (): void => {
           .filter(notEmpty)
           .map(({ el }) => el)
           .filter(notEmpty)
-          .forEach((el) => {
-            console.warn('send remove: ');
-            console.warn(el);
+          .forEach((el) =>
             postWindowMessage({
               window: window.top,
               origin: '*',
@@ -85,8 +80,8 @@ export const init = (): void => {
                 frameSrc: getIframeSrc() ?? '',
                 currentSrc: el.currentSrc
               }
-            });
-          });
+            })
+          );
       }
     },
     { immediate: true }
