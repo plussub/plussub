@@ -3,7 +3,6 @@
     <div style="grid-area: header; height: 1px; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500">
       <div>
         <div>Page Videos</div>
-        <!-- <div v-if="subtitle.length === 0" style="font-size: 0.4em; color: var(--default-text-color); font-weight: 400">You must first add a subtitle before you can add them to the video</div> -->
       </div>
     </div>
     <div style="grid-area: content">
@@ -18,8 +17,6 @@
           @click="selectVideo(video, index)"
         >
           <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
-          <!-- <a v-if="video.hasSubtitle" class="knopf flat small" style="grid-column: 2 / 3" @click="removeVttFrom({ video })">Remove Sub</a>
-          <a v-else class="knopf flat small" :class="{ disabled: subtitle.length === 0 || pageHasSubtitle }" style="grid-column: 2 / 3" @click="addVttTo({ video, subtitle })"> Add Subtitle</a> -->
         </div>
       </div>
       <div v-else>No videos found in current tab.</div>
@@ -28,28 +25,20 @@
 </template>
 
 <script setup="props, {emit}" lang="ts">
-import { computed, onUnmounted } from 'vue';
-import { srcToVideo, Video } from '@/video/state';
-import { addVttTo, removeVttFrom } from '@/video/state';
-import { SubtitleEntry } from '@/subtitle/state/types';
-import { enterVideo, leaveVideo } from '@/util/hover';
+import { onUnmounted } from 'vue';
+import { Video } from '@/video/state';
+import { leaveVideo } from '@/util/hover';
 
-declare const props: {
-  subtitle: SubtitleEntry[];
-};
+export { enterVideo } from '@/util/hover';
+export { videoList } from '@/video/state';
+export { leaveVideo };
 
 export default {
-  emits: ['navigate']
+  emits: ['selected-src']
 };
 
-export { addVttTo, removeVttFrom };
-export { enterVideo, leaveVideo };
-
-export const videoList = computed(() => Object.values(srcToVideo.value));
-export const selectVideo = (video: Video, index: number): void => {
-  // hasSubtitle means selected now
-  video.hasSubtitle = true;
-  emit('navigate', { name: 'SEARCH', params: { videoName: (index + 1).toString(), videoNum: Object.values(srcToVideo.value).length, contentTransitionName: 'content-navigate-deeper' } });
+export const selectVideo = (video: Video): void => {
+  emit('selected-src', video.src);
 };
 onUnmounted(() => {
   leaveVideo();
@@ -75,6 +64,7 @@ onUnmounted(() => {
   height: fit-content;
   margin: 10px 8px 0 8px;
 }
+
 .video-item:hover {
   background-color: #eeeeee;
   cursor: pointer;

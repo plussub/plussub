@@ -2,7 +2,7 @@
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn style="height: 100%" @navigate="(event) => $emit('navigate', event)" />
+        <ToolbarBackBtn style="height: 100%"/>
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Transcript</div>
       </div>
     </template>
@@ -21,8 +21,9 @@
 import { useDraggableArea } from '@/composables';
 import { ref, computed, watch } from 'vue';
 import { formatBiggestUnitMinuteSmallestUnitSeconds } from '../../util/time';
-import { srcToVideo, setCurrentTime as setCurrentTimeState } from '@/video/state';
+import { videoList, setCurrentTime as setCurrentTimeState } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
+import { subtitleState } from '@/subtitle/state';
 
 export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
@@ -31,16 +32,12 @@ declare const props: {
   contentTransitionName: string; // default : ''
 };
 
-export default {
-  emits: ['navigate']
-};
-
 export const draggableAreaRef = ref(null);
 useDraggableArea({ draggableAreaRef });
 
 const currentTime = ref<number>(0);
 
-export const video = computed(() => Object.values(srcToVideo.value).find((e) => e.hasSubtitle));
+export const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
 
 if (video.value) {
   useTimeUpdate({
@@ -71,8 +68,7 @@ export const currentPos = ref(-1);
 export const transcriptContentContainer = ref<HTMLElement | null>(null);
 
 watch(currentTime, (currentTime) => {
-  // // replace with hashmap
-  const pos = binarySearch(Math.ceil(currentTime * 1000), window.plusSub_subtitle.value.withOffsetParsed);
+  const pos = binarySearch(Math.ceil(currentTime * 1000), subtitleState.value.withOffsetParsed);
   if (pos === -1) return;
   currentPos.value = pos;
   if (transcriptContentContainer.value && !transcriptContentContainer.value.matches(':hover')) {
@@ -84,7 +80,7 @@ watch(currentTime, (currentTime) => {
 });
 
 export const subtitleTexts = computed(() =>
-  window.plusSub_subtitle.value.withOffsetParsed.map(({ from, text }) => ({
+    subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
     formattedFrom: formatBiggestUnitMinuteSmallestUnitSeconds({ time: from }),
     text,
     time: from / 1000

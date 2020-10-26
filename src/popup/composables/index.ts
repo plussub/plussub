@@ -1,4 +1,4 @@
 export * from './debounce';
 export * from './useDraggableArea';
 export * from './useWindowMessage';
-export * from './useMutationObserver';
+export * from './useVideoElementMutationObserver';

@@ -3,6 +3,12 @@ import appComponent from './App.vue';
 
 let app: App;
 
+interface LinkEntry {
+  href: string;
+  integrity?: string;
+  crossorigin?: string;
+}
+
 export const init = async (): Promise<void> => {
   if (document.getElementById('plussubShadow')) {
     const appShadowDiv = <HTMLElement>document.getElementById('plussubShadow');
@@ -19,12 +25,6 @@ export const init = async (): Promise<void> => {
     const appDiv = document.createElement('div');
     appDiv.id = 'plussub';
     shadow.appendChild(appDiv);
-
-    interface LinkEntry {
-      href: string;
-      integrity?: string;
-      crossorigin?: string;
-    }
 
     const fontAwesome: LinkEntry = {
       href: 'https://use.fontawesome.com/releases/v5.14.0/css/all.css',

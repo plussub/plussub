@@ -21,6 +21,7 @@ export const setCurrentTime = ({ video, time }: Payload): void => {
       origin: iFrameSource.origin,
       payload: {
         plusSubAction: SetVideoTime,
+        src: video.src,
         time
       }
     });

@@ -5,3 +5,8 @@ export interface Video {
   in: 'I_FRAME' | 'HOST';
   el?: HTMLVideoElement
 }
+export interface IFrameSource {
+  window: Window;
+  frameSrc: string;
+  origin: string;
+}

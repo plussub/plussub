@@ -2,7 +2,7 @@
   <div
     id="filepicker-content--container"
     ref="containerRef"
-    @mouseenter="enterVideo(videoWithSubtitle)"
+    @mouseenter="enterVideo(srcToGlobalVideo[currentSelectedVideoSrc])"
     @mouseleave="leaveVideo"
     @dragenter.prevent="dragenter"
     @dragleave="dragleave"
@@ -24,44 +24,50 @@
       {{ fileErrorMsg }}
     </div>
     <div style="margin: 0 40px 0 40px">
+      <!--      font-size: 0.85em; line-height: 1.8; font-weight: 300 -->
       <p class="upload-text">Click or drop file to this area to upload</p>
       <p class="upload-hint">
         Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable.(Video
-        <span :class="{ 'video-name-string': isNameNotNum }" @click="changeQuery">{{ videoName }}</span> is {{ videoNum === 1 ? 'auto' : '' }} selected)
+        <span :class="{ 'video-name-string': getVideoName() !== '1' }" @click="changeQuery">{{ getVideoName() }}</span>
+        is {{ videoCount === 1 ? 'auto' : '' }} selected)
       </p>
     </div>
   </div>
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import { ref, computed, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import { setFilename } from '../state';
 import { setState, setSrc } from '@/app/state';
 import { setRaw, parse } from '@/subtitle/state';
-import { srcToVideo } from '@/video/state';
-import { enterVideo, leaveVideo } from '@/util/hover';
+import { leaveVideo } from '@/util/hover';
+import { getVideoName } from '@/util/name';
+import { toHome } from '../../navigation/state/actions';
+
+export { currentSelectedVideoSrc } from '@/navigation/state/state';
+export { srcToGlobalVideo } from '@/video/state/state';
+
 export { default as xCircleIcon } from '@/res/x-circle.svg';
 import chardet from 'chardet';
+export { videosWithSubtitle, videoCount } from '@/video/state';
+export { enterVideo } from '@/util/hover';
+export { getVideoName };
+export { leaveVideo };
 
 declare const props: {
-  videoName: string;
   query: string;
 };
 
 export default {
-  emits: ['navigate']
+  emits: ['update:query']
 };
-export { enterVideo, leaveVideo };
+
 export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
 export const containerRef = ref();
-export const dragenter = (): void => {
-  containerRef.value.classList.add('dragging-over');
-};
-export const dragleave = (): void => {
-  containerRef.value.classList.remove('dragging-over');
-};
 export const fileErrorMsg = ref('');
+export const dragenter = (): void => containerRef.value.classList.add('dragging-over');
+export const dragleave = (): void => containerRef.value.classList.remove('dragging-over');
 const showFileErrorMsg = (msg: string) => {
   fileErrorMsg.value = msg;
   setTimeout(() => {
@@ -84,7 +90,10 @@ const readFile = (file: File): void => {
       // as string because we use readAsText...
       setRaw({ raw: textReader.result as string });
       parse(file.name);
-      emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
+      // emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
+      toHome({
+        contentTransitionName: 'content-navigate-select-to-home'
+      });
     };
     textReader.onerror = () => showFileErrorMsg('Some error happened when parsing the subtitle');
   };
@@ -118,17 +127,9 @@ export const fileSelected = async (): Promise<void> => {
   readFile(file);
 };
 
-const nameToInt = parseInt(props.videoName, 10);
-export const isNameNotNum = isNaN(nameToInt) || nameToInt > 20;
-export const changeQuery = (): void => {
-  if (!isNameNotNum) return;
-  emit('update:query', props.videoName);
-};
-export const videoWithSubtitle = computed(() => Object.values(srcToVideo.value).filter((e) => e.hasSubtitle)[0]);
-export const videoNum = computed(() => Object.values(srcToVideo.value).length);
-onUnmounted(() => {
-  leaveVideo();
-});
+export const changeQuery = (): void => emit('update:query', getVideoName());
+
+onUnmounted(() => leaveVideo());
 </script>
 
 <style scoped>
@@ -144,24 +145,29 @@ onUnmounted(() => {
   flex-direction: column;
   justify-content: space-evenly;
 }
+
 .upload-drag-icon {
   color: #5bc0de;
   font-size: 24px;
   margin: 0;
 }
+
 .upload-text {
   margin: 0 0 4px;
   color: rgba(0, 0, 0, 0.85);
   font-size: 16px;
 }
+
 .upload-hint {
   color: rgba(0, 0, 0, 0.45);
   font-size: 14px;
   margin: 0;
 }
+
 .dragging-over {
   background-color: #9ae6b4;
 }
+
 .video-name-string {
   z-index: 2;
   position: relative;
@@ -169,6 +175,7 @@ onUnmounted(() => {
   text-decoration: underline;
   cursor: pointer;
 }
+
 #file-error-notification {
   position: absolute;
   z-index: 3;

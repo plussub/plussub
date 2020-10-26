@@ -59,16 +59,13 @@ import { selectOpenSubtitle, triggerDownload } from '@/search/state';
 import { useDraggableArea } from '@/composables';
 import { setState, setSrc } from '@/app/state';
 import { OpensubtitlesState } from '@/search/state/types';
+import { toHome, toSearch } from '@/navigation/state';
 
 declare const props: {
   searchQuery: string;
   contentTransitionName: string; // default : ''
   tmdb_id: string;
   media_type: string;
-};
-
-export default {
-  emits: ['navigate']
 };
 
 export const draggableAreaRef = ref(null);
@@ -79,14 +76,16 @@ export const select = (openSubtitle) => {
   setSrc({ src: 'SEARCH' });
   selectOpenSubtitle(openSubtitle);
   triggerDownload();
-  emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
+  toHome({
+    contentTransitionName: 'content-navigate-select-to-home'
+  });
 };
 
 export const backFn = (): void => {
-  emit('navigate', {
-    name: 'SEARCH',
-    params: { query: props.searchQuery, contentTransitionName: 'content-navigate-shallow' }
-  });
+  toSearch({
+    contentTransitionName: 'content-navigate-shallow',
+    query: props.searchQuery
+  })
 };
 
 export const entries = ref<OpensubtitlesState[]>([]);

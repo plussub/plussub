@@ -10,7 +10,7 @@ export const useWindowMessage = (useWindowMessagePayload: UseWindowMessagePayloa
       return;
     }
 
-    if (data.plusSubAction === 'REMOVE_MESSAGE_EVENT_LISTENER') {
+    if (data.plusSubAction === 'CLOSE') {
       window.removeEventListener('message', handleMessage);
     }
 

@@ -4,7 +4,7 @@
       <div ref="draggableAreaRef" class="home-toolbar--container--content">
         <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain" />
         <div style="grid-area: buttons; display: flex; justify-content: flex-end">
-          <a v-if="appState.state !== 'NONE'" class="knopf flat pill buttonOnPrimary" @click="$emit('navigate', { name: 'TRANSCRIPT', params: { contentTransitionName: 'content-navigate-deeper' } })">
+          <a v-if="appState.state !== 'NONE'" class="knopf flat pill buttonOnPrimary" @click="toTranscript">
             <!-- This icon comes from material design icons which is under Apache license -->
             <img :src="subtitleIcon" style="filter: invert(1)" />
           </a>
@@ -13,7 +13,6 @@
       </div>
     </template>
     <template #content>
-      <!--  -->
       <div :class="{ 'home-content--container': appState.state !== 'NONE' }">
         <ResultFromSearch
           v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
@@ -37,21 +36,18 @@
             <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
           </template>
         </ResultFromFile>
-        <!-- <NoSub v-else style="grid-row: 1/2; grid-column: 1/4"></NoSub> -->
-        <!-- </transition> -->
-        <PageVideos v-show="appState.state === 'NONE'" style="grid-area: videos" :subtitle="subtitleState.withOffsetParsed" @navigate="(event) => $emit('navigate', event)" />
+        <PageVideos v-show="appState.state === 'NONE'" style="grid-area: videos" @selected-src="selectedSrc" />
       </div>
     </template>
   </PageLayout>
 </template>
 
-
 <script setup="props, {emit}" lang="ts">
 import { ref } from 'vue';
 import { useDraggableArea } from '@/composables';
 import { reset } from '@/app/state';
-import { srcToVideo } from '@/video/state';
-import { getVideoName } from '@/util/name';
+import { setCurrentSelectedSrc, toSearch } from '@/navigation/state';
+
 export { close } from '@/util/close';
 
 declare const props: {
@@ -63,30 +59,22 @@ export { default as subtitleIcon } from '@/res/subtitles-24px.svg';
 export { default as PageLayout } from '@/components/PageLayout';
 export { default as ResultFromSearch } from './components/ResultFromSearch.vue';
 export { default as ResultFromFile } from './components/ResultFromFile.vue';
-export { default as NoSub } from './components/NoSub';
 export { default as PageVideos } from './components/PageVideos';
 export { default as Settings } from './components/Settings.vue';
-export { setOffsetTime } from '@/subtitle/state';
-
-export const fileState = window.plusSub_file;
-export const appState = window.plusSub_app;
-export const subtitleState = window.plusSub_subtitle;
-export const subtitleSearchState = window.plusSub_subtitleSearch;
-
-export default {
-  emits: ['navigate']
-};
+export { subtitleState, setOffsetTime } from '@/subtitle/state';
+export { toTranscript } from '@/navigation/state';
+export { appState } from '@/app/state';
+export { subtitleSearchState } from '@/search/state';
+export { fileState } from '@/file/state';
 
 export const remove = (): void => {
   reset();
-  if (Object.values(srcToVideo.value).length === 1) {
-    emit('navigate', { name: 'SEARCH', params: { videoName: getVideoName(), videoNum: 1, contentTransitionName: 'content-navigate-deeper' } });
-    Object.values(srcToVideo.value)[0].hasSubtitle = true;
-  } else {
-    // The content of home won't change when close and reopen the popup windows and then click "remove subtitle"
-    // use this as a pathetic hack
-    emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-deeper' } });
-  }
+  setCurrentSelectedSrc(null);
+};
+
+export const selectedSrc = (src: string): void => {
+  setCurrentSelectedSrc(src);
+  toSearch();
 };
 
 export const draggableAreaRef = ref(null);

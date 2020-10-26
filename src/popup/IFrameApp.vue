@@ -1,8 +1,11 @@
 <template></template>
 
 <script setup="props" lang="ts">
+import { init as initVideoState, srcToVideo } from '@/iframe/video/state';
+import { close } from '@/iframe/util/close';
 import {
   AddSubtitle,
+  Close,
   GetBoundingClientRect,
   postWindowMessage,
   RemoveSubtitle,
@@ -10,59 +13,90 @@ import {
   StartTranscript,
   StopTranscript,
   useWindowMessage,
-  VideoCurrentTime,
-  VideoInIFrame,
-  VideoBoundingClientRect
+  VideoBoundingClientRect,
+  VideoCurrentTime
 } from '@/composables';
-import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/action/vtt/host';
+import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/actions/vtt/host';
 
-declare const props: {
-  frameSrc: string;
-  videoEl: HTMLVideoElement;
-  // test: string;
-};
+initVideoState();
 
+
+// todo refactor
+let sendTimeEl;
 const sendTime = () => {
   postWindowMessage({
     window: window.top,
     origin: '*',
     payload: {
       plusSubAction: VideoCurrentTime,
-      currentTime: props.videoEl.currentTime
+      currentTime: sendTimeEl.currentTime
     }
   });
 };
+//
 
 useWindowMessage({
-  [AddSubtitle]: (e) =>
+  [Close]: () => close(),
+  [AddSubtitle]: (e) => {
+    const video = srcToVideo.value[e.data.src];
+    if (!video || !video.el) {
+      return;
+    }
+    const el = video.el as HTMLVideoElement;
     addVttToHostVideo({
-      video: { el: props.videoEl },
+      video: { el },
       subtitle: e.data.subtitle
-    }),
-  [RemoveSubtitle]: () => removeVttFromHostVideo({ video: { el: props.videoEl } }),
-  [StartTranscript]: () => props.videoEl.addEventListener('timeupdate', sendTime),
-  [StopTranscript]: () => props.videoEl.removeEventListener('timeupdate', sendTime),
-  [SetVideoTime]: (e) => (props.videoEl.currentTime = e.data.time),
-  [GetBoundingClientRect]: () => {
+    });
+  },
+  [RemoveSubtitle]: (e) => {
+    const video = srcToVideo.value[e.data.src];
+    if (!video || !video.el) {
+      return;
+    }
+    const el = video.el as HTMLVideoElement;
+    removeVttFromHostVideo({ video: { el } });
+  },
+  [StartTranscript]: (e) => {
+    const video = srcToVideo.value[e.data.src];
+    if (!video || !video.el) {
+      return;
+    }
+    const el = video.el as HTMLVideoElement;
+    sendTimeEl = el;
+    el.addEventListener('timeupdate', sendTime);
+  },
+  [StopTranscript]: (e) => {
+    const video = srcToVideo.value[e.data.src];
+    if (!video || !video.el) {
+      return;
+    }
+    const el = video.el as HTMLVideoElement;
+    sendTimeEl = null;
+    el.removeEventListener('timeupdate', sendTime);
+  },
+  [SetVideoTime]: (e) => {
+    const video = srcToVideo.value[e.data.src];
+    if (!video || !video.el) {
+      return;
+    }
+    const el = video.el as HTMLVideoElement;
+    return (el.currentTime = e.data.time);
+  },
+  [GetBoundingClientRect]: (e) => {
+    const video = srcToVideo.value[e.data.src];
+    if (!video || !video.el) {
+      return;
+    }
+    const el = video.el as HTMLVideoElement;
+    console.warn(el.getBoundingClientRect());
     postWindowMessage({
       window: window.top,
       origin: '*',
       payload: {
         plusSubAction: VideoBoundingClientRect,
-        boundingClientRect: props.videoEl.getBoundingClientRect()
+        boundingClientRect: el.getBoundingClientRect()
       }
     });
-  }
-});
-
-postWindowMessage({
-  window: window.top,
-  origin: '*',
-  payload: {
-    plusSubAction: VideoInIFrame,
-    frameSrc: props.frameSrc,
-    src: props.videoEl.src ?? props.videoEl.currentSrc,
-    hasSubtitle: props.videoEl.classList.contains('plussub')
   }
 });
 </script>

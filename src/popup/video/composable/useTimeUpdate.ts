@@ -30,7 +30,8 @@ export const useTimeUpdate = ({ video, fn }: Payload): void => {
         window: iFrameSource.window,
         origin: iFrameSource.origin,
         payload: {
-          plusSubAction: StartTranscript
+          plusSubAction: StartTranscript,
+          src: video.src
         }
       });
     });
@@ -43,7 +44,8 @@ export const useTimeUpdate = ({ video, fn }: Payload): void => {
         window: iFrameSource.window,
         origin: iFrameSource.origin,
         payload: {
-          plusSubAction: StopTranscript
+          plusSubAction: StopTranscript,
+          src: video.src
         }
       });
     });

@@ -1,16 +1,16 @@
 import {
   useWindowMessage,
-  VideoInIFrame,
-  VideoInIFrameEvent,
+  VideosInIFrame,
+  VideosInIFrameEvent,
   UseWindowMessagePayload,
-  RemoveMessageEventListener
+  Close
 } from "@/composables/useWindowMessage";
 
 describe('window message test', () => {
   it('single callback', () => {
     const payload: UseWindowMessagePayload = {
-      [VideoInIFrame]: jest.fn(),
-      [RemoveMessageEventListener]: jest.fn()
+      [VideosInIFrame]: jest.fn(),
+      [Close]: jest.fn()
     };
 
     const underTest = useWindowMessage(payload);
@@ -18,20 +18,24 @@ describe('window message test', () => {
     underTest({
       origin: 'origin',
       data: {
-        plusSubAction: VideoInIFrame,
-        src: 'test',
-        hasSubtitle: true
+        plusSubAction: VideosInIFrame,
+        videos: [{
+          currentSrc: 'test',
+          hasSubtitle: true
+        }]
       }
-    } as MessageEvent<VideoInIFrameEvent>);
+    } as MessageEvent<VideosInIFrameEvent>);
 
-    expect(payload[VideoInIFrame]).toHaveBeenCalledWith({
+    expect(payload[VideosInIFrame]).toHaveBeenCalledWith({
       origin: 'origin',
       data: {
-        plusSubAction: 'VIDEO_IN_I_FRAME',
-        src: 'test',
-        hasSubtitle: true
+        plusSubAction: 'VIDEOS_IN_I_FRAME',
+        videos: [{
+          currentSrc: 'test',
+          hasSubtitle: true
+        }]
       }
     });
-    expect(payload.REMOVE_MESSAGE_EVENT_LISTENER).not.toHaveBeenCalled();
+    expect(payload.CLOSE).not.toHaveBeenCalled();
   });
 });
