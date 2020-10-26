@@ -1,11 +1,14 @@
-import { watch } from 'vue';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { computed, watch } from 'vue';
 import { videoCount, videoList } from '@/video/state';
 import { navigationState, setCurrentSelectedSrc, toHome, toSearch } from '@/navigation/state';
 import { appState } from '@/app/state';
 
+const appStateState = computed(() => appState.value.state);
+
 export const setupAutoNavigation = (): void => {
   watch(
-    [videoCount, navigationState, appState],
+    [videoCount, appStateState],
     ([videoCount], [prevVideoCount]) => {
       // navigate if only 1 video exists
       if (videoCount === 1 && navigationState.value.name === 'HOME' && appState.value.state === 'NONE') {
@@ -20,6 +23,7 @@ export const setupAutoNavigation = (): void => {
         toHome();
         return;
       }
+
       if (videoCount === 0 && navigationState.value.name !== 'HOME') {
         toHome();
         return;
