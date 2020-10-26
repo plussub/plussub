@@ -1,5 +1,6 @@
 import { Video, VideoSrc } from '@/iframe/video/state/types';
 import { srcToVideo } from '@/iframe/video/state/state';
+import { removeUrlHash } from '@/util/url';
 import { postWindowMessage, RemoveVideoInIFrame, useVideoElementMutationObserver, VideosInIFrame } from '@/composables';
 import { watch } from 'vue';
 
@@ -10,9 +11,9 @@ const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
     [...document.querySelectorAll('video')]
       .filter((el) => isValidVideo(el))
       .map((el) => [
-        el.currentSrc,
+        removeUrlHash(el.currentSrc),
         {
-          src: el.currentSrc,
+          src: removeUrlHash(el.currentSrc),
           hasSubtitle: el.classList.contains('plussub'),
           el
         }
@@ -24,7 +25,8 @@ const resetSrcToVideo = () => {
 };
 
 const getIframeSrc = () => {
-  return window.frameElement ? window.frameElement.getAttribute('src') : window.location.href;
+  const windowSelected = window.parent === window.top ? window : window.parent;
+  return windowSelected.frameElement ? windowSelected.frameElement.getAttribute('src') : windowSelected.location.href;
 };
 
 const notEmpty = <TValue>(value: TValue | null | undefined): value is TValue => value !== null && value !== undefined;
@@ -52,7 +54,7 @@ export const init = (): void => {
           .map(({ el }) => el)
           .filter(notEmpty)
           .map((el) => ({
-            currentSrc: el.currentSrc,
+            currentSrc: removeUrlHash(el.currentSrc),
             hasSubtitle: el.classList.contains('plussub')
           }));
 
@@ -78,7 +80,7 @@ export const init = (): void => {
               payload: {
                 plusSubAction: RemoveVideoInIFrame,
                 frameSrc: getIframeSrc() ?? '',
-                currentSrc: el.currentSrc
+                currentSrc: removeUrlHash(el.currentSrc)
               }
             })
           );

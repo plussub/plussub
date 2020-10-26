@@ -2,7 +2,7 @@
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn style="height: 100%"/>
+        <ToolbarBackBtn style="height: 100%" />
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Transcript</div>
       </div>
     </template>
@@ -29,7 +29,7 @@ export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
 
 declare const props: {
-  contentTransitionName: string; // default : ''
+  contentTransitionName?: string; // default : ''
 };
 
 export const draggableAreaRef = ref(null);
@@ -80,7 +80,7 @@ watch(currentTime, (currentTime) => {
 });
 
 export const subtitleTexts = computed(() =>
-    subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
+  subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
     formattedFrom: formatBiggestUnitMinuteSmallestUnitSeconds({ time: from }),
     text,
     time: from / 1000

@@ -1,5 +1,6 @@
 import { srcToIFrameSource, Video } from '@/video/state';
-import { postWindowMessage, GetBoundingClientRect } from '@/composables/useWindowMessage';
+import { appState } from '@/app/state';
+import { VideoBoundingClientRect, postWindowMessage, GetBoundingClientRect } from '@/composables/useWindowMessage';
 
 const isElementNotInViewport = (el) => {
   const rect = el.getBoundingClientRect();
@@ -35,8 +36,9 @@ export const enterVideo = (video: Video): void => {
     // Not use useWindowMessage as I want to remove event listener immediately
     // todo: implement once
     const handleMessageInPageVideos = (e) => {
+      if (appState.value.state !== 'NONE') return;
       const { plusSubAction, boundingClientRect } = e.data;
-      if (plusSubAction === 'Video_Bounding_Client_Rect') {
+      if (plusSubAction === VideoBoundingClientRect) {
         window.removeEventListener('message', handleMessageInPageVideos);
         const iframeBoundingClientRect = el.getBoundingClientRect();
         const iFrameTop = iframeBoundingClientRect.top;
