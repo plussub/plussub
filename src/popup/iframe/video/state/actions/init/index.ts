@@ -13,7 +13,6 @@ const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
         el.currentSrc,
         {
           src: el.currentSrc,
-          in: 'HOST',
           hasSubtitle: el.classList.contains('plussub'),
           el
         }
@@ -32,8 +31,6 @@ const notEmpty = <TValue>(value: TValue | null | undefined): value is TValue => 
 
 export const init = (): void => {
   resetSrcToVideo();
-  console.warn('init');
-  console.warn(findVideosInCurrentTab());
   // handle iframe videos
   // handles also if the source or the src changes
   [...document.querySelectorAll('video')].forEach((el) => el.addEventListener('loadedmetadata', resetSrcToVideo));
