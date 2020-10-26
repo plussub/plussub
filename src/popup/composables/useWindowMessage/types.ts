@@ -54,6 +54,7 @@ export type CloseUseWindowMessagePayload = {
 };
 
 export type AddSubtitleEvent = GenericEvent<typeof AddSubtitle> & {
+  src: string;
   subtitle: SubtitleEntry[];
 };
 export type AddSubtitleEventUseWindowMessagePayload = {

@@ -19,6 +19,7 @@ export const addVttToIFrameVideo = ({video: { src }, subtitle }: AddVttToIFrameV
     origin: iFrameSource.origin,
     payload: {
       plusSubAction: AddSubtitle,
+      src,
       // get rid of all proxies ... dont knnow a better way yet -_(*.*)_-
       subtitle: JSON.parse(JSON.stringify(subtitle))
     }

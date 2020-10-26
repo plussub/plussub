@@ -1,9 +1,10 @@
 <template></template>
 
 <script setup="props" lang="ts">
-import { init as initVideoState } from '@/iframe/video/state';
+import { init as initVideoState, srcToVideo } from '@/iframe/video/state';
 import { close } from '@/iframe/util/close';
-import {Close, useWindowMessage} from "@/composables";
+import { AddSubtitle, Close, useWindowMessage } from '@/composables';
+import { addVttToHostVideo } from '@/video/state/actions/vtt/host';
 
 initVideoState();
 
@@ -47,12 +48,18 @@ initVideoState();
 // };
 //
 useWindowMessage({
-  [Close]: () => close()
-  // [AddSubtitle]: (e) =>
-  //   addVttToHostVideo({
-  //     video: { el: props.videoEl },
-  //     subtitle: e.data.subtitle
-  //   }),
+  [Close]: () => close(),
+  [AddSubtitle]: (e) => {
+    const video = srcToVideo.value[e.data.src];
+    if(!video || !video.el){
+      return;
+    }
+    const el = video.el as HTMLVideoElement;
+    addVttToHostVideo({
+      video: { el },
+      subtitle: e.data.subtitle
+    });
+  }
   // [RemoveSubtitle]: () => removeVttFromHostVideo({ video: { el: props.videoEl } }),
   // [StartTranscript]: () => props.videoEl.addEventListener('timeupdate', sendTime),
   // [StopTranscript]: () => props.videoEl.removeEventListener('timeupdate', sendTime),
