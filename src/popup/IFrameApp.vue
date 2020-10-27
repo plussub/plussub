@@ -20,7 +20,6 @@ import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/actions
 
 initVideoState();
 
-
 // todo refactor
 let sendTimeEl;
 const sendTime = () => {
@@ -88,7 +87,7 @@ useWindowMessage({
       return;
     }
     const el = video.el as HTMLVideoElement;
-    console.warn(el.getBoundingClientRect());
+    // console.warn(el.getBoundingClientRect());
     postWindowMessage({
       window: window.top,
       origin: '*',

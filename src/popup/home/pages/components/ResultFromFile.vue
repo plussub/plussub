@@ -14,7 +14,7 @@
     </div>
     <div style="grid-area: details; width: 100%; font-size: 1em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; font-weight: 300; overflow-x: hidden;">
       <div style="grid-column: 1 / 2">Filename</div>
-      <div style="grid-column: 2 / 3">{{ fileState.filename }}</div>
+      <div style="grid-column: 2 / 3; word-break: break-word">{{ fileState.filename }}</div>
     </div>
     <div style="grid-area: settings">
       <slot name="settings" />

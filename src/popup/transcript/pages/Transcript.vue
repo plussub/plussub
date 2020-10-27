@@ -2,7 +2,7 @@
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn style="height: 100%"/>
+        <ToolbarBackBtn style="height: 100%" />
         <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Transcript</div>
       </div>
     </template>
@@ -29,7 +29,7 @@ export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
 
 declare const props: {
-  contentTransitionName: string; // default : ''
+  contentTransitionName?: string; // default : ''
 };
 
 export const draggableAreaRef = ref(null);
@@ -53,9 +53,9 @@ const binarySearch = (target, arr) => {
   let end = arr.length - 1;
   while (start <= end) {
     const mid = parseInt((start + (end - start) / 2).toString(), 10);
-    if (target >= arr[mid].from && target < arr[mid].to) {
+    if (target >= arr[mid].from && target <= arr[mid].to) {
       return mid;
-    } else if (target >= arr[mid].to) {
+    } else if (target > arr[mid].to) {
       start = mid + 1;
     } else {
       end = mid - 1;
@@ -80,7 +80,7 @@ watch(currentTime, (currentTime) => {
 });
 
 export const subtitleTexts = computed(() =>
-    subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
+  subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
     formattedFrom: formatBiggestUnitMinuteSmallestUnitSeconds({ time: from }),
     text,
     time: from / 1000
@@ -91,9 +91,10 @@ export const setCurrentTime = ({ time }: { time: number }): void => {
   if (!video.value) {
     return;
   }
+  // +0.001 because the "from" is often the same as previous "to", use this to advoid showing previous subtitle text
   setCurrentTimeState({
     video: video.value,
-    time
+    time: time + 0.001
   });
 };
 </script>
@@ -131,6 +132,7 @@ export const setCurrentTime = ({ time }: { time: number }): void => {
 
 .transcript-text {
   text-align: left;
+  white-space: pre-line;
 }
 
 .transcript-text:hover {

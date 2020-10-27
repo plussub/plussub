@@ -19,5 +19,5 @@ export const triggerDownload = async (): Promise<void> => {
     .then((zipFile) => zipFile?.async('string') ?? '');
 
   setRaw({ raw });
-  parse();
+  parse(fileName);
 };

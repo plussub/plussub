@@ -1,6 +1,7 @@
 <template>
   <div
     id="filepicker-content--container"
+    ref="containerRef"
     @mouseenter="enterVideo(srcToGlobalVideo[currentSelectedVideoSrc])"
     @mouseleave="leaveVideo"
     @dragenter.prevent="dragenter"
@@ -14,7 +15,7 @@
       ref="inputRef"
       type="file"
       title="click or drop file here"
-      accept=".vtt,.srt,.ass"
+      accept=".vtt,.srt,.ass,.ssa"
       style="z-index: 1; opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer"
       @change="fileSelected"
     />
@@ -26,7 +27,7 @@
       <!--      font-size: 0.85em; line-height: 1.8; font-weight: 300 -->
       <p class="upload-text">Click or drop file to this area to upload</p>
       <p class="upload-hint">
-        Support for a single file upload. Only .srt or .vtt file is acceptable.(Video
+        Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable.(Video
         <span :class="{ 'video-name-string': getVideoName() !== '1' }" @click="changeQuery">{{ getVideoName() }}</span>
         is {{ videoCount === 1 ? 'auto' : '' }} selected)
       </p>
@@ -47,6 +48,7 @@ export { currentSelectedVideoSrc } from '@/navigation/state/state';
 export { srcToGlobalVideo } from '@/video/state/state';
 
 export { default as xCircleIcon } from '@/res/x-circle.svg';
+import chardet from 'chardet';
 export { videosWithSubtitle, videoCount } from '@/video/state';
 export { enterVideo } from '@/util/hover';
 export { getVideoName };
@@ -62,50 +64,55 @@ export default {
 
 export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
-const readFile = (file: File): void => {
-  const reader = new FileReader();
-  reader.onload = async () => {
-    setFilename({ filename: file.name });
-    setState({ state: 'SELECTED' });
-    setSrc({ src: 'FILE' });
-    // as string because we use readAsText...
-    setRaw({ raw: reader.result as string });
-    parse();
-
-    toHome({
-      contentTransitionName: 'content-navigate-select-to-home'
-    });
-  };
-  reader.readAsText(file);
-};
+export const containerRef = ref();
 export const fileErrorMsg = ref('');
-export const dragenter = (event: DragEvent): void => {
-  (event.currentTarget as HTMLElement).classList.add('dragging-over');
-};
-export const dragleave = (event: DragEvent): void => {
-  (event.currentTarget as HTMLElement).classList.remove('dragging-over');
-};
-const showFileErrorMsg = (msg: string, dragEvent: DragEvent | null = null) => {
+export const dragenter = (): void => containerRef.value.classList.add('dragging-over');
+export const dragleave = (): void => containerRef.value.classList.remove('dragging-over');
+const showFileErrorMsg = (msg: string) => {
   fileErrorMsg.value = msg;
-  if (dragEvent) dragleave(dragEvent);
   setTimeout(() => {
     fileErrorMsg.value = '';
   }, 2000);
+  dragleave();
+};
+
+const readFile = (file: File): void => {
+  const arrayBufferReader = new FileReader();
+  arrayBufferReader.readAsArrayBuffer(file);
+  arrayBufferReader.onload = async () => {
+    const encoding = chardet.detect(new Uint8Array(arrayBufferReader.result as ArrayBuffer));
+    const textReader = new FileReader();
+    textReader.readAsText(file, encoding ?? 'UTF-8');
+    textReader.onload = async () => {
+      setFilename({ filename: file.name });
+      setState({ state: 'SELECTED' });
+      setSrc({ src: 'FILE' });
+      // as string because we use readAsText...
+      setRaw({ raw: textReader.result as string });
+      parse(file.name);
+      // emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
+      toHome({
+        contentTransitionName: 'content-navigate-select-to-home'
+      });
+    };
+    textReader.onerror = () => showFileErrorMsg('Some error happened when parsing the subtitle');
+  };
+  arrayBufferReader.onerror = () => showFileErrorMsg('Some error happened when parsing the subtitle');
 };
 export const drop = (event: DragEvent): void => {
   let droppedFiles = event.dataTransfer?.files;
   if (!droppedFiles) {
-    showFileErrorMsg('Drop to upload file error', event);
+    showFileErrorMsg('Drop to upload file error');
     return;
   }
   if (droppedFiles.length > 1) {
-    showFileErrorMsg('Only a single file is supported', event);
+    showFileErrorMsg('Only a single file is supported');
     return;
   }
   const file = droppedFiles[0];
   const filename = file.name;
-  if (!filename.endsWith('.srt') && !filename.endsWith('.vtt')) {
-    showFileErrorMsg('Only .srt and .vtt file is supported', event);
+  if (!filename.match(/\.(srt|vtt|ass|ssa)$/)) {
+    showFileErrorMsg('Only .srt, .ass, .ssa and .vtt file is acceptable');
     return;
   }
   readFile(file);

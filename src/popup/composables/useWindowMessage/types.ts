@@ -8,8 +8,8 @@ export const VideoCurrentTime = 'VIDEO_CURRENT_TIME' as const;
 export const SetVideoTime = 'SET_VIDEO_TIME' as const;
 export const AddSubtitle = 'ADD_SUBTITLE' as const;
 export const RemoveSubtitle = 'REMOVE_SUBTITLE' as const;
-export const GetBoundingClientRect = 'Get_Bounding_Client_Rect' as const;
-export const VideoBoundingClientRect = 'Video_Bounding_Client_Rect' as const;
+export const GetBoundingClientRect = 'GET_BOUNDING_CLIENT_RECT' as const;
+export const VideoBoundingClientRect = 'VIDEO_BOUNDING_CLIENT_RECT' as const;
 export const RemoveVideoInIFrame = 'REMOVE_VIDEO_IN_I_FRAME' as const;
 
 export type Actions =

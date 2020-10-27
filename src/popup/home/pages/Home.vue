@@ -4,7 +4,7 @@
       <div ref="draggableAreaRef" class="home-toolbar--container--content">
         <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain" />
         <div style="grid-area: buttons; display: flex; justify-content: flex-end">
-          <a v-if="appState.state !== 'NONE'" class="knopf flat pill buttonOnPrimary" @click="toTranscript">
+          <a v-if="appState.state !== 'NONE'" class="knopf flat pill buttonOnPrimary" @click="toTranscript()">
             <!-- This icon comes from material design icons which is under Apache license -->
             <img :src="subtitleIcon" style="filter: invert(1)" />
           </a>

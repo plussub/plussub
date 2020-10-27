@@ -5,6 +5,7 @@ import { watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
 import { reset } from '@/app/state';
 import { currentSelectedVideoSrc } from '@/navigation/state';
+import { removeUrlHash } from '@/util/url';
 
 const isValidVideo = (el: HTMLVideoElement): boolean => el.offsetWidth !== 0 && el.offsetHeight !== 0 && el.currentSrc !== '';
 
@@ -13,9 +14,9 @@ const findVideosInCurrentTab = (): Record<VideoSrc, Video> =>
     [...document.querySelectorAll('video')]
       .filter((el) => isValidVideo(el))
       .map((el) => [
-        el.currentSrc,
+        removeUrlHash(el.currentSrc),
         {
-          src: el.currentSrc,
+          src: removeUrlHash(el.currentSrc),
           in: 'HOST',
           hasSubtitle: el.classList.contains('plussub'),
           el
@@ -37,22 +38,22 @@ export const init = (): void => {
   useVideoElementMutationObserver(({ added, removed }) => {
     resetSrcToHostVideo();
     added.forEach((el) => el.addEventListener('loadedmetadata', resetSrcToHostVideo));
-    if (removed.some((el) => srcToHostVideo.value[el.currentSrc]?.hasSubtitle)) {
+    if (removed.some((el) => srcToHostVideo.value[removeUrlHash(el.currentSrc)]?.hasSubtitle)) {
       reset();
     }
   });
 
   useWindowMessage({
     [VideosInIFrame]: ({ origin, source, data: { videos, frameSrc } }) => {
-      videos.forEach((e) => (srcToIFrameSource[e.currentSrc] = { window: source as Window, frameSrc, origin }));
+      videos.forEach((e) => (srcToIFrameSource[removeUrlHash(e.currentSrc)] = { window: source as Window, frameSrc, origin }));
       Object.assign(
         srcToIFrameVideo.value,
         Object.fromEntries(
           videos.map((e) => [
-            e.currentSrc,
+            removeUrlHash(e.currentSrc),
             {
               hasSubtitle: e.hasSubtitle,
-              src: e.currentSrc,
+              src: removeUrlHash(e.currentSrc),
               in: 'I_FRAME'
             }
           ])
@@ -62,6 +63,7 @@ export const init = (): void => {
   });
   useWindowMessage({
     [RemoveVideoInIFrame]: ({ data: { currentSrc, frameSrc } }) => {
+      currentSrc = removeUrlHash(currentSrc);
       if (srcToIFrameVideo.value[currentSrc]?.hasSubtitle) {
         reset();
       }

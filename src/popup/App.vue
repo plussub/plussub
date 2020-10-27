@@ -15,13 +15,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, watchEffect } from 'vue';
-import { init as initAppState, appState } from '@/app/state';
-import { init as initVideoState, videoCount, videoList } from '@/video/state';
+import { init as initAppState } from '@/app/state';
+import { init as initVideoState } from '@/video/state';
 import { init as initFileState } from '@/file/state';
 import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
-import { init as initNavigationState, setupAutoNavigation, navigationState, toSearch, setCurrentSelectedSrc } from '@/navigation/state';
+import { init as initNavigationState, setupAutoNavigation, navigationState } from '@/navigation/state';
 
 export { default as KnopfCss } from '@/KnopfCss.vue';
 export { default as Home } from '@/home/pages/Home.vue';
@@ -29,8 +28,6 @@ export { default as Search } from '@/search/pages/search/Search.vue';
 export { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
 export { default as FilePick } from '@/file/pages/FilePick.vue';
 export { default as Transcript } from '@/transcript/pages/Transcript.vue';
-
-export const state = reactive({ selected: 'HOME', selectedParams: {} });
 
 initAppState();
 initNavigationState();
