@@ -8,13 +8,19 @@ const appStateState = computed(() => appState.value.state);
 
 export const setupAutoNavigation = (): void => {
   watch(
-    [videoCount, appStateState],
-    ([videoCount], [prevVideoCount]) => {
+    [videoCount, appStateState, videoList],
+    ([videoCount, _, videoList], [prevVideoCount,prev_, prevVideoList]) => {
+
       // navigate if only 1 video exists
       if (videoCount === 1 && navigationState.value.name === 'HOME' && appState.value.state === 'NONE') {
-        setCurrentSelectedSrc(videoList.value[0].src);
+        setCurrentSelectedSrc(videoList[0].src);
         toSearch();
         return;
+      }
+
+      // hack: set current src if video src change like vimeo next
+      if(videoCount === 1 && videoList[0].src !== (prevVideoList ?? [{src: null}])[0]?.src){
+        setCurrentSelectedSrc(videoList[0].src);
       }
 
       // navigate to selection if additional videos appear
