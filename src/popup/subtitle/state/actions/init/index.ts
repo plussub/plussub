@@ -7,6 +7,7 @@ export const init = (): void => {
     : ref<UnwrapRef<SubtitleState>>({
         raw: null,
         parsed: [],
+        format: null,
         withOffsetParsed: [],
         offsetTime: 0
       });

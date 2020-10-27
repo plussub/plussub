@@ -5,6 +5,7 @@ export const setOffsetTime = ({ offsetTime }: Pick<UnwrapRef<SubtitleState>, 'of
   window.plusSub_subtitle.value = {
     raw: window.plusSub_subtitle.value.raw,
     parsed: window.plusSub_subtitle.value.parsed,
+    format:  window.plusSub_subtitle.value.format,
     offsetTime,
     withOffsetParsed: window.plusSub_subtitle.value.parsed.map((e) => ({
       ...e,

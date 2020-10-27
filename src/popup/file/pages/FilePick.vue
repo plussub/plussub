@@ -36,23 +36,24 @@
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import { ref, onUnmounted } from 'vue';
-import { setFilename } from '../state';
-import { setState, setSrc } from '@/app/state';
-import { setRaw, parse } from '@/subtitle/state';
-import { leaveVideo } from '@/util/hover';
-import { getVideoName } from '@/util/name';
-import { toHome } from '../../navigation/state/actions';
-
-export { currentSelectedVideoSrc } from '@/navigation/state/state';
-export { srcToGlobalVideo } from '@/video/state/state';
-
-export { default as xCircleIcon } from '@/res/x-circle.svg';
+import {onUnmounted, ref} from 'vue';
+import {setFilename} from '../state';
+import {setSrc, setState} from '@/app/state';
+import {parse, setRaw} from '@/subtitle/state';
+import {leaveVideo} from '@/util/hover';
+import {getVideoName} from '@/util/name';
+import {toHome} from '../../navigation/state/actions';
 import chardet from 'chardet';
-export { videosWithSubtitle, videoCount } from '@/video/state';
-export { enterVideo } from '@/util/hover';
-export { getVideoName };
-export { leaveVideo };
+import {getFormatFromFilename} from "../../subtitle/util/getFormatFromFilename";
+
+export {currentSelectedVideoSrc} from '@/navigation/state/state';
+export {srcToGlobalVideo} from '@/video/state/state';
+
+export {default as xCircleIcon} from '@/res/x-circle.svg';
+export {videosWithSubtitle, videoCount} from '@/video/state';
+export {enterVideo} from '@/util/hover';
+export {getVideoName};
+export {leaveVideo};
 
 declare const props: {
   query: string;
@@ -84,13 +85,13 @@ const readFile = (file: File): void => {
     const textReader = new FileReader();
     textReader.readAsText(file, encoding ?? 'UTF-8');
     textReader.onload = async () => {
-      setFilename({ filename: file.name });
-      setState({ state: 'SELECTED' });
-      setSrc({ src: 'FILE' });
+      setFilename({filename: file.name});
+      setState({state: 'SELECTED'});
+      setSrc({src: 'FILE'});
       // as string because we use readAsText...
-      setRaw({ raw: textReader.result as string });
-      parse(file.name);
-      // emit('navigate', { name: 'HOME', params: { contentTransitionName: 'content-navigate-select-to-home' } });
+
+      setRaw({raw: textReader.result as string, format: getFormatFromFilename(file.name)});
+      parse();
       toHome({
         contentTransitionName: 'content-navigate-select-to-home'
       });
