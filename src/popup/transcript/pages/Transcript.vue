@@ -1,10 +1,7 @@
 <template>
-  <PageLayout :content-transition-name="contentTransitionName">
+  <PageLayout :content-transition-name="contentTransitionName" has-back>
     <template #toolbar>
-      <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn style="height: 100%" />
-        <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Transcript</div>
-      </div>
+      <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Transcript</div>
     </template>
     <template #content>
       <div id="transcript-content--container" ref="transcriptContentContainer">
@@ -18,22 +15,17 @@
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import { useDraggableArea } from '@/composables';
 import { ref, computed, watch } from 'vue';
 import { formatBiggestUnitMinuteSmallestUnitSeconds } from '../../util/time';
 import { videoList, setCurrentTime as setCurrentTimeState } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
 import { subtitleState } from '@/subtitle/state';
 
-export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
 export { default as PageLayout } from '@/components/PageLayout';
 
 declare const props: {
   contentTransitionName?: string; // default : ''
 };
-
-export const draggableAreaRef = ref(null);
-useDraggableArea({ draggableAreaRef });
 
 const currentTime = ref<number>(0);
 

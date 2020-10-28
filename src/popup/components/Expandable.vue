@@ -4,7 +4,10 @@
       <div style="flex-grow: 1">
         <slot name="title" />
       </div>
-      <a class="knopf flat pill sharp menu-dropdown-chevron"><i class="fa fa-chevron-down fa-lg" :class="{ show: show }"></i></a>
+      <a class="knopf flat pill sharp menu-dropdown-chevron">
+        <fa v-if="show" icon="chevron-down" />
+        <fa v-else icon="chevron-up"/>
+      </a>
     </div>
     <transition name="slide">
       <div class="expandable-content" :class="{ show: show }">
@@ -29,14 +32,17 @@ export const toggle = (): unknown => (show.value = !show.value);
 .fa.fa-chevron-down.fa-lg {
   transition: transform 0.3s ease-in-out;
 }
+
 .fa.fa-chevron-down.fa-lg.show {
   transform: rotate(-180deg);
 }
+
 .expandable-content {
   max-height: 0;
   transition: max-height 0.3s ease-in-out;
   overflow: hidden;
 }
+
 .expandable-content.show {
   max-height: 999px;
 }

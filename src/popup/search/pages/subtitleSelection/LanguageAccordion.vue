@@ -1,19 +1,21 @@
 <template>
   <div class="knopf-group" style="display: flex; position: relative">
-    <a class="knopf even active flat subtitle-dropdown-label sharp start" style="flex-grow: 1; margin-left: -7px" @click="showLanguageSelection = !showLanguageSelection"
-      >Subtitle language: {{ prettySelected }}</a
-    >
+    <a class="knopf even active flat subtitle-dropdown-label sharp start" style="flex-grow: 1;" @click="toggleShowLanguageSelection">
+      Subtitle language: {{ prettySelected }}
+    </a>
     <transition :name="showLanguageSelection ? 'menu-more' : 'menu-less'">
-      <span v-if="showLanguageSelection"
-        ><a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px" @click="showLanguageSelection = !showLanguageSelection"><i class="fa fa-chevron-up fa-lg"></i></a
+      <span v-if="showLanguageSelection">
+        <a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px" @click="toggleShowLanguageSelection"> <fa icon="chevron-up" /> </a
       ></span>
       <span v-else
-        ><a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px" @click="showLanguageSelection = !showLanguageSelection"><i class="fa fa-chevron-down fa-lg"></i></a
+        ><a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px" @click="toggleShowLanguageSelection"> <fa icon="chevron-down" /></a
       ></span>
     </transition>
     <transition name="slide-down">
-      <div v-show="showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 27px; margin-left: -40px">
-        <input ref="inputRef" v-model="query" style="grid-area: search-bar" placeholder="Search language" type="text" @keydown.stop @keypress.stop />
+      <div v-show="showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 42px; height: 250px; z-index: 100; width: calc(100% + 14px);">
+        <div style="width: 100%; display: flex; justify-content: center;">
+          <input ref="inputRef" v-model="query" style="width: calc(100% - 14px)" placeholder="Search language" type="text" @keydown.stop @keypress.stop />
+        </div>
         <div style="grid-area: content; overflow-y: auto">
           <a v-for="lang in languageList" :key="lang.iso639_2" class="knopf flat block" style="width: 100%" @click="select(lang)">{{ lang.iso639Name }} ({{ lang.iso639_2 }})</a>
         </div>
@@ -29,10 +31,11 @@ import { capitalizeFirst } from '@/util/string';
 
 declare const props: {
   selected: string;
+  showLanguageSelection: boolean
 };
 
 export default {
-  emits: ['update:selected']
+  emits: ['update:selected', 'update:showLanguageSelection']
 };
 
 export const query = ref('');
@@ -41,13 +44,17 @@ export const showLanguageSelectionInternal = ref(false);
 export const showLanguageSelection = computed<boolean>({
   get: () => showLanguageSelectionInternal.value,
   set: (val) => {
+    emit('update:showLanguageSelection2', val);
     showLanguageSelectionInternal.value = val;
     if (showLanguageSelectionInternal.value && inputRef.value) {
       inputRef.value.focus();
     }
   }
 });
-
+export const toggleShowLanguageSelection = ():void => {
+  showLanguageSelection.value = !showLanguageSelection.value;
+  emit('update:showLanguageSelection', showLanguageSelection.value);
+}
 export const prettySelected = computed(() => capitalizeFirst(props.selected));
 export const languageList = computed(() => {
   if (query.value === '') {
@@ -58,7 +65,7 @@ export const languageList = computed(() => {
 });
 
 export const select = ({ iso639_2 }): void => {
-  showLanguageSelection.value = false;
+  emit('update:showLanguageSelection', false);
   emit('update:selected', iso639_2);
 };
 </script>
@@ -67,8 +74,8 @@ export const select = ({ iso639_2 }): void => {
 /* plussub header */
 .search-toolbar--container--language--accordion {
   --search-bar-size: 25px;
-  --accordion-size: 250px;
-  width: 400px;
+  --accordion-size: 100%;
+  width: 100%;
   height: var(--accordion-size);
   max-height: 250px;
   background-color: var(--surface-color);

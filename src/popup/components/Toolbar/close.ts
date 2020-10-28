@@ -1,6 +1,7 @@
 import { useApp } from '@/inHost';
 import { postWindowMessage } from '@/composables';
 import { srcToIFrameSource } from '@/video/state';
+import {toHome} from "@/navigation/state";
 
 export const close = (): void => {
   Object.values(srcToIFrameSource).forEach((iFrameSource) => {
@@ -13,6 +14,7 @@ export const close = (): void => {
     });
   });
   const app = useApp();
+  toHome();
   const appDiv = document.getElementById('plussubShadow')?.shadowRoot?.getElementById('plussub');
   // unmount app otherwise watch will continue to work
   app.unmount(appDiv as Element);

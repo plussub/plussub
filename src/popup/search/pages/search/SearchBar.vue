@@ -1,8 +1,10 @@
 <template>
   <div class="knopf-group" style="display: grid; grid-template-areas: 'bar button'; grid-template-columns: 1fr auto; grid-template-rows: 30px">
-    <Spinner v-show="loading && internalQuery" style="grid-area: bar; justify-self: end; align-self: center; font-size: 12px; margin-right: 12px" />
     <input id="search" v-model="internalQuery" autofocus style="grid-area: bar" placeholder="Search movie or series" type="text" @keydown.stop @keypress.stop />
-    <a class="knopf flat pill sharp buttonOnPrimary" style="grid-area: button; width: 40px"><i class="fa fa-search fa-lg"></i></a>
+    <div style="grid-area: bar; justify-self: end; align-self: center; font-size: 12px; margin-right: 12px">
+      <Spinner v-if="loading && internalQuery"/>
+      <fa v-else icon="search" style="height: var(--icon-size-sm)"/>
+    </div>
   </div>
 </template>
 
@@ -31,7 +33,7 @@ export const internalQuery = computed({
 /* plussub header */
 .knopf-group.search-bar--container {
   display: grid;
-  grid-template-areas: 'bar button';
-  grid-template-columns: 1fr auto;
+  grid-template-areas: 'bar';
+  grid-template-columns: 1fr;
 }
 </style>

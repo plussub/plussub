@@ -1,7 +1,9 @@
 <template>
-  <div class="knopf-group" style="display: flex">
-    <input v-model="internalFilter" autofocus style="flex-grow: 1" placeholder="Filter subtitle result" type="text" @keydown.stop @keypress.stop />
-    <a class="knopf flat pill sharp buttonOnPrimary" style="width: 40px"><i class="fa fa-filter fa-lg"></i></a>
+  <div class="knopf-group" style="display: grid; grid-template-areas: 'bar'; grid-template-columns: 1fr auto; grid-template-rows: 30px">
+    <input v-model="internalFilter" autofocus style="grid-area: bar" placeholder="Filter subtitle result" type="text" @keydown.stop @keypress.stop />
+    <div style="grid-area: bar; justify-self: end; align-self: center; font-size: 12px; margin-right: 12px">
+      <fa icon="filter" style="height: var(--icon-size-sm)"/>
+    </div>
   </div>
 </template>
 

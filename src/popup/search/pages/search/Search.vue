@@ -1,18 +1,17 @@
 <template>
-  <PageLayout :content-transition-name="contentTransitionName">
+  <PageLayout :content-transition-name="contentTransitionName" :has-back="videoCount > 1" :back-fn="backFn">
     <template #toolbar>
-      <div ref="draggableAreaRef" style="display: flex; height: 40px">
-        <ToolbarBackBtn v-if="videoCount > 1" style="height: 100%" :backFn="backFn" />
-        <a v-else class="knopf flat pill sharp buttonOnPrimary" @click="close"><i class="fa fa-times fa-lg"></i></a>
-        <SearchBar v-model:query="internalQuery" v-model:loading="loading" style="flex-grow: 1; align-content: center; z-index: 10000" />
-      </div>
+      <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Search Movie or Series</div>
     </template>
     <template #content>
       <div class="search-content--container">
-        <div v-if="searchResults.length" style="grid-area: search-results">
+        <div style="grid-area: search-bar">
+          <SearchBar v-model:query="internalQuery" v-model:loading="loading"/>
+          <Divider style="margin-top: 4px"/>
+        </div>
+        <div v-if="searchResults.length" style="grid-area: search-results; overflow-y: auto;">
           <SearchEntry v-for="(item, index) in searchResults" :key="index" :item="item" @select="select" />
         </div>
-        <!-- <div v-else-if="internalQuery === ''" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">After a search, the results are displayed here.</div> -->
         <FilePick v-else-if="internalQuery === ''" v-model:query="internalQuery" style="grid-area: auto / auto / span 2 / span 3" />
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
           <div>Sorry, no movies or tv shows found</div>
@@ -29,14 +28,13 @@ import { searchRequest } from './searchRequest';
 import { debounce, useDraggableArea } from '@/composables';
 import { ref, watch } from 'vue';
 import { TmdbState } from '@/search/state/types';
-import { setTmdbInSelection } from '../../state/actions/setTmdbInSelection';
-import { toSubtitleSelection } from '../../../navigation/state/actions/toSubtitleSelection';
-import { setCurrentSelectedSrc, toHome } from '../../../navigation/state/actions';
+import { setTmdbInSelection } from '@/search/state/actions/setTmdbInSelection';
+import { toSubtitleSelection } from '@/navigation/state/actions/toSubtitleSelection';
+import { setCurrentSelectedSrc, toHome } from '@/navigation/state/actions';
 
-export { close } from '@/util/close';
-export { default as FilePick } from '@/file/pages/FilePick.vue';
-export { default as ToolbarBackBtn } from '@/components/ToolbarBackBtn.vue';
+export { default as FilePick } from '@/file/components/FilePick.vue';
 export { default as PageLayout } from '@/components/PageLayout';
+export { default as Divider } from '@/components/Divider';
 export { default as SearchBar } from './SearchBar.vue';
 export { default as SearchEntry } from './SearchEntry.vue';
 export { videoCount } from '@/video/state';
@@ -45,9 +43,6 @@ declare const props: {
   query?: string;
   contentTransitionName?: string; // default : ''
 };
-
-export const draggableAreaRef = ref(null);
-useDraggableArea({ draggableAreaRef });
 
 export const internalQuery = ref(props.query ?? '');
 export const searchResults = ref([]);
@@ -87,9 +82,11 @@ export const backFn = (): void => {
   display: grid;
   justify-content: center;
   grid-template-areas:
-    '. search-results .'
-    '. spacer .';
-  grid-template-rows: auto auto;
+    '. .              .'
+    '. search-bar     .'
+    '. .              .'
+    '. search-results .';
+  grid-template-rows: 16px auto 16px 1fr;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
 }
 </style>

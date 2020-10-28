@@ -1,7 +1,9 @@
 <template>
   <div class="plussub-toolbar">
     <!--    <transition name="toolbar-transition" appear>-->
-    <slot name="toolbar" />
+    <Toolbar :has-back="hasBack" :back-fn="backFn">
+      <slot name="toolbar"/>
+    </Toolbar>
     <!--    </transition>-->
   </div>
 
@@ -13,8 +15,12 @@
 </template>
 
 <script setup="props" lang="ts">
+export { default as Toolbar } from '@/components/Toolbar/Toolbar.vue';
+
 declare const props: {
-  contentTransitionName?: string
+  contentTransitionName?: string,
+  hasBack?: boolean;
+  backFn?: () => void
 }
 </script>
 

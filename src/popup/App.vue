@@ -26,7 +26,7 @@ export { default as KnopfCss } from '@/KnopfCss.vue';
 export { default as Home } from '@/home/pages/Home.vue';
 export { default as Search } from '@/search/pages/search/Search.vue';
 export { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
-export { default as FilePick } from '@/file/pages/FilePick.vue';
+export { default as FilePick } from '@/file/components/FilePick.vue';
 export { default as Transcript } from '@/transcript/pages/Transcript.vue';
 
 initAppState();
@@ -58,6 +58,8 @@ export { navigationState };
 
   --toolbar-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   --toolbar-height: 40px;
+  --icon-size: 24px;
+  --icon-size-sm: 12px;
   --content-lr-space: 8px;
 
   --card-padding-top: 16px;
@@ -77,6 +79,13 @@ export { navigationState };
 
 :host .buttonOnPrimary {
   --knopf-text-color: --onPrimary;
+  --knopf-hue: 0;
+  --knopf-saturation: 0%;
+  --knopf-luminosity: 100%;
+}
+
+:host .knopf.flat.buttonOnSurface {
+  --knopf-text-color: --onSurface;
   --knopf-hue: 0;
   --knopf-saturation: 0%;
   --knopf-luminosity: 100%;

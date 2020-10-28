@@ -5,7 +5,7 @@
       <div style="font-size: 0.65em">
         <transition name="fade" mode="out-in">
           <Spinner v-if="state !== 'DONE'" />
-          <i v-else class="fa fa-check fa-sm"></i>
+          <fa v-else icon="check" style="height: var(--icon-size-sm)"/>
         </transition>
       </div>
     </div>

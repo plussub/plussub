@@ -6,7 +6,7 @@
         <div style="font-size: 0.65em">
           <transition name="fade" mode="out-in">
             <Spinner v-if="state !== 'DONE'" />
-            <i v-else class="fa fa-check fa-sm"></i>
+            <fa v-else icon="check" style="height: var(--icon-size-sm)"/>
           </transition>
         </div>
       </div>
@@ -75,7 +75,7 @@ declare const props: {
 export { default as Spinner } from '@/components/Spinner.vue';
 export { default as Expandable } from '@/components/Expandable';
 export const prettyState = computed(() => capitalizeFirst(props.state));
-export const prettyMediaType = computed(() => 'asdf'); // capitalizeFirst(props.searchState?.tmdb?.media_type));
+export const prettyMediaType = computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type));
 
 export default {
   emits: ['remove']

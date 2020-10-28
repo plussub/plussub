@@ -15,9 +15,9 @@
     "version": "node sync-manifest.js && git add src/manifestChrome.json && git add src/manifestFirefox.json"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.30",
-    "@fortawesome/free-solid-svg-icons": "^5.14.0",
-    "@fortawesome/vue-fontawesome": "^0.1.10",
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/vue-fontawesome": "^3.0.0-2",
     "@plussub/srt-vtt-parser": "^1.0.5",
     "ass-compiler": "^0.1.1",
     "chardet": "^1.3.0",

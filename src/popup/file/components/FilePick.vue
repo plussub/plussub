@@ -9,7 +9,7 @@
     @drop.prevent="drop"
   >
     <p class="upload-drag-icon">
-      <i class="fa fa-upload fa-lg"></i>
+      <fa icon="upload"/>
     </p>
     <input
       ref="inputRef"
