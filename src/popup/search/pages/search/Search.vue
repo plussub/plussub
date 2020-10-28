@@ -12,7 +12,9 @@
         <div v-if="searchResults.length" style="grid-area: search-results; overflow-y: auto;">
           <SearchEntry v-for="(item, index) in searchResults" :key="index" :item="item" @select="select" />
         </div>
-        <FilePick v-else-if="internalQuery === ''" v-model:query="internalQuery" style="grid-area: auto / auto / span 2 / span 3" />
+        <div v-else-if="internalQuery === ''" style="grid-area: search-results;">
+          <FilePick v-model:query="internalQuery"/>
+        </div>
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
           <div>Sorry, no movies or tv shows found</div>
           <div>(╯°□°)╯︵ ┻━┻</div>
@@ -85,8 +87,9 @@ export const backFn = (): void => {
     '. .              .'
     '. search-bar     .'
     '. .              .'
-    '. search-results .';
-  grid-template-rows: 16px auto 16px 1fr;
+    '. search-results .'
+    '. .              .';
+  grid-template-rows: 16px auto 16px 1fr 16px;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
 }
 </style>

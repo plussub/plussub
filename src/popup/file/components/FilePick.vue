@@ -1,59 +1,67 @@
 <template>
-  <div
-    id="filepicker-content--container"
-    ref="containerRef"
-    @mouseenter="enterVideo(srcToGlobalVideo[currentSelectedVideoSrc])"
-    @mouseleave="leaveVideo"
-    @dragenter.prevent="dragenter"
-    @dragleave="dragleave"
-    @drop.prevent="drop"
-  >
-    <p class="upload-drag-icon">
-      <fa icon="upload"/>
-    </p>
-    <input
-      ref="inputRef"
-      type="file"
-      title="click or drop file here"
-      accept=".vtt,.srt,.ass,.ssa"
-      style="z-index: 1; opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer"
-      @change="fileSelected"
-    />
-    <div v-show="fileErrorMsg" id="file-error-notification">
-      <img :src="xCircleIcon" alt="(Error)" style="display: inline; margin-right: 5px; width: 14px" />
-      {{ fileErrorMsg }}
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div v-show="getVideoName() !== ''">
+      <div>
+        Suggested Search:
+      </div>
+      <div class="video-name-string" style="margin-top: 8px" @click="changeQuery">{{ getVideoName() }}</div>
     </div>
-    <div style="margin: 0 40px 0 40px">
-      <!--      font-size: 0.85em; line-height: 1.8; font-weight: 300 -->
-      <p class="upload-text">Click or drop file to this area to upload</p>
-      <p class="upload-hint">
-        Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable.(Video
-        <span :class="{ 'video-name-string': getVideoName() !== '1' }" @click="changeQuery">{{ getVideoName() }}</span>
-        is {{ videoCount === 1 ? 'auto' : '' }} selected)
+    <div
+      ref="containerRef"
+      class="filepicker-content--container"
+      @mouseenter="enterVideo(srcToGlobalVideo[currentSelectedVideoSrc])"
+      @mouseleave="leaveVideo"
+      @dragenter.prevent="dragenter"
+      @dragleave="dragleave"
+      @drop.prevent="drop"
+    >
+      <p class="upload-drag-icon">
+        <fa icon="upload" />
       </p>
+      <input
+        ref="inputRef"
+        type="file"
+        title="click or drop file here"
+        accept=".vtt,.srt,.ass,.ssa"
+        style="z-index: 1; opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer"
+        @change="fileSelected"
+      />
+      <div v-show="fileErrorMsg" id="file-error-notification">
+        <img :src="xCircleIcon" alt="(Error)" style="display: inline; margin-right: 5px; width: 14px" />
+        {{ fileErrorMsg }}
+      </div>
+      <div style="margin: 0 40px 0 40px">
+        <!--      font-size: 0.85em; line-height: 1.8; font-weight: 300 -->
+        <p class="upload-text">Click or drop file to this area to upload</p>
+        <p class="upload-hint">
+          Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable.(Video
+          <span :class="{ 'video-name-string': getVideoName() !== '1' }" @click="changeQuery">{{ getVideoName() }}</span>
+          is {{ videoCount === 1 ? 'auto' : '' }} selected)
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup="props, { emit }" lang="ts">
-import {onUnmounted, ref} from 'vue';
-import {setFilename} from '../state';
-import {setSrc, setState} from '@/app/state';
-import {parse, setRaw} from '@/subtitle/state';
-import {leaveVideo} from '@/util/hover';
-import {getVideoName} from '@/util/name';
-import {toHome} from '../../navigation/state/actions';
+import { onUnmounted, ref } from 'vue';
+import { setFilename } from '../state';
+import { setSrc, setState } from '@/app/state';
+import { parse, setRaw } from '@/subtitle/state';
+import { leaveVideo } from '@/util/hover';
+import { getVideoName } from '@/util/name';
+import { toHome } from '../../navigation/state/actions';
 import chardet from 'chardet';
-import {getFormatFromFilename} from "../../subtitle/util/getFormatFromFilename";
+import { getFormatFromFilename } from '../../subtitle/util/getFormatFromFilename';
 
-export {currentSelectedVideoSrc} from '@/navigation/state/state';
-export {srcToGlobalVideo} from '@/video/state/state';
+export { currentSelectedVideoSrc } from '@/navigation/state/state';
+export { srcToGlobalVideo } from '@/video/state/state';
 
-export {default as xCircleIcon} from '@/res/x-circle.svg';
-export {videosWithSubtitle, videoCount} from '@/video/state';
-export {enterVideo} from '@/util/hover';
-export {getVideoName};
-export {leaveVideo};
+export { default as xCircleIcon } from '@/res/x-circle.svg';
+export { videosWithSubtitle, videoCount } from '@/video/state';
+export { enterVideo } from '@/util/hover';
+export { getVideoName };
+export { leaveVideo };
 
 declare const props: {
   query: string;
@@ -85,12 +93,12 @@ const readFile = (file: File): void => {
     const textReader = new FileReader();
     textReader.readAsText(file, encoding ?? 'UTF-8');
     textReader.onload = async () => {
-      setFilename({filename: file.name});
-      setState({state: 'SELECTED'});
-      setSrc({src: 'FILE'});
+      setFilename({ filename: file.name });
+      setState({ state: 'SELECTED' });
+      setSrc({ src: 'FILE' });
       // as string because we use readAsText...
 
-      setRaw({raw: textReader.result as string, format: getFormatFromFilename(file.name)});
+      setRaw({ raw: textReader.result as string, format: getFormatFromFilename(file.name) });
       parse();
       toHome({
         contentTransitionName: 'content-navigate-select-to-home'
@@ -135,16 +143,19 @@ onUnmounted(() => leaveVideo());
 
 <style scoped>
 /* plussub header */
-#filepicker-content--container {
+.filepicker-content--container {
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 14px);
+  height: calc(100% - 14px);
   position: relative;
   padding: 110px 0 110px 0;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  align-self: center;
+  justify-self: center;
+  border: 2px dashed;
 }
 
 .upload-drag-icon {
