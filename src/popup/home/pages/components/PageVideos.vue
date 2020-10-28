@@ -10,13 +10,16 @@
         <div
           v-for="(video, index) in videoList"
           :key="index"
-          style="display: grid; grid-template-columns: 1fr auto"
+          style="display: grid; grid-template-columns: 8px 1fr auto"
           class="video-item"
           @mouseenter="enterVideo(video)"
           @mouseleave="leaveVideo"
           @click="selectVideo(video, index)"
         >
-          <div style="grid-column: 1 / 2; align-self: center">Video {{ index + 1 }}</div>
+          <Divider style="grid-column: 1/3"/>
+          <div style="grid-column: 2 / 3;height: 45px; display: flex; align-items: center;">
+            <div>Video {{ index + 1 }}</div>
+          </div>
         </div>
       </div>
       <div v-else>No videos found in current tab.</div>
@@ -28,6 +31,8 @@
 import { onUnmounted } from 'vue';
 import { Video } from '@/video/state';
 import { leaveVideo } from '@/util/hover';
+
+export { default as Divider } from '@/components/Divider';
 
 export { enterVideo } from '@/util/hover';
 export { videoList } from '@/video/state';
@@ -49,20 +54,19 @@ onUnmounted(() => {
 /* plussub header */
 .videos--card {
   background-color: var(--surface-color);
-  box-shadow: var(--card-shadow);
-  border-radius: var(--card-border-radius);
+  /*box-shadow: var(--card-shadow);*/
+  /*border-radius: var(--card-border-radius);*/
   display: grid;
   padding-top: var(--card-padding-top);
   grid-template-areas:
     '. header .'
     '. . .'
-    '. content .'
+    'content content content'
     '. . .';
-  grid-template-rows: 50px 16px auto 8px;
+  grid-template-rows: 50px 4px auto 8px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   /* width: 100%; */
   height: fit-content;
-  margin: 10px 8px 0 8px;
 }
 
 .video-item:hover {

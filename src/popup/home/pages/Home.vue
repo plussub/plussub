@@ -77,7 +77,7 @@ export const selectedSrc = (src: string): void => {
   justify-content: center;
   grid-template-areas:
     '. current-sub .'
-    '. videos .'
+    'videos videos videos'
     '. debug .';
   grid-template-rows: auto auto auto;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
