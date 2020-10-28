@@ -1,5 +1,5 @@
 <template>
-  <div class="search-content--container--card">
+  <div class="search-content--container--card" @click="select(item)">
     <div style="grid-area: header; position: relative">
       <div class="search-content--container--card--hero">
         <img
@@ -23,9 +23,6 @@
     </div>
     <div style="grid-area: content; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
       {{ item.overview }}
-    </div>
-    <div style="grid-area: action; justify-self: end; align-self: center">
-      <a class="knopf flat block end large" style="width: 100%" @click="select(item)">Select</a>
     </div>
     <div
       style="
@@ -69,11 +66,8 @@ export const prettyMediaType = computed(() => capitalizeFirst(props.item.media_t
     'header header  header'
     '.      .       .'
     '.      content .'
-    '.      .       .'
-    '.      .       .'
-    '.      action  .'
     '.      .       .';
-  grid-template-rows: var(--image-height) 16px 1fr 16px 8px 50px 8px;
+  grid-template-rows: var(--image-height) 16px 1fr 24px;
   grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
   width: 100%;
   margin-bottom: 8px;
@@ -90,5 +84,10 @@ export const prettyMediaType = computed(() => capitalizeFirst(props.item.media_t
   opacity: 1;
   border-top-left-radius: var(--card-border-radius);
   border-top-right-radius: var(--card-border-radius);
+}
+
+.search-content--container--card:hover {
+  background-color: var(--hoverColorOnSurfce);
+  cursor: pointer;
 }
 </style>

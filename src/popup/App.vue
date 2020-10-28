@@ -55,6 +55,7 @@ export { navigationState };
   --surface-color: white;
   --default-text-color: #989898;
   --default-header-text-color: #000000;
+  --hoverColorOnSurfce: #eeeeee;
 
   --toolbar-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   --toolbar-height: 40px;

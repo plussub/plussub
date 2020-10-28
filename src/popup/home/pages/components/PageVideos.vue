@@ -70,7 +70,7 @@ onUnmounted(() => {
 }
 
 .video-item:hover {
-  background-color: #eeeeee;
+  background-color: var(--hoverColorOnSurfce);
   cursor: pointer;
 }
 </style>
