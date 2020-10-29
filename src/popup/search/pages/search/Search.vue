@@ -16,7 +16,7 @@
             <Divider style="grid-column: 1/3"/>
           </div>
         </div>
-        <div v-else-if="internalQuery === ''" style="grid-area: search-results;">
+        <div v-else-if="internalQuery === ''" style="grid-area: search-results; grid-column: 2/3; grid-row: 4/5">
           <FilePick v-model:query="internalQuery"/>
         </div>
         <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">

@@ -1,8 +1,8 @@
 <template>
   <div style="display: flex; flex-direction: column; gap: 14px">
-    <div v-show="getVideoName() !== ''">
+    <div v-show="getVideoName() !== ''" style="padding-left: 8px;">
       <div>
-        Suggested Search:
+        Suggested Search
       </div>
       <div class="video-name-string" style="margin-top: 8px" @click="changeQuery">{{ getVideoName() }}</div>
     </div>
