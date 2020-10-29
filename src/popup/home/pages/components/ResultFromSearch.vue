@@ -11,13 +11,13 @@
         </div>
       </div>
       <div style="grid-area: title; font-size: var(--card-header-font-size); font-weight: 400">{{ searchState.tmdb.title }}</div>
-      <div style="grid-area: subtitle; font-size: 0.75em">({{ prettyMediaType }} {{ searchState.tmdb.release_date }})</div>
+      <div style="grid-area: subtitle; font-size: 0.75em">{{ prettyMediaType }} {{ searchState.tmdb.release_date ? "/ "+searchState.tmdb.release_date.substr(0, 4) : ''}}</div>
       <div style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6; font-weight: 400">
-        <div style="grid-column: 1 / 2">subRating</div>
+        <div style="grid-column: 1 / 2">Rating</div>
         <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.SubRating }}</div>
-        <div style="grid-column: 1 / 2">subFormat</div>
+        <div style="grid-column: 1 / 2">Format</div>
         <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.SubFormat }}</div>
-        <div style="grid-column: 1 / 2">subLang</div>
+        <div style="grid-column: 1 / 2">Language</div>
         <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.LanguageName }}</div>
       </div>
       <div style="grid-area: detail2; font-size: 0.75em; align-self: end; font-weight: 500">
