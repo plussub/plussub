@@ -1,10 +1,13 @@
 <template>
   <div class="search-content--container--card" @click="select(item)">
     <div style="grid-area: poster">
-      <img
-        :src="item.poster_path ?? posterFallback"
+      <img v-if="item.poster_path"
+        :src="item.poster_path"
         style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius)"
       />
+      <div v-else style="display: flex; justify-content: center; align-items: center; height: 100%;">
+        <fa icon="question"></fa>
+      </div>
     </div>
     <div style="grid-area: title">
       <div style="font-weight: 500; font-size: 1.25em; color: var(--default-header-text-color);">

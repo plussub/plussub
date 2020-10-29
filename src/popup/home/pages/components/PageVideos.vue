@@ -23,7 +23,7 @@
           <Divider style="grid-column: 1/3"/>
         </div>
       </div>
-      <div v-else>No videos found in current tab.</div>
+      <div v-else style="padding-left: 16px">No videos found in current tab.</div>
     </div>
   </div>
 </template>
