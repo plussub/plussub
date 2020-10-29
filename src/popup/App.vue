@@ -213,7 +213,7 @@ export { navigationState };
 
   max-width: 400px;
   width: 400px;
-  max-height: 700px;
+  max-height: 720px;
   min-height: 400px;
   height: auto;
   overflow-x: hidden;

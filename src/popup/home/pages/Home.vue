@@ -7,7 +7,7 @@
       </a>
     </template>
     <template #content>
-      <div :class="{ 'home-content--container': appState.state !== 'NONE' }">
+      <div :class="{ 'home-content--container': appState.state !== 'NONE' }" style="margin-bottom: 24px">
         <ResultFromSearch
           v-if="appState.state !== 'NONE' && appState.src === 'SEARCH'"
           style="grid-area: current-sub; margin-top: 20px"
@@ -31,6 +31,11 @@
           </template>
         </ResultFromFile>
         <PageVideos v-show="appState.state === 'NONE'" style="grid-area: videos" @selected-src="selectedSrc" />
+      </div>
+      <div style="font-size: 0.75em; width: 100%; position: absolute; bottom: 0; display: flex; flex-direction: column; align-items: center">
+        <div>Subtitle search files provided by <a href="https://opensubtitles.org/" target="_blank">OpenSubtitles</a></div>
+        <div>Movie Poster provided by <a href="https://www.themoviedb.org/" target="_blank">tmdb</a></div>
+        <div>Icons by <a href="https://fontawesome.com/" target="_blank">font awesome</a></div>
       </div>
     </template>
   </PageLayout>
@@ -78,8 +83,8 @@ export const selectedSrc = (src: string): void => {
   grid-template-areas:
     '. current-sub .'
     'videos videos videos'
-    '. debug .';
-  grid-template-rows: auto auto auto;
+    '. contribution .';
+  grid-template-rows: auto 1fr auto;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
   row-gap: 16px;
 }
