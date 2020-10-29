@@ -10,7 +10,11 @@
           <Divider style="margin-top: 4px"/>
         </div>
         <div v-if="searchResults.length" style="grid-area: search-results; overflow-y: auto;">
-          <SearchEntry v-for="(item, index) in searchResults" :key="index" :item="item" @select="select" />
+          <div v-for="(item, index) in searchResults" :key="index">
+            <Divider v-if="index === 0" style="grid-column: 1/3"/>
+            <SearchEntry  :item="item" @select="select" />
+            <Divider style="grid-column: 1/3"/>
+          </div>
         </div>
         <div v-else-if="internalQuery === ''" style="grid-area: search-results;">
           <FilePick v-model:query="internalQuery"/>
@@ -87,7 +91,7 @@ export const backFn = (): void => {
     '. .              .'
     '. search-bar     .'
     '. .              .'
-    '. search-results .'
+    'search-results  search-results search-results'
     '. .              .';
   grid-template-rows: 16px auto 16px 1fr 16px;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);

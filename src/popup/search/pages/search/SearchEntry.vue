@@ -1,38 +1,18 @@
 <template>
   <div class="search-content--container--card" @click="select(item)">
-    <div style="grid-area: header; position: relative">
-      <div class="search-content--container--card--hero">
-        <img
-          :src="item.poster_path ?? posterFallback"
-          style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius)"
-        />
-      </div>
-      <div style="position: absolute; color: white; top: 8px; left: 16px; width: calc(100% - 32px)">
-        <div style="font-family: var(--card-header-font-family); width: 100%; display: flex; justify-content: space-between">
-          <span>
-            <div style="font-size: var(--card-header-font-size); font-weight: 400">
-              {{ item.title }}
-            </div>
-            <div style="font-size: 0.75em">({{ prettyMediaType }} {{ item.release_date }})</div>
-          </span>
-        </div>
-      </div>
-      <div style="font-size: 0.75em; position: absolute; bottom: 12px; right: 16px; color: white; font-weight: 500">
-        <div>tmdb {{ item.vote_average }}</div>
-      </div>
+    <div style="grid-area: poster">
+      <img
+        :src="item.poster_path ?? posterFallback"
+        style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius)"
+      />
     </div>
-    <div style="grid-area: content; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
-      {{ item.overview }}
+    <div style="grid-area: title">
+      <div style="font-weight: 500; font-size: 1.25em; color: var(--default-header-text-color);">
+        {{ item.title }}
+      </div>
+      <div style="font-size: 0.75em; margin-top: 8px; font-weight: 500;">{{ prettyMediaType }} {{ item.release_date ? "/ "+item.release_date.substr(0, 4) : ''}}</div>
+      <div style="font-size: 0.75em; margin-top: 4px;">tmdb {{ item.vote_average }}</div>
     </div>
-    <div
-      style="
-        grid-column: 1/4;
-        grid-row: 5/8;
-        background-color: var(--card-actions-background-color);
-        border-bottom-left-radius: var(--card-border-radius);
-        border-bottom-right-radius: var(--card-border-radius);
-      "
-    />
   </div>
 </template>
 
@@ -59,18 +39,15 @@ export const prettyMediaType = computed(() => capitalizeFirst(props.item.media_t
 .search-content--container--card {
   --image-height: 120px;
   background-color: var(--surface-color);
-  box-shadow: var(--card-shadow);
-  border-radius: var(--card-border-radius);
   display: grid;
   grid-template-areas:
-    'header header  header'
-    '.      .       .'
-    '.      content .'
-    '.      .       .';
-  grid-template-rows: var(--image-height) 16px 1fr 24px;
-  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
+    '. .      . .     .'
+    '. poster . .     .'
+    '. poster . title .'
+    '. .      . .     .';
+  grid-template-rows: 4px 8px 90px 4px;
+  grid-template-columns: 4px 60px 16px 1fr var(--card-lr-space);
   width: 100%;
-  margin-bottom: 8px;
 }
 
 .search-content--container--card--hero::after {
