@@ -12,31 +12,11 @@
         </div>
         <div v-show="showLanguageSelection" style="grid-row: 3/5; grid-column: 1/4; background-color: #29292936; top: 40px; width: 100%; height: 100%; overflow-y: hidden; backdrop-filter: blur(1px)"></div>
         <div v-if="!dataReady" style="grid-area: search-results; line-height: 3; text-align: center; overflow-y: auto">Loading subtitles...</div>
-        <div v-else-if="filteredEntries.length" style="grid-area: search-results; display: grid; overflow-y: auto">
-          <div v-for="(item, index) in filteredEntries" :key="index" class="subtitle-selection-content--container--card">
-            <div style="grid-area: header; overflow: hidden; text-overflow: ellipsis; color: black; font-weight: 500; font-family: 'Rubik', sans-serif; word-break; break-all;">
-              {{ item.SubFileName }}
-            </div>
-            <div style="grid-area: content; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 1em; line-height: 1.8; font-weight: 300">
-              <div style="grid-column: 1 / 2">subRating</div>
-              <div style="grid-column: 2 / 3">{{ item.SubRating }}</div>
-              <div style="grid-column: 1 / 2">subFormat</div>
-              <div style="grid-column: 2 / 3">{{ item.SubFormat }}</div>
-              <div style="grid-column: 1 / 2">subLang</div>
-              <div style="grid-column: 2 / 3">{{ item.LanguageName }}</div>
-            </div>
-            <div style="grid-area: action; justify-self: end; align-self: center">
-              <a class="knopf flat block end large" style="width: 100%" @click="select(item)">Select</a>
-            </div>
-            <div
-              style="
-                grid-column: 1/4;
-                grid-row: 6/9;
-                background-color: var(--card-actions-background-color);
-                border-bottom-left-radius: var(--card-border-radius);
-                border-bottom-right-radius: var(--card-border-radius);
-              "
-            />
+        <div v-else-if="filteredEntries.length" style="grid-area: search-results; overflow-y: auto">
+          <div v-for="(item, index) in filteredEntries" :key="index">
+            <Divider v-if="index === 0" style="grid-column: 1/3"/>
+            <SubtitleEntry :item="item" @select="select"/>
+            <Divider/>
           </div>
         </div>
         <div v-else style="grid-area: search-results; line-height: 3; text-align: center">
@@ -59,6 +39,7 @@ import { toHome, toSearch } from '@/navigation/state';
 export { default as LanguageAccordion } from './LanguageAccordion.vue';
 export { default as Divider } from '@/components/Divider';
 export { default as FilterBar } from './FilterBar.vue';
+export { default as SubtitleEntry } from './SubtitleEntry.vue';
 export { default as PageLayout } from '@/components/PageLayout';
 
 declare const props: {
@@ -118,30 +99,9 @@ watch(language, () => {
     '. .              .'
     '. filter-bar     .'
     '. .              .'
-    '. search-results .';
+    'search-results search-results search-results';
   grid-template-rows: 16px auto 16px 1fr;
   grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
-}
-
-.subtitle-selection-content--container--card {
-  background-color: var(--surface-color);
-  box-shadow: var(--card-shadow);
-  border-radius: var(--card-border-radius);
-  display: grid;
-  grid-template-areas:
-    '.       .       .'
-    '.       header  .'
-    '.       .       .'
-    '.       content .'
-    '.       .       .'
-    '.       .       .'
-    '.       action  .'
-    '.       .       .';
-  grid-template-rows: 16px auto 16px 1fr 16px 8px 50px 8px;
-  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
-  width: 100%;
-  min-width: 100%;
-  margin-bottom: 8px;
 }
 </style>
 <style>

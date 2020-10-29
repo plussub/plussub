@@ -16,10 +16,11 @@
           @mouseleave="leaveVideo"
           @click="selectVideo(video, index)"
         >
-          <Divider style="grid-column: 1/3"/>
+          <Divider v-if="index === 0" style="grid-column: 1/3"/>
           <div style="grid-column: 2 / 3;height: 45px; display: flex; align-items: center;">
             <div>Video {{ index + 1 }}</div>
           </div>
+          <Divider style="grid-column: 1/3"/>
         </div>
       </div>
       <div v-else>No videos found in current tab.</div>
