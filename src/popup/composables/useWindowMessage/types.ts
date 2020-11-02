@@ -29,6 +29,10 @@ type GenericEvent<T extends Actions> = {
   plusSubAction: T;
 };
 
+type GenericEventWithSrc<T extends Actions> = GenericEvent<T> & {
+  src: string;
+};
+
 export type VideosInIFrameEvent = GenericEvent<typeof VideosInIFrame> & {
   frameSrc: string;
   videos: {
@@ -36,92 +40,50 @@ export type VideosInIFrameEvent = GenericEvent<typeof VideosInIFrame> & {
     hasSubtitle: boolean;
   }[];
 };
-export type VideosInIFrameUseWindowMessagePayload = {
-  [VideosInIFrame]: (payload: MessageEvent<VideosInIFrameEvent>) => void;
-};
 
 export type RemoveVideoInIFrameEvent = GenericEvent<typeof RemoveVideoInIFrame> & {
   currentSrc: string;
   frameSrc: string;
 };
-export type RemoveVideoInIFrameEventUseWindowMessagePayload = {
-  [RemoveVideoInIFrame]: (payload: MessageEvent<RemoveVideoInIFrameEvent>) => void;
-};
 
 export type CloseEvent = GenericEvent<typeof Close>;
-export type CloseUseWindowMessagePayload = {
-  [Close]: (payload: MessageEvent<CloseEvent>) => void;
-};
 
-export type AddSubtitleEvent = GenericEvent<typeof AddSubtitle> & {
-  src: string;
+export type AddSubtitleEvent = GenericEventWithSrc<typeof AddSubtitle> & {
   subtitle: SubtitleEntry[];
 };
-export type AddSubtitleEventUseWindowMessagePayload = {
-  [AddSubtitle]: (payload: MessageEvent<AddSubtitleEvent>) => void;
-};
+export type RemoveSubtitleEvent = GenericEventWithSrc<typeof RemoveSubtitle>;
 
-export type RemoveSubtitleEvent = GenericEvent<typeof RemoveSubtitle> & {
-  src: string;
-};
-export type RemoveSubtitleEventUseWindowMessagePayload = {
-  [RemoveSubtitle]: (payload: MessageEvent<RemoveSubtitleEvent>) => void;
-};
-
-export type GetBoundingClientRectEvent = GenericEvent<typeof GetBoundingClientRect> & {
-  src: string;
-};
-export type GetBoundingClientRectEventUseWindowMessagePayload = {
-  [GetBoundingClientRect]: (payload: MessageEvent<GetBoundingClientRectEvent>) => void;
-};
+export type GetBoundingClientRectEvent = GenericEventWithSrc<typeof GetBoundingClientRect>;
 
 export type VideoBoundingClientRectEvent = GenericEvent<typeof VideoBoundingClientRect> & {
   boundingClientRect: DOMRect;
 };
-export type VideoBoundingClientRectEventUseWindowMessagePayload = {
-  [VideoBoundingClientRect]: (payload: MessageEvent<VideoBoundingClientRectEvent>) => void;
-};
 
-export type StartTranscriptEvent = GenericEvent<typeof StartTranscript> & {
-  src: string;
-};
-export type StartTranscriptUseWindowMessagePayload = {
-  [StartTranscript]: (payload: MessageEvent<StartTranscriptEvent>) => void;
-};
-
-export type StopTranscriptEvent = GenericEvent<typeof StopTranscript> & {
-  src: string;
-};
-export type StopTranscriptUseWindowMessagePayload = {
-  [StopTranscript]: (payload: MessageEvent<StopTranscriptEvent>) => void;
-};
-
+export type StartTranscriptEvent = GenericEventWithSrc<typeof StartTranscript>;
+export type StopTranscriptEvent = GenericEventWithSrc<typeof StopTranscript>;
 export type VideoCurrentTimeEvent = GenericEvent<typeof VideoCurrentTime> & {
   currentTime: number;
 };
-export type VideoCurrentTimeUseWindowMessagePayload = {
-  [VideoCurrentTime]: (payload: MessageEvent<VideoCurrentTimeEvent>) => void;
-};
 
-export type SetVideoTimeEvent = GenericEvent<typeof SetVideoTime> & {
-  src: string;
+export type SetVideoTimeEvent = GenericEventWithSrc<typeof SetVideoTime> & {
   time: number;
 };
-export type SetVideoTimeUseWindowMessagePayload = {
-  [SetVideoTime]: (payload: MessageEvent<SetVideoTimeEvent>) => void;
+
+export type GenericWindowMessagePayload<A extends Actions, E extends GenericEvent<A>> = {
+  [x in A]?: (payload: MessageEvent<E>) => void;
 };
 
-type AllUseWindowMessagePayload = VideosInIFrameUseWindowMessagePayload &
-  CloseUseWindowMessagePayload &
-  StartTranscriptUseWindowMessagePayload &
-  RemoveSubtitleEventUseWindowMessagePayload &
-  AddSubtitleEventUseWindowMessagePayload &
-  VideoCurrentTimeUseWindowMessagePayload &
-  StopTranscriptUseWindowMessagePayload &
-  GetBoundingClientRectEventUseWindowMessagePayload &
-  VideoBoundingClientRectEventUseWindowMessagePayload &
-  SetVideoTimeUseWindowMessagePayload &
-  RemoveVideoInIFrameEventUseWindowMessagePayload;
+export type AllUseWindowMessagePayload = GenericWindowMessagePayload<typeof VideosInIFrame, VideosInIFrameEvent> &
+  GenericWindowMessagePayload<typeof RemoveVideoInIFrame, RemoveVideoInIFrameEvent> &
+  GenericWindowMessagePayload<typeof Close, CloseEvent> &
+  GenericWindowMessagePayload<typeof StartTranscript, StartTranscriptEvent> &
+  GenericWindowMessagePayload<typeof StopTranscript, StopTranscriptEvent> &
+  GenericWindowMessagePayload<typeof AddSubtitle, AddSubtitleEvent> &
+  GenericWindowMessagePayload<typeof RemoveSubtitle, RemoveSubtitleEvent> &
+  GenericWindowMessagePayload<typeof GetBoundingClientRect, GetBoundingClientRectEvent> &
+  GenericWindowMessagePayload<typeof VideoBoundingClientRect, VideoBoundingClientRectEvent> &
+  GenericWindowMessagePayload<typeof VideoCurrentTime, VideoCurrentTimeEvent> &
+  GenericWindowMessagePayload<typeof SetVideoTime, SetVideoTimeEvent>;
 
 export type UseWindowMessagePayload = Partial<AllUseWindowMessagePayload>;
 export type AllEvents =
