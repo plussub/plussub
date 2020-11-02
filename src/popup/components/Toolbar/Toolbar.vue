@@ -44,4 +44,11 @@ useDraggableArea({ draggableAreaRef });
   grid-template-rows: 40px;
   grid-template-columns: auto 1fr auto 4px;
 }
+.home-toolbar--container--content:hover {
+  cursor: grab;
+}
+
+.home-toolbar--container--content:active {
+  cursor: grabbing;
+}
 </style>
