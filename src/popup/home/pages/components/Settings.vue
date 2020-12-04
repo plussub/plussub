@@ -33,9 +33,12 @@ import { computed } from '@vue/reactivity';
 import { formatBiggestUnitHoursSmallestUnitMilliseconds } from '@/util/time';
 import { SubtitleEntry } from '@/subtitle/state/types';
 
-export { default as Expandable } from '@/components/Expandable';
+import { default as Expandable } from '@/components/Expandable';
 
 export default defineComponent({
+  components: {
+    Expandable
+  },
   props: {
     parsed: {
       type: Array as PropType<SubtitleEntry[]>,
