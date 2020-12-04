@@ -42,7 +42,7 @@ export default defineComponent({
       required: true
     },
     offsetTime: {
-      type: String as PropType<number | string>,
+      type: Number as PropType<number | string>,
       required: true
     }
   },

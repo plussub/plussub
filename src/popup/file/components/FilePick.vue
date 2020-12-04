@@ -109,6 +109,8 @@ export default defineComponent({
       leaveVideo,
       videoCount,
       videosWithSubtitle,
+      srcToGlobalVideo,
+      currentSelectedVideoSrc,
 
       drop: (event: DragEvent): void => {
         let droppedFiles = event.dataTransfer?.files;
