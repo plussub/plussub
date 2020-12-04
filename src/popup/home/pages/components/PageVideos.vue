@@ -16,11 +16,11 @@
           @mouseleave="leaveVideo"
           @click="selectVideo(video, index)"
         >
-          <Divider v-if="index === 0" style="grid-column: 1/3"/>
-          <div style="grid-column: 2 / 3;height: 45px; display: flex; align-items: center;">
+          <Divider v-if="index === 0" style="grid-column: 1/3" />
+          <div style="grid-column: 2 / 3; height: 45px; display: flex; align-items: center">
             <div>Video {{ index + 1 }}</div>
           </div>
-          <Divider style="grid-column: 1/3"/>
+          <Divider style="grid-column: 1/3" />
         </div>
       </div>
       <div v-else style="padding-left: 16px">No videos found in current tab.</div>
@@ -28,26 +28,30 @@
   </div>
 </template>
 
-<script setup="props, {emit}" lang="ts">
-import { onUnmounted } from 'vue';
-import { Video } from '@/video/state';
-import { leaveVideo } from '@/util/hover';
+<script lang="ts">
+import { defineComponent, onUnmounted } from 'vue';
+import { Video, videoList } from '@/video/state';
+import { leaveVideo, enterVideo } from '@/util/hover';
 
-export { default as Divider } from '@/components/Divider';
+import { default as Divider } from '@/components/Divider.vue';
 
-export { enterVideo } from '@/util/hover';
-export { videoList } from '@/video/state';
-export { leaveVideo };
+export default defineComponent({
+  components: {
+    Divider
+  },
+  emits: ['selected-src'],
+  setup(_, { emit }) {
+    onUnmounted(() => {
+      leaveVideo();
+    });
 
-export default {
-  emits: ['selected-src']
-};
-
-export const selectVideo = (video: Video): void => {
-  emit('selected-src', video.src);
-};
-onUnmounted(() => {
-  leaveVideo();
+    return {
+      enterVideo,
+      leaveVideo,
+      videoList,
+      selectVideo: (video: Video): void => emit('selected-src', video.src)
+    };
+  }
 });
 </script>
 

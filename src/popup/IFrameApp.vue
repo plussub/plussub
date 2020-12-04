@@ -1,6 +1,6 @@
 <template></template>
 
-<script setup="props" lang="ts">
+<script lang="ts">
 import { init as initVideoState, srcToVideo } from '@/iframe/video/state';
 import { close } from '@/iframe/util/close';
 import {
@@ -17,85 +17,89 @@ import {
   VideoCurrentTime
 } from '@/composables';
 import { addVttToHostVideo, removeVttFromHostVideo } from '@/video/state/actions/vtt/host';
+import {defineComponent} from "vue";
 
-initVideoState();
+export default defineComponent({
+  setup(){
+    initVideoState();
+    // todo refactor
+    let sendTimeEl;
+    const sendTime = () => {
+      postWindowMessage({
+        window: window.top,
+        origin: '*',
+        payload: {
+          plusSubAction: VideoCurrentTime,
+          currentTime: sendTimeEl.currentTime
+        }
+      });
+    };
+    //
 
-// todo refactor
-let sendTimeEl;
-const sendTime = () => {
-  postWindowMessage({
-    window: window.top,
-    origin: '*',
-    payload: {
-      plusSubAction: VideoCurrentTime,
-      currentTime: sendTimeEl.currentTime
-    }
-  });
-};
-//
-
-useWindowMessage({
-  [Close]: () => close(),
-  [AddSubtitle]: (e) => {
-    const video = srcToVideo.value[e.data.src];
-    if (!video || !video.el) {
-      return;
-    }
-    const el = video.el as HTMLVideoElement;
-    addVttToHostVideo({
-      video: { el },
-      subtitle: e.data.subtitle
-    });
-  },
-  [RemoveSubtitle]: (e) => {
-    const video = srcToVideo.value[e.data.src];
-    if (!video || !video.el) {
-      return;
-    }
-    const el = video.el as HTMLVideoElement;
-    removeVttFromHostVideo({ video: { el } });
-  },
-  [StartTranscript]: (e) => {
-    const video = srcToVideo.value[e.data.src];
-    if (!video || !video.el) {
-      return;
-    }
-    const el = video.el as HTMLVideoElement;
-    sendTimeEl = el;
-    el.addEventListener('timeupdate', sendTime);
-  },
-  [StopTranscript]: (e) => {
-    const video = srcToVideo.value[e.data.src];
-    if (!video || !video.el) {
-      return;
-    }
-    const el = video.el as HTMLVideoElement;
-    sendTimeEl = null;
-    el.removeEventListener('timeupdate', sendTime);
-  },
-  [SetVideoTime]: (e) => {
-    const video = srcToVideo.value[e.data.src];
-    if (!video || !video.el) {
-      return;
-    }
-    const el = video.el as HTMLVideoElement;
-    return (el.currentTime = e.data.time);
-  },
-  [GetBoundingClientRect]: (e) => {
-    const video = srcToVideo.value[e.data.src];
-    if (!video || !video.el) {
-      return;
-    }
-    const el = video.el as HTMLVideoElement;
-    // console.warn(el.getBoundingClientRect());
-    postWindowMessage({
-      window: window.top,
-      origin: '*',
-      payload: {
-        plusSubAction: VideoBoundingClientRect,
-        boundingClientRect: el.getBoundingClientRect()
+    useWindowMessage({
+      [Close]: () => close(),
+      [AddSubtitle]: (e) => {
+        const video = srcToVideo.value[e.data.src];
+        if (!video || !video.el) {
+          return;
+        }
+        const el = video.el as HTMLVideoElement;
+        addVttToHostVideo({
+          video: { el },
+          subtitle: e.data.subtitle
+        });
+      },
+      [RemoveSubtitle]: (e) => {
+        const video = srcToVideo.value[e.data.src];
+        if (!video || !video.el) {
+          return;
+        }
+        const el = video.el as HTMLVideoElement;
+        removeVttFromHostVideo({ video: { el } });
+      },
+      [StartTranscript]: (e) => {
+        const video = srcToVideo.value[e.data.src];
+        if (!video || !video.el) {
+          return;
+        }
+        const el = video.el as HTMLVideoElement;
+        sendTimeEl = el;
+        el.addEventListener('timeupdate', sendTime);
+      },
+      [StopTranscript]: (e) => {
+        const video = srcToVideo.value[e.data.src];
+        if (!video || !video.el) {
+          return;
+        }
+        const el = video.el as HTMLVideoElement;
+        sendTimeEl = null;
+        el.removeEventListener('timeupdate', sendTime);
+      },
+      [SetVideoTime]: (e) => {
+        const video = srcToVideo.value[e.data.src];
+        if (!video || !video.el) {
+          return;
+        }
+        const el = video.el as HTMLVideoElement;
+        return (el.currentTime = e.data.time);
+      },
+      [GetBoundingClientRect]: (e) => {
+        const video = srcToVideo.value[e.data.src];
+        if (!video || !video.el) {
+          return;
+        }
+        const el = video.el as HTMLVideoElement;
+        // console.warn(el.getBoundingClientRect());
+        postWindowMessage({
+          window: window.top,
+          origin: '*',
+          payload: {
+            plusSubAction: VideoBoundingClientRect,
+            boundingClientRect: el.getBoundingClientRect()
+          }
+        });
       }
     });
   }
-});
+})
 </script>

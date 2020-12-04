@@ -15,28 +15,34 @@
       {{ item.SubFileName }}
     </div>
     <div style="grid-area: content; display: grid; grid-template-columns: auto 1fr auto 1fr auto 1fr; grid-column-gap: 8px; width: 100%; font-size: 0.75em; line-height: 1.8; font-weight: 300">
-      <div style="grid-column: 1 / 2; font-weight: 500;">Rating</div>
+      <div style="grid-column: 1 / 2; font-weight: 500">Rating</div>
       <div style="grid-column: 2 / 3">{{ item.SubRating }}</div>
-      <div style="grid-column: 3 / 4; font-weight: 500;">Format</div>
+      <div style="grid-column: 3 / 4; font-weight: 500">Format</div>
       <div style="grid-column: 4 / 5">{{ item.SubFormat }}</div>
-      <div style="grid-column: 5 / 6; font-weight: 500;">Language</div>
+      <div style="grid-column: 5 / 6; font-weight: 500">Language</div>
       <div style="grid-column: 6 / 7">{{ item.LanguageName }}</div>
     </div>
   </div>
 </template>
 
-<script setup="props, {emit}" lang="ts">
-import { OpensubtitlesState } from '@/search/state/types';
+<script lang="ts">
+import { OpensubtitlesState } from '@/search/state';
+import { defineComponent, PropType } from 'vue';
 
-declare const props: {
-  item: OpensubtitlesState;
-};
-
-export default {
-  emits: ['select']
-};
-
-export const select = (selected) => emit('select', selected);
+export default defineComponent({
+  props: {
+    item: {
+      type: Object as PropType<OpensubtitlesState>,
+      required: true
+    }
+  },
+  emits: ['select'],
+  setup(props, { emit }) {
+    return {
+      select: (selected) => emit('select', selected)
+    };
+  }
+});
 </script>
 
 <style scoped>

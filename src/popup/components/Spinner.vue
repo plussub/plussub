@@ -1,8 +1,7 @@
 <template>
   <div class="loader">Loading...</div>
 </template>
-<script setup lang="ts">
-</script>
+
 <style scoped>
 /* plussub header */
 .loader {

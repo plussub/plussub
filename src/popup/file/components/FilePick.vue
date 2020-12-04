@@ -1,9 +1,7 @@
 <template>
   <div style="display: flex; flex-direction: column; gap: 14px">
-    <div v-show="getVideoName() !== ''" style="padding-left: 8px;">
-      <div>
-        Suggested Search
-      </div>
+    <div v-show="getVideoName() !== ''" style="padding-left: 8px">
+      <div>Suggested Search</div>
       <div class="video-name-string" style="margin-top: 8px" @click="changeQuery">{{ getVideoName() }}</div>
     </div>
     <div
@@ -43,102 +41,105 @@
   </div>
 </template>
 
-<script setup="props, { emit }" lang="ts">
-import { onUnmounted, ref } from 'vue';
-import { setFilename } from '../state';
-import { setSrc, setState } from '@/app/state';
-import { parse, setRaw } from '@/subtitle/state';
-import { leaveVideo } from '@/util/hover';
-import { getVideoName } from '@/util/name';
-import { toHome } from '../../navigation/state/actions';
-import chardet from 'chardet';
-import { getFormatFromFilename } from '../../subtitle/util/getFormatFromFilename';
+<script lang="ts">
+import {defineComponent, onUnmounted, PropType, ref} from 'vue';
+import {enterVideo, leaveVideo} from '@/util/hover';
+import {getVideoName} from '@/util/name';
+import {OnLoadPayload, readFile} from './readFile';
 
-export { currentSelectedVideoSrc } from '@/navigation/state/state';
-export { srcToGlobalVideo } from '@/video/state/state';
+import {default as xCircleIcon} from '@/res/x-circle.svg';
+import {srcToGlobalVideo, videoCount, videosWithSubtitle} from '@/video/state';
+import {setSrc, setState} from "@/app/state";
+import {parse, setRaw} from "@/subtitle/state";
+import {getFormatFromFilename} from "@/subtitle/util";
+import {setFilename} from "@/file/state";
+import {currentSelectedVideoSrc, toHome} from "@/navigation/state";
 
-export { default as xCircleIcon } from '@/res/x-circle.svg';
-export { videosWithSubtitle, videoCount } from '@/video/state';
-export { enterVideo } from '@/util/hover';
-export { getVideoName };
-export { leaveVideo };
+export default defineComponent({
+  props: {
+    query: {
+      type: String as PropType<string>,
+      required: false,
+      default: ""
+    },
+  },
+  emits: ['update:query'],
+  setup(props, {emit}) {
 
-declare const props: {
-  query: string;
-};
+    const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
-export default {
-  emits: ['update:query']
-};
+    const containerRef = ref();
+    const fileErrorMsg = ref('');
+    const dragenter = (): void => containerRef.value.classList.add('dragging-over');
+    const dragleave = (): void => containerRef.value.classList.remove('dragging-over');
 
-export const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
-export const containerRef = ref();
-export const fileErrorMsg = ref('');
-export const dragenter = (): void => containerRef.value.classList.add('dragging-over');
-export const dragleave = (): void => containerRef.value.classList.remove('dragging-over');
-const showFileErrorMsg = (msg: string) => {
-  fileErrorMsg.value = msg;
-  setTimeout(() => {
-    fileErrorMsg.value = '';
-  }, 2000);
-  dragleave();
-};
+    onUnmounted(() => leaveVideo());
 
-const readFile = (file: File): void => {
-  const arrayBufferReader = new FileReader();
-  arrayBufferReader.readAsArrayBuffer(file);
-  arrayBufferReader.onload = async () => {
-    const encoding = chardet.detect(new Uint8Array(arrayBufferReader.result as ArrayBuffer));
-    const textReader = new FileReader();
-    textReader.readAsText(file, encoding ?? 'UTF-8');
-    textReader.onload = async () => {
-      setFilename({ filename: file.name });
-      setState({ state: 'SELECTED' });
-      setSrc({ src: 'FILE' });
-      // as string because we use readAsText...
+    const showFileErrorMsg = (msg: string) => {
+      fileErrorMsg.value = msg;
+      setTimeout(() => {
+        fileErrorMsg.value = '';
+      }, 2000);
+      dragleave();
+    };
 
-      setRaw({ raw: textReader.result as string, format: getFormatFromFilename(file.name) });
+    const onLoad = ({fileName, result}: OnLoadPayload): void => {
+      setFilename({filename: fileName});
+      setState({state: 'SELECTED'});
+      setSrc({src: 'FILE'});
+
+      setRaw({raw: result, format: getFormatFromFilename(fileName)});
       parse();
       toHome({
         contentTransitionName: 'content-navigate-select-to-home'
       });
-    };
-    textReader.onerror = () => showFileErrorMsg('Some error happened when parsing the subtitle');
-  };
-  arrayBufferReader.onerror = () => showFileErrorMsg('Some error happened when parsing the subtitle');
-};
-export const drop = (event: DragEvent): void => {
-  let droppedFiles = event.dataTransfer?.files;
-  if (!droppedFiles) {
-    showFileErrorMsg('Drop to upload file error');
-    return;
-  }
-  if (droppedFiles.length > 1) {
-    showFileErrorMsg('Only a single file is supported');
-    return;
-  }
-  const file = droppedFiles[0];
-  const filename = file.name;
-  if (!filename.match(/\.(srt|vtt|ass|ssa)$/)) {
-    showFileErrorMsg('Only .srt, .ass, .ssa and .vtt file is acceptable');
-    return;
-  }
-  readFile(file);
-};
+    }
+    const onError = (): void => showFileErrorMsg('Some error happened when parsing the subtitle');
 
-export const fileSelected = async (): Promise<void> => {
-  if (!inputRef.value?.files) {
-    showFileErrorMsg('Click to upload file error');
-    return;
+    return {
+      xCircleIcon,
+      inputRef,
+      containerRef,
+      fileErrorMsg,
+      dragenter,
+      dragleave,
+      getVideoName,
+      enterVideo,
+      leaveVideo,
+      videoCount,
+      videosWithSubtitle,
+
+      drop: (event: DragEvent): void => {
+        let droppedFiles = event.dataTransfer?.files;
+        if (!droppedFiles) {
+          showFileErrorMsg('Drop to upload file error');
+          return;
+        }
+        if (droppedFiles.length > 1) {
+          showFileErrorMsg('Only a single file is supported');
+          return;
+        }
+        const file = droppedFiles[0];
+        const filename = file.name;
+        if (!filename.match(/\.(srt|vtt|ass|ssa)$/)) {
+          showFileErrorMsg('Only .srt, .ass, .ssa and .vtt file is acceptable');
+          return;
+        }
+        readFile({file, onLoad, onError});
+      },
+      fileSelected: async (): Promise<void> => {
+        if (!inputRef.value?.files) {
+          showFileErrorMsg('Click to upload file error');
+          return;
+        }
+        const file = inputRef.value.files[0];
+        readFile({file, onLoad, onError});
+      },
+      changeQuery: (): void => emit('update:query', getVideoName())
+    }
   }
-  const file = inputRef.value.files[0];
-  readFile(file);
-};
-
-export const changeQuery = (): void => emit('update:query', getVideoName());
-
-onUnmounted(() => leaveVideo());
+});
 </script>
 
 <style scoped>

@@ -41,35 +41,62 @@
   </PageLayout>
 </template>
 
-<script setup="props, {emit}" lang="ts">
-import { reset } from '@/app/state';
-import { setCurrentSelectedSrc, toSearch } from '@/navigation/state';
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
 
-declare const props: {
-  contentTransitionName?: string;
-};
+import { default as subtitleIcon } from '@/res/subtitles-24px.svg';
 
-export { default as subtitleIcon } from '@/res/subtitles-24px.svg';
-export { default as PageLayout } from '@/components/PageLayout';
-export { default as ResultFromSearch } from './components/ResultFromSearch.vue';
-export { default as ResultFromFile } from './components/ResultFromFile.vue';
-export { default as PageVideos } from './components/PageVideos';
-export { default as Settings } from './components/Settings.vue';
-export { subtitleState, setOffsetTime } from '@/subtitle/state';
-export { toTranscript } from '@/navigation/state';
-export { appState } from '@/app/state';
-export { subtitleSearchState } from '@/search/state';
-export { fileState } from '@/file/state';
+import { default as PageLayout } from '@/components/PageLayout';
+import { default as ResultFromSearch } from './components/ResultFromSearch.vue';
+import { default as ResultFromFile } from './components/ResultFromFile.vue';
+import { default as PageVideos } from './components/PageVideos';
+import { default as Settings } from './components/Settings.vue';
 
-export const remove = (): void => {
-  reset();
-  setCurrentSelectedSrc(null);
-};
+import { setCurrentSelectedSrc, toSearch, toTranscript } from '@/navigation/state';
+import { subtitleState, setOffsetTime } from '@/subtitle/state';
+import { appState, reset } from '@/app/state';
+import { subtitleSearchState } from '@/search/state';
+import { fileState } from '@/file/state';
 
-export const selectedSrc = (src: string): void => {
-  setCurrentSelectedSrc(src);
-  toSearch();
-};
+export default defineComponent({
+  components: {
+    PageLayout,
+    ResultFromSearch,
+    ResultFromFile,
+    PageVideos,
+    Settings
+  },
+  props: {
+    contentTransitionName: {
+      type: String as PropType<string>,
+      required: false,
+      default: ''
+    }
+  },
+  setup() {
+    return {
+      subtitleIcon,
+
+      appState,
+      subtitleState,
+      subtitleSearchState,
+      fileState,
+
+      setOffsetTime,
+
+      toTranscript,
+
+      remove: (): void => {
+        reset();
+        setCurrentSelectedSrc(null);
+      },
+      selectedSrc: (src: string): void => {
+        setCurrentSelectedSrc(src);
+        toSearch();
+      }
+    };
+  }
+});
 </script>
 
 <style scoped>

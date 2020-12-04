@@ -1,8 +1,6 @@
 <template>
   <div class="knopf-group" style="display: flex; position: relative">
-    <a class="knopf even active flat subtitle-dropdown-label sharp start" style="flex-grow: 1;" @click="toggleShowLanguageSelection">
-      Subtitle language: {{ prettySelected }}
-    </a>
+    <a class="knopf even active flat subtitle-dropdown-label sharp start" style="flex-grow: 1" @click="toggleShowLanguageSelection"> Subtitle language: {{ prettySelected }} </a>
     <transition :name="showLanguageSelection ? 'menu-more' : 'menu-less'">
       <span v-if="showLanguageSelection">
         <a class="knopf even active pale sharp subtitle-dropdown-chevron" style="width: 40px" @click="toggleShowLanguageSelection"> <fa icon="chevron-up" /> </a
@@ -12,8 +10,8 @@
       ></span>
     </transition>
     <transition name="slide-down">
-      <div v-show="showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 42px; height: 250px; z-index: 100; width: calc(100% + 14px);">
-        <div style="width: 100%; display: flex; justify-content: center;">
+      <div v-show="showLanguageSelection" class="search-toolbar--container--language--accordion" style="position: absolute; top: 42px; height: 250px; z-index: 100; width: calc(100% + 14px)">
+        <div style="width: 100%; display: flex; justify-content: center">
           <input ref="inputRef" v-model="query" style="width: calc(100% - 14px)" placeholder="Search language" type="text" @keydown.stop @keypress.stop />
         </div>
         <div style="grid-area: content; overflow-y: auto">
@@ -24,50 +22,65 @@
   </div>
 </template>
 
-<script setup="props, { emit }" lang="ts">
+<script lang="ts">
 import iso639List from '@/res/iso639List.json';
-import { computed, ref } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 
-declare const props: {
-  selected: string;
-  showLanguageSelection: boolean
-};
-
-export default {
-  emits: ['update:selected', 'update:showLanguageSelection']
-};
-
-export const query = ref('');
-export const inputRef = ref<HTMLElement | null>(null);
-export const showLanguageSelectionInternal = ref(false);
-export const showLanguageSelection = computed<boolean>({
-  get: () => showLanguageSelectionInternal.value,
-  set: (val) => {
-    emit('update:showLanguageSelection2', val);
-    showLanguageSelectionInternal.value = val;
-    if (showLanguageSelectionInternal.value && inputRef.value) {
-      inputRef.value.focus();
+export default defineComponent({
+  props: {
+    selected: {
+      type: String as PropType<string>,
+      required: true,
+      default: ''
+    },
+    showLanguageSelection: {
+      type: Boolean as PropType<boolean>,
+      required: true
     }
-  }
-});
-export const toggleShowLanguageSelection = ():void => {
-  showLanguageSelection.value = !showLanguageSelection.value;
-  emit('update:showLanguageSelection', showLanguageSelection.value);
-}
-export const prettySelected = computed(() => capitalizeFirst(props.selected));
-export const languageList = computed(() => {
-  if (query.value === '') {
-    return iso639List;
-  }
-  const lowerCaseQuery = query.value.toLowerCase();
-  return iso639List.filter(({ iso639Name, iso639_2 }) => iso639Name.toLowerCase().startsWith(lowerCaseQuery) || iso639_2.toLowerCase().startsWith(lowerCaseQuery));
-});
+  },
+  emits: ['update:selected', 'update:showLanguageSelection'],
+  setup(props, { emit }) {
+    const query = ref('');
+    const inputRef = ref<HTMLElement | null>(null);
+    const showLanguageSelectionInternal = ref(false);
+    const showLanguageSelection = computed<boolean>({
+      get: () => showLanguageSelectionInternal.value,
+      set: (val) => {
+        emit('update:showLanguageSelection', val);
+        showLanguageSelectionInternal.value = val;
+        if (showLanguageSelectionInternal.value && inputRef.value) {
+          inputRef.value.focus();
+        }
+      }
+    });
 
-export const select = ({ iso639_2 }): void => {
-  emit('update:showLanguageSelection', false);
-  emit('update:selected', iso639_2);
-};
+    return {
+      query,
+      inputRef,
+
+      showLanguageSelection,
+      showLanguageSelectionInternal,
+      toggleShowLanguageSelection: (): void => {
+        showLanguageSelection.value = !showLanguageSelection.value;
+        emit('update:showLanguageSelection', showLanguageSelection.value);
+      },
+
+      languageList: computed(() => {
+        if (query.value === '') {
+          return iso639List;
+        }
+        const lowerCaseQuery = query.value.toLowerCase();
+        return iso639List.filter(({ iso639Name, iso639_2 }) => iso639Name.toLowerCase().startsWith(lowerCaseQuery) || iso639_2.toLowerCase().startsWith(lowerCaseQuery));
+      }),
+      select: ({ iso639_2 }): void => {
+        emit('update:showLanguageSelection', false);
+        emit('update:selected', iso639_2);
+      },
+      prettySelected: computed(() => capitalizeFirst(props.selected))
+    };
+  }
+});
 </script>
 
 <style scoped>

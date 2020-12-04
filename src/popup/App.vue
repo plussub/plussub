@@ -14,7 +14,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import {defineComponent} from "vue";
 import { init as initAppState } from '@/app/state';
 import { init as initVideoState } from '@/video/state';
 import { init as initFileState } from '@/file/state';
@@ -22,22 +23,35 @@ import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
 import { init as initNavigationState, setupAutoNavigation, navigationState } from '@/navigation/state';
 
-export { default as KnopfCss } from '@/KnopfCss.vue';
-export { default as Home } from '@/home/pages/Home.vue';
-export { default as Search } from '@/search/pages/search/Search.vue';
-export { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
-export { default as FilePick } from '@/file/components/FilePick.vue';
-export { default as Transcript } from '@/transcript/pages/Transcript.vue';
+import { default as KnopfCss } from '@/KnopfCss.vue';
+import { default as Home } from '@/home/pages/Home.vue';
+import { default as Search } from '@/search/pages/search/Search.vue';
+import { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
+import { default as FilePick } from '@/file/components/FilePick.vue';
+import { default as Transcript } from '@/transcript/pages/Transcript.vue';
 
-initAppState();
-initNavigationState();
-initSubtitleState();
-initVideoState();
-initFileState();
-initSubtitleSearchState();
-setupAutoNavigation();
-
-export { navigationState };
+export default defineComponent({
+  components: {
+    KnopfCss,
+    Home,
+    Search,
+    SubtitleSelection,
+    FilePick,
+    Transcript
+  },
+  setup(){
+    initAppState();
+    initNavigationState();
+    initSubtitleState();
+    initVideoState();
+    initFileState();
+    initSubtitleSearchState();
+    setupAutoNavigation();
+    return {
+      navigationState
+    }
+  }
+});
 </script>
 
 <style>

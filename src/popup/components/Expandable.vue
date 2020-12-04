@@ -17,14 +17,26 @@
   </div>
 </template>
 
-<script setup="props" lang="ts">
-import { ref } from 'vue';
+<script lang="ts">
+import {defineComponent, PropType, Ref, ref} from 'vue';
 
-declare const props: {
-  open: boolean | undefined;
-};
-export const show = ref<boolean>(props.open ?? false);
-export const toggle = (): unknown => (show.value = !show.value);
+export default defineComponent({
+  props: {
+    open: {
+      type: Boolean as PropType<boolean>,
+      required: false,
+      default: false
+    }
+  },
+  setup(props) {
+    const show: Ref<boolean> = ref(props.open ?? false);
+
+    return {
+      show,
+      toggle: (): unknown => (show.value = !show.value)
+    }
+  }
+});
 </script>
 
 <style scoped>

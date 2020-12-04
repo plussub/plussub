@@ -18,21 +18,39 @@
   </div>
 </template>
 
-<script setup="props" lang="ts">
-import { ref } from 'vue';
+<script lang="ts">
+import {defineComponent, ref, PropType} from 'vue';
 import { useDraggableArea } from '@/composables';
 
-export { close } from './close';
-export { default as logo } from '@/res/plussub128.png';
-export { toHome } from '@/navigation/state/actions';
+import { close } from './close';
+import { default as logo } from '@/res/plussub128.png';
+import { toHome } from '@/navigation/state/actions';
 
-declare const props: {
-  hasBack?: boolean;
-  backFn?: () => void;
-};
+export default defineComponent({
+  props: {
+    hasBack: {
+      type: Boolean as PropType<boolean>,
+      required: false,
+      default: false
+    },
+    backFn: {
+      type: Function as PropType<() => unknown | undefined>,
+      required: false,
+      default: undefined
+    }
+  },
+  setup(){
+    const draggableAreaRef = ref(null);
+    useDraggableArea({ draggableAreaRef });
 
-export const draggableAreaRef = ref(null);
-useDraggableArea({ draggableAreaRef });
+    return {
+      toHome,
+      logo,
+      close,
+      draggableAreaRef
+    }
+  }
+});
 </script>
 
 <style scoped>

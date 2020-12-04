@@ -14,81 +14,79 @@
   </PageLayout>
 </template>
 
-<script setup="props, { emit }" lang="ts">
-import { ref, computed, watch } from 'vue';
-import { formatBiggestUnitMinuteSmallestUnitSeconds } from '../../util/time';
+<script lang="ts">
+import {ref, computed, watch, defineComponent, PropType} from 'vue';
+import { formatBiggestUnitMinuteSmallestUnitSeconds } from '@/util/time';
 import { videoList, setCurrentTime as setCurrentTimeState } from '@/video/state';
-import { useTimeUpdate } from '@/video/composable';
 import { subtitleState } from '@/subtitle/state';
+import { useTimeUpdate } from '@/video/composable';
 
-export { default as PageLayout } from '@/components/PageLayout';
+import { default as PageLayout } from '@/components/PageLayout.vue';
+import {binarySearch} from "@/transcript/pages/binarySearch";
 
-declare const props: {
-  contentTransitionName?: string; // default : ''
-};
-
-const currentTime = ref<number>(0);
-
-export const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
-
-if (video.value) {
-  useTimeUpdate({
-    video: video.value,
-    fn: ({ currentTime: currentTimeFromVideo }): void => {
-      currentTime.value = currentTimeFromVideo;
+export default defineComponent({
+  components: {
+    PageLayout
+  },
+  props: {
+    contentTransitionName: {
+      type: String as PropType<string>,
+      required: false,
+      default: ''
     }
-  });
-}
+  },
+  setup() {
+    const currentTime = ref<number>(0);
+    const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
 
-const binarySearch = (target, arr) => {
-  let start = 0;
-  let end = arr.length - 1;
-  while (start <= end) {
-    const mid = parseInt((start + (end - start) / 2).toString(), 10);
-    if (target >= arr[mid].from && target <= arr[mid].to) {
-      return mid;
-    } else if (target > arr[mid].to) {
-      start = mid + 1;
-    } else {
-      end = mid - 1;
+    if (video.value) {
+      useTimeUpdate({
+        video: video.value,
+        fn: ({ currentTime: currentTimeFromVideo }): void => {
+          currentTime.value = currentTimeFromVideo;
+        }
+      });
     }
-  }
-  return -1;
-};
 
-export const currentPos = ref(-1);
-export const transcriptContentContainer = ref<HTMLElement | null>(null);
+    const currentPos = ref(-1);
+    const transcriptContentContainer = ref<HTMLElement | null>(null);
 
-watch(currentTime, (currentTime) => {
-  const pos = binarySearch(Math.ceil(currentTime * 1000), subtitleState.value.withOffsetParsed);
-  if (pos === -1) return;
-  currentPos.value = pos;
-  if (transcriptContentContainer.value && !transcriptContentContainer.value.matches(':hover')) {
-    const topPos = Math.max(currentPos.value - 3, 0);
-    const topElement = transcriptContentContainer.value.querySelector<HTMLElement>(`:nth-child(${topPos + 1})`);
-    if (!topElement) return;
-    transcriptContentContainer.value.scrollTop = topElement.offsetTop;
+    watch(currentTime, (currentTime) => {
+      const pos = binarySearch(Math.ceil(currentTime * 1000), subtitleState.value.withOffsetParsed);
+      if (pos === -1) return;
+      currentPos.value = pos;
+      if (transcriptContentContainer.value && !transcriptContentContainer.value.matches(':hover')) {
+        const topPos = Math.max(currentPos.value - 3, 0);
+        const topElement = transcriptContentContainer.value.querySelector<HTMLElement>(`:nth-child(${topPos + 1})`);
+        if (!topElement) return;
+        transcriptContentContainer.value.scrollTop = topElement.offsetTop;
+      }
+    });
+
+    return {
+      currentPos,
+      transcriptContentContainer,
+      video,
+      subtitleTexts: computed(() =>
+          subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
+            formattedFrom: formatBiggestUnitMinuteSmallestUnitSeconds({ time: from }),
+            text,
+            time: from / 1000
+          }))
+      ),
+      setCurrentTime: ({ time }: { time: number }): void => {
+        if (!video.value) {
+          return;
+        }
+        // +0.001 because the "from" is often the same as previous "to", use this to advoid showing previous subtitle text
+        setCurrentTimeState({
+          video: video.value,
+          time: time + 0.001
+        });
+      }
+    }
   }
 });
-
-export const subtitleTexts = computed(() =>
-  subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
-    formattedFrom: formatBiggestUnitMinuteSmallestUnitSeconds({ time: from }),
-    text,
-    time: from / 1000
-  }))
-);
-
-export const setCurrentTime = ({ time }: { time: number }): void => {
-  if (!video.value) {
-    return;
-  }
-  // +0.001 because the "from" is often the same as previous "to", use this to advoid showing previous subtitle text
-  setCurrentTimeState({
-    video: video.value,
-    time: time + 0.001
-  });
-};
 </script>
 
 

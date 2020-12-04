@@ -2,26 +2,44 @@
   <div class="plussub-toolbar">
     <!--    <transition name="toolbar-transition" appear>-->
     <Toolbar :has-back="hasBack" :back-fn="backFn">
-      <slot name="toolbar"/>
+      <slot name="toolbar" />
     </Toolbar>
     <!--    </transition>-->
   </div>
 
-  <transition :name="contentTransitionName ? contentTransitionName : ''" appear>
+  <transition :name="contentTransitionName" appear>
     <div class="plussub-content">
       <slot name="content" />
     </div>
   </transition>
 </template>
 
-<script setup="props" lang="ts">
-export { default as Toolbar } from '@/components/Toolbar/Toolbar.vue';
+<script lang="ts">
+import { default as Toolbar } from '@/components/Toolbar/Toolbar.vue';
+import { defineComponent, PropType } from 'vue';
 
-declare const props: {
-  contentTransitionName?: string,
-  hasBack?: boolean;
-  backFn?: () => void
-}
+export default defineComponent({
+  components: {
+    Toolbar
+  },
+  props: {
+    contentTransitionName: {
+      type: String as PropType<string>,
+      required: false,
+      default: ''
+    },
+    hasBack: {
+      type: Boolean as PropType<boolean>,
+      required: false,
+      default: false
+    },
+    backFn: {
+      type: Function as PropType<() => unknown | undefined>,
+      required: false,
+      default: undefined
+    }
+  }
+});
 </script>
 
 <style scoped>

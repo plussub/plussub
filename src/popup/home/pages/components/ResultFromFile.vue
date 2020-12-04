@@ -5,14 +5,27 @@
       <div style="font-size: 0.65em">
         <transition name="fade" mode="out-in">
           <Spinner v-if="state !== 'DONE'" />
-          <fa v-else icon="check" style="height: var(--icon-size-sm)"/>
+          <fa v-else icon="check" style="height: var(--icon-size-sm)" />
         </transition>
       </div>
     </div>
     <div style="grid-area: header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); display: flex; font-weight: 500">
       <div>Subtitle via file</div>
     </div>
-    <div style="grid-area: details; width: 100%; font-size: 1em; line-height: 1.6; margin-bottom: 16px; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; font-weight: 300; overflow-x: hidden;">
+    <div
+      style="
+        grid-area: details;
+        width: 100%;
+        font-size: 1em;
+        line-height: 1.6;
+        margin-bottom: 16px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-column-gap: 16px;
+        font-weight: 300;
+        overflow-x: hidden;
+      "
+    >
       <div style="grid-column: 1 / 2">Filename</div>
       <div style="grid-column: 2 / 3; word-break: break-word">{{ fileState.filename }}</div>
     </div>
@@ -34,23 +47,33 @@
   </div>
 </template>
 
-<script setup="props" lang="ts">
-import { computed } from '@vue/reactivity';
+<script lang="ts">
+import { defineComponent, PropType, UnwrapRef, computed } from 'vue';
 import { capitalizeFirst } from '@/util/string';
-import { FileState } from '../../../file/state/types';
-import { UnwrapRef } from 'vue';
+import { FileState } from '@/file/state/types';
+import { default as Spinner } from '@/components/Spinner.vue';
 
-declare const props: {
-  state: string;
-  fileState: UnwrapRef<FileState>;
-};
-
-export { default as Spinner } from '@/components/Spinner.vue';
-export default {
-  emits: ['remove']
-};
-
-export const prettyState = computed(() => capitalizeFirst(props.state));
+export default defineComponent({
+  components: {
+    Spinner
+  },
+  props: {
+    state: {
+      type: String as PropType<string>,
+      required: true
+    },
+    fileState: {
+      type: Object as PropType<UnwrapRef<FileState>>,
+      required: true
+    }
+  },
+  emits: ['remove'],
+  setup(props) {
+    return {
+      prettyState: computed(() => capitalizeFirst(props.state))
+    };
+  }
+});
 </script>
 
 <style scoped>

@@ -6,12 +6,15 @@
         <div style="font-size: 0.65em">
           <transition name="fade" mode="out-in">
             <Spinner v-if="state !== 'DONE'" />
-            <fa v-else icon="check" style="height: var(--icon-size-sm)"/>
+            <fa v-else icon="check" style="height: var(--icon-size-sm)" />
           </transition>
         </div>
       </div>
       <div style="grid-area: title; font-size: var(--card-header-font-size); font-weight: 400">{{ searchState.tmdb.title }}</div>
-      <div style="grid-area: subtitle; font-size: 0.75em">{{ prettyMediaType }} {{ searchState.tmdb.release_date ? "/ "+searchState.tmdb.release_date.substr(0, 4) : ''}}</div>
+      <div style="grid-area: subtitle; font-size: 0.75em">
+        {{ prettyMediaType }}
+        {{ searchState.tmdb.release_date ? '/ ' + searchState.tmdb.release_date.substr(0, 4) : '' }}
+      </div>
       <div style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6; font-weight: 400">
         <div style="grid-column: 1 / 2">Rating</div>
         <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.SubRating }}</div>
@@ -62,24 +65,36 @@
   </div>
 </template>
 
-<script setup="props" lang="ts">
-import { computed, UnwrapRef } from '@vue/reactivity';
+<script lang="ts">
+import { computed, defineComponent, PropType, UnwrapRef } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 import { SubtitleSearchState } from '@/search/state/types';
+import { default as Spinner } from '@/components/Spinner.vue';
+import { default as Expandable } from '@/components/Expandable.vue';
 
-declare const props: {
-  state: string;
-  searchState: UnwrapRef<SubtitleSearchState>;
-};
-
-export { default as Spinner } from '@/components/Spinner.vue';
-export { default as Expandable } from '@/components/Expandable';
-export const prettyState = computed(() => capitalizeFirst(props.state));
-export const prettyMediaType = computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type));
-
-export default {
-  emits: ['remove']
-};
+export default defineComponent({
+  components: {
+    Spinner,
+    Expandable
+  },
+  props: {
+    state: {
+      type: String as PropType<string>,
+      required: true
+    },
+    searchState: {
+      type: Object as PropType<UnwrapRef<SubtitleSearchState>>,
+      required: true
+    }
+  },
+  emits: ['remove'],
+  setup(props) {
+    return {
+      prettyState: computed(() => capitalizeFirst(props.state)),
+      prettyMediaType: computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type))
+    };
+  }
+});
 </script>
 <style scoped>
 /* plussub header */
@@ -111,12 +126,12 @@ export default {
   height: 100%;
   color: white;
   grid-template-areas:
-    '.        .        .            .'
-    'title    title    .            .'
-    'subtitle subtitle .            .'
-    '. .        .            .'
-    'detail detail   detail2      .'
-    '. .        .            .';
+    '.        .        .       .'
+    'title    title    .       .'
+    'subtitle subtitle .       .'
+    '.        .        .       .'
+    'detail   detail   detail2 .'
+    '.        .        .       .';
   grid-template-rows: 8px auto auto 1fr auto 8px;
   grid-template-columns: var(--card-lr-space) 1fr auto var(--card-lr-space);
 }
