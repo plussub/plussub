@@ -30,9 +30,8 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { computed } from '@vue/reactivity';
-import { formatBiggestUnitHoursSmallestUnitMilliseconds } from '@/util/time';
 import { SubtitleEntry } from '@/subtitle/state/types';
-
+import Duration from 'luxon/src/duration.js'
 import { default as Expandable } from '@/components/Expandable';
 
 export default defineComponent({
@@ -55,7 +54,7 @@ export default defineComponent({
     const getTimestamp = ({ time, offset }): string => {
       const parsedOffset = parseInt(offset, 10);
       const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
-      return formatBiggestUnitHoursSmallestUnitMilliseconds({ time: value });
+      return Duration.fromMillis(value).toFormat("hh:mm:ss.SSS");
     };
     const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '');
     const setOffsetTime = () => emit('offset-time', { offsetTime: parseInt(currentOffsetTime.value.toString()) });
@@ -77,7 +76,7 @@ export default defineComponent({
       excerpt: computed(() =>
         parsedPartial.value
           .map(({ from, to, text }, i) => {
-            const value = parseInt(from, 10); //+ (isNaN(<number>currentOffsetTime.value) ? 0 : currentOffsetTime.value);
+            const value = parseInt(from, 10);
             return `${i + 1}\n${getTimestamp({
               time: value,
               offset: currentOffsetTime.value

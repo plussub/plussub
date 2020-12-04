@@ -24,6 +24,7 @@
     "cssbeautify": "^0.3.1",
     "jszip": "^3.5.0",
     "knopf.css": "^1.0.9",
+    "luxon": "^1.25.0",
     "typeface-roboto": "^1.1.13",
     "typeface-rubik": "^1.1.13",
     "uuid": "^8.3.0",

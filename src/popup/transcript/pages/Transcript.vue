@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import {ref, computed, watch, defineComponent, PropType} from 'vue';
-import { formatBiggestUnitMinuteSmallestUnitSeconds } from '@/util/time';
 import { videoList, setCurrentTime as setCurrentTimeState } from '@/video/state';
 import { subtitleState } from '@/subtitle/state';
+import Duration from 'luxon/src/duration.js'
 import { useTimeUpdate } from '@/video/composable';
 
 import { default as PageLayout } from '@/components/PageLayout.vue';
@@ -69,7 +69,7 @@ export default defineComponent({
       video,
       subtitleTexts: computed(() =>
           subtitleState.value.withOffsetParsed.map(({ from, text }) => ({
-            formattedFrom: formatBiggestUnitMinuteSmallestUnitSeconds({ time: from }),
+            formattedFrom: Duration.fromMillis(from).toFormat("mm:ss"),
             text,
             time: from / 1000
           }))
