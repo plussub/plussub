@@ -1,4 +1,13 @@
-<template></template>
+<template>
+
+</template>
+<script>
+import {defineComponent} from "vue";
+
+export default defineComponent({
+
+});
+</script>
 <!--knopf.css-->
 <style>
 /* plussub header */

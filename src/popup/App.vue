@@ -220,10 +220,11 @@ export default defineComponent({
 }
 
 .app--container {
+  background-color: red;
   font-family: 'Roboto', sans-serif;
   margin: 0;
   color: var(--default-text-color);
-  background-color: var(--background-color);
+  /*background-color: var(--background-color);*/
 
   max-width: 400px;
   width: 400px;

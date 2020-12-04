@@ -49,7 +49,12 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css$/,
-          use: ['vue-style-loader', 'css-loader']
+          use: ['vue-style-loader', {
+            loader: 'css-loader',
+            options: {
+              esModule: false
+            }
+          }]
         },
         {
           test: /\.scss$/,
