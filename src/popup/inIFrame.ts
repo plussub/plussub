@@ -47,8 +47,7 @@ export const init = async (): Promise<void> => {
 
     [roboto, rubik, fontAwesome].forEach((entry) => prependLink(document.head, entry));
     [fontAwesome].forEach((entry) => prependLink(shadow, entry));
-
-    [...document.querySelectorAll('head style')].filter((style) => style.innerHTML.startsWith('\n/* plussub header */')).forEach((style) => shadow.prepend(style));
+    shadow.prepend(document.getElementById('plussub-style') as HTMLElement);
 
     document.body.prepend(appShadowDiv);
     app.mount(appDiv);

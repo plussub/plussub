@@ -40,7 +40,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .fa.fa-chevron-down.fa-lg {
   transition: transform 0.3s ease-in-out;
 }

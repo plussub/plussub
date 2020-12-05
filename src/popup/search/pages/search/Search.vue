@@ -101,7 +101,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .search-content--container {
   position: relative;
   width: 100%;

@@ -55,7 +55,7 @@ export default defineComponent({
 </script>
 
 <style>
-/* plussub header */
+
 :host {
   --primary: #5bc0de;
   --primary50: #e4f7fd;
@@ -112,7 +112,7 @@ export default defineComponent({
 }
 </style>
 <style scoped>
-/* plussub header */
+
 .content-navigate-deeper-leave-active,
 .content-navigate-deeper-enter-active {
   transition: all 0.2s ease;

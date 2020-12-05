@@ -39,7 +39,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .knopf-group.search-bar--container {
   display: grid;
   grid-template-areas: 'bar';

@@ -90,7 +90,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .offset-time--container {
   display: grid;
   grid-template-areas:

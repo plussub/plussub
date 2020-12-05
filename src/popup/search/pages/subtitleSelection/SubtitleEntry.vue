@@ -46,7 +46,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .subtitle-selection-content--container--card {
   background-color: var(--surface-color);
   display: grid;

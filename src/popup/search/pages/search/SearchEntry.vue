@@ -48,7 +48,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-/* plussub header */
+
 .search-content--container--card {
   --image-height: 120px;
   background-color: var(--surface-color);

@@ -100,7 +100,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .home-content--container {
   overflow-y: scroll;
   width: 100%;

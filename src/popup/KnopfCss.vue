@@ -10,7 +10,7 @@ export default defineComponent({
 </script>
 <!--knopf.css-->
 <style>
-/* plussub header */
+
 /*! knopf v1.0.9 | MIT License | https://knopf.dev/ */
 :host {
   --knopf-hue: 218;

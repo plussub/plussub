@@ -3,7 +3,7 @@
 </template>
 
 <style scoped>
-/* plussub header */
+
 .loader {
   color: var(--primary);
   text-indent: -9999em;

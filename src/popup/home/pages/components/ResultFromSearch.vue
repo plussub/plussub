@@ -97,7 +97,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-/* plussub header */
+
 .result-from-search--card {
   --image-height: 150px;
   background-color: var(--surface-color);

@@ -84,7 +84,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .search-toolbar--container--language--accordion {
   --search-bar-size: 25px;
   --accordion-size: 100%;

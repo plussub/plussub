@@ -120,7 +120,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .subtitle-selection-content--container {
   position: relative;
   width: 100%;
@@ -138,7 +138,7 @@ export default defineComponent({
 }
 </style>
 <style>
-/* plussub header */
+
 .plussub-toolbar {
   --toolbar-height: auto;
 }

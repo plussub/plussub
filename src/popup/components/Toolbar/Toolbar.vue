@@ -54,7 +54,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .home-toolbar--container--content {
   box-shadow: var(--toolbar-shadow);
   display: grid;

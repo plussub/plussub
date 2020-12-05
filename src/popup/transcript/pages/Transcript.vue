@@ -91,7 +91,7 @@ export default defineComponent({
 
 
 <style scoped>
-/* plussub header */
+
 #transcript-content--container {
   color: #030303;
   height: 100%;

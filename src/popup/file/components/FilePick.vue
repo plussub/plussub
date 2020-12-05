@@ -145,7 +145,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .filepicker-content--container {
   box-sizing: border-box;
   width: calc(100% - 14px);

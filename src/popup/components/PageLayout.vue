@@ -43,7 +43,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* plussub header */
+
 .plussub-toolbar {
   grid-area: toolbar;
   z-index: 1000;

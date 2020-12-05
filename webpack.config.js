@@ -49,16 +49,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css$/,
-          use: ['vue-style-loader', {
-            loader: 'css-loader',
-            options: {
-              esModule: false
-            }
-          }]
-        },
-        {
-          test: /\.scss$/,
-          use: ['vue-style-loader', 'css-loader', 'sass-loader']
+          use: [{ loader: 'style-loader', options: { injectType: 'singletonStyleTag', attributes: { id: 'plussub-style' } } }, 'css-loader']
         },
         {
           test: /\.js$/,
