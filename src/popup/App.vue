@@ -220,7 +220,6 @@ export default defineComponent({
 }
 
 .app--container {
-  background-color: red;
   font-family: 'Roboto', sans-serif;
   margin: 0;
   color: var(--default-text-color);
