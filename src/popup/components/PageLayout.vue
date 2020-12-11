@@ -1,5 +1,5 @@
 <template>
-  <div class="plussub-toolbar">
+  <div class="w-full z-10">
     <!--    <transition name="toolbar-transition" appear>-->
     <Toolbar :has-back="hasBack" :back-fn="backFn">
       <slot name="toolbar" />
@@ -8,7 +8,7 @@
   </div>
 
   <transition :name="contentTransitionName" appear>
-    <div class="plussub-content">
+    <div class="w-full max-w-full overflow-y-auto bg-surface-50 text-on-surface-50 font-sans">
       <slot name="content" />
     </div>
   </transition>
@@ -41,25 +41,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-
-.plussub-toolbar {
-  grid-area: toolbar;
-  z-index: 1000;
-
-  background-color: var(--primary);
-  color: var(--onPrimary);
-  width: 100%;
-  height: var(--toolbar-height);
-  box-shadow: var(--toolbar-shadow);
-}
-
-.plussub-content {
-  grid-area: content;
-  overflow-y: auto;
-  background-color: var(--background-color);
-  width: 100%;
-  max-width: 100%;
-}
-</style>

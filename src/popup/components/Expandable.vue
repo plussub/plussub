@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div style="font-size: var(--card-sub-header-font-size); color: var(--default-header-text-color); display: flex" @click="toggle">
-      <div style="flex-grow: 1">
+    <div class="font-header font-size-xl flex hover:cursor-pointer" @click="toggle">
+      <div class="flex-grow" :class="{'text-primary-700': show}">
         <slot name="title" />
       </div>
-      <a class="knopf flat pill sharp menu-dropdown-chevron">
-        <fa v-if="show" icon="chevron-down" />
-        <fa v-else icon="chevron-up"/>
+      <a class="menu-dropdown-chevron">
+        <fa v-if="show" icon="chevron-up" class="h-icon text-primary-700"/>
+        <fa v-else icon="chevron-down" class="h-icon"/>
       </a>
     </div>
     <transition name="slide">

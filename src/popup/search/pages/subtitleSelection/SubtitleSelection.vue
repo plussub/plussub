@@ -1,28 +1,21 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName" has-back :back-fn="backFn">
-    <template #toolbar>
-      <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Pick Subtitle</div>
-    </template>
     <template #content>
-      <div class="subtitle-selection-content--container">
+      <div class="pt-2 w-full h-full grid relative justify-center subtitle-selection-content--container">
         <div style="grid-area: filter-bar">
-          <FilterBar v-model:filter="filter" />
-          <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" style="margin-top: 4px" />
-          <Divider style="margin-top: 4px" />
+          <FilterBar v-model:filter="filter" class="px-2" />
+          <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" class="px-3 mt-2" />
         </div>
-        <div
-          v-show="showLanguageSelection"
-          style="grid-row: 3/5; grid-column: 1/4; background-color: #29292936; top: 40px; width: 100%; height: 100%; overflow-y: hidden; backdrop-filter: blur(1px)"
-        ></div>
-        <div v-if="!dataReady" style="grid-area: search-results; line-height: 3; text-align: center; overflow-y: auto">Loading subtitles...</div>
-        <div v-else-if="filteredEntries.length" style="grid-area: search-results; overflow-y: auto">
+        <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
+        <div v-if="!dataReady" class="self-center text-center leading-loose" style="grid-area: search-results">Loading subtitles...</div>
+        <div v-else-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in filteredEntries" :key="index">
-            <Divider v-if="index === 0" style="grid-column: 1/3" />
+            <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
             <SubtitleEntry :item="item" @select="select" />
-            <Divider />
+            <Divider class="border-surface-200" />
           </div>
         </div>
-        <div v-else style="grid-area: search-results; line-height: 3; text-align: center">
+        <div v-else class="self-center text-center leading-loose" style="grid-area: search-results">
           <div>Sorry, no subtitle found.</div>
           <div>(╯°□°)╯︵ ┻━┻</div>
         </div>
@@ -120,26 +113,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 .subtitle-selection-content--container {
-  position: relative;
-  width: 100%;
-  height: 100%;
   min-height: 300px;
-  display: grid;
-  justify-content: center;
+  max-height: 500px;
   grid-template-areas:
-    '. .              .'
-    '. filter-bar     .'
-    '. .              .'
-    'search-results search-results search-results';
-  grid-template-rows: 16px auto 16px 1fr;
-  grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
-}
-</style>
-<style>
-
-.plussub-toolbar {
-  --toolbar-height: auto;
+    'filter-bar'
+    '.'
+    'search-results';
+  grid-template-rows: auto 16px 1fr;
+  grid-template-columns: 1fr;
 }
 </style>

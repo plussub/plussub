@@ -1,67 +1,60 @@
 <template>
-  <div class="result-from-search--card" style="position: relative">
-    <div style="grid-row: 1/2; grid-column: 2/3; z-index: 10" class="result-from-search--card--hero--text">
-      <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500">
-        <div style="font-size: 0.65em; margin-right: 16px">{{ prettyState }}</div>
-        <div style="font-size: 0.65em">
+  <div class="relative bg-surface-50 grid w-full rounded-lg shadow-lg border border-primary-700 result-from-search--card">
+    <div style="grid-row: 1/2; grid-column: 1/2;" class="z-10 px-2 grid w-full h-full text-white result-from-search--card--hero--text">
+      <div class="absolute flex font-medium top-2.5	right-2.5">
+        <div class="text-xs mr-1">{{ prettyState }}</div>
+        <div class="text-xs flex align-center">
           <transition name="fade" mode="out-in">
             <Spinner v-if="state !== 'DONE'" />
-            <fa v-else icon="check" style="height: var(--icon-size-sm)" />
+            <fa v-else icon="check" class="h-icon-sm" />
           </transition>
         </div>
       </div>
-      <div style="grid-area: title; font-size: var(--card-header-font-size); font-weight: 400">{{ searchState.tmdb.title }}</div>
-      <div style="grid-area: subtitle; font-size: 0.75em">
+      <div style="grid-area: title;" class="font-header text-xl2 font-medium">{{ searchState.tmdb.title }}</div>
+      <div style="grid-area: subtitle;" class="text-sm">
         {{ prettyMediaType }}
         {{ searchState.tmdb.release_date ? '/ ' + searchState.tmdb.release_date.substr(0, 4) : '' }}
       </div>
-      <div style="grid-area: detail; display: grid; grid-template-columns: auto 1fr; grid-column-gap: 16px; width: 100%; font-size: 0.75em; line-height: 1.6; font-weight: 400">
+      <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 16px;" class="grid w-full text-xs leading-relaxed">
         <div style="grid-column: 1 / 2">Rating</div>
-        <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.SubRating }}</div>
+        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.SubRating }}</div>
         <div style="grid-column: 1 / 2">Format</div>
-        <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.SubFormat }}</div>
+        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.SubFormat }}</div>
         <div style="grid-column: 1 / 2">Language</div>
-        <div style="grid-column: 2 / 3">{{ searchState.openSubtitle.LanguageName }}</div>
+        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.LanguageName }}</div>
       </div>
-      <div style="grid-area: detail2; font-size: 0.75em; align-self: end; font-weight: 500">
-        <div>tmdb {{ searchState.tmdb.vote_average }}</div>
+      <div style="grid-area: detail2;" class="text-xs self-end">
+        <div><span class="mr-2">tmdb</span><span class="font-thin">{{ searchState.tmdb.vote_average }}</span></div>
       </div>
     </div>
-    <div style="grid-area: header; position: relative">
-      <div class="result-from-search--card--hero">
+    <div class="relative" style="grid-area: header;">
+      <div>
         <img
           :src="searchState.tmdb.poster_path"
-          style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius)"
+          class="w-full h-full object-cover rounded-t-lg"
+          style="max-height: var(--image-height);"
         />
+        <div class="w-full h-full absolute inset-0 rounded-t-lg bg-surface-900 bg-opacity-70"/>
       </div>
     </div>
-    <div style="grid-area: overview; display: flex; width: 100%; font-size: 1em; line-height: 1.6">
-      <Expandable style="width: 100%">
+    <div class="px-4 w-full" style="grid-area: overview;">
+      <Expandable class="w-full">
         <template #title>
-          <div style="font-weight: 500; font-family: 'Rubik', sans-serif">Overview</div>
+          <div class="font-medium font-header">Overview</div>
         </template>
         <template #content>
-          <div style="font-weight: 300">
+          <div class="text-sm font-light leading-relaxed">
             {{ searchState.tmdb.overview }}
           </div>
         </template>
       </Expandable>
     </div>
-    <div style="grid-area: settings">
+    <div class="px-4" style="grid-area: settings">
       <slot name="settings" />
     </div>
-    <div style="grid-area: actions; justify-self: end; align-self: center">
-      <a class="knopf flat block end large" style="width: 100%" @click="$emit('remove')">Remove subtitle</a>
+    <div class="justify-self-end self-center px-4" style="grid-area: actions;">
+      <a class="w-full text-primary-500 hover:text-primary-700" @click="$emit('remove')">Remove subtitle</a>
     </div>
-    <div
-      style="
-        grid-column: 1/4;
-        grid-row: 7/10;
-        background-color: var(--card-actions-background-color);
-        border-bottom-left-radius: var(--card-border-radius);
-        border-bottom-right-radius: var(--card-border-radius);
-      "
-    />
   </div>
 </template>
 
@@ -100,31 +93,21 @@ export default defineComponent({
 
 .result-from-search--card {
   --image-height: 150px;
-  background-color: var(--surface-color);
-  box-shadow: var(--card-shadow);
-  border-radius: var(--card-border-radius);
-  display: grid;
   grid-template-areas:
-    'header header   header'
-    '.      .        .'
-    '.      overview .'
-    '.      .        .'
-    '.      settings .'
-    '.      .        .'
-    '.      .        .'
-    '.      actions  .'
-    '.      .        .';
+    'header  '
+    '.       '
+    'overview'
+    '.       '
+    'settings'
+    '.       '
+    '.       '
+    'actions '
+    '.       ';
   grid-template-rows: var(--image-height) 16px auto 16px auto 16px 8px 50px 8px;
-  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
-  width: 100%;
+  grid-template-columns: 1fr;
 }
 
 .result-from-search--card--hero--text {
-  font-family: var(--card-header-font-family);
-  display: grid;
-  width: 100%;
-  height: 100%;
-  color: white;
   grid-template-areas:
     '.        .        .       .'
     'title    title    .       .'
@@ -133,20 +116,7 @@ export default defineComponent({
     'detail   detail   detail2 .'
     '.        .        .       .';
   grid-template-rows: 8px auto auto 1fr auto 8px;
-  grid-template-columns: var(--card-lr-space) 1fr auto var(--card-lr-space);
-}
-
-.result-from-search--card--hero::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.62);
-  opacity: 1;
-  border-top-left-radius: var(--card-border-radius);
-  border-top-right-radius: var(--card-border-radius);
+  grid-template-columns: 4px 1fr auto 4px;
 }
 
 .fade-enter-active,

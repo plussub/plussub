@@ -4,12 +4,6 @@ import FontAwesomeIcon from "@/components/FontAwesomeIcon/fontAwesome";
 
 let app: App;
 
-interface LinkEntry {
-  href: string;
-  integrity?: string;
-  crossorigin?: string;
-}
-
 export const init = async (): Promise<void> => {
   if (document.getElementById('plussubShadow')) {
     const appShadowDiv = <HTMLElement>document.getElementById('plussubShadow');
@@ -27,23 +21,6 @@ export const init = async (): Promise<void> => {
     appDiv.id = 'plussub';
     shadow.appendChild(appDiv);
 
-    const roboto: LinkEntry = { href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap' };
-    const rubik: LinkEntry = { href: 'https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap' };
-
-    const prependLink = (target: HTMLElement | ShadowRoot, { href, integrity, crossorigin }: LinkEntry) => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = href;
-      if (integrity) {
-        link.integrity = integrity;
-      }
-      if (crossorigin) {
-        link.setAttribute('crossorigin', crossorigin);
-      }
-      target.prepend(link);
-    };
-
-    [roboto, rubik].forEach((entry) => prependLink(document.head, entry));
     shadow.prepend(document.getElementById('plussub-style') as HTMLElement);
     document.body.prepend(overlayHightlight);
     document.body.prepend(appShadowDiv);

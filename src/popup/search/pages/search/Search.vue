@@ -1,29 +1,29 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName" :has-back="videoCount > 1" :back-fn="backFn">
-    <template #toolbar>
-      <div style="align-self: center; flex-grow: 1; display: flex; margin-left: 16px">Search Movie or Series</div>
-    </template>
     <template #content>
-      <div class="search-content--container">
+      <div class="pt-2 w-full h-full grid relative justify-center search-content--container">
         <div style="grid-area: search-bar">
-          <SearchBar v-model:query="internalQuery" v-model:loading="loading" />
-          <Divider style="margin-top: 4px" />
+          <SearchBar v-model:query="internalQuery" v-model:loading="loading" class="px-2" />
+          <div v-show="getVideoName() !== ''" class="px-5 mt-2 leading-normal text-sm">
+            <div class="italic">Search Suggestion</div>
+            <a class="relative text-primary-700 hover:underline italic" @click="changeQueryToSuggested">{{ getVideoName() }}</a>
+          </div>
+          <Divider v-if="internalQuery === ''" class="mt-2" />
         </div>
-        <div v-if="searchResults.length" style="grid-area: search-results; overflow-y: auto">
+        <div v-if="searchResults.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in searchResults" :key="index">
-            <Divider v-if="index === 0" style="grid-column: 1/3" />
+            <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
             <SearchEntry :item="item" @select="select" />
-            <Divider style="grid-column: 1/3" />
+            <Divider style="grid-column: 1/3" class="border-surface-200" />
           </div>
         </div>
-        <div v-else-if="internalQuery === ''" style="grid-area: search-results; grid-column: 2/3; grid-row: 4/5">
+        <div v-else-if="internalQuery === ''" style="grid-area: search-results; grid-column: 1/2; grid-row: 3/4" class="mb-4">
           <FilePick v-model:query="internalQuery" />
         </div>
-        <div v-else-if="!loading" style="grid-area: search-results; line-height: 3; text-align: center; align-self: center">
+        <div v-else-if="!loading" class="self-center text-center leading-loose" style="grid-area: search-results">
           <div>Sorry, no movies or tv shows found</div>
           <div>(╯°□°)╯︵ ┻━┻</div>
         </div>
-        <div v-if="searchResults.length" style="grid-area: spacer">&nbsp;</div>
       </div>
     </template>
   </PageLayout>
@@ -35,6 +35,7 @@ import { searchRequest } from './searchRequest';
 import { debounce } from '@/composables';
 import { setTmdbInSelection, TmdbState } from '@/search/state';
 import { setCurrentSelectedSrc, toHome, toSubtitleSelection } from '@/navigation/state';
+import { getVideoName } from '@/util/name';
 import { videoCount } from '@/video/state';
 
 import { default as FilePick } from '@/file/components/FilePick.vue';
@@ -82,6 +83,8 @@ export default defineComponent({
       searchResults,
       loading,
       videoCount,
+      getVideoName,
+      changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
       select: (tmdb: TmdbState): void => {
         setTmdbInSelection(tmdb);
         toSubtitleSelection({
@@ -101,21 +104,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 .search-content--container {
-  position: relative;
-  width: 100%;
-  height: 100%;
   min-height: 300px;
-  display: grid;
-  justify-content: center;
+  max-height: 500px;
   grid-template-areas:
-    '. .              .'
-    '. search-bar     .'
-    '. .              .'
-    'search-results  search-results search-results'
-    '. .              .';
-  grid-template-rows: 16px auto 16px 1fr 16px;
-  grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
+    'search-bar'
+    '.'
+    'search-results';
+  grid-template-rows: auto 16px 1fr;
+  grid-template-columns: 1fr;
 }
 </style>

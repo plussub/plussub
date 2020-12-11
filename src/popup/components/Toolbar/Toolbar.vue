@@ -1,32 +1,36 @@
 <template>
-  <div ref="draggableAreaRef" class="home-toolbar--container--content">
-    <a v-if="hasBack" class="knopf flat pill sharp buttonOnPrimary" style="grid-area: logo;" @click="backFn ? backFn() : toHome()">
-      <fa icon="chevron-left"/>
+  <div ref="draggableAreaRef" class="grid shadow home-toolbar--container--content cursor-grab active:cursor-grabbing bg-primary-500 text-on-primary-500">
+    <a v-if="hasBack" style="grid-area: logo" @click="backFn ? backFn() : toHome()">
+      <fa icon="chevron-left" class="h-full py-2 pl-1 hover:text-on-primary-hover-500"/>
     </a>
-    <div v-else style="width: 64px;">
-      <img :src="logo" alt="logo" style="grid-area: logo; height: 100%; width: 100%; object-fit: contain" />
+    <div v-else>
+      <logo style="grid-area: logo" class="h-full w-full" />
     </div>
 
-    <div style="grid-area: buttons; display: flex; justify-content: flex-end">
+    <div style="grid-area: buttons" class="flex justify-end font-header font-medium text-xl">
       <slot />
     </div>
-    <div style="grid-area: close">
-      <a class="knopf flat pill buttonOnPrimary" @click="close">
-        <fa icon="times" style="height: var(--icon-size-sm)" />
+    <div style="grid-area: close" class="mt-1.5 mr-2">
+      <a @click="close">
+        <fa icon="times" class="h-icon-sm hover:text-on-primary-hover-500" />
       </a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, PropType} from 'vue';
+import { defineComponent, ref, PropType } from 'vue';
 import { useDraggableArea } from '@/composables';
+import { default as Logo } from './Logo.vue';
 
 import { close } from './close';
 import { default as logo } from '@/res/plussub128.png';
 import { toHome } from '@/navigation/state/actions';
 
 export default defineComponent({
+  components: {
+    Logo
+  },
   props: {
     hasBack: {
       type: Boolean as PropType<boolean>,
@@ -39,7 +43,7 @@ export default defineComponent({
       default: undefined
     }
   },
-  setup(){
+  setup() {
     const draggableAreaRef = ref(null);
     useDraggableArea({ draggableAreaRef });
 
@@ -48,25 +52,15 @@ export default defineComponent({
       logo,
       close,
       draggableAreaRef
-    }
+    };
   }
 });
 </script>
 
 <style scoped>
-
 .home-toolbar--container--content {
-  box-shadow: var(--toolbar-shadow);
-  display: grid;
   grid-template-areas: 'logo buttons close .';
   grid-template-rows: 40px;
-  grid-template-columns: auto 1fr auto 4px;
-}
-.home-toolbar--container--content:hover {
-  cursor: grab;
-}
-
-.home-toolbar--container--content:active {
-  cursor: grabbing;
+  grid-template-columns: 50px 1fr auto 4px;
 }
 </style>

@@ -1,34 +1,30 @@
 <template>
-  <div class="search-content--container--card" @click="select(item)">
+  <div class="grid w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer search-content--container--card" @click="select(item)">
     <div style="grid-area: poster">
-      <img
-        v-if="item.poster_path"
-        :src="item.poster_path"
-        style="max-height: var(--image-height); height: 100%; width: 100%; object-fit: cover; border-top-left-radius: var(--card-border-radius); border-top-right-radius: var(--card-border-radius)"
-      />
-      <div v-else style="display: flex; justify-content: center; align-items: center; height: 100%">
-        <fa icon="question"></fa>
+      <img v-if="item.poster_path" :src="item.poster_path" class="h-full w-full object-cover" style="max-height: var(--image-height)" />
+      <div v-else class="flex justify-center align-center h-full">
+        <fa icon="question" class="h-full"></fa>
       </div>
     </div>
     <div style="grid-area: title">
-      <div style="font-weight: 500; font-size: 1.25em; color: var(--default-header-text-color)">
+      <div class="font-header font-medium text-xl two-lines">
         {{ item.title }}
       </div>
-      <div style="font-size: 0.75em; margin-top: 8px; font-weight: 500">
+      <div class="text-xs font-medium mt-2 pl-2">
         {{ prettyMediaType }}
         {{ item.release_date ? '/ ' + item.release_date.substr(0, 4) : '' }}
       </div>
-      <div style="font-size: 0.75em; margin-top: 4px">tmdb {{ item.vote_average }}</div>
+      <div class="text-xs mt-1 pl-2">tmdb {{ item.vote_average }}</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, PropType} from "vue";
-import {TmdbState} from '@/search/state';
-import {capitalizeFirst} from '@/util/string';
+import { computed, defineComponent, PropType } from 'vue';
+import { TmdbState } from '@/search/state';
+import { capitalizeFirst } from '@/util/string';
 
-import {default as posterFallback} from '@/res/posterFallback.png';
+import { default as posterFallback } from '@/res/posterFallback.png';
 
 export default defineComponent({
   emits: ['select'],
@@ -38,46 +34,22 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, {emit}) {
+  setup(props, { emit }) {
     return {
       posterFallback,
       select: (selected) => emit('select', selected),
       prettyMediaType: computed(() => capitalizeFirst(props.item.media_type))
-    }
+    };
   }
 });
 </script>
 <style scoped>
-
 .search-content--container--card {
   --image-height: 120px;
-  background-color: var(--surface-color);
-  display: grid;
   grid-template-areas:
-    '. .      . .     .'
-    '. poster . .     .'
-    '. poster . title .'
-    '. .      . .     .';
-  grid-template-rows: 4px 8px 90px 4px;
-  grid-template-columns: 4px 60px 16px 1fr var(--card-lr-space);
-  width: 100%;
-}
-
-.search-content--container--card--hero::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.62);
-  opacity: 1;
-  border-top-left-radius: var(--card-border-radius);
-  border-top-right-radius: var(--card-border-radius);
-}
-
-.search-content--container--card:hover {
-  background-color: var(--hoverColorOnSurfce);
-  cursor: pointer;
+    'poster . .     .'
+    'poster . title .';
+  grid-template-rows: 8px 110px;
+  grid-template-columns: 60px 16px 1fr 4px;
 }
 </style>

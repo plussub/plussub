@@ -49,7 +49,14 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css$/,
-          use: [{ loader: 'style-loader', options: { injectType: 'singletonStyleTag', attributes: { id: 'plussub-style' } } }, 'css-loader']
+          use: [
+            {
+              loader: 'style-loader',
+              options: { injectType: 'singletonStyleTag', attributes: { id: 'plussub-style' } }
+            },
+            'css-loader',
+            'postcss-loader'
+          ]
         },
         {
           test: /\.js$/,
@@ -99,7 +106,8 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [
           { from: manifestName, to: 'manifest.json' },
-          { from: 'res', to: 'res' }
+          { from: 'res', to: 'res' },
+          { from: 'popup/font.css', to: 'font.css' }
         ]
       })
     ]

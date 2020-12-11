@@ -1,29 +1,27 @@
 <template>
-  <div class="videos--card">
-    <div style="grid-area: header; height: 1px; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); font-weight: 500">
-      <div>
-        <div>Page Videos</div>
-      </div>
+  <div class="grid py-2 h-fit videos--card">
+    <div class="h-px text-2xl font-header font-medium" style="grid-area: header">
+      <div>Page Videos</div>
     </div>
     <div style="grid-area: content">
       <div v-if="videoList.length">
         <div
           v-for="(video, index) in videoList"
           :key="index"
-          style="display: grid; grid-template-columns: 8px 1fr auto"
-          class="video-item"
+          style="grid-template-columns: 8px 1fr auto"
+          class="grid hover:cursor-pointer video-item hover:bg-primary-700 hover:text-on-primary-700"
           @mouseenter="enterVideo(video)"
           @mouseleave="leaveVideo"
           @click="selectVideo(video, index)"
         >
-          <Divider v-if="index === 0" style="grid-column: 1/3" />
-          <div style="grid-column: 2 / 3; height: 45px; display: flex; align-items: center">
+          <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
+          <div class="flex items-center h-11" style="grid-column: 2 / 3">
             <div>Video {{ index + 1 }}</div>
           </div>
-          <Divider style="grid-column: 1/3" />
+          <Divider style="grid-column: 1/3" class="border-surface-200" />
         </div>
       </div>
-      <div v-else style="padding-left: 16px">No videos found in current tab.</div>
+      <div v-else class="px-8">No videos found in current tab.</div>
     </div>
   </div>
 </template>
@@ -56,26 +54,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 .videos--card {
-  background-color: var(--surface-color);
-  /*box-shadow: var(--card-shadow);*/
-  /*border-radius: var(--card-border-radius);*/
-  display: grid;
-  padding-top: var(--card-padding-top);
   grid-template-areas:
     '. header .'
     '. . .'
     'content content content'
     '. . .';
   grid-template-rows: 50px 4px auto 8px;
-  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
-  /* width: 100%; */
-  height: fit-content;
-}
-
-.video-item:hover {
-  background-color: var(--hoverColorOnSurfce);
-  cursor: pointer;
+  grid-template-columns: 16px auto 16px;
 }
 </style>

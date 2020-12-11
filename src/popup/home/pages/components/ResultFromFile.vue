@@ -1,49 +1,27 @@
 <template>
-  <div class="result-from-file--card" style="position: relative">
-    <div style="position: absolute; top: 8px; right: 16px; display: flex; font-weight: 500">
-      <div style="font-size: 0.65em; margin-right: 16px">{{ prettyState }}</div>
-      <div style="font-size: 0.65em">
+  <div class="relative bg-surface-50 grid w-full rounded-lg shadow-lg border border-primary-700 result-from-file--card">
+    <div class="absolute flex font-medium top-2.5	right-2.5">
+      <div class="text-xs mr-1">{{ prettyState }}</div>
+      <div class="text-xs flex align-center">
         <transition name="fade" mode="out-in">
           <Spinner v-if="state !== 'DONE'" />
-          <fa v-else icon="check" style="height: var(--icon-size-sm)" />
+          <fa v-else icon="check" class="h-icon-sm" />
         </transition>
       </div>
     </div>
-    <div style="grid-area: header; font-family: var(--card-header-font-family); font-size: var(--card-header-font-size); color: var(--default-header-text-color); display: flex; font-weight: 500">
+    <div class="font-header font-medium text-2xl flex mt-2 px-2" style="grid-area: header;">
       <div>Subtitle via file</div>
     </div>
-    <div
-      style="
-        grid-area: details;
-        width: 100%;
-        font-size: 1em;
-        line-height: 1.6;
-        margin-bottom: 16px;
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-column-gap: 16px;
-        font-weight: 300;
-        overflow-x: hidden;
-      "
-    >
-      <div style="grid-column: 1 / 2">Filename</div>
-      <div style="grid-column: 2 / 3; word-break: break-word">{{ fileState.filename }}</div>
+    <div class="w-full text-sm px-4" style="grid-area: details;">
+      <span class="font-medium">Filename</span>
+      <span class="one-line">{{ fileState.filename }}</span>
     </div>
-    <div style="grid-area: settings">
+    <div class="px-4" style="grid-area: settings">
       <slot name="settings" />
     </div>
-    <div style="grid-area: actions; justify-self: end; align-self: center">
-      <a class="knopf flat block end large" style="width: 100%" @click="$emit('remove')">Remove subtitle</a>
+    <div class="justify-self-end self-center px-4" style="grid-area: actions;">
+      <a class="w-full text-primary-500 hover:text-primary-700" @click="$emit('remove')">Remove subtitle</a>
     </div>
-    <div
-      style="
-        grid-column: 1/4;
-        grid-row: 7/10;
-        background-color: var(--card-actions-background-color);
-        border-bottom-left-radius: var(--card-border-radius);
-        border-bottom-right-radius: var(--card-border-radius);
-      "
-    />
   </div>
 </template>
 
@@ -79,24 +57,18 @@ export default defineComponent({
 <style scoped>
 
 .result-from-file--card {
-  background-color: var(--surface-color);
-  box-shadow: var(--card-shadow);
-  border-radius: var(--card-border-radius);
-  display: grid;
-  padding-top: var(--card-padding-top);
   grid-template-areas:
-    '.                header           .'
-    '.                .                .'
-    '.                details          .'
-    '.                .                .'
-    '.                settings         .'
-    '.                .                .'
-    '.                .                .'
-    '.                actions          .'
-    '.                .                .';
+    'header  '
+    '.       '
+    'details '
+    '.       '
+    'settings'
+    '.       '
+    '.       '
+    'actions '
+    '.       ';
   grid-template-rows: auto 16px auto 16px auto 16px 8px 50px 8px;
-  grid-template-columns: var(--card-lr-space) 1fr var(--card-lr-space);
-  width: 100%;
+  grid-template-columns: 1fr;
 }
 
 .fade-enter-active,

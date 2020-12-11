@@ -2,23 +2,29 @@
   <div>
     <Expandable :open="true">
       <template #title>
-        <div style="font-weight: 500; font-family: 'Rubik', sans-serif">Subtitle Setting</div>
+        <div class="font-medium font-header">Subtitle Setting</div>
       </template>
       <template #content>
-        <div class="offset-time--container">
-          <div style="grid-area: input-label; font-weight: 500; font-size: 0.75em">Offset time (in ms)</div>
-          <div style="grid-area: input; display: flex; width: 100%">
-            <input v-model="currentOffsetTime" style="height: 1.5em; flex-grow: 1; font-size: 1em" type="number" step="100" @keydown.stop @keypress.stop />
-            <div>
-              <a class="knopf flat small" @click="setOffsetTime">Apply</a>
-              <a class="knopf flat small" @click="reset">Reset</a>
-            </div>
+        <div class="grid offset-time--container">
+          <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input;">
+            <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
+            <input
+              v-model="currentOffsetTime"
+              class="flex-grow rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 leading-none"
+              type="number"
+              step="100"
+              @keydown.stop
+              @keypress.stop
+            />
+            <a class="text-primary-500 hover:text-primary-700 flex-grow self-center flex justify-center" @click="setOffsetTime"><span>Apply</span></a>
+            <a class="text-primary-500 hover:text-primary-700 flex-grow self-center flex" @click="reset"><span>Reset</span></a>
           </div>
-          <div style="grid-area: preview-label; font-weight: 500; font-size: 0.75em">Preview <span v-if="notApplied" style="color: #c35e5e">(not applied)</span></div>
+          <div class="font-medium text-xs mx-2" style="grid-area: preview-label;">Preview <span v-if="notApplied" class="text-destructive-icon">(not applied)</span></div>
           <textarea
             v-model="excerpt"
             disabled
-            style="grid-area: preview; width: 100%; resize: none; height: 150px; font-size: 0.75em; font-family: Roboto, sans-serif; font-weight: 500; box-sizing: border-box"
+            class="mx-2 rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 text-xs font-medium box-border resize-none"
+            style="grid-area: preview; height: 150px; width: calc(100% - 12px);"
           >
           </textarea>
         </div>
@@ -31,7 +37,7 @@
 import { defineComponent, PropType, ref } from 'vue';
 import { computed } from '@vue/reactivity';
 import { SubtitleEntry } from '@/subtitle/state/types';
-import Duration from 'luxon/src/duration.js'
+import Duration from 'luxon/src/duration.js';
 import { default as Expandable } from '@/components/Expandable';
 
 export default defineComponent({
@@ -54,7 +60,7 @@ export default defineComponent({
     const getTimestamp = ({ time, offset }): string => {
       const parsedOffset = parseInt(offset, 10);
       const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
-      return Duration.fromMillis(value).toFormat("hh:mm:ss.SSS");
+      return Duration.fromMillis(value).toFormat('hh:mm:ss.SSS');
     };
     const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '');
     const setOffsetTime = () => emit('offset-time', { offsetTime: parseInt(currentOffsetTime.value.toString()) });
@@ -90,9 +96,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 .offset-time--container {
-  display: grid;
   grid-template-areas:
     '.'
     'input-label'

@@ -1,3 +1,3 @@
 <template>
-  <div style="height: 1px; border-top: 1px solid #bbb;">&nbsp;</div>
+  <div class="h-px border-t border-solid">&nbsp;</div>
 </template>
