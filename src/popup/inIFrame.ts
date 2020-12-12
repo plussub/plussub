@@ -17,8 +17,10 @@ export const init = async (): Promise<void> => {
 
     const shadow = appShadowDiv.attachShadow({ mode: 'open' });
     shadow.appendChild(appDiv);
-
-    shadow.prepend(document.getElementById('plussub-style') as HTMLElement);
+    const plussubStyle = document.getElementById('plussub-style') as HTMLElement;
+    if(plussubStyle){
+      shadow.prepend(plussubStyle);
+    }
     document.body.prepend(appShadowDiv);
     app.mount(appDiv);
   }
