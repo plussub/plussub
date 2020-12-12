@@ -7,7 +7,6 @@ query videoSearch($query: String!)
     entries{
       tmdb_id
       title
-      overview
       poster_path
       release_date
       media_type

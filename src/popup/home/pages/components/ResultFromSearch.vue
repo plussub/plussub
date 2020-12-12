@@ -36,18 +36,6 @@
         <div class="w-full h-full absolute inset-0 rounded-t-lg bg-surface-900 bg-opacity-70"/>
       </div>
     </div>
-    <div class="px-4 w-full" style="grid-area: overview;">
-      <Expandable class="w-full">
-        <template #title>
-          <div class="font-medium font-header">Overview</div>
-        </template>
-        <template #content>
-          <div class="text-sm font-light leading-relaxed">
-            {{ searchState.tmdb.overview }}
-          </div>
-        </template>
-      </Expandable>
-    </div>
     <div class="px-4" style="grid-area: settings">
       <slot name="settings" />
     </div>
@@ -95,14 +83,12 @@ export default defineComponent({
   grid-template-areas:
     'header  '
     '.       '
-    'overview'
-    '.       '
     'settings'
     '.       '
     '.       '
     'actions '
     '.       ';
-  grid-template-rows: var(--image-height) 16px auto 16px auto 16px 8px 50px 8px;
+  grid-template-rows: var(--image-height) 16px auto 16px 8px 50px 8px;
   grid-template-columns: 1fr;
 }
 

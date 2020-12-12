@@ -8,7 +8,6 @@ export interface TmdbState {
   release_date: string;
   description: string;
   vote_average: number;
-  overview: string;
 }
 
 export interface OpensubtitlesState {
