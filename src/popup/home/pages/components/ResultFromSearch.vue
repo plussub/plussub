@@ -19,16 +19,12 @@
         {{ prettyMediaType }}
         {{ searchState.tmdb.release_date ? '/ ' + searchState.tmdb.release_date.substr(0, 4) : '' }}
       </div>
-      <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 16px;" class="grid w-full text-xs leading-relaxed">
-        <div style="grid-column: 1 / 2">Rating</div>
-        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.SubRating }}</div>
-        <div style="grid-column: 1 / 2">Format</div>
-        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.SubFormat }}</div>
-        <div style="grid-column: 1 / 2">Language</div>
-        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.LanguageName }}</div>
-      </div>
-      <div style="grid-area: detail2;" class="text-xs self-end">
-        <div><span class="mr-2">tmdb</span><span class="font-thin">{{ searchState.tmdb.vote_average }}</span></div>
+      <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 8px;" class="grid w-full text-xs leading-relaxed">
+        <div style="grid-column: 1 / 3">Rating</div>
+        <div style="grid-column: 1 / 2" class="px-2">Movie</div>
+        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.SubRating }} / 10</div>
+        <div style="grid-column: 1 / 2" class="px-2">Subtitle</div>
+        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.tmdb.vote_average }} / 10</div>
       </div>
     </div>
     <div class="relative" style="grid-area: header;">
@@ -103,7 +99,7 @@ export default defineComponent({
     'title    title    .       .'
     'subtitle subtitle .       .'
     '.        .        .       .'
-    'detail   detail   detail2 .'
+    'detail   detail   .       .'
     '.        .        .       .';
   grid-template-rows: 8px auto auto 1fr auto 8px;
   grid-template-columns: 4px 1fr auto 4px;
