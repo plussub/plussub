@@ -8,8 +8,11 @@
         </transition>
       </div>
     </div>
-    <div class="font-header font-medium text-2xl flex mt-2 px-2" style="grid-area: header;">
-      <div>Subtitle via file</div>
+    <div class="flex mt-2 px-2 gap-2" style="grid-area: header;">
+      <div class="font-header font-medium text-2xl">Subtitle via file</div>
+      <div class="self-center" :title="`filename - ${fileState.filename}`">
+        <fa icon="question-circle" class="h-icon"/>
+      </div>
     </div>
     <div class="w-full text-sm px-4" style="grid-area: details;">
       <span class="font-medium">Filename</span>
