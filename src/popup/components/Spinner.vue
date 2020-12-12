@@ -5,7 +5,6 @@
 <style scoped>
 
 .loader {
-  color: var(--primary);
   text-indent: -9999em;
   overflow: hidden;
   width: 1em;

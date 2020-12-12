@@ -7,7 +7,9 @@
           <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" class="px-3 mt-2" />
         </div>
         <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
-        <div v-if="!dataReady" class="self-center text-center leading-loose" style="grid-area: search-results">Loading subtitles...</div>
+        <div v-if="!dataReady" class="self-center text-center leading-loose flex place-content-center" style="grid-area: search-results">
+          <Spinner class="text-2xl mb-4"/>
+        </div>
         <div v-else-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in filteredEntries" :key="index">
             <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
@@ -36,9 +38,11 @@ import { default as Divider } from '@/components/Divider.vue';
 import { default as FilterBar } from './FilterBar.vue';
 import { default as SubtitleEntry } from './SubtitleEntry.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
+import {default as Spinner} from "@/components/Spinner.vue";
 
 export default defineComponent({
   components: {
+    Spinner,
     LanguageAccordion,
     Divider,
     FilterBar,
