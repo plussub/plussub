@@ -2,8 +2,7 @@
   <div class="relative bg-surface-50 grid w-full rounded-lg shadow-lg border border-primary-700 result-from-search--card">
     <div style="grid-row: 1/2; grid-column: 1/2;" class="z-10 px-2 grid w-full h-full text-white result-from-search--card--hero--text">
       <div class="absolute flex font-medium top-2.5	right-2.5">
-        <div class="text-xs mr-1">{{ prettyState }}</div>
-        <div class="text-xs flex align-center">
+        <div class="text-xs flex align-center" :title="prettyState">
           <transition name="fade" mode="out-in">
             <Spinner v-if="state !== 'DONE'" />
             <fa v-else icon="check" class="h-icon-sm" />
