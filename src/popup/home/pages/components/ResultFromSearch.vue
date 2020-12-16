@@ -51,12 +51,10 @@ import { computed, defineComponent, PropType, UnwrapRef } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 import { SubtitleSearchState } from '@/search/state/types';
 import { default as Spinner } from '@/components/Spinner.vue';
-import { default as Expandable } from '@/components/Expandable.vue';
 
 export default defineComponent({
   components: {
     Spinner,
-    Expandable
   },
   props: {
     state: {
