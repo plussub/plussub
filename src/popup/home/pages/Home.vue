@@ -2,11 +2,11 @@
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <a class="self-center pr-4" v-if="appState.state !== 'NONE'" @click="toTranscript()">
-         <fa type="local" icon="caption" class="h-icon hover:text-on-primary-hover-500"></fa>
+        <fa type="local" icon="caption" class="h-icon hover:text-on-primary-hover-500"></fa>
       </a>
     </template>
     <template #content>
-      <div class="flex flex-wrap h-full home-content--container" :class="{'bg-surface-100': current === 'search-card' || current === 'file-card'}">
+      <div class="flex flex-wrap h-full home-content--container" :class="{ 'bg-surface-100': current === 'search-card' || current === 'file-card' }">
         <ResultFromSearch v-if="current === 'search-card'" class="m-2" :state="appState.state" :search-state="subtitleSearchState" @remove="remove">
           <template #settings>
             <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
@@ -22,9 +22,29 @@
         <PageVideos v-else-if="current === 'page-videos'" class="w-full" @selected-src="selectedSrc" />
 
         <div class="text-xs w-full flex flex-wrap items-center self-end justify-center mb-1 gap-1">
-          <span>Subtitles by <a href="https://opensubtitles.org/" target="_blank" class="inline-flex gap-1 text-primary-500 hover:text-primary-700 hover:underline">OpenSubtitles <fa icon="external-link-alt" class="self-center	h-icon-sm"/></a> •</span>
-          <span>Movie infos by <a href="https://www.themoviedb.org/" target="_blank" class="inline-flex gap-1 text-primary-500 hover:text-primary-700 hover:underline">tmdb <fa icon="external-link-alt" class="self-center	h-icon-sm"/></a> •</span>
-          <span>Icons by <a href="https://fontawesome.com/" target="_blank" class="inline-flex gap-1 text-primary-500 hover:text-primary-700 hover:underline">font awesome <fa icon="external-link-alt" class="self-center	h-icon-sm"/></a></span>
+          <span>
+            <span class="pr-1">Subtitles by</span>
+            <a href="https://opensubtitles.org/" target="_blank" class="inline-flex gap-0.5 text-primary-500 hover:text-primary-700 hover:underline">
+              <span>OpenSubtitles</span>
+              <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
+            </a>
+            <span>•</span>
+          </span>
+          <span>
+            <span class="pr-1">Movie infos by</span>
+            <a href="https://www.themoviedb.org/" target="_blank" class="inline-flex gap-0.5 text-primary-500 hover:text-primary-700 hover:underline">
+              <span>TMDb</span>
+              <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
+            </a>
+            <span>•</span>
+          </span>
+          <span>
+            <span class="pr-1">Icons by</span>
+            <a href="https://fontawesome.com/" target="_blank" class="inline-flex gap-0.5 text-primary-500 hover:text-primary-700 hover:underline">
+              <span>Font Awesome</span>
+              <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
+            </a>
+          </span>
         </div>
       </div>
     </template>
@@ -32,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, PropType} from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 
 import { default as PageLayout } from '@/components/PageLayout.vue';
 import { default as ResultFromSearch } from './components/ResultFromSearch.vue';
@@ -62,7 +82,6 @@ export default defineComponent({
     }
   },
   setup() {
-
     return {
       appState,
       subtitleState,
@@ -82,16 +101,16 @@ export default defineComponent({
         toSearch();
       },
       current: computed(() => {
-        if(appState.value.state !== 'NONE' && appState.value.src === 'SEARCH'){
-          return 'search-card'
+        if (appState.value.state !== 'NONE' && appState.value.src === 'SEARCH') {
+          return 'search-card';
         }
-        if(appState.value.state !== 'NONE' && appState.value.src === 'FILE') {
+        if (appState.value.state !== 'NONE' && appState.value.src === 'FILE') {
           return 'file-card';
         }
-        if(appState.value.state === 'NONE'){
-          return 'page-videos'
+        if (appState.value.state === 'NONE') {
+          return 'page-videos';
         }
-        return 'unkown'
+        return 'unkown';
       })
     };
   }
@@ -99,10 +118,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.home-content--container{
+.home-content--container {
   min-height: 300px;
   max-height: 500px;
 }
+
 .home-content--container-old {
   overflow-y: scroll;
   width: 100%;

@@ -1,7 +1,7 @@
 <template>
   <div class="relative bg-surface-50 grid w-full rounded-lg shadow-lg border border-primary-700 result-from-search--card">
-    <div style="grid-row: 1/2; grid-column: 1/2;" class="z-10 px-2 grid w-full h-full text-white result-from-search--card--hero--text">
-      <div class="absolute flex font-medium top-2.5	right-2.5">
+    <div style="grid-row: 1/2; grid-column: 1/2" class="z-10 px-2 grid w-full h-full text-white result-from-search--card--hero--text">
+      <div class="absolute flex font-medium top-2.5 right-2.5">
         <div class="text-xs flex align-center" :title="prettyState">
           <transition name="fade" mode="out-in">
             <Spinner v-if="state !== 'DONE'" />
@@ -9,38 +9,44 @@
           </transition>
         </div>
       </div>
-      <div style="grid-area: title;" class="flex gap-2">
+      <div style="grid-area: title" class="flex gap-2">
         <div class="font-header text-xl2 font-medium">{{ searchState.tmdb.title }}</div>
-        <div class="self-center" :title="`format - ${ searchState.openSubtitle.SubFormat} ${'\n'}language - ${searchState.openSubtitle.LanguageName}`">
-          <fa icon="question-circle" class="h-icon-sm"/>
+        <div class="self-center" :title="`format - ${searchState.openSubtitle.SubFormat} ${'\n'}language - ${searchState.openSubtitle.LanguageName}`">
+          <fa icon="question-circle" class="h-icon-sm" />
         </div>
       </div>
-      <div style="grid-area: subtitle;" class="text-sm">
+      <div style="grid-area: subtitle" class="text-sm">
         {{ prettyMediaType }}
         {{ searchState.tmdb.release_date ? '/ ' + searchState.tmdb.release_date.substr(0, 4) : '' }}
       </div>
-      <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 8px;" class="grid w-full text-xs leading-relaxed">
+      <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 8px" class="grid w-full text-xs leading-relaxed">
         <div style="grid-column: 1 / 3">Rating</div>
-        <div style="grid-column: 1 / 2" class="px-2">Movie</div>
+        <div style="grid-column: 1 / 2" class="px-2">
+          <a :href="tmdbLink" target="_blank" class="inline-flex gap-1 w-full text-primary-500 hover:text-primary-700 hover:underline">
+            <span class="flex-grow">TMDb</span>
+            <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
+          </a>
+        </div>
         <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.SubRating }} / 10</div>
-        <div style="grid-column: 1 / 2" class="px-2">Subtitle</div>
+        <div style="grid-column: 1 / 2" class="px-2">
+          <a :href="searchState?.openSubtitle?.SubtitlesLink" target="_blank" class="inline-flex gap-1 w-full text-primary-500 hover:text-primary-700 hover:underline">
+            <span class="flex-grow">Subtitle</span>
+            <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
+          </a>
+        </div>
         <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.tmdb.vote_average }} / 10</div>
       </div>
     </div>
-    <div class="relative" style="grid-area: header;">
+    <div class="relative" style="grid-area: header">
       <div>
-        <img
-          :src="searchState.tmdb.poster_path"
-          class="w-full h-full object-cover rounded-t-lg"
-          style="max-height: var(--image-height);"
-        />
-        <div class="w-full h-full absolute inset-0 rounded-t-lg bg-surface-900 bg-opacity-70"/>
+        <img :src="searchState.tmdb.poster_path" class="w-full h-full object-cover rounded-t-lg" style="max-height: var(--image-height)" />
+        <div class="w-full h-full absolute inset-0 rounded-t-lg bg-surface-900 bg-opacity-70" />
       </div>
     </div>
     <div class="px-4" style="grid-area: settings">
       <slot name="settings" />
     </div>
-    <div class="justify-self-end self-center px-4" style="grid-area: actions;">
+    <div class="justify-self-end self-center px-4" style="grid-area: actions">
       <a class="w-full text-primary-500 hover:text-primary-700" @click="$emit('remove')">Remove subtitle</a>
     </div>
   </div>
@@ -54,7 +60,7 @@ import { default as Spinner } from '@/components/Spinner.vue';
 
 export default defineComponent({
   components: {
-    Spinner,
+    Spinner
   },
   props: {
     state: {
@@ -70,13 +76,13 @@ export default defineComponent({
   setup(props) {
     return {
       prettyState: computed(() => capitalizeFirst(props.state)),
-      prettyMediaType: computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type))
+      prettyMediaType: computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type)),
+      tmdbLink: computed(() => `https://www.themoviedb.org/${props.searchState?.tmdb?.media_type}/${props.searchState.tmdb?.tmdb_id}`)
     };
   }
 });
 </script>
 <style scoped>
-
 .result-from-search--card {
   --image-height: 150px;
   grid-template-areas:
