@@ -12,7 +12,7 @@ export const init = async (): Promise<void> => {
     app = createApp(appComponent).component('fa', FontAwesomeIcon);
     const appShadowDiv = document.createElement('div');
     appShadowDiv.id = 'plussubShadow';
-    appShadowDiv.style.cssText = `position:absolute;z-index: 10000; top: ${window.scrollY + 30}px; right: 16px; width: 400px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); font-size: 16px`;
+    appShadowDiv.style.cssText = `position:absolute;z-index: 10000; top: ${window.scrollY + 30}px; right: 16px; width: 400px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);`;
     const shadow = appShadowDiv.attachShadow({ mode: 'open' });
     const overlayHightlight = document.createElement('div');
     overlayHightlight.id = 'plussub-overlay-highlight';
