@@ -11,7 +11,7 @@
         <fa icon="question-circle" class="h-icon hover:text-primary-700" />
       </div>
     </div>
-    <div style="grid-area: loading">
+    <div style="grid-area: loading" class="flex items-center">
       <LoadingBar :loading="state !== 'DONE'" class="w-full" />
     </div>
     <div class="px-4" style="grid-area: settings">
@@ -56,8 +56,7 @@ export default defineComponent({
     return {
       highlightCurrentVideo,
       removeHighlightFromVideo,
-      infoTooltip: computed(() => `filename - ${props.fileState.filename}`),
-      prettyState: computed(() => capitalizeFirst(props.state))
+      infoTooltip: computed(() => [`filename - ${props.fileState.filename}`, `state - ${capitalizeFirst(props.state)}`].join('\n'))
     };
   }
 });
@@ -74,7 +73,7 @@ export default defineComponent({
     '.       '
     'actions '
     '.       ';
-  grid-template-rows: auto 1px 16px 1fr 16px 8px 50px 8px;
+  grid-template-rows: auto 8px 16px 1fr 16px 8px 50px 8px;
   grid-template-columns: 1fr;
 }
 </style>

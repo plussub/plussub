@@ -87,7 +87,6 @@ export default defineComponent({
     return {
       highlightCurrentVideo,
       removeHighlightFromVideo,
-      prettyState: computed(() => capitalizeFirst(props.state)),
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() =>
         [`format - ${props.searchState.openSubtitle?.SubFormat}`, `language - ${props.searchState.openSubtitle?.LanguageName}`, `state - ${capitalizeFirst(props.state)}`].join('\n')
