@@ -2,19 +2,18 @@
   <div class="relative w-full">
     <div class="flex">
       <a class="flex-grow" :class="{'text-primary-700': showLanguageSelection}" @click="toggleShowLanguageSelection"> Subtitle language: {{ prettySelected }} </a>
-      <transition :name="showLanguageSelection ? 'menu-more' : 'menu-less'">
         <span v-if="showLanguageSelection">
           <a @click="toggleShowLanguageSelection"> <fa icon="chevron-up" class="h-icon text-primary-700" /> </a
         ></span>
         <span v-else>
           <a @click="toggleShowLanguageSelection"> <fa icon="chevron-down" class="h-icon" /></a>
         </span>
-      </transition>
     </div>
 
-    <transition name="slide-down">
-      <div v-show="showLanguageSelection" class="absolute mt-1 inset-x-0 inset-y-full z-30 grid h-full w-full bg-surface-100 shadow search-toolbar--container--language--accordion px-2">
-        <div class="w-full flex justify-center grid focus-within:text-primary-700" style="grid-template-areas: 'bar'; grid-template-columns: 1fr; grid-template-rows: 30px">
+    <transition name="slide">
+      <div v-show="showLanguageSelection" class="absolute mt-1 inset-x-0 inset-y-full z-30 grid h-0 w-full bg-surface-100 shadow search-toolbar--container--language--accordion">
+        <div style="grid-column: 1 / -1; grid-row: 1 / 2;" class="bg-surface-100"></div>
+        <div class="w-full flex justify-center grid focus-within:text-primary-700" style="grid-area: search-bar; grid-template-areas: 'bar'; grid-template-columns: 1fr; grid-template-rows: 30px">
           <input
             ref="input"
             v-model="query"
@@ -30,12 +29,14 @@
             <fa v-else icon="search" class="h-icon-sm" />
           </div>
         </div>
-        <div style="grid-area: space" class="bg-surface-100">&nbsp;</div>
-        <div class="overflow-y-auto overflow-x-hidden bg-surface-100 z-10 shadow-lg" style="grid-area: content">
-          <div v-for="lang in languageList" class="w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer font-lg p-2" :key="lang.iso639_2" @click="select(lang)">
-            {{ lang.iso639Name }} ({{ lang.iso639_2 }})
+        <div style="grid-area: space" class="bg-surface-100 border-l border-r border-primary-700">&nbsp;</div>
+        <transition name="slide" appear>
+          <div v-show="showLanguageSelection" class="overflow-y-auto overflow-x-hidden bg-surface-100 z-10 shadow-lg border-l border-r border-b rounded-b border-primary-700" style="grid-area: content">
+            <div v-for="lang in languageList" class="w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer font-lg p-2" :key="lang.iso639_2" @click="select(lang)">
+              {{ lang.iso639Name }} ({{ lang.iso639_2 }})
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
     </transition>
   </div>
@@ -109,31 +110,21 @@ export default defineComponent({
 <style scoped>
 .search-toolbar--container--language--accordion {
   grid-template-areas:
-    'search-bar'
-    'space'
-    'content';
+    '. search-bar .'
+    '. space .'
+    '. content .';
   grid-template-rows: auto 8px 200px;
+  grid-template-columns: 8px 1fr 8px;
 }
 
-.slide-down-enter-active {
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in;
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.5s ease;
+  max-height: 200px;
 }
 
-.slide-down-leave-active {
-  transition-duration: 0.3s;
-  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-}
-
-.slide-down-enter-to,
-.slide-down-leave-from {
-  max-height: 100px;
-  overflow: hidden;
-}
-
-.slide-down-enter-from,
-.slide-down-leave-to {
-  overflow: hidden;
+.slide-enter-from,
+.slide-leave-to {
   max-height: 0;
 }
 </style>
