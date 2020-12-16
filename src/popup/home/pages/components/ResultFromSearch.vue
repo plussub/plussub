@@ -46,17 +46,23 @@
       <slot name="settings" />
     </div>
     <div class="justify-self-end self-center px-4" style="grid-area: actions">
-      <a class="w-full block text-primary-500 hover:text-primary-700" @click="$emit('remove')">Remove subtitle</a>
-      <a class="w-full block text-primary-500 hover:text-primary-700" @click="$emit('highlight')">Highlight video</a>
+      <a class="w-full flex text-primary-500 hover:text-primary-700 mb-2" @mouseenter="highlightCurrentVideo" @mouseleave="removeHighlightFromVideo">
+        <span class="pr-1"> Highlight video </span>
+        <fa icon="crosshairs" class="h-icon-sm self-center" />
+      </a>
+      <a class="w-full block text-primary-500 hover:text-primary-700" @click="$emit('remove')">
+        <span> Remove subtitle </span>
+      </a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, UnwrapRef } from 'vue';
+import { computed, defineComponent, onUnmounted, PropType, UnwrapRef } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 import { SubtitleSearchState } from '@/search/state/types';
 import { default as Spinner } from '@/components/Spinner.vue';
+import { highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
 
 export default defineComponent({
   components: {
@@ -72,12 +78,18 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['remove', 'highlight'],
+  emits: ['remove'],
   setup(props) {
-    const mediaType =  computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type));
-    const releaseDate =  computed(() => props.searchState.tmdb?.release_date.substr(0, 4) ?? null);
+    const mediaType = computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type));
+    const releaseDate = computed(() => props.searchState.tmdb?.release_date.substr(0, 4) ?? null);
+
+    onUnmounted(() => {
+      removeHighlightFromVideo();
+    });
 
     return {
+      highlightCurrentVideo,
+      removeHighlightFromVideo,
       prettyState: computed(() => capitalizeFirst(props.state)),
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() => `format - ${props.searchState.openSubtitle?.SubFormat} ${'\n'}language - ${props.searchState.openSubtitle?.LanguageName}`),
