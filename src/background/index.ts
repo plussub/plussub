@@ -1,2 +1,1 @@
-import 'onInstalled';
 import 'onPageActionClicked';
