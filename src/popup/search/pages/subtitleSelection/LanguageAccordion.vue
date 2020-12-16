@@ -1,18 +1,22 @@
 <template>
   <div class="relative w-full">
     <div class="flex">
-      <a class="flex-grow" :class="{'text-primary-700': showLanguageSelection}" @click="toggleShowLanguageSelection"> Subtitle language: {{ prettySelected }} </a>
-        <span v-if="showLanguageSelection">
-          <a @click="toggleShowLanguageSelection"> <fa icon="chevron-up" class="h-icon text-primary-700" /> </a
-        ></span>
-        <span v-else>
-          <a @click="toggleShowLanguageSelection"> <fa icon="chevron-down" class="h-icon" /></a>
-        </span>
+      <a class="flex-grow" :class="{ 'text-primary-700': showLanguageSelection }" @click="toggleShowLanguageSelection"> Subtitle language: {{ prettySelected }} </a>
+      <span v-if="showLanguageSelection">
+        <a @click="toggleShowLanguageSelection">
+          <fa icon="chevron-up" class="h-icon text-primary-700" />
+        </a>
+      </span>
+      <span v-else>
+        <a @click="toggleShowLanguageSelection">
+          <fa icon="chevron-down" class="h-icon" />
+        </a>
+      </span>
     </div>
 
     <transition name="slide-language-accordion">
       <div v-show="showLanguageSelection" class="absolute mt-1 inset-x-0 inset-y-full z-30 grid h-0 w-full bg-surface-100 shadow search-toolbar--container--language--accordion">
-        <div style="grid-column: 1 / -1; grid-row: 1 / 2;" class="bg-surface-100"></div>
+        <div style="grid-column: 1 / -1; grid-row: 1 / 2" class="bg-surface-100"></div>
         <div class="w-full flex justify-center grid focus-within:text-primary-700" style="grid-area: search-bar; grid-template-areas: 'bar'; grid-template-columns: 1fr; grid-template-rows: 30px">
           <input
             ref="input"
@@ -31,7 +35,11 @@
         </div>
         <div style="grid-area: space" class="bg-surface-100 border-l border-r border-primary-700">&nbsp;</div>
         <transition name="slide-language-accordion" appear>
-          <div v-show="showLanguageSelection" class="overflow-y-auto overflow-x-hidden bg-surface-100 z-10 shadow-lg border-l border-r border-b rounded-b border-primary-700" style="grid-area: content">
+          <div
+            v-show="showLanguageSelection"
+            class="overflow-y-auto overflow-x-hidden bg-surface-100 z-10 shadow-lg border-l border-r border-b rounded-b border-primary-700"
+            style="grid-area: content"
+          >
             <div v-for="lang in languageList" class="w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer font-lg p-2" :key="lang.iso639_2" @click="select(lang)">
               {{ lang.iso639Name }} ({{ lang.iso639_2 }})
             </div>
@@ -63,13 +71,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const query = ref('');
     const input = ref<HTMLElement | null>(null);
-    const showLanguageSelectionInternal = ref(false);
-    const showLanguageSelection = computed<boolean>({
-      get: () => showLanguageSelectionInternal.value,
+    const showLanguageSelectionInternal = computed<boolean>({
+      get: () => props.showLanguageSelection,
       set: (val) => {
         emit('update:showLanguageSelection', val);
-        showLanguageSelectionInternal.value = val;
-        if (showLanguageSelectionInternal.value && input.value) {
+        if (val && input.value) {
           input.value.focus();
         }
       }
@@ -78,12 +84,9 @@ export default defineComponent({
     return {
       query,
       input,
-
-      showLanguageSelection,
       showLanguageSelectionInternal,
       toggleShowLanguageSelection: (): void => {
-        showLanguageSelection.value = !showLanguageSelection.value;
-        emit('update:showLanguageSelection', showLanguageSelection.value);
+        emit('update:showLanguageSelection', !showLanguageSelectionInternal.value);
       },
 
       languageList: computed(() => {
@@ -94,7 +97,7 @@ export default defineComponent({
         return iso639List.filter(({ iso639Name, iso639_2 }) => iso639Name.toLowerCase().startsWith(lowerCaseQuery) || iso639_2.toLowerCase().startsWith(lowerCaseQuery));
       }),
       select: ({ iso639_2 }): void => {
-        showLanguageSelection.value = false;
+        showLanguageSelectionInternal.value = false;
         emit('update:selected', iso639_2);
       },
       prettySelected: computed(() => capitalizeFirst(props.selected)),
