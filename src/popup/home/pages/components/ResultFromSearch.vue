@@ -11,13 +11,12 @@
       </div>
       <div style="grid-area: title" class="flex gap-2">
         <div class="font-header text-xl2 font-medium">{{ searchState.tmdb.title }}</div>
-        <div class="self-center" :title="`format - ${searchState.openSubtitle.SubFormat} ${'\n'}language - ${searchState.openSubtitle.LanguageName}`">
+        <div class="self-center" :title="infoTooltip">
           <fa icon="question-circle" class="h-icon-sm" />
         </div>
       </div>
       <div style="grid-area: subtitle" class="text-sm">
-        {{ prettyMediaType }}
-        {{ searchState.tmdb.release_date ? '/ ' + searchState.tmdb.release_date.substr(0, 4) : '' }}
+        {{ subHeader }}
       </div>
       <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 8px" class="grid w-full text-xs leading-relaxed">
         <div style="grid-column: 1 / 3">Rating</div>
@@ -74,9 +73,13 @@ export default defineComponent({
   },
   emits: ['remove'],
   setup(props) {
+    const mediaType =  computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type));
+    const releaseDate =  computed(() => props.searchState.tmdb?.release_date.substr(0, 4) ?? null);
+
     return {
       prettyState: computed(() => capitalizeFirst(props.state)),
-      prettyMediaType: computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type)),
+      subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
+      infoTooltip: computed(() => `format - ${props.searchState.openSubtitle?.SubFormat} ${'\n'}language - ${props.searchState.openSubtitle?.LanguageName}`),
       tmdbLink: computed(() => `https://www.themoviedb.org/${props.searchState?.tmdb?.media_type}/${props.searchState.tmdb?.tmdb_id}`)
     };
   }
