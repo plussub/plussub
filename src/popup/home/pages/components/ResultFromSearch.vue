@@ -2,11 +2,8 @@
   <div class="relative bg-surface-50 grid w-full rounded-lg shadow-lg border border-primary-700 result-from-search--card">
     <div style="grid-row: 1/2; grid-column: 1/2" class="z-10 px-2 grid w-full h-full text-white result-from-search--card--hero--text">
       <div class="absolute flex font-medium top-2.5 right-2.5">
-        <div class="text-xs flex align-center" :title="prettyState">
-          <transition name="fade" mode="out-in">
-            <Spinner v-if="state !== 'DONE'" />
-            <fa v-else icon="check" class="h-icon-sm" />
-          </transition>
+        <div class="text-xs flex align-center">
+          <fa icon="times" class="h-icon-sm hover:text-destructive-icon" @click="$emit('remove')" />
         </div>
       </div>
       <div style="grid-area: title" class="flex gap-2">
@@ -42,16 +39,16 @@
         <div class="w-full h-full absolute inset-0 rounded-t-lg bg-surface-900 bg-opacity-70" />
       </div>
     </div>
+    <div style="grid-area: loading">
+      <LoadingBar :loading="state !== 'DONE'" class="w-full"/>
+    </div>
     <div class="px-4" style="grid-area: settings">
       <slot name="settings" />
     </div>
     <div class="justify-self-end self-center px-4" style="grid-area: actions">
-      <a class="w-full flex text-primary-500 hover:text-primary-700 mb-2" @mouseenter="highlightCurrentVideo" @mouseleave="removeHighlightFromVideo">
+      <a class="w-full flex text-primary-500 hover:text-primary-700" @mouseenter="highlightCurrentVideo" @mouseleave="removeHighlightFromVideo">
         <span class="pr-1"> Highlight video </span>
         <fa icon="crosshairs" class="h-icon-sm self-center" />
-      </a>
-      <a class="w-full block text-primary-500 hover:text-primary-700" @click="$emit('remove')">
-        <span> Remove subtitle </span>
       </a>
     </div>
   </div>
@@ -61,12 +58,12 @@
 import { computed, defineComponent, onUnmounted, PropType, UnwrapRef } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 import { SubtitleSearchState } from '@/search/state/types';
-import { default as Spinner } from '@/components/Spinner.vue';
+import { default as LoadingBar} from "@/components/LoadingBar.vue";
 import { highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
 
 export default defineComponent({
   components: {
-    Spinner
+    LoadingBar
   },
   props: {
     state: {
@@ -92,7 +89,9 @@ export default defineComponent({
       removeHighlightFromVideo,
       prettyState: computed(() => capitalizeFirst(props.state)),
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
-      infoTooltip: computed(() => `format - ${props.searchState.openSubtitle?.SubFormat} ${'\n'}language - ${props.searchState.openSubtitle?.LanguageName}`),
+      infoTooltip: computed(() =>
+        [`format - ${props.searchState.openSubtitle?.SubFormat}`, `language - ${props.searchState.openSubtitle?.LanguageName}`, `state - ${capitalizeFirst(props.state)}`].join('\n')
+      ),
       tmdbLink: computed(() => `https://www.themoviedb.org/${props.searchState?.tmdb?.media_type}/${props.searchState.tmdb?.tmdb_id}`)
     };
   }
@@ -103,13 +102,14 @@ export default defineComponent({
   --image-height: 150px;
   grid-template-areas:
     'header  '
+    'loading '
     '.       '
     'settings'
     '.       '
     '.       '
     'actions '
     '.       ';
-  grid-template-rows: var(--image-height) 16px auto 16px 8px 50px 8px;
+  grid-template-rows: var(--image-height) 1px 16px auto 16px 8px 50px 8px;
   grid-template-columns: 1fr;
 }
 
@@ -123,15 +123,5 @@ export default defineComponent({
     '.        .        .       .';
   grid-template-rows: 8px auto auto 1fr auto 8px;
   grid-template-columns: 4px 1fr auto 4px;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 1;
 }
 </style>
