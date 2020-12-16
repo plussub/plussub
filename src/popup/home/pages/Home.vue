@@ -22,9 +22,9 @@
         <PageVideos v-else-if="current === 'page-videos'" class="w-full" @selected-src="selectedSrc" />
 
         <div class="text-xs w-full flex flex-wrap items-center self-end justify-center mb-1 gap-1">
-          <span>Subtitles by <a href="https://opensubtitles.org/" target="_blank" class="text-primary-500 hover:text-primary-700 hover:underline">OpenSubtitles</a> •</span>
-          <span>Movie infos by <a href="https://www.themoviedb.org/" target="_blank" class="text-primary-500 hover:text-primary-700 hover:underline">tmdb</a> •</span>
-          <span>Icons by <a href="https://fontawesome.com/" target="_blank" class="text-primary-500 hover:text-primary-700 hover:underline">font awesome</a></span>
+          <span>Subtitles by <a href="https://opensubtitles.org/" target="_blank" class="inline-flex gap-1 text-primary-500 hover:text-primary-700 hover:underline">OpenSubtitles <fa icon="external-link-alt" class="self-center	h-icon-sm"/></a> •</span>
+          <span>Movie infos by <a href="https://www.themoviedb.org/" target="_blank" class="inline-flex gap-1 text-primary-500 hover:text-primary-700 hover:underline">tmdb <fa icon="external-link-alt" class="self-center	h-icon-sm"/></a> •</span>
+          <span>Icons by <a href="https://fontawesome.com/" target="_blank" class="inline-flex gap-1 text-primary-500 hover:text-primary-700 hover:underline">font awesome <fa icon="external-link-alt" class="self-center	h-icon-sm"/></a></span>
         </div>
       </div>
     </template>
