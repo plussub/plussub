@@ -7,12 +7,13 @@
       <logo style="grid-area: logo" class="h-full w-full" />
     </div>
 
-    <div style="grid-area: buttons" class="flex justify-end font-header font-medium text-xl">
+    <div style="grid-area: buttons" class="flex justify-end font-header font-medium text-xl mr-3">
       <slot />
     </div>
-    <div style="grid-area: close" class="mt-1.5 mr-2">
+
+    <div style="grid-area: close" class="flex items-center mr-3">
       <a @click="close">
-        <fa icon="times" class="h-icon-sm hover:text-on-primary-hover-500" />
+        <fa icon="times" class="h-icon hover:text-on-primary-hover-500" />
       </a>
     </div>
   </div>
