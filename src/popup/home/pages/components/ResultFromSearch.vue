@@ -12,7 +12,7 @@
       <div style="grid-area: title" class="flex gap-2">
         <div class="font-header text-xl2 font-medium">{{ searchState.tmdb.title }}</div>
         <div class="self-center" :title="infoTooltip">
-          <fa icon="question-circle" class="h-icon-sm" />
+          <fa icon="question-circle" class="h-icon-sm hover:text-primary-700" />
         </div>
       </div>
       <div style="grid-area: subtitle" class="text-sm">
