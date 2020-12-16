@@ -46,7 +46,8 @@
       <slot name="settings" />
     </div>
     <div class="justify-self-end self-center px-4" style="grid-area: actions">
-      <a class="w-full text-primary-500 hover:text-primary-700" @click="$emit('remove')">Remove subtitle</a>
+      <a class="w-full block text-primary-500 hover:text-primary-700" @click="$emit('remove')">Remove subtitle</a>
+      <a class="w-full block text-primary-500 hover:text-primary-700" @click="$emit('highlight')">Highlight video</a>
     </div>
   </div>
 </template>
@@ -71,7 +72,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['remove'],
+  emits: ['remove', 'highlight'],
   setup(props) {
     const mediaType =  computed(() => capitalizeFirst(props.searchState?.tmdb?.media_type));
     const releaseDate =  computed(() => props.searchState.tmdb?.release_date.substr(0, 4) ?? null);

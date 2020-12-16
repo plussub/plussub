@@ -10,8 +10,8 @@
           :key="index"
           style="grid-template-columns: 8px 1fr auto"
           class="grid hover:cursor-pointer video-item hover:bg-primary-700 hover:text-on-primary-700"
-          @mouseenter="enterVideo(video)"
-          @mouseleave="leaveVideo"
+          @mouseenter="highlightVideo({video})"
+          @mouseleave="removeHighlightFromVideo"
           @click="selectVideo(video, index)"
         >
           <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
@@ -28,8 +28,7 @@
 
 <script lang="ts">
 import { defineComponent, onUnmounted } from 'vue';
-import { Video, videoList } from '@/video/state';
-import { leaveVideo, enterVideo } from '@/util/hover';
+import { Video, videoList, highlightVideo, removeHighlightFromVideo } from '@/video/state';
 
 import { default as Divider } from '@/components/Divider.vue';
 
@@ -40,12 +39,12 @@ export default defineComponent({
   emits: ['selected-src'],
   setup(_, { emit }) {
     onUnmounted(() => {
-      leaveVideo();
+      removeHighlightFromVideo();
     });
 
     return {
-      enterVideo,
-      leaveVideo,
+      highlightVideo,
+      removeHighlightFromVideo,
       videoList,
       selectVideo: (video: Video): void => emit('selected-src', video.src)
     };

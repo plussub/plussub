@@ -4,8 +4,8 @@
       ref="containerRef"
       style="width: calc(100% - 30px);"
       class="h-full relative flex flex-col text-center justify-evenly self-center justify-self-center box-border border-dashed border-2 border-primary-700"
-      @mouseenter="enterVideo(srcToGlobalVideo[currentSelectedVideoSrc])"
-      @mouseleave="leaveVideo"
+      @mouseenter="highlightCurrentVideo"
+      @mouseleave="removeHighlightFromVideo"
       @dragenter.prevent="dragenter"
       @dragleave="dragleave"
       @drop.prevent="drop"
@@ -41,16 +41,15 @@
 
 <script lang="ts">
 import { defineComponent, onUnmounted, PropType, ref } from 'vue';
-import { enterVideo, leaveVideo } from '@/util/hover';
 import { getVideoName } from '@/util/name';
 import { OnLoadPayload, readFile } from './readFile';
 
-import { srcToGlobalVideo, videoCount, videosWithSubtitle } from '@/video/state';
+import { videoCount, videosWithSubtitle, highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
 import { setSrc, setState } from '@/app/state';
 import { parse, setRaw } from '@/subtitle/state';
 import { getFormatFromFilename } from '@/subtitle/util';
 import { setFilename } from '@/file/state';
-import { currentSelectedVideoSrc, toHome } from '@/navigation/state';
+import { toHome } from '@/navigation/state';
 
 export default defineComponent({
   props: {
@@ -68,7 +67,7 @@ export default defineComponent({
     const dragenter = (): void => containerRef.value.classList.add('bg-surface-200');
     const dragleave = (): void => containerRef.value.classList.remove('bg-surface-200');
 
-    onUnmounted(() => leaveVideo());
+    onUnmounted(() => removeHighlightFromVideo());
 
     const showFileErrorMsg = (msg: string) => {
       fileErrorMsg.value = msg;
@@ -98,12 +97,10 @@ export default defineComponent({
       dragenter,
       dragleave,
       getVideoName,
-      enterVideo,
-      leaveVideo,
+      highlightCurrentVideo,
+      removeHighlightFromVideo,
       videoCount,
       videosWithSubtitle,
-      srcToGlobalVideo,
-      currentSelectedVideoSrc,
 
       drop: (event: DragEvent): void => {
         let droppedFiles = event.dataTransfer?.files;
