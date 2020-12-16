@@ -10,7 +10,7 @@
         </span>
     </div>
 
-    <transition name="slide">
+    <transition name="slide-language-accordion">
       <div v-show="showLanguageSelection" class="absolute mt-1 inset-x-0 inset-y-full z-30 grid h-0 w-full bg-surface-100 shadow search-toolbar--container--language--accordion">
         <div style="grid-column: 1 / -1; grid-row: 1 / 2;" class="bg-surface-100"></div>
         <div class="w-full flex justify-center grid focus-within:text-primary-700" style="grid-area: search-bar; grid-template-areas: 'bar'; grid-template-columns: 1fr; grid-template-rows: 30px">
@@ -30,7 +30,7 @@
           </div>
         </div>
         <div style="grid-area: space" class="bg-surface-100 border-l border-r border-primary-700">&nbsp;</div>
-        <transition name="slide" appear>
+        <transition name="slide-language-accordion" appear>
           <div v-show="showLanguageSelection" class="overflow-y-auto overflow-x-hidden bg-surface-100 z-10 shadow-lg border-l border-r border-b rounded-b border-primary-700" style="grid-area: content">
             <div v-for="lang in languageList" class="w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer font-lg p-2" :key="lang.iso639_2" @click="select(lang)">
               {{ lang.iso639Name }} ({{ lang.iso639_2 }})
@@ -117,14 +117,14 @@ export default defineComponent({
   grid-template-columns: 8px 1fr 8px;
 }
 
-.slide-enter-active,
-.slide-leave-active {
+.slide-language-accordion-enter-active,
+.slide-language-accordion-leave-active {
   transition: all 0.5s ease;
   max-height: 200px;
 }
 
-.slide-enter-from,
-.slide-leave-to {
+.slide-language-accordion-enter-from,
+.slide-language-accordion-leave-to {
   max-height: 0;
 }
 </style>
