@@ -8,7 +8,9 @@
             <div class="italic">Search Suggestion</div>
             <a class="relative text-primary-700 hover:underline italic" @click="changeQueryToSuggested">{{ getVideoName() }}</a>
           </div>
-          <Divider v-if="internalQuery === ''" class="mt-2" />
+        </div>
+        <div style="grid-area: loading" class="flex items-end flex-wrap" :class="{'shadow-md': internalQuery !== ''}">
+          <LoadingBar :loading="loading && internalQuery !== ''" class="w-full"/>
         </div>
         <div v-if="searchResults.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in searchResults" :key="index">
@@ -17,7 +19,7 @@
             <Divider style="grid-column: 1/3" class="border-surface-200" />
           </div>
         </div>
-        <div v-else-if="internalQuery === ''" style="grid-area: search-results; grid-column: 1/2; grid-row: 3/4" class="mb-4">
+        <div v-else-if="internalQuery === ''" style="grid-area: search-results; grid-column: 1/2; grid-row: 3/4" class="my-4">
           <FilePick v-model:query="internalQuery" />
         </div>
         <div v-else-if="!loading" class="self-center text-center leading-loose" style="grid-area: search-results">
@@ -43,9 +45,11 @@ import { default as PageLayout } from '@/components/PageLayout.vue';
 import { default as Divider } from '@/components/Divider.vue';
 import { default as SearchBar } from './SearchBar.vue';
 import { default as SearchEntry } from './SearchEntry.vue';
+import { default as LoadingBar } from "@/components/LoadingBar.vue";
 
 export default defineComponent({
   components: {
+    LoadingBar,
     FilePick,
     PageLayout,
     Divider,
@@ -109,9 +113,9 @@ export default defineComponent({
   max-height: 500px;
   grid-template-areas:
     'search-bar'
-    '.'
+    'loading'
     'search-results';
-  grid-template-rows: auto 16px 1fr;
+  grid-template-rows: auto 8px 1fr;
   grid-template-columns: 1fr;
 }
 </style>

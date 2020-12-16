@@ -7,10 +7,10 @@
           <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" class="px-3 mt-2" />
         </div>
         <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
-        <div v-if="!dataReady" class="self-center text-center leading-loose flex place-content-center" style="grid-area: search-results">
-          <Spinner class="text-2xl mb-4"/>
+        <div style="grid-area: loading" class="flex items-end flex-wrap shadow-md">
+          <LoadingBar :loading="!dataReady" class="w-full"/>
         </div>
-        <div v-else-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
+        <div v-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in filteredEntries" :key="index">
             <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
             <SubtitleEntry :item="item" @select="select" />
@@ -38,11 +38,11 @@ import { default as Divider } from '@/components/Divider.vue';
 import { default as FilterBar } from './FilterBar.vue';
 import { default as SubtitleEntry } from './SubtitleEntry.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
-import {default as Spinner} from "@/components/Spinner.vue";
+import { default as LoadingBar } from "@/components/LoadingBar.vue";
 
 export default defineComponent({
   components: {
-    Spinner,
+    LoadingBar,
     LanguageAccordion,
     Divider,
     FilterBar,
@@ -122,9 +122,9 @@ export default defineComponent({
   max-height: 500px;
   grid-template-areas:
     'filter-bar'
-    '.'
+    'loading'
     'search-results';
-  grid-template-rows: auto 16px 1fr;
+  grid-template-rows: auto 8px 1fr;
   grid-template-columns: 1fr;
 }
 </style>

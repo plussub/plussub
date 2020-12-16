@@ -12,8 +12,7 @@
       @keypress.stop
     />
     <div class="justify-self-end self-center mr-2 text" style="grid-area: bar">
-      <Spinner v-if="loading && internalQuery" class="text-spinner-box" />
-      <fa v-else-if="internalQuery" icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="clear" />
+      <fa v-if="internalQuery" icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="clear" />
       <fa v-else icon="search" class="h-icon-sm" />
     </div>
   </div>
@@ -21,12 +20,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue';
-import { default as Spinner } from '@/components/Spinner.vue';
 
 export default defineComponent({
-  components: {
-    Spinner
-  },
   props: {
     query: {
       type: String as PropType<string>,

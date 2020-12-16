@@ -1,10 +1,12 @@
 <template>
-  <transition name="fade-loading-bar" mode="out-in">
-    <div v-show="loading" class="h-px relative border-t border-solid border-surface-200 w-full">
-      <div class="absolute h-1 bg-primary-700 loading-bar">&nbsp;</div>
-    </div>
-  </transition>
-  <Divider v-show="!loading" class="w-full border-surface-200" />
+  <div>
+    <transition name="fade-loading-bar" mode="out-in">
+      <div v-show="loading" class="h-px relative border-t border-solid border-surface-200 w-full">
+        <div class="absolute h-1 bg-primary-700 loading-bar">&nbsp;</div>
+      </div>
+    </transition>
+    <Divider v-show="!loading" class="w-full border-surface-200" />
+  </div>
 </template>
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
