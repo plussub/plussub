@@ -5,35 +5,18 @@ const { VueLoaderPlugin } = require('vue-loader');
 const ExtensionReloader = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const getBrowserSpecific = (argv) => {
-  const browser = argv.browser ? argv.browser.toLowerCase() : 'unknown';
-  switch (browser) {
-    case 'firefox':
-      return {
-        manifestName: 'manifestFirefox.json',
-        outputPath: 'dist-firefox'
-      };
-    case 'chrome':
-      return {
-        manifestName: 'manifestChrome.json',
-        outputPath: 'dist-chrome'
-      };
-    default:
-      throw new Error('unknown browser', browser)
-  }
-}
-
 module.exports = (env, argv) => {
   const browser = argv.browser ? argv.browser.toLowerCase() : 'chrome'; // chrome or firefox
-  const {manifestName, outputPath} = getBrowserSpecific(argv);
-
+  if(browser !== 'chrome' || browser !== 'firefox'){
+    throw new Error(`unknown browser: ${browser}`);
+  }
   const config = {
     mode: argv.mode ? argv.mode : 'development',
     entry: { popup: './popup/index.ts', background: './background/index.ts' },
     context: path.resolve(__dirname, 'src'),
     output: {
       filename: '[name].js',
-      path: path.resolve(__dirname, outputPath)
+      path: path.resolve(__dirname, `dist-${browser}`)
     },
     resolve: {
       extensions: ['.ts', '.js', '.vue', '.json'],
@@ -113,7 +96,7 @@ module.exports = (env, argv) => {
       new ExtensionReloader(),
       new CopyPlugin({
         patterns: [
-          { from: manifestName, to: 'manifest.json' },
+          { from: `manifest-${browser}.json`, to: 'manifest.json' },
           { from: 'res', to: 'res' },
           { from: 'popup/font.css', to: 'font.css' }
         ]
