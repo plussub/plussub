@@ -41,19 +41,19 @@ jobs:
       - run: zip -r plussub.zip .
       - id: access_token
         run: |
-          export ACCESS_TOKEN = curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&refresh_token=$CHROME_REFRESH_TOKEN&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob"
+          export ACCESS_TOKEN=$(curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&refresh_token=$CHROME_REFRESH_TOKEN&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob")
           echo "::set-output name=ACCESS_TOKEN::$ACCESS_TOKEN"
         env:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
       - run: echo ${{ steps.access_token.outputs.ACCESS_TOKEN }}
-#      - run: >
-#          curl -H "Authorization: Bearer $ACCESS_TOKEN"
-#          -H "x-goog-api-version: 2"
-#          -X PUT
-#          -T plussub.zip
-#          -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID
-#        env:
-#          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
-#          ACCESS_TOKEN: ${{ steps.access_token.outputs.ACCESS_TOKEN }}
+      - run: >
+          curl -H "Authorization: Bearer $ACCESS_TOKEN"
+          -H "x-goog-api-version: 2"
+          -X PUT
+          -T plussub.zip
+          -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID
+        env:
+          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
+          ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
