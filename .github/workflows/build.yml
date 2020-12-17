@@ -20,9 +20,9 @@ jobs:
           node-version: '12.x'
       - run: npm ci
       - run: npm run build:${{ matrix.target }}
-      - run: npm run zip:${{ matrix.target }}
+#      - run: npm run zip:${{ matrix.target }}
       - uses: actions/upload-artifact@v2
         with:
-          name: plussub-${{ matrix.target }}.zip
-          path: plussub-${{ matrix.target }}.zip
+          name: dist-${{ matrix.target }}
+          path: dist-${{ matrix.target }}
 
