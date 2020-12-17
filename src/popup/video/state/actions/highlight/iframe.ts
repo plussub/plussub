@@ -4,7 +4,6 @@ import { appState } from '@/app/state';
 import { isElementNotInViewport } from '@/video/state/actions/highlight/isElementNotInViewport';
 
 export const highlightVideoInIFrame = (video: Video): void => {
-  console.warn('iframe3');
   const el = document.querySelector(`iframe[src="${srcToIFrameSource[video.src].frameSrc}"]`);
   if (!el) {
     return;
