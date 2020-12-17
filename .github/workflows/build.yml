@@ -102,7 +102,6 @@ jobs:
           curl -s
           -H "Authorization: JWT $ACCESS_TOKEN"
           -X POST
-#          todo
           -F "upload=@firefox.zip"
           -F "version=$VERSION"
           -v https://addons.mozilla.org/api/v4/addons
