@@ -51,7 +51,6 @@ jobs:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
-      - run: echo ${{ steps.access_token.outputs.ACCESS_TOKEN }}
       - run: >
           curl -H "Authorization: Bearer $ACCESS_TOKEN"
           -H "x-goog-api-version: 2"
