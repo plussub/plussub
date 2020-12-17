@@ -25,3 +25,12 @@ jobs:
           name: dist-${{ matrix.target }}
           path: dist-${{ matrix.target }}/
 
+  deploy-chrome:
+    needs:
+      - build
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo deploy
