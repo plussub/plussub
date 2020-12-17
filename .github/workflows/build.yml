@@ -38,10 +38,16 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: dist-chrome
-      - run: ls -R
       - run: zip -r plussub.zip .
-      - run: ls -R
-      - run: curl --help
-        env:
-          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
-     # - run: curl -H "Authorization: Bearer $TOKEN"  -H "x-goog-api-version: 2"  -X PUT -T $FILE_NAME -v  https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID
+      - run: >
+          curl "https://accounts.google.com/o/oauth2/token"
+          -d "client_id=${{CHROME_CLIENT_ID}}&client_secret=${{CHROME_CLIENT_SECRET}}&code=${{CHROME_CODE_TOKEN}}&grant_type=authorization_code&redirect_uri=urn:ietf:wg:oauth:2.0:oob" > resp.json
+      - run: cat resp.json
+#      - run: >
+#          curl -H "Authorization: Bearer $TOKEN"
+#          -H "x-goog-api-version: 2"
+#          -X PUT
+#          -T plussub.zip
+#          -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID
+#        env:
+#          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
