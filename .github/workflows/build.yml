@@ -52,7 +52,8 @@ jobs:
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
       - run: >
-          curl -H "Authorization: Bearer $ACCESS_TOKEN"
+          curl -s
+          -H "Authorization: Bearer $ACCESS_TOKEN"
           -H "x-goog-api-version: 2"
           -X PUT
           -T plussub.zip
@@ -61,7 +62,8 @@ jobs:
           APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
           ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
       - run: >
-          curl -H "Authorization: Bearer $ACCESS_TOKEN"
+          curl -s
+          -H "Authorization: Bearer $ACCESS_TOKEN"
           -H "x-goog-api-version: 2"
           -H "Content-Length: 0"
           -X POST
