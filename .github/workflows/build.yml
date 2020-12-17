@@ -39,7 +39,8 @@ jobs:
         with:
           name: dist-chrome
       - run: ls -R
-      - run: echo deploy
+      - run: zip -r plussub.zip .
+      - run: ls -R
       - run: curl --help
         env:
           APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
