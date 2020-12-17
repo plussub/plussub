@@ -4,25 +4,29 @@
 
 is an extension which adds subtitle to HTML <video> tags via file or subtitle search powered by tmbd & opensubtitles.org.
 
-### Build Project
-
+### Install local build in Chrome
 ```
 # install dependencies
 npm install
 
-# build chrome
-npm run start
+# build chrome (dev)
+npm run start:chrome
+```
 
-# build firefoy
+1) Type in Chrome address bar: chrome://extensions/
+2) Activate developer mode
+3) Load unpacked extension...
+4) Select plussub-root-folder/dist-chrome
+
+### Install local build in Firefox
+```
+# install dependencies
+npm install
+
+# build firefox (dev)
 npm run start:firefox
 ```
 
-
-### Install local build in Chrome 
-1) Type in Chrome address bar: chrome://extensions/
-2) Active developer mode
-3) Load unpacked extension...
-4) Select plussub-root-folder/dist-chrome
 
 ## Run tests
 ```
