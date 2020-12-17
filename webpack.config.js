@@ -6,7 +6,7 @@ const ExtensionReloader = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
-  const browser = argv.browser ? argv.browser.toLowerCase() : 'chrome'; // chrome or firefox
+  const browser = argv.browser ? argv.browser.toLowerCase() : 'unknown'; // chrome or firefox
   if(browser !== 'chrome' || browser !== 'firefox'){
     throw new Error(`unknown browser: ${browser}`);
   }
