@@ -7,10 +7,8 @@
     "eslint": "eslint . --ext .ts",
     "start:chrome": "webpack --browser=chrome --watch",
     "build:chrome": "webpack --browser=chrome --mode=production",
-    "zip:chrome": "rm -f plussub-chrome.zip && cd dist-chrome && bestzip ../plussub-chrome.zip *",
     "start:firefox": "webpack --browser=firefox --watch",
     "build:firefox": "webpack --browser=firefox --mode=production",
-    "zip:firefox": "rm -f plussub-firefox.zip && cd dist-firefox && bestzip ../plussub-firefox.zip *",
     "test": "jest --no-cache",
     "version": "node sync-manifest.js && git add src/manifestChrome.json && git add src/manifestFirefox.json"
   },
@@ -59,7 +57,6 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
-    "bestzip": "^2.1.7",
     "copy-webpack-plugin": "^6.3.2",
     "css-loader": "^5.0.1",
     "eslint": "^7.14.0",
