@@ -5,19 +5,28 @@ const { VueLoaderPlugin } = require('vue-loader');
 const ExtensionReloader = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 
-module.exports = (env, argv) => {
-  const browser = argv.browser ? argv.browser.toLowerCase() : 'chrome'; // chrome or firefox
-  let manifestName;
-  let outputPath;
+const getBrowserSpecific = (argv) => {
+  const browser = argv.browser ? argv.browser.toLowerCase() : 'unknown';
   switch (browser) {
     case 'firefox':
-      manifestName = 'manifestFirefox.json';
-      outputPath = 'dist-firefox';
-      break;
+      return {
+        manifestName: 'manifestFirefox.json',
+        outputPath: 'dist-firefox'
+      };
+    case 'chrome':
+      return {
+        manifestName: 'manifestChrome.json',
+        outputPath: 'dist-chrome'
+      };
     default:
-      manifestName = 'manifestChrome.json';
-      outputPath = 'dist-chrome';
+      throw new Error('unknown browser', browser)
   }
+}
+
+module.exports = (env, argv) => {
+  const browser = argv.browser ? argv.browser.toLowerCase() : 'chrome'; // chrome or firefox
+  const {manifestName, outputPath} = getBrowserSpecific(argv);
+
   const config = {
     mode: argv.mode ? argv.mode : 'development',
     entry: { popup: './popup/index.ts', background: './background/index.ts' },
@@ -37,7 +46,6 @@ module.exports = (env, argv) => {
         // on the first HMR update and causes the page to reload.
         // vue: '@vue/runtime-dom',
         storage: path.resolve(__dirname, `src/popup/platform/storage/${browser}/index.ts`),
-        onInstalled: path.resolve(__dirname, `src/background/platform/onInstalled/${browser}/index.ts`),
         onPageActionClicked: path.resolve(__dirname, `src/background/platform/onPageActionClicked/${browser}/index.ts`)
       }
     },

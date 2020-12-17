@@ -5,11 +5,11 @@
   "author": "Stefan Breitenstein",
   "scripts": {
     "eslint": "eslint . --ext .ts",
-    "start": "webpack --watch",
+    "start:chrome": "webpack --browser=chrome --watch",
+    "build:chrome": "webpack --browser=chrome --mode=production",
+    "zip:chrome": "rm -f plussub-chrome.zip && cd dist-chrome && bestzip ../plussub-firefox.zip *",
     "start:firefox": "webpack --browser=firefox --watch",
-    "build": "webpack --mode=production",
     "build:firefox": "webpack --browser=firefox --mode=production",
-    "zip": "rm -f plussub-chrome.zip && cd dist-chrome && bestzip ../plussub-chrome.zip *",
     "zip:firefox": "rm -f plussub-firefox.zip && cd dist-firefox && bestzip ../plussub-firefox.zip *",
     "test": "jest --no-cache",
     "version": "node sync-manifest.js && git add src/manifestChrome.json && git add src/manifestFirefox.json"
