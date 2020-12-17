@@ -6,11 +6,12 @@ const ExtensionReloader = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
-  const browser = argv.browser ? argv.browser.toLowerCase() : 'unknown'; // chrome or firefox
-  if(browser !== 'chrome' || browser !== 'firefox'){
+  const browser = (argv.browser ? argv.browser.toLowerCase() : 'unknown').trim();
+  if(browser !== 'chrome' && browser !== 'firefox'){
     throw new Error(`unknown browser: ${browser}`);
   }
-  const config = {
+
+  return {
     mode: argv.mode ? argv.mode : 'development',
     entry: { popup: './popup/index.ts', background: './background/index.ts' },
     context: path.resolve(__dirname, 'src'),
@@ -103,5 +104,4 @@ module.exports = (env, argv) => {
       })
     ]
   };
-  return config;
 };
