@@ -4,6 +4,7 @@ import { appState } from '@/app/state';
 import { isElementNotInViewport } from '@/video/state/actions/highlight/isElementNotInViewport';
 
 export const highlightVideoInIFrame = (video: Video): void => {
+  console.warn('iframe3');
   const el = document.querySelector(`iframe[src="${srcToIFrameSource[video.src].frameSrc}"]`);
   if (!el) {
     return;
@@ -17,15 +18,17 @@ export const highlightVideoInIFrame = (video: Video): void => {
     }
     plussubShadow.style.top = `${(window.scrollY + 30).toString()}px`;
   }
+
   const overlayHighlight = document.getElementById('plussub-overlay-highlight');
-  if (!overlayHighlight){
+  if (!overlayHighlight) {
     return;
   }
+  console.warn('before declare');
 
   // Not use useWindowMessage as I want to remove event listener immediately
   // todo: implement once
   const handleMessageInPageVideos = (e) => {
-    if (appState.value.state !== 'NONE'){
+    if (appState.value.state !== 'NONE') {
       return;
     }
     const { plusSubAction, boundingClientRect } = e.data;
@@ -39,8 +42,8 @@ export const highlightVideoInIFrame = (video: Video): void => {
         window.scrollY + top + iFrameTop
       }px; left: ${window.scrollX + left + iFrameLeft}px;`;
     }
-    window.addEventListener('message', handleMessageInPageVideos);
-
+  };
+  window.addEventListener('message', handleMessageInPageVideos);
   postWindowMessage({
     window: srcToIFrameSource[video.src].window,
     origin: srcToIFrameSource[video.src].origin,
@@ -49,5 +52,4 @@ export const highlightVideoInIFrame = (video: Video): void => {
       src: video.src
     }
   });
-  };
 };
