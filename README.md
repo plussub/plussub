@@ -1,4 +1,4 @@
-# +Sub Chrome Extension
+# +Sub Browser Extension
 ![build(chrome)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(chrome)/badge.svg)
 ![build(firefox)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(firefox)/badge.svg)
 
