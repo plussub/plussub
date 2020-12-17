@@ -2,8 +2,8 @@ name: build and deploy(chrome)
 
 on:
   push:
-    branches:
-      - master
+#    branches:
+#      - master
     tags:
       - "v*"
 
@@ -35,8 +35,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist-chrome
+      - run: ls -R
       - run: echo deploy
-      - run: curl -v
+      - run: curl --help
         env:
           APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
      # - run: curl -H "Authorization: Bearer $TOKEN"  -H "x-goog-api-version: 2"  -X PUT -T $FILE_NAME -v  https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID
