@@ -27,6 +27,10 @@ npm install
 npm run start:firefox
 ```
 
+1) Type in Firefox address bar: about:debugging
+2) Click "This Firefox"
+3) Load Temporary Add-on...
+4) Select plussub-root-folder/dist-firefox
 
 ## Run tests
 ```
