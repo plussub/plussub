@@ -1,6 +1,6 @@
 {
   "name": "+Sub",
-  "version": "4.11.10",
+  "version": "4.11.11",
   "manifest_version": 2,
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
