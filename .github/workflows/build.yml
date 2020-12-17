@@ -85,14 +85,14 @@ jobs:
         with:
           name: dist-firefox
       - run: zip -r firefox.zip .
-      - id: package_json
+      - id: manifest_json
         run: |
-          PACKAGE_JSON=$(cat package.json)
+          MANIFEST_JSON=$(cat manifest.json)
           # the following lines are only required for multi line json
-          PACKAGE_JSON="${PACKAGE_JSON//'%'/'%25'}"
-          PACKAGE_JSON="${PACKAGE_JSON//$'\n'/'%0A'}"
-          PACKAGE_JSON="${PACKAGE_JSON//$'\r'/'%0D'}"
-          echo "::set-output name=PACKAGE_JSON::$PACKAGE_JSON"
+          MANIFEST_JSON="${MANIFEST_JSON//'%'/'%25'}"
+          MANIFEST_JSON="${MANIFEST_JSON//$'\n'/'%0A'}"
+          MANIFEST_JSON="${MANIFEST_JSON//$'\r'/'%0D'}"
+          echo "::set-output name=MANIFEST_JSON::$MANIFEST_JSON"
       - id: jwtGenerator
         uses: morzzz007/github-actions-jwt-generator@1.0.1
         with:
@@ -107,4 +107,4 @@ jobs:
           -v https://addons.mozilla.org/api/v4/addons
         env:
           ACCESS_TOKEN: ${{ steps.jwtGenerator.outputs.token }}
-          VERSION: ${{ fromJson(steps.package_json.outputs.PACKAGE_JSON).version }}
+          VERSION: ${{ fromJson(steps.manifest_json.outputs.MANIFEST_JSON).version }}
