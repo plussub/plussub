@@ -107,6 +107,5 @@ jobs:
           -F "version=$VERSION"
           -v https://addons.mozilla.org/api/v4/addons
         env:
-          APP_ID: 83078104-a00b-45e2-8749-7a10af244653
           ACCESS_TOKEN: ${{ steps.jwtGenerator.outputs.token }}
           VERSION: ${{ fromJson(steps.package_json.outputs.PACKAGE_JSON).version }}
