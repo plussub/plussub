@@ -7,7 +7,7 @@
     "eslint": "eslint . --ext .ts",
     "start:chrome": "webpack --browser=chrome --watch",
     "build:chrome": "webpack --browser=chrome --mode=production",
-    "zip:chrome": "rm -f plussub-chrome.zip && cd dist-chrome && bestzip ../plussub-firefox.zip *",
+    "zip:chrome": "rm -f plussub-chrome.zip && cd dist-chrome && bestzip ../plussub-chrome.zip *",
     "start:firefox": "webpack --browser=firefox --watch",
     "build:firefox": "webpack --browser=firefox --mode=production",
     "zip:firefox": "rm -f plussub-firefox.zip && cd dist-firefox && bestzip ../plussub-firefox.zip *",
