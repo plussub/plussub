@@ -41,7 +41,11 @@ jobs:
       - run: zip -r plussub.zip .
       - id: access_token
         run: |
-          export ACCESS_TOKEN=$(curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&refresh_token=$CHROME_REFRESH_TOKEN&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob")
+          ACCESS_TOKEN=$(curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&refresh_token=$CHROME_REFRESH_TOKEN&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob")
+          # the following lines are only required for multi line json
+          ACCESS_TOKEN="${ACCESS_TOKEN//'%'/'%25'}"
+          ACCESS_TOKEN="${ACCESS_TOKEN//$'\n'/'%0A'}"
+          ACCESS_TOKEN="${ACCESS_TOKEN//$'\r'/'%0D'}"
           echo "::set-output name=ACCESS_TOKEN::$ACCESS_TOKEN"
         env:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
@@ -54,6 +58,15 @@ jobs:
           -X PUT
           -T plussub.zip
           -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID
+        env:
+          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
+          ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
+      - run: >
+          curl -H "Authorization: Bearer $ACCESS_TOKEN"
+          -H "x-goog-api-version: 2"
+          -H "Content-Length: 0"
+          -X POST
+          -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID/publish
         env:
           APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
           ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
