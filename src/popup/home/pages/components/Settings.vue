@@ -6,7 +6,7 @@
       </template>
       <template #content>
         <div class="grid offset-time--container">
-          <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input;">
+          <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
             <input
               v-model="currentOffsetTime"
@@ -19,12 +19,12 @@
             <a class="text-primary-500 hover:text-primary-700 flex-grow self-center flex justify-center" @click="setOffsetTime"><span>Apply</span></a>
             <a class="text-primary-500 hover:text-primary-700 flex-grow self-center flex" @click="reset"><span>Reset</span></a>
           </div>
-          <div class="font-medium text-xs mx-2" style="grid-area: preview-label;">Preview <span v-if="notApplied" class="text-destructive-icon">(not applied)</span></div>
+          <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview <span v-if="notApplied" class="text-destructive-icon">(not applied)</span></div>
           <textarea
             v-model="excerpt"
             disabled
             class="mx-2 rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 text-xs font-medium box-border resize-none"
-            style="grid-area: preview; height: 150px; width: calc(100% - 12px);"
+            style="grid-area: preview; height: 150px; width: calc(100% - 12px)"
           >
           </textarea>
         </div>
@@ -63,7 +63,10 @@ export default defineComponent({
       return Duration.fromMillis(value).toFormat('hh:mm:ss.SSS');
     };
     const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '');
-    const setOffsetTime = () => emit('offset-time', { offsetTime: parseInt(currentOffsetTime.value.toString()) });
+    const setOffsetTime = () => {
+      const offsetTime = parseInt(currentOffsetTime.value.toString());
+      return emit('offset-time', { offsetTime: Number.isNaN(offsetTime) ? 0 : offsetTime });
+    };
     return {
       currentOffsetTime,
       setOffsetTime,
