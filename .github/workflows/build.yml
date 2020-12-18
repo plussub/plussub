@@ -61,16 +61,16 @@ jobs:
         env:
           APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
           ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
-#      - run: >
-#          curl -s
-#          -H "Authorization: Bearer $ACCESS_TOKEN"
-#          -H "x-goog-api-version: 2"
-#          -H "Content-Length: 0"
-#          -X POST
-#          -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID/publish
-#        env:
-#          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
-#          ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
+      - run: >
+          curl -s
+          -H "Authorization: Bearer $ACCESS_TOKEN"
+          -H "x-goog-api-version: 2"
+          -H "Content-Length: 0"
+          -X POST
+          -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID/publish
+        env:
+          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
+          ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
 
 
   deploy-firefox:
@@ -84,7 +84,8 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: dist-firefox
-#      - run: npx web-ext sign --source-dir ./ --api-key $JWT_ISSUER --api-secret $JWT_SECRET
-#        env:
-#          JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
-#          JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+      - run: npx web-ext sign --source-dir ./
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+          WEB_EXT_ID: "{83078104-a00b-45e2-8749-7a10af244653}"
