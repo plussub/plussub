@@ -84,7 +84,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: dist-firefox
-      - run: npx web-ext sign --source-dir ./
+      - run: npx web-ext sign --source-dir ./ || true
         env:
           WEB_EXT_API_KEY: ${{ secrets.FIREFOX_JWT_ISSUER }}
           WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
