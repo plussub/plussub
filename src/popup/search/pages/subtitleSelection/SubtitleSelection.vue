@@ -3,7 +3,7 @@
     <template #content>
       <div class="pt-2 w-full h-full grid relative justify-center subtitle-selection-content--container">
         <div style="grid-area: filter-bar">
-          <FilterBar v-model:filter="filter" class="px-2" />
+          <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2" />
           <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" class="px-3 mt-2" />
         </div>
         <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
@@ -35,17 +35,17 @@ import { toHome, toSearch } from '@/navigation/state';
 
 import { default as LanguageAccordion } from './LanguageAccordion.vue';
 import { default as Divider } from '@/components/Divider.vue';
-import { default as FilterBar } from './FilterBar.vue';
 import { default as SubtitleEntry } from './SubtitleEntry.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
 import { default as LoadingBar } from "@/components/LoadingBar.vue";
+import { default as InputField } from "@/components/InputField.vue";
 
 export default defineComponent({
   components: {
+    InputField,
     LoadingBar,
     LanguageAccordion,
     Divider,
-    FilterBar,
     SubtitleEntry,
     PageLayout
   },

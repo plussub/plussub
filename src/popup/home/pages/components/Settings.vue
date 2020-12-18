@@ -8,15 +8,7 @@
         <div class="grid offset-time--container">
           <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
-            <input
-              v-model="internalOffsetTime"
-              class="flex-grow rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 leading-none"
-              type="number"
-              step="100"
-              @keydown.stop
-              @keypress.stop
-            />
-            <a class="text-primary-500 hover:text-primary-700 flex-grow self-center flex ml-2" @click="reset"><span>Reset</span></a>
+            <InputField v-model="internalOffsetTime" step="100" type="number"/>
           </div>
           <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview</div>
           <textarea
@@ -38,9 +30,11 @@ import { computed } from '@vue/reactivity';
 import { SubtitleEntry } from '@/subtitle/state/types';
 import Duration from 'luxon/src/duration.js';
 import { default as Expandable } from '@/components/Expandable';
+import InputField from "@/components/InputField.vue";
 
 export default defineComponent({
   components: {
+    InputField,
     Expandable
   },
   props: {

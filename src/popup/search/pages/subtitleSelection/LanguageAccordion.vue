@@ -17,22 +17,7 @@
     <transition name="slide-language-accordion">
       <div v-show="showLanguageSelection" class="absolute mt-1 inset-x-0 inset-y-full z-30 grid h-0 w-full bg-surface-100 shadow search-toolbar--container--language--accordion">
         <div style="grid-column: 1 / -1; grid-row: 1 / 2" class="bg-surface-100"></div>
-        <div class="w-full flex justify-center grid focus-within:text-primary-700" style="grid-area: search-bar; grid-template-areas: 'bar'; grid-template-columns: 1fr; grid-template-rows: 30px">
-          <input
-            ref="input"
-            v-model="query"
-            class="w-full z-30 rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50"
-            style="grid-area: bar"
-            placeholder="Search language"
-            type="text"
-            @keydown.stop
-            @keypress.stop
-          />
-          <div class="justify-self-end self-center mr-2 text z-30" style="grid-area: bar">
-            <fa v-if="query" icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="clear" />
-            <fa v-else icon="search" class="h-icon-sm" />
-          </div>
-        </div>
+        <InputField v-model="query" placeholder="Filter languages" placeholder-icon="filter" class="w-full"  style="grid-area: filter-bar;"/>
         <div style="grid-area: space" class="bg-surface-100 border-l border-r border-primary-700">&nbsp;</div>
         <transition name="slide-language-accordion" appear>
           <div
@@ -54,8 +39,12 @@
 import iso639List from '@/res/iso639List.json';
 import { computed, defineComponent, PropType, ref } from 'vue';
 import { capitalizeFirst } from '@/util/string';
+import { default as InputField } from "@/components/InputField.vue";
 
 export default defineComponent({
+  components: {
+    InputField
+  },
   props: {
     selected: {
       type: String as PropType<string>,
@@ -113,7 +102,7 @@ export default defineComponent({
 <style scoped>
 .search-toolbar--container--language--accordion {
   grid-template-areas:
-    '. search-bar .'
+    '. filter-bar .'
     '. space .'
     '. content .';
   grid-template-rows: auto 8px 200px;

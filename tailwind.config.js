@@ -64,7 +64,8 @@ module.exports = {
   },
   variants: {
     extend: {
-      cursor: ['active', 'hover']
+      cursor: ['active', 'hover'],
+      display: ['hover']
     },
   },
   plugins: [require('@tailwindcss/forms')]

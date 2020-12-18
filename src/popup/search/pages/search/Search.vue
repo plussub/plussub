@@ -3,7 +3,7 @@
     <template #content>
       <div class="pt-2 w-full h-full grid relative justify-center search-content--container">
         <div style="grid-area: search-bar">
-          <SearchBar v-model:query="internalQuery" v-model:loading="loading" class="px-2" />
+          <InputField v-model="internalQuery" class="px-2" placeholder-icon="search" placeholder="Search movie or series"/>
           <div v-show="getVideoName() !== ''" class="px-5 mt-2 leading-normal text-sm">
             <div class="italic">Search Suggestion</div>
             <a class="relative text-primary-700 hover:underline italic" @click="changeQueryToSuggested">{{ getVideoName() }}</a>
@@ -43,17 +43,17 @@ import { videoCount } from '@/video/state';
 import { default as FilePick } from '@/file/components/FilePick.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
 import { default as Divider } from '@/components/Divider.vue';
-import { default as SearchBar } from './SearchBar.vue';
 import { default as SearchEntry } from './SearchEntry.vue';
 import { default as LoadingBar } from "@/components/LoadingBar.vue";
+import {default as InputField } from "@/components/InputField.vue";
 
 export default defineComponent({
   components: {
+    InputField,
     LoadingBar,
     FilePick,
     PageLayout,
     Divider,
-    SearchBar,
     SearchEntry
   },
   props: {
