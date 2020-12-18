@@ -9,17 +9,16 @@
           <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
             <input
-              v-model="currentOffsetTime"
+              v-model="internalOffsetTime"
               class="flex-grow rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 leading-none"
               type="number"
               step="100"
               @keydown.stop
               @keypress.stop
             />
-            <a class="text-primary-500 hover:text-primary-700 flex-grow self-center flex justify-center" @click="setOffsetTime"><span>Apply</span></a>
-            <a class="text-primary-500 hover:text-primary-700 flex-grow self-center flex" @click="reset"><span>Reset</span></a>
+            <a class="text-primary-500 hover:text-primary-700 flex-grow self-center flex ml-2" @click="reset"><span>Reset</span></a>
           </div>
-          <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview <span v-if="notApplied" class="text-destructive-icon">(not applied)</span></div>
+          <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview</div>
           <textarea
             v-model="excerpt"
             disabled
@@ -62,25 +61,19 @@ export default defineComponent({
       const value = parseInt(time, 10) + (isNaN(parsedOffset) ? 0 : parsedOffset);
       return Duration.fromMillis(value).toFormat('hh:mm:ss.SSS');
     };
-    const currentOffsetTime = ref(props.offsetTime ? props.offsetTime : '');
-    const setOffsetTime = () => {
-      const offsetTime = parseInt(currentOffsetTime.value.toString());
-      return emit('offset-time', { offsetTime: Number.isNaN(offsetTime) ? 0 : offsetTime });
-    };
-    return {
-      currentOffsetTime,
-      setOffsetTime,
-      reset: () => {
-        currentOffsetTime.value = 0;
-        setOffsetTime();
-      },
 
-      notApplied: computed(() => {
-        if (!props.offsetTime && !currentOffsetTime.value) {
-          return false;
-        }
-        return props.offsetTime !== parseInt(currentOffsetTime.value.toString(), 10);
-      }),
+    const internalOffsetTime = computed({
+      get: () => props.offsetTime,
+      set: (val) => {
+        const offsetTime = parseInt(val.toString());
+        return emit('offset-time', { offsetTime: Number.isNaN(offsetTime) ? 0 : offsetTime });
+      }
+    });
+
+    return {
+      internalOffsetTime,
+      setOffsetTime: (val) => (internalOffsetTime.value = val),
+      reset: () => (internalOffsetTime.value = 0),
 
       excerpt: computed(() =>
         parsedPartial.value
@@ -88,8 +81,8 @@ export default defineComponent({
             const value = parseInt(from, 10);
             return `${i + 1}\n${getTimestamp({
               time: value,
-              offset: currentOffsetTime.value
-            })} --> ${getTimestamp({ time: to, offset: currentOffsetTime.value })}\n${text}\n`;
+              offset: internalOffsetTime.value
+            })} --> ${getTimestamp({ time: to, offset: internalOffsetTime.value })}\n${text}\n`;
           })
           .join('\n')
       )
