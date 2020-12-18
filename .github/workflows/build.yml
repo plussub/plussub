@@ -61,16 +61,16 @@ jobs:
         env:
           APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
           ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
-      - run: >
-          curl -s
-          -H "Authorization: Bearer $ACCESS_TOKEN"
-          -H "x-goog-api-version: 2"
-          -H "Content-Length: 0"
-          -X POST
-          -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID/publish
-        env:
-          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
-          ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
+#      - run: >
+#          curl -s
+#          -H "Authorization: Bearer $ACCESS_TOKEN"
+#          -H "x-goog-api-version: 2"
+#          -H "Content-Length: 0"
+#          -X POST
+#          -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID/publish
+#        env:
+#          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
+#          ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
 
 
   deploy-firefox:
@@ -84,27 +84,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: dist-firefox
-      - run: zip -r firefox.zip .
-      - id: manifest_json
-        run: |
-          MANIFEST_JSON=$(cat manifest.json)
-          # the following lines are only required for multi line json
-          MANIFEST_JSON="${MANIFEST_JSON//'%'/'%25'}"
-          MANIFEST_JSON="${MANIFEST_JSON//$'\n'/'%0A'}"
-          MANIFEST_JSON="${MANIFEST_JSON//$'\r'/'%0D'}"
-          echo "::set-output name=MANIFEST_JSON::$MANIFEST_JSON"
-      - id: jwtGenerator
-        uses: morzzz007/github-actions-jwt-generator@1.0.1
-        with:
-          secret: ${{ secrets.FIREFOX_JWT_SECRET }}
-          payload: '{"iss":"${{ secrets.FIREFOX_JWT_ISSUER }}"}'
-      - run: >
-          curl -s
-          -H "Authorization: JWT $ACCESS_TOKEN"
-          -X POST
-          -F "upload=@firefox.zip"
-          -F "version=$VERSION"
-          -v https://addons.mozilla.org/api/v4/addons
-        env:
-          ACCESS_TOKEN: ${{ steps.jwtGenerator.outputs.token }}
-          VERSION: ${{ fromJson(steps.manifest_json.outputs.MANIFEST_JSON).version }}
+#      - run: npx web-ext sign --source-dir ./ --api-key $JWT_ISSUER --api-secret $JWT_SECRET
+#        env:
+#          JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+#          JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
