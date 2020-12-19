@@ -3,17 +3,27 @@ import { SubtitleEntry } from '@/subtitle/state/types';
 
 export interface AddVttToHostVideoPayload {
   video: Pick<Video, 'el'>;
-  subtitle: SubtitleEntry[];
+  subtitles: SubtitleEntry[];
+  subtitleId: string;
 }
 
-export const addVttToHostVideo = ({ video: { el }, subtitle }: AddVttToHostVideoPayload): void => {
+const cues: Record<string, VTTCue[]> = {};
+
+export const addVttToHostVideo = ({ video: { el }, subtitles, subtitleId }: AddVttToHostVideoPayload): void => {
   if (!el) {
     return;
   }
-  const cues = subtitle.map((srt) => new VTTCue(srt.from / 1000, srt.to / 1000, `<c.plussub>${srt.text}</c.plussub>`));
+  if (cues[subtitleId]) {
+    cues[subtitleId].forEach((c, idx) => {
+      c.startTime = subtitles[idx].from / 1000;
+      c.endTime = subtitles[idx].to / 1000;
+    });
+    return;
+  }
+  cues[subtitleId] = subtitles.map((srt) => new VTTCue(srt.from / 1000, srt.to / 1000, `<c.plussub>${srt.text}</c.plussub>`));
   Array.from(el.textTracks).forEach((track) => (track.mode = 'hidden'));
   const track = el.addTextTrack('subtitles', `Plussub`, 'en');
-  cues.forEach((cue) => track.addCue(cue));
+  cues[subtitleId].forEach((cue) => track.addCue(cue));
   track.mode = 'showing';
   el.classList.add('plussub');
 };
@@ -26,6 +36,7 @@ export const removeVttFromHostVideo = ({ video: { el } }: RemoveVttFromHostVideo
   if (!el) {
     return;
   }
+  Object.keys(cues).forEach((k) => delete cues[k]);
   el.classList.remove('plussub');
   Array.from(el.textTracks)
     .filter((track) => track.label === 'Plussub')

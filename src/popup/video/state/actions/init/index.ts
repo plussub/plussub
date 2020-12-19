@@ -45,7 +45,14 @@ export const init = (): void => {
 
   useWindowMessage({
     [VideosInIFrame]: ({ origin, source, data: { videos, frameSrc } }) => {
-      videos.forEach((e) => (srcToIFrameSource[removeUrlHash(e.currentSrc)] = { window: source as Window, frameSrc, origin }));
+      videos.forEach(
+        (e) =>
+          (srcToIFrameSource[removeUrlHash(e.currentSrc)] = {
+            window: source as Window,
+            frameSrc,
+            origin
+          })
+      );
       Object.assign(
         srcToIFrameVideo.value,
         Object.fromEntries(
@@ -78,19 +85,23 @@ export const init = (): void => {
       if (prevSrc && srcToGlobalVideo.value[prevSrc]) {
         removeVttFrom({ video: srcToGlobalVideo.value[prevSrc] });
       }
-      if (src && srcToGlobalVideo.value[src]) {
-        removeVttFrom({ video: srcToGlobalVideo.value[src] });
-        addVttTo({ video: srcToGlobalVideo.value[src], subtitle: window.plusSub_subtitle.value.withOffsetParsed });
-      }
     }
   );
 
   watch(
     () => window.plusSub_subtitle.value.withOffsetParsed,
-    (subtitle) =>
-      videosWithSubtitle.value.forEach((video) => {
-        removeVttFrom({ video });
-        addVttTo({ video, subtitle });
-      })
+    (subtitles) => {
+      if (!currentSelectedVideoSrc.value) {
+        console.warn('current selected is null');
+        return;
+      }
+      const video = srcToGlobalVideo.value[currentSelectedVideoSrc.value];
+      const subtitleId = window.plusSub_subtitle.value.id;
+      if (!subtitleId) {
+        console.warn('subtitleId is null');
+        return;
+      }
+      addVttTo({ video, subtitles, subtitleId });
+    }
   );
 };

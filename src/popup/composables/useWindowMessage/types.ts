@@ -49,7 +49,8 @@ export type RemoveVideoInIFrameEvent = GenericEvent<typeof RemoveVideoInIFrame> 
 export type CloseEvent = GenericEvent<typeof Close>;
 
 export type AddSubtitleEvent = GenericEventWithSrc<typeof AddSubtitle> & {
-  subtitle: SubtitleEntry[];
+  subtitles: SubtitleEntry[];
+  subtitleId: string;
 };
 export type RemoveSubtitleEvent = GenericEventWithSrc<typeof RemoveSubtitle>;
 

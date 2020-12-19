@@ -110,7 +110,7 @@ export default defineComponent({
         if (appState.value.state === 'NONE') {
           return 'page-videos';
         }
-        return 'unkown';
+        return 'unknown';
       })
     };
   }

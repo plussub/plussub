@@ -5,6 +5,7 @@ query subtitleSearch($tmdb_id: String!, $language: String!, $media_type: String!
 {
   subtitleSearch(tmdb_id: $tmdb_id, language: $language, media_type: $media_type){
     entries{
+      SubHash
       SubFileName
       SubDownloadLink
       ZipDownloadLink

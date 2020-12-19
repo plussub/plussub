@@ -5,14 +5,15 @@ import { setState } from '@/app/state';
 
 export const parse = (): void => {
   setState({ state: 'PARSING' });
-  const {raw, format} = window.plusSub_subtitle.value;
-  if (!raw || !format) {
+  const {raw, format, id} = window.plusSub_subtitle.value;
+  if (!raw || !format || !id) {
     setState({ state: 'ERROR' });
     return;
   }
   const parsed = (format === '.srt' || format === '.vtt') ? srtVttParse(raw).entries : assSsaParse(raw);
 
   window.plusSub_subtitle.value = {
+    id,
     raw,
     parsed,
     format,

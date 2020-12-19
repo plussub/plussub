@@ -6,7 +6,10 @@ import {getFormatFromFilename} from "@/subtitle/util/getFormatFromFilename";
 export const triggerDownload = async (): Promise<void> => {
   const { openSubtitle } = window.plusSub_subtitleSearch.value;
   const link = openSubtitle?.ZipDownloadLink;
-  if (!link) {
+  const subHash = openSubtitle?.SubHash
+
+  if (!link || !subHash) {
+    console.warn('no link or subhash');
     return;
   }
   setState({ state: 'DOWNLOADING' });
@@ -19,6 +22,6 @@ export const triggerDownload = async (): Promise<void> => {
       format: getFormatFromFilename(zipFile.name)
     }));
 
-  setRaw({ raw, format });
+  setRaw({ raw, format, id: subHash });
   parse();
 };

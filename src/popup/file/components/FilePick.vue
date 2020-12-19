@@ -82,7 +82,7 @@ export default defineComponent({
       setState({ state: 'SELECTED' });
       setSrc({ src: 'FILE' });
 
-      setRaw({ raw: result, format: getFormatFromFilename(fileName) });
+      setRaw({ raw: result, format: getFormatFromFilename(fileName), id: fileName });
       parse();
       toHome({
         contentTransitionName: 'content-navigate-select-to-home'

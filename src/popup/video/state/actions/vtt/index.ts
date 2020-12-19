@@ -6,14 +6,15 @@ import {SubtitleEntry} from "@/subtitle/state/types";
 
 interface AddVttToPayload {
   video: Video;
-  subtitle: SubtitleEntry[];
+  subtitles: SubtitleEntry[];
+  subtitleId: string;
 }
 
-export const addVttTo = ({ video, subtitle }: AddVttToPayload): void => {
+export const addVttTo = ({ video, subtitles, subtitleId }: AddVttToPayload): void => {
   if (video.in === 'HOST') {
-    addVttToHostVideo({ video, subtitle });
+    addVttToHostVideo({ video, subtitles, subtitleId });
   } else {
-    addVttToIFrameVideo({video, subtitle });
+    addVttToIFrameVideo({video, subtitles, subtitleId });
   }
   video.hasSubtitle = true;
 };

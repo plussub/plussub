@@ -46,7 +46,8 @@ export default defineComponent({
         const el = video.el as HTMLVideoElement;
         addVttToHostVideo({
           video: { el },
-          subtitle: e.data.subtitle
+          subtitles: e.data.subtitles,
+          subtitleId: e.data.subtitleId
         });
       },
       [RemoveSubtitle]: (e) => {

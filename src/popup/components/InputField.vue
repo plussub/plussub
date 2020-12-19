@@ -25,7 +25,7 @@ import { computed, defineComponent, PropType, ref } from 'vue';
 export default defineComponent({
   props: {
     modelValue: {
-      type: String as PropType<string>,
+      type: [String, Number],
       required: true
     },
     placeholderIcon: {

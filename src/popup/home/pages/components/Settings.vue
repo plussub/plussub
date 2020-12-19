@@ -8,7 +8,10 @@
         <div class="grid offset-time--container">
           <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
-            <InputField v-model="internalOffsetTime" step="100" type="number"/>
+            <div class="w-full flex">
+              <input v-model="internalOffsetTime" type="range" step="100" min="-3000" max="3000" style="width: 60%" class="mr-2">
+              <InputField v-model="internalOffsetTime" step="100" type="number" style="width: 115px"/>
+            </div>
           </div>
           <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview</div>
           <textarea
@@ -56,6 +59,7 @@ export default defineComponent({
       return Duration.fromMillis(value).toFormat('hh:mm:ss.SSS');
     };
 
+    // todo: require debounce
     const internalOffsetTime = computed({
       get: () => props.offsetTime,
       set: (val) => {

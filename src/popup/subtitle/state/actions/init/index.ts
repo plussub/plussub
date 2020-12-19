@@ -5,6 +5,7 @@ export const init = (): void => {
   window.plusSub_subtitle = window.plusSub_subtitle
     ? ref({ ...window.plusSub_subtitle.value })
     : ref<UnwrapRef<SubtitleState>>({
+        id: null,
         raw: null,
         parsed: [],
         format: null,

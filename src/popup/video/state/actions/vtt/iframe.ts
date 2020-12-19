@@ -5,10 +5,11 @@ import { srcToIFrameSource } from '@/video/state';
 
 export interface AddVttToIFrameVideoPayload {
   video: Pick<Video, 'src'>;
-  subtitle: SubtitleEntry[];
+  subtitles: SubtitleEntry[];
+  subtitleId: string;
 }
 
-export const addVttToIFrameVideo = ({ video: { src }, subtitle }: AddVttToIFrameVideoPayload): void => {
+export const addVttToIFrameVideo = ({ video: { src }, subtitles, subtitleId }: AddVttToIFrameVideoPayload): void => {
   const iFrameSource = srcToIFrameSource[src];
   if (!iFrameSource) {
     return;
@@ -22,7 +23,8 @@ export const addVttToIFrameVideo = ({ video: { src }, subtitle }: AddVttToIFrame
       plusSubAction: AddSubtitle,
       src,
       // get rid of all proxies ... dont knnow a better way yet -_(*.*)_-
-      subtitle: JSON.parse(JSON.stringify(subtitle))
+      subtitles: JSON.parse(JSON.stringify(subtitles)),
+      subtitleId
     }
   });
 };

@@ -10,10 +10,11 @@ export interface SubtitleEntry {
 export type SubtitleFormat = '.srt' | '.vtt' | '.ass' | '.ssa';
 
 export type SubtitleState = Ref<{
+  id: string | null;
   raw: string | null;
   parsed: SubtitleEntry[];
   withOffsetParsed: SubtitleEntry[];
   offsetTime: number;
-  format: SubtitleFormat | null
+  format: SubtitleFormat | null;
 }>;
 

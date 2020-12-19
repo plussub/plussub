@@ -11,6 +11,7 @@ export interface TmdbState {
 }
 
 export interface OpensubtitlesState {
+  SubHash: string;
   SubFileName: string;
   SubDownloadLink: string;
   ZipDownloadLink: string;
