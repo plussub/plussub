@@ -3,7 +3,7 @@ import {Ref} from "@vue/reactivity";
 
 interface Payload<T> {
   resultRef: Ref;
-  loadingRef: Ref;
+  loadingRef?: Ref;
   fn: (...args) => Promise<T>;
   timeout: number;
 }
@@ -17,7 +17,9 @@ export const debounce = <T> ({ fn, timeout, resultRef, loadingRef }: Payload<T>)
   let nextFn;
 
   const dbFn = async (...args) => {
-    loadingRef.value = true;
+    if(loadingRef){
+      loadingRef.value = true;
+    }
     if (isCalled) {
       nextFn = () => dbFn(...args);
       return;
@@ -31,7 +33,9 @@ export const debounce = <T> ({ fn, timeout, resultRef, loadingRef }: Payload<T>)
       if (_nextFn) {
         _nextFn();
       } else {
-        loadingRef.value = false;
+        if(loadingRef){
+          loadingRef.value = false;
+        }
       }
     }, timeout);
   };

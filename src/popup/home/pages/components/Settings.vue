@@ -9,8 +9,8 @@
           <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
             <div class="w-full flex px-2 mt-0.5">
-              <input v-model="internalOffsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6">
-              <InputField v-model="internalOffsetTime" step="100" type="number" class="pr-2"/>
+              <input ref="range" :value="internalOffsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6" @input="setOffsetTimeDebounced"/>
+              <InputField v-model="internalOffsetTime" step="100" type="number" class="pr-2" />
             </div>
           </div>
           <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview</div>
@@ -33,7 +33,8 @@ import { computed } from '@vue/reactivity';
 import { SubtitleEntry } from '@/subtitle/state/types';
 import Duration from 'luxon/src/duration.js';
 import { default as Expandable } from '@/components/Expandable';
-import InputField from "@/components/InputField.vue";
+import InputField from '@/components/InputField.vue';
+import { debounce } from '@/composables';
 
 export default defineComponent({
   components: {
@@ -59,7 +60,6 @@ export default defineComponent({
       return Duration.fromMillis(value).toFormat('hh:mm:ss.SSS');
     };
 
-    // todo: require debounce
     const internalOffsetTime = computed({
       get: () => props.offsetTime,
       set: (val) => {
@@ -68,9 +68,17 @@ export default defineComponent({
       }
     });
 
+    const { fn: setOffsetTimeDebounced } = debounce<string>({
+      fn: (val) => val,
+      timeout: 50,
+      resultRef: internalOffsetTime
+    });
+    const range = ref<HTMLElement | null>(null);
+
     return {
+      range,
+      setOffsetTimeDebounced: () => setOffsetTimeDebounced(range.value.value),
       internalOffsetTime,
-      setOffsetTime: (val) => (internalOffsetTime.value = val),
       reset: () => (internalOffsetTime.value = 0),
 
       excerpt: computed(() =>
