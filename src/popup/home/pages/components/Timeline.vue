@@ -9,7 +9,8 @@ import { computed } from '@vue/reactivity';
 import { SubtitleEntry } from '@/subtitle/state/types';
 import { videoList } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
-import { subtitleState, setOffsetTime } from '@/subtitle/state';
+import { subtitleState } from '@/subtitle/state';
+import Duration from 'luxon/src/duration.js';
 
 export default defineComponent({
   props: {
@@ -20,9 +21,14 @@ export default defineComponent({
   },
   setup(props) {
     const canvas = ref<HTMLCanvasElement | null>(null);
-    const parsedPartial = computed(() =>
-      JSON.parse(JSON.stringify(subtitleState.value.withOffsetParsed.length > 5 ? subtitleState.value.withOffsetParsed.slice(0, 5) : subtitleState.value.withOffsetParsed))
-    );
+    const parsedPartial = computed(() => {
+      try {
+        return JSON.parse(JSON.stringify(subtitleState.value.withOffsetParsed.length > 5 ? subtitleState.value.withOffsetParsed.slice(0, 5) : subtitleState.value.withOffsetParsed));
+      } catch (e) {
+        console.warn(e);
+        return [] as SubtitleEntry[];
+      }
+    });
     const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
     const videoTimePoint = { x: 0, y: 0 };
     const subtitleTimeEntry = parsedPartial.value.map((e, i) => ({
@@ -36,15 +42,31 @@ export default defineComponent({
     let chart: null | Chart = null;
     watch(
       () => parsedPartial.value,
-      () => {
-        parsedPartial.value.forEach((e, i) => {
-          subtitleTimeEntry[i].timePoint[0].x = e.from;
-          subtitleTimeEntry[i].timePoint[1].x = e.to;
-        });
-        if (chart) {
-          chart.update();
+      (val) => {
+        if (!val || !chart || !chart.data || !chart.data.datasets) {
+          return;
         }
-      }
+        console.warn(chart.data.datasets);
+        try {
+          chart.data.datasets = [
+            chart.data.datasets[0],
+            ...val.map((e, i) => ({
+              label: e.text,
+              data: [
+                { x: e.from, y: i % 2 === 0 ? 10 : -10 },
+                { x: e.to, y: i % 2 === 0 ? 10 : -10 }
+              ],
+              backgroundColor: 'rgba(6,182,212, 0.2)',
+              borderColor: 'rgba(6,182,212, 1)',
+              borderWidth: 1
+            }))
+          ];
+        } catch (e) {
+          console.warn(e);
+        }
+        chart.update();
+      },
+      { immediate: true }
     );
 
     if (video.value) {
@@ -83,6 +105,9 @@ export default defineComponent({
           ]
         },
         options: {
+          animation: {
+            duration: 0
+          },
           legend: {
             display: false
           },
@@ -94,7 +119,8 @@ export default defineComponent({
                   display: true,
                   suggestedMin: 0,
                   suggestedMax: 10,
-                  beginAtZero: true
+                  beginAtZero: true,
+                  callback: (value) => Duration.fromMillis(value).toFormat('hh:mm:ss.SSS')
                 }
               }
             ],
