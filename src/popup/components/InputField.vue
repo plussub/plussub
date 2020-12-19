@@ -3,7 +3,7 @@
     <input
         ref="input"
         v-model="internal"
-        class="rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50"
+        class="w-full rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50"
         autofocus
         style="grid-area: bar"
         :placeholder="placeholder"
@@ -69,4 +69,45 @@ export default defineComponent({
 input[type=number]::-webkit-inner-spin-button {
   opacity: 1
 }
+input[type=range]:focus,input[type=range]:active,input[type=range] {
+  -webkit-appearance: none;
+  border: none;
+  background-color: transparent;
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  height: 1px;
+  background: #374151;
+  border: none;
+  border-radius: 3px;
+}
+
+input[type=range]::-moz-range-track {
+  height: 1px;
+  background: #374151;
+  border: none;
+  border-radius: 3px;
+}
+
+input[type=range]::-moz-range-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background: #06b6d4;
+  margin-top: -6px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background: #06b6d4;
+  margin-top: -6px;
+}
+
 </style>

@@ -8,9 +8,9 @@
         <div class="grid offset-time--container">
           <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
-            <div class="w-full flex">
-              <input v-model="internalOffsetTime" type="range" step="100" min="-3000" max="3000" style="width: 60%" class="mr-2">
-              <InputField v-model="internalOffsetTime" step="100" type="number" style="width: 115px"/>
+            <div class="w-full flex px-2 mt-0.5">
+              <input v-model="internalOffsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6">
+              <InputField v-model="internalOffsetTime" step="100" type="number" class="pr-2"/>
             </div>
           </div>
           <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview</div>
