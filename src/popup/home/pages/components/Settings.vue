@@ -14,13 +14,14 @@
             </div>
           </div>
           <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview</div>
-          <textarea
-            v-model="excerpt"
-            disabled
-            class="mx-2 rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 text-xs font-medium box-border resize-none"
-            style="grid-area: preview; height: 150px; width: calc(100% - 12px)"
-          >
-          </textarea>
+<!--          <textarea-->
+<!--            v-model="excerpt"-->
+<!--            disabled-->
+<!--            class="mx-2 rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 text-xs font-medium box-border resize-none"-->
+<!--            style="grid-area: preview; height: 150px; width: calc(100% - 12px)"-->
+<!--          >-->
+<!--          </textarea>-->
+          <Timeline style="grid-area: preview; height: 150px; width: calc(100% - 12px)" :parsed="parsed"/>
         </div>
       </template>
     </Expandable>
@@ -33,11 +34,13 @@ import { computed } from '@vue/reactivity';
 import { SubtitleEntry } from '@/subtitle/state/types';
 import Duration from 'luxon/src/duration.js';
 import { default as Expandable } from '@/components/Expandable';
+import { default as Timeline } from './Timeline';
 import InputField from '@/components/InputField.vue';
 import { debounce } from '@/composables';
 
 export default defineComponent({
   components: {
+    Timeline,
     InputField,
     Expandable
   },
