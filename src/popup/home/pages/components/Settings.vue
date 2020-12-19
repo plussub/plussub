@@ -73,11 +73,11 @@ export default defineComponent({
       timeout: 50,
       resultRef: internalOffsetTime
     });
-    const range = ref<HTMLElement | null>(null);
+    const range = ref<HTMLInputElement | null>(null);
 
     return {
       range,
-      setOffsetTimeDebounced: () => setOffsetTimeDebounced(range.value.value),
+      setOffsetTimeDebounced: () => setOffsetTimeDebounced(range.value?.value),
       internalOffsetTime,
       reset: () => (internalOffsetTime.value = 0),
 
