@@ -34,7 +34,6 @@ export default defineComponent({
           return;
         }
         chart.value.data.datasets = [chart.value.data.datasets[0], chart.value.data.datasets[1], ...getSubtitleDataset()];
-
         chart.value.update();
       },
       { immediate: true }
@@ -55,16 +54,16 @@ export default defineComponent({
 
     const videoTimePoint = { x: 0, y: 0 };
     const videoTimePointLine = { x: 0, y: 12 };
-    if (video.value) {
-      useTimeUpdate({
-        video: video.value,
-        fn: ({ currentTime }): void => {
-          videoTimePoint.x = currentTime * 1000;
-          videoTimePointLine.x = currentTime * 1000;
-          chart.value?.update();
-        }
-      });
-    }
+    useTimeUpdate({
+      video,
+      fn: ({ currentTime }): void => {
+        console.warn(currentTime);
+        videoTimePoint.x = currentTime * 1000;
+        videoTimePointLine.x = currentTime * 1000;
+        chart.value?.update();
+      }
+    });
+
     onMounted(() => {
       if (canvas.value === null) {
         return;
@@ -78,7 +77,7 @@ export default defineComponent({
               data: [videoTimePoint],
               backgroundColor: 'rgba(51,65,85, 0.2)',
               borderColor: 'rgba(51, 65, 85, 1)',
-              borderWidth: 1,
+              borderWidth: 1
             },
             {
               data: [videoTimePoint, videoTimePointLine],
@@ -107,7 +106,7 @@ export default defineComponent({
                 const { x: time } = (datasets?.[datasetIndex]?.data?.[index] as ChartPoint) ?? { x: 0 };
                 return Duration.fromMillis(time).toFormat('hh:mm:ss.SSS');
               },
-              label: ({ datasetIndex }, { datasets }) => datasetIndex ? datasets?.[datasetIndex]?.label ?? '' : ''
+              label: ({ datasetIndex }, { datasets }) => (datasetIndex ? datasets?.[datasetIndex]?.label ?? '' : '')
             }
           },
           scales: {

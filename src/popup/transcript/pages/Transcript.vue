@@ -43,14 +43,12 @@ export default defineComponent({
     const currentTime = ref<number>(0);
     const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
 
-    if (video.value) {
-      useTimeUpdate({
-        video: video.value,
-        fn: ({currentTime: currentTimeFromVideo}): void => {
-          currentTime.value = currentTimeFromVideo;
-        }
-      });
-    }
+    useTimeUpdate({
+      video,
+      fn: ({currentTime: currentTimeFromVideo}): void => {
+        currentTime.value = currentTimeFromVideo;
+      }
+    });
 
     const currentPos = ref(-1);
     const transcriptContentContainer = ref<HTMLElement | null>(null);
