@@ -10,13 +10,16 @@ import { videoList } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
 import { subtitleState } from '@/subtitle/state';
 import Duration from 'luxon/src/duration.js';
+import {findNext} from "@/home/pages/components/findNext";
 
 export default defineComponent({
   setup() {
     const canvas = ref<HTMLCanvasElement | null>(null);
-    const parsedPartial = computed(() => subtitleState.value.withOffsetParsed.length > 5 ? subtitleState.value.withOffsetParsed.slice(0, 5) : subtitleState.value.withOffsetParsed);
+    const parsed = computed(() => subtitleState.value.withOffsetParsed);
     const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
     const chart = ref<null | Chart>(null);
+    const currentPos = ref(0);
+    const parsedPartial = computed(() => parsed.value.filter((e, idx) => idx >= currentPos.value && idx <= currentPos.value + 5));
 
     watch(
       [parsedPartial, chart],
@@ -51,6 +54,10 @@ export default defineComponent({
         videoTimePoint.x = currentTime * 1000;
         videoTimePointLine.x = currentTime * 1000;
         chart.value?.update();
+        const pos = findNext(Math.ceil(currentTime * 1000), parsed.value);
+        if (pos !== -1){
+          currentPos.value = pos;
+        }
       }
     });
 
@@ -107,7 +114,7 @@ export default defineComponent({
                   display: true,
                   suggestedMin: 0,
                   suggestedMax: 10,
-                  beginAtZero: true,
+                  beginAtZero: false,
                   callback: (value) => Duration.fromMillis(value).toFormat('hh:mm:ss.SSS')
                 }
               }
@@ -121,7 +128,7 @@ export default defineComponent({
                   display: false,
                   suggestedMin: 0,
                   suggestedMax: 15,
-                  beginAtZero: true
+                  beginAtZero: false
                 }
               }
             ]
