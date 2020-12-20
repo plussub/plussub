@@ -19,64 +19,47 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup() {
     const canvas = ref<HTMLCanvasElement | null>(null);
-    const parsedPartial = computed(() => {
-      try {
-        return JSON.parse(JSON.stringify(subtitleState.value.withOffsetParsed.length > 5 ? subtitleState.value.withOffsetParsed.slice(0, 5) : subtitleState.value.withOffsetParsed));
-      } catch (e) {
-        console.warn(e);
-        return [] as SubtitleEntry[];
-      }
-    });
+    const parsedPartial = computed(() =>
+      JSON.parse(JSON.stringify(subtitleState.value.withOffsetParsed.length > 5 ? subtitleState.value.withOffsetParsed.slice(0, 5) : subtitleState.value.withOffsetParsed))
+    );
     const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
     const videoTimePoint = { x: 0, y: 0 };
-    const subtitleTimeEntry = parsedPartial.value.map((e, i) => ({
-      text: e.text,
-      timePoint: [
-        { x: e.from, y: i % 2 === 0 ? 10 : -10 },
-        { x: e.to, y: i % 2 === 0 ? 10 : -10 }
-      ]
-    }));
+    const chart = ref<null | Chart>(null);
 
-    let chart: null | Chart = null;
     watch(
-      () => parsedPartial.value,
-      (val) => {
-        if (!val || !chart || !chart.data || !chart.data.datasets) {
+      [parsedPartial, chart],
+      () => {
+        if (!parsedPartial.value || !chart.value?.data?.datasets) {
           return;
         }
-        console.warn(chart.data.datasets);
-        try {
-          chart.data.datasets = [
-            chart.data.datasets[0],
-            ...val.map((e, i) => ({
-              label: e.text,
-              data: [
-                { x: e.from, y: i % 2 === 0 ? 10 : -10 },
-                { x: e.to, y: i % 2 === 0 ? 10 : -10 }
-              ],
-              backgroundColor: 'rgba(6,182,212, 0.2)',
-              borderColor: 'rgba(6,182,212, 1)',
-              borderWidth: 1
-            }))
-          ];
-        } catch (e) {
-          console.warn(e);
-        }
-        chart.update();
+        chart.value.data.datasets = [chart.value.data.datasets[0], ...getSubtitleDataset()];
+
+        chart.value.update();
       },
       { immediate: true }
     );
+
+    const getSubtitleDataset = () =>
+      parsedPartial.value.map((e, i) => ({
+        label: e.text,
+        data: [
+          { x: e.from, y: i % 2 === 0 ? 10 : 5 },
+          { x: e.to, y: i % 2 === 0 ? 10 : 5 }
+        ],
+        backgroundColor: 'rgba(6,182,212, 0.2)',
+        borderColor: 'rgba(6,182,212, 1)',
+        borderWidth: 1,
+        fill: false
+      }));
 
     if (video.value) {
       useTimeUpdate({
         video: video.value,
         fn: ({ currentTime }): void => {
           videoTimePoint.x = currentTime * 1000;
-          if (chart) {
-            chart.update();
-          }
+          chart.value?.update();
         }
       });
     }
@@ -85,23 +68,17 @@ export default defineComponent({
         return;
       }
 
-      chart = new Chart(canvas.value, {
+      chart.value = new Chart(canvas.value, {
         type: 'line',
         data: {
           datasets: [
             {
               data: [videoTimePoint],
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(51,65,85, 0.2)',
+              borderColor: 'rgba(51, 65, 85, 1)',
               borderWidth: 1
             },
-            ...subtitleTimeEntry.map((e) => ({
-              label: e.text,
-              data: e.timePoint,
-              backgroundColor: 'rgba(6,182,212, 0.2)',
-              borderColor: 'rgba(6,182,212, 1)',
-              borderWidth: 1
-            }))
+            ...getSubtitleDataset()
           ]
         },
         options: {
