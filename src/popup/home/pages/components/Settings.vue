@@ -21,7 +21,7 @@
 <!--            style="grid-area: preview; height: 150px; width: calc(100% - 12px)"-->
 <!--          >-->
 <!--          </textarea>-->
-          <Timeline style="grid-area: preview; height: 150px; width: calc(100% - 12px)" :parsed="parsed"/>
+          <Timeline style="grid-area: preview; height: 80px; width: calc(100% - 12px)" :parsed="parsed"/>
         </div>
       </template>
     </Expandable>

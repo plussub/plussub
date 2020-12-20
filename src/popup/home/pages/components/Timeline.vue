@@ -25,7 +25,6 @@ export default defineComponent({
       JSON.parse(JSON.stringify(subtitleState.value.withOffsetParsed.length > 5 ? subtitleState.value.withOffsetParsed.slice(0, 5) : subtitleState.value.withOffsetParsed))
     );
     const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
-    const videoTimePoint = { x: 0, y: 0 };
     const chart = ref<null | Chart>(null);
 
     watch(
@@ -34,7 +33,7 @@ export default defineComponent({
         if (!parsedPartial.value || !chart.value?.data?.datasets) {
           return;
         }
-        chart.value.data.datasets = [chart.value.data.datasets[0], ...getSubtitleDataset()];
+        chart.value.data.datasets = [chart.value.data.datasets[0], chart.value.data.datasets[1], ...getSubtitleDataset()];
 
         chart.value.update();
       },
@@ -54,11 +53,14 @@ export default defineComponent({
         fill: false
       }));
 
+    const videoTimePoint = { x: 0, y: 0 };
+    const videoTimePointLine = { x: 0, y: 12 };
     if (video.value) {
       useTimeUpdate({
         video: video.value,
         fn: ({ currentTime }): void => {
           videoTimePoint.x = currentTime * 1000;
+          videoTimePointLine.x = currentTime * 1000;
           chart.value?.update();
         }
       });
@@ -76,7 +78,14 @@ export default defineComponent({
               data: [videoTimePoint],
               backgroundColor: 'rgba(51,65,85, 0.2)',
               borderColor: 'rgba(51, 65, 85, 1)',
-              borderWidth: 1
+              borderWidth: 1,
+            },
+            {
+              data: [videoTimePoint, videoTimePointLine],
+              backgroundColor: 'rgba(51,65,85, 0.2)',
+              borderColor: 'rgba(51, 65, 85, 1)',
+              borderWidth: 1,
+              pointRadius: 0
             },
             ...getSubtitleDataset()
           ]
@@ -121,7 +130,7 @@ export default defineComponent({
                 },
                 ticks: {
                   display: false,
-                  suggestedMin: -15,
+                  suggestedMin: 0,
                   suggestedMax: 15,
                   beginAtZero: true,
                   callback: (value) => Duration.fromMillis(value).toFormat('hh:mm:ss.SSS')
