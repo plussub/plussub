@@ -3,27 +3,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 import { Chart, ChartPoint } from 'chart.js';
 import { computed } from '@vue/reactivity';
-import { SubtitleEntry } from '@/subtitle/state/types';
 import { videoList } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
 import { subtitleState } from '@/subtitle/state';
 import Duration from 'luxon/src/duration.js';
 
 export default defineComponent({
-  props: {
-    parsed: {
-      type: Array as PropType<SubtitleEntry[]>,
-      required: true
-    }
-  },
   setup() {
     const canvas = ref<HTMLCanvasElement | null>(null);
-    const parsedPartial = computed(() =>
-      JSON.parse(JSON.stringify(subtitleState.value.withOffsetParsed.length > 5 ? subtitleState.value.withOffsetParsed.slice(0, 5) : subtitleState.value.withOffsetParsed))
-    );
+    const parsedPartial = computed(() => subtitleState.value.withOffsetParsed.length > 5 ? subtitleState.value.withOffsetParsed.slice(0, 5) : subtitleState.value.withOffsetParsed);
     const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
     const chart = ref<null | Chart>(null);
 
@@ -131,8 +122,7 @@ export default defineComponent({
                   display: false,
                   suggestedMin: 0,
                   suggestedMax: 15,
-                  beginAtZero: true,
-                  callback: (value) => Duration.fromMillis(value).toFormat('hh:mm:ss.SSS')
+                  beginAtZero: true
                 }
               }
             ]

@@ -9,13 +9,13 @@
       <div class="flex flex-wrap h-full home-content--container" :class="{ 'bg-surface-100': current === 'search-card' || current === 'file-card' }">
         <ResultFromSearch v-if="current === 'search-card'" class="m-2" :state="appState.state" :search-state="subtitleSearchState" @remove="remove">
           <template #settings>
-            <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
+            <Settings :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
           </template>
         </ResultFromSearch>
 
         <ResultFromFile v-else-if="current === 'file-card'" class="m-2" :state="appState.state" :file-state="fileState" @remove="remove">
           <template #settings>
-            <Settings :parsed="subtitleState.parsed" :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
+            <Settings :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
           </template>
         </ResultFromFile>
 
