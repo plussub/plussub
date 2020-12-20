@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from 'vue';
-import { Chart } from 'chart.js';
+import { Chart, ChartPoint } from 'chart.js';
 import { computed } from '@vue/reactivity';
 import { SubtitleEntry } from '@/subtitle/state/types';
 import { videoList } from '@/video/state';
@@ -88,6 +88,19 @@ export default defineComponent({
           legend: {
             display: false
           },
+          tooltips: {
+            displayColors: false,
+            callbacks: {
+              title: ([{ datasetIndex, index }], { datasets }) => {
+                if (datasetIndex === undefined || index === undefined || datasets === undefined) {
+                  return '??';
+                }
+                const { x: time } = (datasets?.[datasetIndex]?.data?.[index] as ChartPoint) ?? { x: 0 };
+                return Duration.fromMillis(time).toFormat('hh:mm:ss.SSS');
+              },
+              label: ({ datasetIndex }, { datasets }) => datasetIndex ? datasets?.[datasetIndex]?.label ?? '' : ''
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -110,7 +123,8 @@ export default defineComponent({
                   display: false,
                   suggestedMin: -15,
                   suggestedMax: 15,
-                  beginAtZero: true
+                  beginAtZero: true,
+                  callback: (value) => Duration.fromMillis(value).toFormat('hh:mm:ss.SSS')
                 }
               }
             ]
