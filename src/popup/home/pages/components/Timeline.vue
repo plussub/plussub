@@ -112,9 +112,10 @@ export default defineComponent({
                 type: 'linear',
                 ticks: {
                   display: true,
-                  suggestedMin: 0,
-                  suggestedMax: 10,
+                  // suggestedMin: 0,
+                  // suggestedMax: 10,
                   beginAtZero: false,
+                  maxTicksLimit: 50,
                   callback: (value) => Duration.fromMillis(value).toFormat('hh:mm:ss.SSS')
                 }
               }
@@ -128,7 +129,7 @@ export default defineComponent({
                   display: false,
                   suggestedMin: 0,
                   suggestedMax: 15,
-                  beginAtZero: false
+                  beginAtZero: false,
                 }
               }
             ]
