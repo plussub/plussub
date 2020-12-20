@@ -65,6 +65,7 @@ export default defineComponent({
         }
         const el = video.el as HTMLVideoElement;
         sendTimeEl = el;
+        el.removeEventListener('timeupdate', sendTime);
         el.addEventListener('timeupdate', sendTime);
       },
       [StopTranscript]: (e) => {

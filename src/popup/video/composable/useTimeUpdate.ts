@@ -58,14 +58,17 @@ export const useTimeUpdate = ({ video, fn }: Payload): void => {
         if (!iFrameSource) {
           return;
         }
-        postWindowMessage({
-          window: iFrameSource.window,
-          origin: iFrameSource.origin,
-          payload: {
-            plusSubAction: StartTranscript,
-            src: currentVideo.src
-          }
-        });
+        // todo: fix correct, race condition with mount and unmount between components
+        setTimeout(() => {
+          postWindowMessage({
+            window: iFrameSource.window,
+            origin: iFrameSource.origin,
+            payload: {
+              plusSubAction: StartTranscript,
+              src: currentVideo.src
+            }
+          });
+        })
       }
     },
     { immediate: true }
