@@ -19,7 +19,7 @@ export default defineComponent({
     const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
     const chart = ref<null | Chart>(null);
     const currentPos = ref(0);
-    const parsedPartial = computed(() => parsed.value.filter((e, idx) => idx >= currentPos.value && idx <= currentPos.value + 5));
+    const parsedPartial = computed(() => parsed.value.filter((e, idx) => idx >= currentPos.value && idx < currentPos.value + 3));
 
     watch(
       [parsedPartial, chart],
@@ -28,6 +28,11 @@ export default defineComponent({
           return;
         }
         chart.value.data.datasets = [chart.value.data.datasets[0], chart.value.data.datasets[1], ...getSubtitleDataset()];
+        if(chart.value.options?.scales?.xAxes?.[0].ticks) {
+          chart.value.options.scales.xAxes[0].ticks.suggestedMin = parsedPartial.value[0].from;
+          chart.value.options.scales.xAxes[0].ticks.suggestedMax = parsedPartial.value[parsedPartial.value.length - 1].to;
+        }
+
         chart.value.update();
       },
       { immediate: true }
@@ -115,7 +120,7 @@ export default defineComponent({
                   // suggestedMin: 0,
                   // suggestedMax: 10,
                   beginAtZero: false,
-                  maxTicksLimit: 50,
+                  // maxTicksLimit: 50,
                   callback: (value) => Duration.fromMillis(value).toFormat('hh:mm:ss.SSS')
                 }
               }

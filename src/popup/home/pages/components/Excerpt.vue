@@ -34,7 +34,7 @@ export default defineComponent({
     return {
       excerpt: computed(() =>
           parsed.value
-          .filter((e, idx) => idx >= currentPos.value && idx <= currentPos.value + 5)
+          .filter((e, idx) => idx >= currentPos.value && idx < currentPos.value + 3)
           .map(({ from, to, text }, i) => `${i + 1}\n${Duration.fromMillis(from).toFormat('hh:mm:ss.SSS')} --> ${Duration.fromMillis(to).toFormat('hh:mm:ss.SSS')}\n${text}\n`)
           .join('\n')
       )

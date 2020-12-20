@@ -14,7 +14,7 @@
             </div>
           </div>
           <div class="font-medium text-xs mx-2 flex" style="grid-area: preview-label">
-            <span class="flex-grow">Preview (next 5 subtitles)</span>
+            <span class="flex-grow">Preview (next 3 subtitles)</span>
             <label for="excerpt" class="pr-1">Excerpt</label>
             <input id="excerpt" v-model="previewSelection" type="radio" value="excerpt" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />
             <label for="diagram" class="pr-1">Diagram</label>
