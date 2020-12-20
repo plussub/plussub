@@ -48,7 +48,6 @@ export default defineComponent({
     useTimeUpdate({
       video,
       fn: ({ currentTime }): void => {
-        console.warn(currentTime);
         videoTimePoint.x = currentTime * 1000;
         videoTimePointLine.x = currentTime * 1000;
         chart.value?.update();
