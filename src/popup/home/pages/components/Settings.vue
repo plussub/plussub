@@ -9,19 +9,26 @@
           <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
             <div class="w-full flex px-2 mt-0.5">
-              <input ref="range" :value="internalOffsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6" @input="setOffsetTimeDebounced"/>
+              <input ref="range" :value="internalOffsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6" @input="setOffsetTimeDebounced" />
               <InputField v-model="internalOffsetTime" step="100" type="number" class="pr-2" />
             </div>
           </div>
-          <div class="font-medium text-xs mx-2" style="grid-area: preview-label">Preview</div>
-<!--          <textarea-->
-<!--            v-model="excerpt"-->
-<!--            disabled-->
-<!--            class="mx-2 rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 text-xs font-medium box-border resize-none"-->
-<!--            style="grid-area: preview; height: 150px; width: calc(100% - 12px)"-->
-<!--          >-->
-<!--          </textarea>-->
-          <Timeline style="grid-area: preview; height: 80px; width: calc(100% - 12px)" :parsed="parsed"/>
+          <div class="font-medium text-xs mx-2 flex" style="grid-area: preview-label">
+            <span class="flex-grow">Preview</span>
+            <label for="excerpt" class="pr-1">Excerpt</label>
+            <input id="excerpt" v-model="previewSelection" type="radio" value="excerpt" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />
+            <label for="diagram" class="pr-1">Diagram</label>
+            <input id="diagram" v-model="previewSelection" type="radio" value="diagram" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0"/>
+          </div>
+          <textarea
+            v-if="previewSelection === 'excerpt'"
+            v-model="excerpt"
+            disabled
+            class="mx-2 rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 text-xs font-medium box-border resize-none"
+            style="grid-area: preview; height: 150px; width: calc(100% - 12px)"
+          >
+          </textarea>
+          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" :parsed="parsed" />
         </div>
       </template>
     </Expandable>
@@ -83,7 +90,7 @@ export default defineComponent({
       setOffsetTimeDebounced: () => setOffsetTimeDebounced(range.value?.value),
       internalOffsetTime,
       reset: () => (internalOffsetTime.value = 0),
-
+      previewSelection: ref('excerpt'),
       excerpt: computed(() =>
         parsedPartial.value
           .map(({ from, to, text }, i) => {
@@ -108,7 +115,8 @@ export default defineComponent({
     'input'
     '.'
     'preview-label'
+    '.'
     'preview';
-  grid-template-rows: 8px auto auto 16px auto auto;
+  grid-template-rows: 8px auto auto 16px auto 8px auto;
 }
 </style>
