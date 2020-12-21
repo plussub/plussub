@@ -3,7 +3,7 @@
     <div
       ref="containerRef"
       style="width: calc(100% - 30px);"
-      class="h-full relative flex flex-col text-center justify-evenly self-center justify-self-center box-border border-dashed border-2 border-primary-700"
+      class="h-full relative flex flex-col text-center justify-evenly self-center justify-self-center box-border border-dashed border-2 border-primary-700 hover:bg-surface-100"
       @mouseenter="highlightCurrentVideo"
       @mouseleave="removeHighlightFromVideo"
       @dragenter.prevent="dragenter"
