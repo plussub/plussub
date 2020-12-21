@@ -96,7 +96,7 @@ input[type=range]::-moz-range-thumb {
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background: #06b6d4;
+  background: #0e7490;
   margin-top: -6px;
 }
 
@@ -106,7 +106,7 @@ input[type=range]::-webkit-slider-thumb {
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background: #06b6d4;
+  background: #0e7490;
   margin-top: -6px;
 }
 

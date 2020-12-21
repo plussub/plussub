@@ -1,15 +1,15 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName" :has-back="videoCount > 1" :back-fn="backFn">
     <template #content>
-      <div class="pt-2 w-full h-full grid relative justify-center search-content--container">
-        <div style="grid-area: search-bar">
+      <div class="w-full h-full grid relative justify-center search-content--container">
+        <div style="grid-area: search-bar" class="pt-3 pb-2 bg-primary-50">
           <InputField v-model="internalQuery" class="px-2" placeholder-icon="search" placeholder="Search movie or series"/>
           <div v-show="getVideoName() !== ''" class="px-5 mt-2 leading-normal text-sm">
             <div class="italic">Search Suggestion</div>
             <a class="relative text-primary-700 hover:underline italic" @click="changeQueryToSuggested">{{ getVideoName() }}</a>
           </div>
         </div>
-        <div style="grid-area: loading" class="flex items-end flex-wrap" :class="{'shadow-md': internalQuery !== ''}">
+        <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
           <LoadingBar :loading="loading && internalQuery !== ''" class="w-full"/>
         </div>
         <div v-if="searchResults.length" class="overflow-y-auto" style="grid-area: search-results">

@@ -1,13 +1,13 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName" has-back :back-fn="backFn">
     <template #content>
-      <div class="pt-2 w-full h-full grid relative justify-center subtitle-selection-content--container">
-        <div style="grid-area: filter-bar">
+      <div class="w-full h-full grid relative justify-center subtitle-selection-content--container">
+        <div style="grid-area: filter-bar" class="pt-3 pb-2 bg-primary-50">
           <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2" />
           <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" class="px-3 mt-2" />
         </div>
         <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
-        <div style="grid-area: loading" class="flex items-end flex-wrap shadow-md">
+        <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
           <LoadingBar :loading="!dataReady" class="w-full"/>
         </div>
         <div v-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">

@@ -5,7 +5,7 @@
         <div class="absolute h-1 bg-primary-700 loading-bar">&nbsp;</div>
       </div>
     </transition>
-    <Divider v-show="!loading" class="w-full border-surface-200" />
+    <Divider class="w-full border-surface-400" />
   </div>
 </template>
 <script lang="ts">
