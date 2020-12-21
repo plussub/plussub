@@ -24,7 +24,7 @@
             v-if="previewSelection === 'excerpt'"
             style="grid-area: preview; height: 150px; width: calc(100% - 12px)"
           />
-          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" />
+          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-1"/>
         </div>
       </template>
     </Expandable>
