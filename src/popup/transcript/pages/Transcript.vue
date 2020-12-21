@@ -1,5 +1,10 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName" has-back>
+    <template #toolbar>
+      <a class="self-center pr-4" :title="infoTooltip">
+        <fa icon="question-circle" class="h-icon hover:text-on-primary-hover-500"></fa>
+      </a>
+    </template>
     <template #content>
       <div class="w-full h-full grid relative justify-center transcript-content--container">
         <div style="grid-area: bar" class="pt-3 pb-2 bg-primary-50 flex justify-end">
@@ -36,6 +41,7 @@ import { useTimeUpdate } from '@/video/composable';
 import { default as PageLayout } from '@/components/PageLayout.vue';
 import { binarySearch } from '@/transcript/pages/binarySearch';
 import { default as LoadingBar } from '@/components/LoadingBar.vue';
+import {capitalizeFirst} from "@/util/string";
 
 export default defineComponent({
   components: {
@@ -98,6 +104,7 @@ export default defineComponent({
         });
       },
       currentTimePretty: computed(() => Duration.fromMillis(currentTime.value * 1000).toFormat('mm:ss')),
+      infoTooltip: computed(() => [`left click - jump to time point`, `shift + left click - copy text to clipboard`].join('\n')),
       copy: ({ text }: { text: string }) => navigator.clipboard.writeText(text)
     };
   }
