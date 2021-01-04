@@ -2,7 +2,7 @@ import { Ref } from 'vue';
 import {VideoSrc} from "@/video/state";
 
 export type NavigationState = Ref<{
-  name: 'HOME' | 'SEARCH' | 'SUBTITLE-SELECTION' | 'TRANSCRIPT';
+  name: 'HOME' | 'SEARCH' | 'SUBTITLE-SELECTION' | 'TRANSCRIPT' | 'SETTINGS';
   params: any;
 }>;
 
@@ -10,6 +10,10 @@ export type CurrentSelectedSrcState = Ref<VideoSrc | null>;
 
 export interface ToHomePayload {
   contentTransitionName: 'content-navigate-shallow' | 'content-navigate-select-to-home';
+}
+
+export interface ToSettingsPayload {
+  contentTransitionName: 'content-navigate-deeper';
 }
 
 export interface ToTranscriptPayload {

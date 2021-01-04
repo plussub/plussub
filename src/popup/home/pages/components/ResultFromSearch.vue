@@ -40,7 +40,7 @@
       </div>
     </div>
     <div style="grid-area: loading">
-      <LoadingBar :loading="state !== 'DONE'" class="w-full"/>
+      <LoadingBar :loading="state !== 'DONE'" :error="state === 'ERROR'" class="w-full"/>
     </div>
     <div class="px-4" style="grid-area: settings">
       <slot name="settings" />

@@ -62,7 +62,6 @@ export default defineComponent({
     useTimeUpdate({
       video,
       fn: ({ currentTime: currentTimeFromVideo }): void => {
-        console.warn('wtf');
         currentTime.value = currentTimeFromVideo;
       }
     });

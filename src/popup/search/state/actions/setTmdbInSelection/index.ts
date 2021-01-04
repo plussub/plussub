@@ -4,6 +4,7 @@ export const setTmdbInSelection = (tmdb: TmdbState): void => {
   window.plusSub_subtitleSearch.value = {
     inSelectionTmdb: tmdb,
     tmdb: null,
-    openSubtitle: null
+    openSubtitle: null,
+    preferredLanguage: window.plusSub_subtitleSearch.value.preferredLanguage
   };
 };

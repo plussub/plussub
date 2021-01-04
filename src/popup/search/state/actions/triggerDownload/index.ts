@@ -13,14 +13,19 @@ export const triggerDownload = async (): Promise<void> => {
     return;
   }
   setState({ state: 'DOWNLOADING' });
-  const { raw, format} = await fetch(link)
+  const { raw, format } = await fetch(link)
+    .then((r) => (r.headers.get('content-type')?.startsWith('application/zip') ? r : Promise.reject(`wrong content type: ${r.headers.get('content-type')}`)))
     .then((r) => r.arrayBuffer())
     .then((blob) => new JSZip().loadAsync(blob))
     .then((zip) => zip.file(/\.(srt|vtt|ssa|ass)$/)[0])
     .then(async (zipFile) => ({
       raw: (await zipFile.async('string')) ?? '',
       format: getFormatFromFilename(zipFile.name)
-    }));
+    }))
+    .catch((e) => {
+      setState({ state: 'ERROR' });
+      return Promise.reject(e);
+    });
 
   setRaw({ raw, format, id: subHash });
   parse();

@@ -6,6 +6,7 @@ declare module 'plussub-state' {
   import { FileState } from '@/file/state/types';
   import { SubtitleState } from '@/subtitle/state/types';
   import { SubtitleSearchState } from '@/search/state/types';
+  import { ApiState } from '@/api/state/types';
   import { NavigationState, CurrentSelectedSrcState } from '@/navigation/state/types';
   global {
     interface Window {
@@ -15,6 +16,7 @@ declare module 'plussub-state' {
       plusSub_subtitleSearch: SubtitleSearchState;
       plusSub_navigation: NavigationState;
       plusSub_currentSelectedSrc: CurrentSelectedSrcState;
+      plusSub_api: ApiState;
     }
   }
 }

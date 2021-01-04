@@ -4,6 +4,9 @@
       <a class="self-center pr-4" v-if="appState.state !== 'NONE'" @click="toTranscript()">
         <fa type="local" icon="caption" class="h-icon hover:text-on-primary-hover-500"></fa>
       </a>
+      <a class="self-center pr-4" @click="toSettings()">
+        <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
+      </a>
     </template>
     <template #content>
       <div class="flex flex-wrap h-full home-content--container" :class="{ 'bg-surface-100': current === 'search-card' || current === 'file-card' }">
@@ -60,7 +63,7 @@ import { default as ResultFromFile } from './components/ResultFromFile.vue';
 import { default as PageVideos } from './components/PageVideos.vue';
 import { default as Settings } from './components/Settings.vue';
 
-import { setCurrentSelectedSrc, toSearch, toTranscript } from '@/navigation/state';
+import { setCurrentSelectedSrc, toSearch, toTranscript, toSettings } from '@/navigation/state';
 import { subtitleState, setOffsetTime } from '@/subtitle/state';
 import { appState, reset } from '@/app/state';
 import { subtitleSearchState } from '@/search/state';
@@ -91,6 +94,7 @@ export default defineComponent({
       setOffsetTime,
 
       toTranscript,
+      toSettings,
 
       remove: (): void => {
         reset();

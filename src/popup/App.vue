@@ -8,24 +8,29 @@
   <div v-else-if="navigationState.name === 'TRANSCRIPT'" class="h-auto overflow-hidden grid app--container">
     <Transcript v-bind="navigationState.params" />
   </div>
+  <div v-else-if="navigationState.name === 'SETTINGS'" class="h-auto overflow-hidden grid app--container">
+    <Settings v-bind="navigationState.params" />
+  </div>
   <div v-else class="h-auto overflow-hidden grid app--container">
     <Home v-bind="navigationState.params" />
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, PropType} from "vue";
 import { init as initAppState } from '@/app/state';
 import { init as initVideoState } from '@/video/state';
 import { init as initFileState } from '@/file/state';
 import { init as initSubtitleState } from '@/subtitle/state';
 import { init as initSubtitleSearchState } from '@/search/state';
 import { init as initNavigationState, setupAutoNavigation, navigationState } from '@/navigation/state';
+import { init as initApi } from '@/api/state';
 
 import { default as Home } from '@/home/pages/Home.vue';
 import { default as Search } from '@/search/pages/search/Search.vue';
 import { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
 import { default as Transcript } from '@/transcript/pages/Transcript.vue';
+import { default as Settings } from '@/settings/pages/Settings.vue';
 import "@/styles.css"
 
 export default defineComponent({
@@ -33,15 +38,27 @@ export default defineComponent({
     Home,
     Search,
     SubtitleSelection,
-    Transcript
+    Transcript,
+    Settings
   },
-  setup(){
+  props: {
+    preferredLanguage: {
+      type: String as PropType<string>,
+      required: true
+    },
+    apiVersion: {
+      type: String as PropType<'dev' | 'stable'>,
+      required: true
+    }
+  },
+  setup(props){
     initAppState();
     initNavigationState();
     initSubtitleState();
     initVideoState();
     initFileState();
-    initSubtitleSearchState();
+    initSubtitleSearchState({preferredLanguage: props.preferredLanguage});
+    initApi({version: props.apiVersion})
     setupAutoNavigation();
     return {
       navigationState

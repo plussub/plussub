@@ -25,4 +25,5 @@ export type SubtitleSearchState = Ref<{
   inSelectionTmdb: TmdbState | null;
   tmdb: TmdbState | null;
   openSubtitle: OpensubtitlesState | null;
+  preferredLanguage: string;
 }>;

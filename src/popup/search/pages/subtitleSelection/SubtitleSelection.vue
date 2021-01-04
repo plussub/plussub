@@ -29,7 +29,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import { searchRequest } from './searchRequest';
-import { OpensubtitlesState, selectOpenSubtitle, triggerDownload } from '@/search/state';
+import { OpensubtitlesState, selectOpenSubtitle, triggerDownload, setPreferredLanguage } from '@/search/state';
 import { setSrc, setState } from '@/app/state';
 import { toHome, toSearch } from '@/navigation/state';
 
@@ -70,7 +70,7 @@ export default defineComponent({
   },
   setup(props) {
     const entries = ref<OpensubtitlesState[]>([]);
-    const language = ref('en');
+    const language = ref( window.plusSub_subtitleSearch.value.preferredLanguage);
     const filter = ref('');
     const dataReady = ref(false);
 
@@ -100,6 +100,7 @@ export default defineComponent({
       select: (openSubtitle) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });
+        setPreferredLanguage(language.value);
         selectOpenSubtitle(openSubtitle);
         triggerDownload();
         toHome({

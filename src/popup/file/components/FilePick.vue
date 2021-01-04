@@ -50,6 +50,8 @@ import { parse, setRaw } from '@/subtitle/state';
 import { getFormatFromFilename } from '@/subtitle/util';
 import { setFilename } from '@/file/state';
 import { toHome } from '@/navigation/state';
+import { reset } from '@/app/state';
+import { setCurrentSelectedSrc } from '@/navigation/state';
 
 export default defineComponent({
   props: {
@@ -73,7 +75,7 @@ export default defineComponent({
       fileErrorMsg.value = msg;
       setTimeout(() => {
         fileErrorMsg.value = '';
-      }, 2000);
+      }, 4000);
       dragleave();
     };
 
@@ -83,7 +85,15 @@ export default defineComponent({
       setSrc({ src: 'FILE' });
 
       setRaw({ raw: result, format: getFormatFromFilename(fileName), id: fileName });
-      parse();
+      try {
+        parse();
+      }catch(e){
+        showFileErrorMsg('Parse error, not a valid subtitle file');
+        reset();
+        setCurrentSelectedSrc(null);
+        return;
+      }
+
       toHome({
         contentTransitionName: 'content-navigate-select-to-home'
       });

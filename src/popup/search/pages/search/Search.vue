@@ -1,5 +1,10 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName" :has-back="videoCount > 1" :back-fn="backFn">
+    <template #toolbar>
+      <a v-if="videoCount === 1" class="self-center pr-4" @click="toSettings()">
+        <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
+      </a>
+    </template>
     <template #content>
       <div class="w-full h-full grid relative justify-center search-content--container">
         <div style="grid-area: search-bar" class="pt-3 pb-2 bg-primary-50">
@@ -36,7 +41,7 @@ import { defineComponent, PropType, ref, watch } from 'vue';
 import { searchRequest } from './searchRequest';
 import { debounce } from '@/composables';
 import { setTmdbInSelection, TmdbState } from '@/search/state';
-import { setCurrentSelectedSrc, toHome, toSubtitleSelection } from '@/navigation/state';
+import { setCurrentSelectedSrc, toHome, toSubtitleSelection, toSettings } from '@/navigation/state';
 import { getVideoName } from '@/util/name';
 import { videoCount } from '@/video/state';
 
@@ -88,6 +93,7 @@ export default defineComponent({
       loading,
       videoCount,
       getVideoName,
+      toSettings,
       changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
       select: (tmdb: TmdbState): void => {
         setTmdbInSelection(tmdb);

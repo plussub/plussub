@@ -34,9 +34,8 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { computed } from '@vue/reactivity';
-import { SubtitleEntry } from '@/subtitle/state/types';
-import { default as Expandable } from '@/components/Expandable';
-import { default as Timeline } from './Timeline';
+import { default as Expandable } from '@/components/Expandable.vue';
+import { default as Timeline } from './Timeline.vue';
 import { default as Excerpt } from "@/home/pages/components/Excerpt.vue";
 import InputField from '@/components/InputField.vue';
 import { debounce } from '@/composables';
