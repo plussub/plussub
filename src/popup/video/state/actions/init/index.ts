@@ -38,7 +38,7 @@ export const init = (): void => {
   useVideoElementMutationObserver(({ added, removed }) => {
     resetSrcToHostVideo();
     added.forEach((el) => el.addEventListener('loadedmetadata', resetSrcToHostVideo));
-    if (removed.some((el) => srcToHostVideo.value[removeUrlHash(el.currentSrc)]?.hasSubtitle)) {
+    if (removed.some((el) => [...el.textTracks].some(tracks => tracks.label === 'Plussub'))) {
       reset();
     }
   });
