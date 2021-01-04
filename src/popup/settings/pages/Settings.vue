@@ -4,9 +4,9 @@
       <div class="pt-2 px-2">
         <div class="font-header font-medium text-xl">User data</div>
         <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 16px" class="grid w-full leading-relaxed">
-          <div style="grid-column: 1 / 2" class="font-medium"> Preferred language</div>
-          <div style="grid-column: 2 / 3"> {{ preferredLanguage }}</div>
-          <div style="grid-column: 1 / 2" class="font-medium"> Api</div>
+          <div style="grid-column: 1 / 2" class="font-medium">Preferred language</div>
+          <div style="grid-column: 2 / 3">{{ preferredLanguage }}</div>
+          <div style="grid-column: 1 / 2" class="font-medium">Api</div>
           <div style="grid-column: 2 / 3" class="flex items-center">
             <label for="stable" class="pr-1">stable</label>
             <input id="stable" v-model="apiVersion" type="radio" value="stable" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />
@@ -46,25 +46,22 @@ export default defineComponent({
     }
   },
   setup() {
-    const preferredLanguage = computed(() => window.plusSub_subtitleSearch.value.preferredLanguage);
-    const apiVersion = computed({
-      get() {
-        return window.plusSub_api.value.version
-      },
-      set(val: 'stable' | 'dev') {
-        setVersion(val);
-      }
-    });
-
     return {
+      preferredLanguage: computed(() => window.plusSub_subtitleSearch.value.preferredLanguage),
+      apiVersion: computed({
+        get() {
+          return window.plusSub_api.value.version;
+        },
+        set(val: 'stable' | 'dev') {
+          setVersion(val);
+        }
+      }),
       clearUserData: async () => {
         await storageClear();
         setPreferredLanguage('en');
         setVersion('stable');
       },
-      preferredLanguage,
-      backFn: () => (videoCount.value === 1 ? toSearch() : toHome()),
-      apiVersion
+      backFn: () => (videoCount.value === 1 ? toSearch() : toHome())
     };
   }
 });
