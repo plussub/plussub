@@ -46,13 +46,11 @@ jobs:
           ACCESS_TOKEN="${ACCESS_TOKEN//'%'/'%25'}"
           ACCESS_TOKEN="${ACCESS_TOKEN//$'\n'/'%0A'}"
           ACCESS_TOKEN="${ACCESS_TOKEN//$'\r'/'%0D'}"
-          echo $ACCESS_TOKEN
           echo "::set-output name=ACCESS_TOKEN::$ACCESS_TOKEN"
         env:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          CODE: 4/1AY0e-g4juGY-1tpllp60ZhGqKVVqXUDqu7EFahRPUIb865DwY8KPiI9Bl8k
       - run: >
           curl -s
           -H "Authorization: Bearer $ACCESS_TOKEN"
