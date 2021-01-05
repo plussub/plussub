@@ -46,6 +46,7 @@ jobs:
           ACCESS_TOKEN="${ACCESS_TOKEN//'%'/'%25'}"
           ACCESS_TOKEN="${ACCESS_TOKEN//$'\n'/'%0A'}"
           ACCESS_TOKEN="${ACCESS_TOKEN//$'\r'/'%0D'}"
+          echo $ACCESS_TOKEN
           echo "::set-output name=ACCESS_TOKEN::$ACCESS_TOKEN"
         env:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
