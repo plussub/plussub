@@ -41,6 +41,8 @@ jobs:
       - run: zip -r plussub.zip .
       - id: access_token
         run: |
+          WTF=$(curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&grant_type=authorization_code&redirect_uri=urn:ietf:wg:oauth:2.0:oob&code=$CODE")
+          echo $WTF
           ACCESS_TOKEN=$(curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&refresh_token=$CHROME_REFRESH_TOKEN&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob")
           # the following lines are only required for multi line json
           ACCESS_TOKEN="${ACCESS_TOKEN//'%'/'%25'}"
@@ -52,6 +54,7 @@ jobs:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CODE: 4/1AY0e-g4juGY-1tpllp60ZhGqKVVqXUDqu7EFahRPUIb865DwY8KPiI9Bl8k
       - run: >
           curl -s
           -H "Authorization: Bearer $ACCESS_TOKEN"

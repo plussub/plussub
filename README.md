@@ -36,3 +36,9 @@ npm run start:firefox
 ```
 npm run test
 ```
+
+### chrome webstore 
+
+```
+https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/chromewebstore&client_id=52192900965-tc6m9a3r0mrc66l406lht14gvt4kc5ji.apps.googleusercontent.com&redirect_uri=urn:ietf:wg:oauth:2.0:oob
+```
