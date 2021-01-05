@@ -41,8 +41,8 @@ jobs:
       - run: zip -r plussub.zip .
       - id: access_token
         run: |
-          WTF=$(curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&grant_type=authorization_code&redirect_uri=urn:ietf:wg:oauth:2.0:oob")
-          echo $WTF
+#          WTF=$(curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&grant_type=authorization_code&redirect_uri=urn:ietf:wg:oauth:2.0:oob")
+#          echo $WTF
           ACCESS_TOKEN=$(curl -s "https://accounts.google.com/o/oauth2/token" -d "client_id=$CHROME_CLIENT_ID&client_secret=$CHROME_CLIENT_SECRET&refresh_token=$CHROME_REFRESH_TOKEN&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob")
           # the following lines are only required for multi line json
           ACCESS_TOKEN="${ACCESS_TOKEN//'%'/'%25'}"
