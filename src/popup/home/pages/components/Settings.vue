@@ -2,7 +2,7 @@
   <div>
     <Expandable :open="true">
       <template #title>
-        <div class="font-medium font-header">Time</div>
+        <div class="font-medium font-header"><span class="pr-2">Time</span><span>{{ currentTime }}</span></div>
       </template>
       <template #content>
         <div class="grid offset-time--container">
@@ -18,13 +18,10 @@
             <label for="excerpt" class="pr-1">Excerpt</label>
             <input id="excerpt" v-model="previewSelection" type="radio" value="excerpt" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />
             <label for="diagram" class="pr-1">Diagram</label>
-            <input id="diagram" v-model="previewSelection" type="radio" value="diagram" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0"/>
+            <input id="diagram" v-model="previewSelection" type="radio" value="diagram" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />
           </div>
-          <Excerpt
-            v-if="previewSelection === 'excerpt'"
-            style="grid-area: preview; height: 150px; width: calc(100% - 12px)"
-          />
-          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-5"/>
+          <Excerpt v-if="previewSelection === 'excerpt'" style="grid-area: preview; height: 150px; width: calc(100% - 12px)" />
+          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-5" />
         </div>
       </template>
     </Expandable>
@@ -36,9 +33,12 @@ import { defineComponent, PropType, ref } from 'vue';
 import { computed } from '@vue/reactivity';
 import { default as Expandable } from '@/components/Expandable.vue';
 import { default as Timeline } from './Timeline.vue';
-import { default as Excerpt } from "@/home/pages/components/Excerpt.vue";
+import { default as Excerpt } from '@/home/pages/components/Excerpt.vue';
 import InputField from '@/components/InputField.vue';
 import { debounce } from '@/composables';
+import { useTimeUpdate } from '@/video/composable';
+import { videoList } from '@/video/state';
+import Duration from 'luxon/src/duration';
 
 export default defineComponent({
   components: {
@@ -55,6 +55,15 @@ export default defineComponent({
   },
   emits: ['offset-time'],
   setup(props, { emit }) {
+    const currentTime = ref<string>(Duration.fromMillis(0).toFormat('hh:mm:ss'));
+
+    useTimeUpdate({
+      video: computed(() => videoList.value.find((e) => e.hasSubtitle)),
+      fn: ({ currentTime: currentTimeFromVideo }): void => {
+        currentTime.value = Duration.fromMillis(currentTimeFromVideo*1000).toFormat('hh:mm:ss');
+      }
+    });
+
     const internalOffsetTime = computed({
       get: () => props.offsetTime,
       set: (val) => {
@@ -71,6 +80,7 @@ export default defineComponent({
     const range = ref<HTMLInputElement | null>(null);
 
     return {
+      currentTime,
       range,
       setOffsetTimeDebounced: () => setOffsetTimeDebounced(range.value?.value),
       internalOffsetTime,

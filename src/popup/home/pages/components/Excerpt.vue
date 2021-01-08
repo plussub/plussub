@@ -26,10 +26,9 @@ export default defineComponent({
   setup() {
     const parsed = computed(() => (subtitleState.value.withOffsetParsed));
     const currentTime = ref<number>(0);
-    const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
 
     useTimeUpdate({
-      video,
+      video: computed(() => videoList.value.find((e) => e.hasSubtitle)),
       fn: ({ currentTime: currentTimeFromVideo }): void => {
         currentTime.value = currentTimeFromVideo;
       }
