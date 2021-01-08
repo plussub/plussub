@@ -11,14 +11,10 @@ export interface TmdbState {
 }
 
 export interface OpensubtitlesState {
-  SubHash: string;
-  SubFileName: string;
-  SubDownloadLink: string;
-  ZipDownloadLink: string;
-  SubtitlesLink: string;
-  SubRating: string;
-  SubFormat: string;
-  LanguageName: string;
+  websiteLink: string;
+  rating: string;
+  format: string;
+  languageName: string;
 }
 
 export type SubtitleSearchState = Ref<{

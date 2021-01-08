@@ -1,4 +1,13 @@
-import {OpensubtitlesState} from "@/search/state/types";
+export interface OpensubtitlesStateResponse {
+  SubHash: string;
+  SubFileName: string;
+  SubDownloadLink: string;
+  ZipDownloadLink: string;
+  SubtitlesLink: string;
+  SubRating: string;
+  SubFormat: string;
+  LanguageName: string;
+}
 
 const query = `
 query subtitleSearch($tmdb_id: String!, $language: String!, $media_type: String!)
@@ -18,7 +27,7 @@ query subtitleSearch($tmdb_id: String!, $language: String!, $media_type: String!
 }
 `
 
-export const searchRequest = async (variables: {tmdb_id: string, language: string, media_type: string}): Promise<OpensubtitlesState[]> => {
+export const searchRequest = async (variables: {tmdb_id: string, language: string, media_type: string}): Promise<OpensubtitlesStateResponse[]> => {
   return fetch('https://gql.plus-sub.com', {
     method: 'post',
     headers: {

@@ -28,8 +28,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
-import { searchRequest } from './searchRequest';
-import { OpensubtitlesState, selectOpenSubtitle, triggerDownload, setPreferredLanguage } from '@/search/state';
+import { searchRequest, OpensubtitlesStateResponse } from './searchRequest';
+import { selectOpenSubtitle, triggerDownload, setPreferredLanguage } from '@/search/state';
 import { setSrc, setState } from '@/app/state';
 import { toHome, toSearch } from '@/navigation/state';
 
@@ -69,7 +69,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const entries = ref<OpensubtitlesState[]>([]);
+    const entries = ref<OpensubtitlesStateResponse[]>([]);
     const language = ref( window.plusSub_subtitleSearch.value.preferredLanguage);
     const filter = ref('');
     const dataReady = ref(false);
@@ -97,12 +97,17 @@ export default defineComponent({
       showLanguageSelection: ref(false),
       entries,
       filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
-      select: (openSubtitle) => {
+      select: (openSubtitle: OpensubtitlesStateResponse) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });
         setPreferredLanguage(language.value);
-        selectOpenSubtitle(openSubtitle);
-        triggerDownload();
+        selectOpenSubtitle({
+          format: openSubtitle.SubFormat,
+          languageName: openSubtitle.LanguageName,
+          rating: openSubtitle.SubRating,
+          websiteLink: openSubtitle.SubtitlesLink
+        });
+        triggerDownload(openSubtitle);
         toHome({
           contentTransitionName: 'content-navigate-select-to-home'
         });

@@ -23,9 +23,9 @@
             <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
           </a>
         </div>
-        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.SubRating }} / 10</div>
+        <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.rating }} / 10</div>
         <div style="grid-column: 1 / 2" class="px-2">
-          <a :href="searchState?.openSubtitle?.SubtitlesLink" target="_blank" class="inline-flex gap-1 w-full text-primary-500 hover:text-primary-700 hover:underline">
+          <a :href="searchState.openSubtitle.websiteLink" target="_blank" class="inline-flex gap-1 w-full text-primary-500 hover:text-primary-700 hover:underline">
             <span class="flex-grow">Subtitle</span>
             <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
           </a>
@@ -89,7 +89,7 @@ export default defineComponent({
       removeHighlightFromVideo,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() =>
-        [`format - ${props.searchState.openSubtitle?.SubFormat}`, `language - ${props.searchState.openSubtitle?.LanguageName}`, `state - ${capitalizeFirst(props.state)}`].join('\n')
+        [`format - ${props.searchState.openSubtitle?.format}`, `language - ${props.searchState.openSubtitle?.languageName}`, `state - ${capitalizeFirst(props.state)}`].join('\n')
       ),
       tmdbLink: computed(() => `https://www.themoviedb.org/${props.searchState?.tmdb?.media_type}/${props.searchState.tmdb?.tmdb_id}`)
     };

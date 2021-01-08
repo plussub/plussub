@@ -2,11 +2,11 @@ import JSZip from 'jszip';
 import { setState } from '@/app/state';
 import { parse, setRaw } from '@/subtitle/state';
 import {getFormatFromFilename} from "@/subtitle/util/getFormatFromFilename";
+import {OpensubtitlesStateResponse} from "@/search/pages/subtitleSelection/searchRequest";
 
-export const triggerDownload = async (): Promise<void> => {
-  const { openSubtitle } = window.plusSub_subtitleSearch.value;
-  const link = openSubtitle?.ZipDownloadLink;
-  const subHash = openSubtitle?.SubHash
+export const triggerDownload = async (opensubtitlesStateResponse: OpensubtitlesStateResponse): Promise<void> => {
+  const link = opensubtitlesStateResponse?.ZipDownloadLink;
+  const subHash = opensubtitlesStateResponse?.SubHash
 
   if (!link || !subHash) {
     console.warn('no link or subhash');
