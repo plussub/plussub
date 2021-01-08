@@ -10,7 +10,7 @@ import { videoList } from '@/video/state';
 import { useTimeUpdate } from '@/video/composable';
 import { subtitleState } from '@/subtitle/state';
 import Duration from 'luxon/src/duration.js';
-import {findNext} from "@/home/pages/components/findNext";
+import { findNext } from '@/home/pages/components/findNext';
 
 export default defineComponent({
   setup() {
@@ -28,12 +28,18 @@ export default defineComponent({
           return;
         }
         chart.value.data.datasets = [chart.value.data.datasets[0], chart.value.data.datasets[1], ...getSubtitleDataset()];
-        if(chart.value.options?.scales?.xAxes?.[0].ticks) {
+        if (chart.value.options?.scales?.xAxes?.[0].ticks) {
           chart.value.options.scales.xAxes[0].ticks.suggestedMin = parsedPartial.value[0].from;
           chart.value.options.scales.xAxes[0].ticks.suggestedMax = parsedPartial.value[parsedPartial.value.length - 1].to;
         }
 
+        if (chart.value?.options?.animation?.duration) {
+          chart.value.options.animation.duration = 0;
+        }
         chart.value.update();
+        if (chart.value?.options?.animation?.duration === 0) {
+          chart.value.options.animation.duration = 1000;
+        }
       },
       { immediate: true }
     );
@@ -60,7 +66,7 @@ export default defineComponent({
         videoTimePointLine.x = currentTime * 1000;
         chart.value?.update();
         const pos = findNext(Math.ceil(currentTime * 1000), parsed.value);
-        if (pos !== -1){
+        if (pos !== -1) {
           currentPos.value = pos;
         }
       }
@@ -93,7 +99,7 @@ export default defineComponent({
         },
         options: {
           animation: {
-            duration: 0
+            duration: 1000
           },
           legend: {
             display: false
@@ -134,7 +140,7 @@ export default defineComponent({
                   display: false,
                   suggestedMin: 0,
                   suggestedMax: 15,
-                  beginAtZero: false,
+                  beginAtZero: false
                 }
               }
             ]

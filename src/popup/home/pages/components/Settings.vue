@@ -2,7 +2,7 @@
   <div>
     <Expandable :open="true">
       <template #title>
-        <div class="font-medium font-header">Subtitle Setting</div>
+        <div class="font-medium font-header">Time</div>
       </template>
       <template #content>
         <div class="grid offset-time--container">
@@ -24,7 +24,7 @@
             v-if="previewSelection === 'excerpt'"
             style="grid-area: preview; height: 150px; width: calc(100% - 12px)"
           />
-          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-1"/>
+          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-5"/>
         </div>
       </template>
     </Expandable>

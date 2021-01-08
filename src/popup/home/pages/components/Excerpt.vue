@@ -1,5 +1,16 @@
 <template>
-  <textarea v-model="excerpt" disabled class="mx-2 rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50 text-xs font-medium box-border resize-none" />
+  <div class="px-2 overflow-y-auto">
+    <div v-for="(item) in excerpt" :key="item.text">
+      <div class="mt-4 text-xs font-medium flex items-center">
+        <span class="mr-2">{{formatTime(item.from)}}</span>
+        <fa icon="arrow-right" class="mr-2 h-icon-sm inline-block" />
+        <span>{{formatTime(item.to)}}</span>
+      </div>
+      <div class="text-xs text-sub-text-on-surface-50">
+        {{item.text}}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -32,12 +43,8 @@ export default defineComponent({
     });
 
     return {
-      excerpt: computed(() =>
-          parsed.value
-          .filter((e, idx) => idx >= currentPos.value && idx < currentPos.value + 3)
-          .map(({ from, to, text }) => `${Duration.fromMillis(from).toFormat('hh:mm:ss.SSS')} --> ${Duration.fromMillis(to).toFormat('hh:mm:ss.SSS')}\n${text}\n`)
-          .join('\n')
-      )
+      excerpt: computed(() => parsed.value.filter((e, idx) => idx >= currentPos.value && idx < currentPos.value + 3)),
+      formatTime: (ms) => Duration.fromMillis(ms).toFormat('hh:mm:ss.SSS')
     };
   }
 });
