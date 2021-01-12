@@ -2,14 +2,17 @@
   <div v-if="navigationState.name === 'SEARCH'" class="h-auto overflow-hidden grid app--container">
     <Search v-bind="navigationState.params" />
   </div>
-  <div v-else-if="navigationState.name === 'SUBTITLE-SELECTION'" class="h-auto overflow-hidden grid	app--container">
+  <div v-else-if="navigationState.name === 'SUBTITLE-SELECTION' && version === 'stable'" class="h-auto overflow-hidden grid	app--container">
     <SubtitleSelection v-bind="navigationState.params" />
+  </div>
+  <div v-else-if="navigationState.name === 'SUBTITLE-SELECTION' && version === 'dev'" class="h-auto overflow-hidden grid	app--container">
+    <SubtitleSelectionDev v-bind="navigationState.params" />
   </div>
   <div v-else-if="navigationState.name === 'TRANSCRIPT'" class="h-auto overflow-hidden grid app--container">
     <Transcript v-bind="navigationState.params" />
   </div>
   <div v-else-if="navigationState.name === 'SETTINGS'" class="h-auto overflow-hidden grid app--container">
-    <Settings v-bind="navigationState.params" />
+    <Settings v-bind="navigationState.params"/>
   </div>
   <div v-else class="h-auto overflow-hidden grid app--container">
     <Home v-bind="navigationState.params" />
@@ -17,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import {computed, defineComponent, PropType, ref} from "vue";
 import { init as initAppState } from '@/app/state';
 import { init as initVideoState } from '@/video/state';
 import { init as initFileState } from '@/file/state';
@@ -29,6 +32,7 @@ import { init as initApi } from '@/api/state';
 import { default as Home } from '@/home/pages/Home.vue';
 import { default as Search } from '@/search/pages/search/Search.vue';
 import { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
+import { default as SubtitleSelectionDev } from '@/search/pages/subtitleSelection/SubtitleSelectionDev.vue';
 import { default as Transcript } from '@/transcript/pages/Transcript.vue';
 import { default as Settings } from '@/settings/pages/Settings.vue';
 import "@/styles.css"
@@ -38,6 +42,7 @@ export default defineComponent({
     Home,
     Search,
     SubtitleSelection,
+    SubtitleSelectionDev,
     Transcript,
     Settings
   },
@@ -61,6 +66,7 @@ export default defineComponent({
     initApi({version: props.apiVersion})
     setupAutoNavigation();
     return {
+      version: computed(() => window.plusSub_api.value.version),
       navigationState
     }
   }

@@ -1,21 +1,21 @@
 <template>
   <div class="grid w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer subtitle-selection-content--container--card py-2" @click="select(item)">
     <div class="font-header font-medium text-xl one-line" style="grid-area: header">
-      {{ item.SubFileName }}
+      {{ item.attributes.files[0].file_name }}
     </div>
     <div class="grid w-full text-xs font-light leading-relaxed pl-2" style="grid-area: content; grid-template-columns: auto 1fr auto 1fr auto 1fr; grid-column-gap: 8px;">
       <div style="grid-column: 1 / 2;" class="font-medium">Rating</div>
-      <div style="grid-column: 2 / 3" >{{ item.SubRating }}</div>
+      <div style="grid-column: 2 / 3" >{{ item.attributes.ratings }}</div>
       <div style="grid-column: 3 / 4;" class="font-medium">Format</div>
-      <div style="grid-column: 4 / 5">{{ item.SubFormat }}</div>
+      <div style="grid-column: 4 / 5">{{ item.attributes.format }}</div>
       <div style="grid-column: 5 / 6;" class="font-medium">Language</div>
-      <div style="grid-column: 6 / 7">{{ item.LanguageName }}</div>
+      <div style="grid-column: 6 / 7">{{ item.attributes.language }}</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { OpensubtitlesStateResponse } from '@/search/pages/subtitleSelection/searchRequest';
+import { OpensubtitlesStateResponse } from '@/search/pages/subtitleSelection/searchRequestDev';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({

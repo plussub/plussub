@@ -1,0 +1,131 @@
+<template>
+  <PageLayout :content-transition-name="contentTransitionName" has-back :back-fn="backFn">
+    <template #content>
+      <div class="w-full h-full grid relative justify-center subtitle-selection-content--container">
+        <div style="grid-area: filter-bar" class="pt-3 pb-2 bg-primary-50">
+          <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2" />
+          <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" class="px-3 mt-2" />
+        </div>
+        <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
+        <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
+          <LoadingBar :loading="!dataReady" class="w-full"/>
+        </div>
+        <div v-if="entries.length" class="overflow-y-auto" style="grid-area: search-results">
+          <div v-for="(item, index) in entries" :key="index">
+            <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
+            <SubtitleEntryDev :item="item" @select="select" />
+            <Divider class="border-surface-200" />
+          </div>
+        </div>
+        <div v-else-if="dataReady" class="self-center text-center leading-loose" style="grid-area: search-results">
+          <div>Sorry, no subtitle found.</div>
+          <div>(╯°□°)╯︵ ┻━┻</div>
+        </div>
+      </div>
+    </template>
+  </PageLayout>
+</template>
+
+<script lang="ts">
+import { defineComponent, PropType, ref, watch } from 'vue';
+import { searchRequest, OpensubtitlesStateResponse } from './searchRequestDev';
+import { selectOpenSubtitle, triggerDownloadDev, setPreferredLanguage } from '@/search/state';
+import { setSrc, setState } from '@/app/state';
+import { toHome, toSearch } from '@/navigation/state';
+
+import { default as LanguageAccordion } from './LanguageAccordion.vue';
+import { default as Divider } from '@/components/Divider.vue';
+import { default as SubtitleEntryDev } from './SubtitleEntryDev.vue';
+import { default as PageLayout } from '@/components/PageLayout.vue';
+import { default as LoadingBar } from "@/components/LoadingBar.vue";
+import { default as InputField } from "@/components/InputField.vue";
+
+export default defineComponent({
+  components: {
+    InputField,
+    LoadingBar,
+    LanguageAccordion,
+    Divider,
+    SubtitleEntryDev,
+    PageLayout
+  },
+  props: {
+    searchQuery: {
+      type: String as PropType<string>,
+      required: true
+    },
+    contentTransitionName: {
+      type: String as PropType<string>,
+      required: false,
+      default: ''
+    },
+    tmdb_id: {
+      type: String as PropType<string>,
+      required: true
+    }
+  },
+  setup(props) {
+    const entries = ref<OpensubtitlesStateResponse[]>([]);
+    const language = ref( window.plusSub_subtitleSearch.value.preferredLanguage);
+    const filter = ref('');
+    const dataReady = ref(false);
+
+    const triggerSearch = () =>
+      searchRequest({
+        tmdb_id: props.tmdb_id,
+        language: language.value
+      }).then((result) => {
+        dataReady.value = true;
+        entries.value = result;
+      });
+    triggerSearch();
+
+    watch(language, () => {
+      dataReady.value = false;
+      triggerSearch();
+    });
+
+    return {
+      dataReady,
+      filter,
+      language,
+      showLanguageSelection: ref(false),
+      entries,
+      // filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
+      select: (openSubtitle: OpensubtitlesStateResponse) => {
+        setState({ state: 'SELECTED' });
+        setSrc({ src: 'SEARCH' });
+        setPreferredLanguage(language.value);
+        selectOpenSubtitle({
+          format: openSubtitle.attributes.format ?? 'srt',
+          languageName: openSubtitle.attributes.language,
+          rating: openSubtitle.attributes.ratings.toString(),
+          websiteLink: openSubtitle.attributes.url
+        });
+        triggerDownloadDev(openSubtitle);
+        toHome({
+          contentTransitionName: 'content-navigate-select-to-home'
+        });
+      },
+      backFn: (): void =>
+        toSearch({
+          contentTransitionName: 'content-navigate-shallow',
+          query: props.searchQuery
+        })
+    };
+  }
+});
+</script>
+
+<style scoped>
+.subtitle-selection-content--container {
+  min-height: 300px;
+  max-height: 500px;
+  grid-template-areas:
+    'filter-bar'
+    'loading'
+    'search-results';
+  grid-template-rows: auto 8px 1fr;
+  grid-template-columns: 1fr;
+}
+</style>
