@@ -14,9 +14,9 @@ export interface OpensubtitlesStateResponse {
 }
 
 const query = `
-query subtitleSearch($tmdb_id: String!, $language: String!)
+query subtitleSearch($tmdb_id: String!, $language: String!, $season_number: Int, $episode_number: Int)
 {
-  subtitleSearch(tmdb_id: $tmdb_id, language: $language){
+  subtitleSearch(tmdb_id: $tmdb_id, language: $language, season_number: $season_number, episode_number: $episode_number){
     data {
       attributes {
         subtitle_id
@@ -35,7 +35,7 @@ query subtitleSearch($tmdb_id: String!, $language: String!)
 }
 `;
 
-export const searchRequest = async (variables: { tmdb_id: string; language: string }): Promise<OpensubtitlesStateResponse[]> => {
+export const searchRequest = async (variables: { tmdb_id: string; language: string, season_number: number, episode_number: number }): Promise<OpensubtitlesStateResponse[]> => {
   return fetch('https://gqldev.plus-sub.com', {
     method: 'post',
     headers: {

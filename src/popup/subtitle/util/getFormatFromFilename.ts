@@ -1,6 +1,6 @@
 import {SubtitleFormat} from "@/subtitle/state/types";
 
-export const getFormatFromFilename = (filename: string): SubtitleFormat => {
+export const getFormatFromFilename = (filename: string): SubtitleFormat | null => {
   switch (true) {
     case /\.(ass)$/.test(filename):
       return '.ass';
@@ -11,6 +11,6 @@ export const getFormatFromFilename = (filename: string): SubtitleFormat => {
     case /\.(srt)$/.test(filename):
       return '.srt';
     default:
-      throw new Error('Not supported: ' + filename)
+      return null;
   }
 }

@@ -28,17 +28,19 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, watch } from 'vue';
-import { searchRequest, OpensubtitlesStateResponse } from './searchRequestDev';
-import { selectOpenSubtitle, triggerDownloadDev, setPreferredLanguage } from '@/search/state';
+import { searchRequest, OpensubtitlesStateResponse } from './searchRequest';
+import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
+import { download } from './download';
 import { setSrc, setState } from '@/app/state';
 import { toHome, toSearch } from '@/navigation/state';
 
-import { default as LanguageAccordion } from './LanguageAccordion.vue';
+import { default as LanguageAccordion } from '../LanguageAccordion.vue';
 import { default as Divider } from '@/components/Divider.vue';
-import { default as SubtitleEntryDev } from './SubtitleEntryDev.vue';
+import { default as SubtitleEntryDev } from './SubtitleEntry.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
 import { default as LoadingBar } from "@/components/LoadingBar.vue";
 import { default as InputField } from "@/components/InputField.vue";
+import {parse, setRaw} from "@/subtitle/state";
 
 export default defineComponent({
   components: {
@@ -62,6 +64,10 @@ export default defineComponent({
     tmdb_id: {
       type: String as PropType<string>,
       required: true
+    },
+    media_type: {
+      type: String as PropType<string>,
+      required: true
     }
   },
   setup(props) {
@@ -73,7 +79,9 @@ export default defineComponent({
     const triggerSearch = () =>
       searchRequest({
         tmdb_id: props.tmdb_id,
-        language: language.value
+        language: language.value,
+        season_number: props.media_type === 'tv' ? 1 : 0,
+        episode_number: 0
       }).then((result) => {
         dataReady.value = true;
         entries.value = result;
@@ -102,7 +110,12 @@ export default defineComponent({
           rating: openSubtitle.attributes.ratings.toString(),
           websiteLink: openSubtitle.attributes.url
         });
-        triggerDownloadDev(openSubtitle);
+
+        download(openSubtitle).then(({raw, format}) => {
+          setRaw({ raw, format, id: openSubtitle.attributes.files[0].file_name });
+          parse();
+        }).catch(() => setState({ state: 'ERROR' }));
+
         toHome({
           contentTransitionName: 'content-navigate-select-to-home'
         });

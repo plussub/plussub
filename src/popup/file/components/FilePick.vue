@@ -83,8 +83,15 @@ export default defineComponent({
       setFilename({ filename: fileName });
       setState({ state: 'SELECTED' });
       setSrc({ src: 'FILE' });
+      const format = getFormatFromFilename(fileName);
+      if(!format){
+        showFileErrorMsg('Unknown file format');
+        reset();
+        setCurrentSelectedSrc(null);
+        return;
+      }
+      setRaw({ raw: result, format, id: fileName });
 
-      setRaw({ raw: result, format: getFormatFromFilename(fileName), id: fileName });
       try {
         parse();
       }catch(e){

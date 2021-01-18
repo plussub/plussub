@@ -32,7 +32,7 @@ import { init as initApi } from '@/api/state';
 import { default as Home } from '@/home/pages/Home.vue';
 import { default as Search } from '@/search/pages/search/Search.vue';
 import { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
-import { default as SubtitleSelectionDev } from '@/search/pages/subtitleSelection/SubtitleSelectionDev.vue';
+import { default as SubtitleSelectionDev } from '@/search/pages/subtitleSelection/dev/SubtitleSelection.vue';
 import { default as Transcript } from '@/transcript/pages/Transcript.vue';
 import { default as Settings } from '@/settings/pages/Settings.vue';
 import "@/styles.css"

@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { OpensubtitlesStateResponse } from '@/search/pages/subtitleSelection/searchRequestDev';
+import { OpensubtitlesStateResponse } from '@/search/pages/subtitleSelection/dev/searchRequest';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({

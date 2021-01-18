@@ -8,7 +8,7 @@
         </div>
         <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
-          <LoadingBar :loading="!dataReady" class="w-full"/>
+          <LoadingBar :loading="!dataReady" class="w-full" />
         </div>
         <div v-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in filteredEntries" :key="index">
@@ -29,7 +29,8 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import { searchRequest, OpensubtitlesStateResponse } from './searchRequest';
-import { selectOpenSubtitle, triggerDownload, setPreferredLanguage } from '@/search/state';
+import { download } from './download';
+import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
 import { setSrc, setState } from '@/app/state';
 import { toHome, toSearch } from '@/navigation/state';
 
@@ -37,8 +38,9 @@ import { default as LanguageAccordion } from './LanguageAccordion.vue';
 import { default as Divider } from '@/components/Divider.vue';
 import { default as SubtitleEntry } from './SubtitleEntry.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
-import { default as LoadingBar } from "@/components/LoadingBar.vue";
-import { default as InputField } from "@/components/InputField.vue";
+import { default as LoadingBar } from '@/components/LoadingBar.vue';
+import { default as InputField } from '@/components/InputField.vue';
+import {parse, setRaw} from "@/subtitle/state";
 
 export default defineComponent({
   components: {
@@ -70,7 +72,7 @@ export default defineComponent({
   },
   setup(props) {
     const entries = ref<OpensubtitlesStateResponse[]>([]);
-    const language = ref( window.plusSub_subtitleSearch.value.preferredLanguage);
+    const language = ref(window.plusSub_subtitleSearch.value.preferredLanguage);
     const filter = ref('');
     const dataReady = ref(false);
 
@@ -107,7 +109,13 @@ export default defineComponent({
           rating: openSubtitle.SubRating,
           websiteLink: openSubtitle.SubtitlesLink
         });
-        triggerDownload(openSubtitle);
+        setState({ state: 'DOWNLOADING' });
+        download(openSubtitle)
+          .then(({raw, format}) => {
+            setRaw({ raw, format, id: openSubtitle.SubHash });
+            parse();
+          })
+          .catch(() => setState({ state: 'ERROR' }));
         toHome({
           contentTransitionName: 'content-navigate-select-to-home'
         });
