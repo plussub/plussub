@@ -4,11 +4,33 @@
       <div class="w-full h-full grid relative justify-center subtitle-selection-content--container">
         <div style="grid-area: filter-bar" class="pt-3 pb-2 bg-primary-50">
           <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2" />
-          <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" class="px-3 mt-2" />
+          <div v-if="media_type === 'tv'" class="w-full flex">
+            <Accordion v-model:selected="season" v-model:show="showSeasonSelection" :items="seasonList" :filter-fn="seasonFilter" filter-placeholder="Filter seasons" class="px-3 mt-2">
+              <template #currentSelected>
+                <span>Season {{ season }}</span>
+              </template>
+            </Accordion>
+            <Accordion v-model:selected="episode" v-model:show="showEpisodeSelection" :items="episodeList" :filter-fn="episodeFilter" filter-placeholder="Filter episodes" class="px-3 mt-2">
+              <template #currentSelected>
+                <span>Episode {{ episode === 0 ? 'All' : episode }}</span>
+              </template>
+              <template #default="slotProps">
+                <span>{{ slotProps.item === 0 ? 'All' : slotProps.item }}</span>
+              </template>
+            </Accordion>
+          </div>
+          <Accordion v-model:selected="language" v-model:show="showLanguageSelection" :items="languageList" filter-placeholder="Filter languages" :filter-fn="languageFilter" class="px-3 mt-2">
+            <template #currentSelected>
+              <span>Subtitle language: {{ prettyLanguage }}</span>
+            </template>
+            <template #default="slotProps">
+              <span>{{ slotProps.item.iso639Name }} ({{ slotProps.item.iso639_2 }})</span>
+            </template>
+          </Accordion>
         </div>
-        <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
+        <div v-show="showSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
-          <LoadingBar :loading="!dataReady" class="w-full"/>
+          <LoadingBar :loading="!dataReady" class="w-full" />
         </div>
         <div v-if="entries.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in entries" :key="index">
@@ -27,26 +49,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue';
+import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import { searchRequest, OpensubtitlesStateResponse } from './searchRequest';
 import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
 import { download } from './download';
 import { setSrc, setState } from '@/app/state';
 import { toHome, toSearch } from '@/navigation/state';
 
-import { default as LanguageAccordion } from '../LanguageAccordion.vue';
+import { default as Accordion } from './Accordion.vue';
 import { default as Divider } from '@/components/Divider.vue';
 import { default as SubtitleEntryDev } from './SubtitleEntry.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
-import { default as LoadingBar } from "@/components/LoadingBar.vue";
-import { default as InputField } from "@/components/InputField.vue";
-import {parse, setRaw} from "@/subtitle/state";
+import { default as LoadingBar } from '@/components/LoadingBar.vue';
+import { default as InputField } from '@/components/InputField.vue';
+import { parse, setRaw } from '@/subtitle/state';
+import languageList from '@/res/iso639List.json';
+import { capitalizeFirst } from '@/util/string';
 
 export default defineComponent({
   components: {
     InputField,
     LoadingBar,
-    LanguageAccordion,
+    Accordion,
     Divider,
     SubtitleEntryDev,
     PageLayout
@@ -72,23 +96,37 @@ export default defineComponent({
   },
   setup(props) {
     const entries = ref<OpensubtitlesStateResponse[]>([]);
-    const language = ref( window.plusSub_subtitleSearch.value.preferredLanguage);
+
+    const language = ref<{iso639_2: string, iso639Name: string}>(languageList.find((e) => e.iso639_2 === window.plusSub_subtitleSearch.value.preferredLanguage) ?? {iso639_2: "en", iso639Name: "English"});
+    const showLanguageSelection = ref(false);
+
     const filter = ref('');
+
     const dataReady = ref(false);
+
+    const season = ref(1);
+    const seasonCount = ref(40);
+    const showSeasonSelection = ref(false);
+    const seasonList = computed(() => Array.from({ length: seasonCount.value }).map((_, index) => index + 1));
+
+    const episode = ref(0);
+    const episodeCount = ref(99);
+    const showEpisodeSelection = ref(false);
+    const episodeList = computed(() => [0, ...Array.from({ length: episodeCount.value }).map((_, index) => index + 1)]);
 
     const triggerSearch = () =>
       searchRequest({
         tmdb_id: props.tmdb_id,
-        language: language.value,
-        season_number: props.media_type === 'tv' ? 1 : 0,
-        episode_number: 0
+        language: language.value.iso639_2,
+        season_number: props.media_type === 'tv' ? season.value : 0,
+        episode_number: props.media_type === 'tv' ? episode.value : 0
       }).then((result) => {
         dataReady.value = true;
         entries.value = result;
       });
     triggerSearch();
 
-    watch(language, () => {
+    watch([language, season, episode], () => {
       dataReady.value = false;
       triggerSearch();
     });
@@ -96,14 +134,29 @@ export default defineComponent({
     return {
       dataReady,
       filter,
+      languageList,
+      languageFilter: (query: string) => {
+        const lowerCaseQuery = query.toLowerCase();
+        return languageList.filter(({ iso639Name, iso639_2 }) => iso639Name.toLowerCase().startsWith(query) || iso639_2.toLowerCase().startsWith(lowerCaseQuery));
+      },
       language,
-      showLanguageSelection: ref(false),
+      prettyLanguage: computed(() => capitalizeFirst(language.value.iso639_2)),
+      showLanguageSelection,
+      season,
+      seasonList,
+      seasonFilter: (query: string) => seasonList.value.filter((e) => e.toString() === query.toString()),
+      showSeasonSelection,
+      episode,
+      episodeList,
+      episodeFilter: (query: string) => episodeList.value.filter((e) => e.toString() === query.toString()),
+      showEpisodeSelection,
+      showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),
       entries,
       // filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
       select: (openSubtitle: OpensubtitlesStateResponse) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });
-        setPreferredLanguage(language.value);
+        setPreferredLanguage(language.value.iso639_2);
         selectOpenSubtitle({
           format: openSubtitle.attributes.format ?? 'srt',
           languageName: openSubtitle.attributes.language,
@@ -111,10 +164,12 @@ export default defineComponent({
           websiteLink: openSubtitle.attributes.url
         });
 
-        download(openSubtitle).then(({raw, format}) => {
-          setRaw({ raw, format, id: openSubtitle.attributes.files[0].file_name });
-          parse();
-        }).catch(() => setState({ state: 'ERROR' }));
+        download(openSubtitle)
+          .then(({ raw, format }) => {
+            setRaw({ raw, format, id: openSubtitle.attributes.files[0].file_name });
+            parse();
+          })
+          .catch(() => setState({ state: 'ERROR' }));
 
         toHome({
           contentTransitionName: 'content-navigate-select-to-home'
