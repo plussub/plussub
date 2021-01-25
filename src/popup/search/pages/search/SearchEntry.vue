@@ -27,13 +27,13 @@ import { capitalizeFirst } from '@/util/string';
 import { default as posterFallback } from '@/res/posterFallback.png';
 
 export default defineComponent({
-  emits: ['select'],
   props: {
     item: {
       type: Object as PropType<SearchQueryResultEntry>,
       required: true
     }
   },
+  emits: ['select'],
   setup(props, { emit }) {
     return {
       posterFallback,
