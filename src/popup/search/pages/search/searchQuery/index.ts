@@ -2,7 +2,7 @@ import query from './query.gql';
 import {DocumentNode} from "graphql";
 import {
   VideoSearch,
-  VideoSearch_videoSearch_entries as SearchQueryResultEntry
+  VideoSearch_videoSearch_entries as SearchQueryResultEntry, VideoSearchVariables
 } from './__gen_gql/VideoSearch';
 
 function getGqlString(doc: DocumentNode) {
@@ -11,8 +11,8 @@ function getGqlString(doc: DocumentNode) {
 
 export { SearchQueryResultEntry };
 
-export const searchQuery = async (queryParam: string): Promise<SearchQueryResultEntry[]> => {
-  if(queryParam === ""){
+export const searchQuery = async (variables: VideoSearchVariables): Promise<SearchQueryResultEntry[]> => {
+  if(variables.query === ""){
     return [];
   }
 
@@ -23,9 +23,7 @@ export const searchQuery = async (queryParam: string): Promise<SearchQueryResult
     },
     body: JSON.stringify({
       query: getGqlString(query),
-      variables: {
-        query: queryParam
-      }
+      variables
     })
   })
     .then((r) => r.json());

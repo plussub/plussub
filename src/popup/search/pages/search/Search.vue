@@ -85,7 +85,7 @@ export default defineComponent({
       loadingRef: loading
     });
 
-    watch(internalQuery, (query) => req(query), { immediate: true });
+    watch(internalQuery, (query) => req({query}), { immediate: true });
 
     return {
       internalQuery,
