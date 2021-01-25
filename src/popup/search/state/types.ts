@@ -6,7 +6,6 @@ export interface TmdbState {
   title: string;
   media_type: string;
   release_date: string;
-  description: string;
   vote_average: number;
 }
 

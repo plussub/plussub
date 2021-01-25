@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue';
-import { TmdbState } from '@/search/state';
+import { SearchQueryResultEntry } from './searchQuery';
 import { capitalizeFirst } from '@/util/string';
 
 import { default as posterFallback } from '@/res/posterFallback.png';
@@ -30,7 +30,7 @@ export default defineComponent({
   emits: ['select'],
   props: {
     item: {
-      type: Object as PropType<TmdbState>,
+      type: Object as PropType<SearchQueryResultEntry>,
       required: true
     }
   },

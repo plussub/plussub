@@ -38,9 +38,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, watch } from 'vue';
-import { searchRequest } from './searchRequest';
+import { searchQuery, SearchQueryResultEntry } from './searchQuery';
 import { debounce } from '@/composables';
-import { setTmdbInSelection, TmdbState } from '@/search/state';
+import { setTmdbInSelection } from '@/search/state';
 import { setCurrentSelectedSrc, toHome, toSubtitleSelection, toSettings } from '@/navigation/state';
 import { getVideoName } from '@/util/name';
 import { videoCount } from '@/video/state';
@@ -78,8 +78,8 @@ export default defineComponent({
     const searchResults = ref([]);
     const loading = ref(false);
 
-    const { fn: req } = debounce<TmdbState[]>({
-      fn: searchRequest,
+    const { fn: req } = debounce<SearchQueryResultEntry[]>({
+      fn: searchQuery,
       timeout: 1500,
       resultRef: searchResults,
       loadingRef: loading
@@ -95,7 +95,7 @@ export default defineComponent({
       getVideoName,
       toSettings,
       changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
-      select: (tmdb: TmdbState): void => {
+      select: (tmdb: SearchQueryResultEntry): void => {
         setTmdbInSelection(tmdb);
         toSubtitleSelection({
           tmdb_id: tmdb.tmdb_id,

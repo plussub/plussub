@@ -1,0 +1,12 @@
+query VideoSearch($query: String!){
+    videoSearch(query: $query){
+        entries{
+            tmdb_id
+            title
+            poster_path
+            release_date
+            media_type
+            vote_average
+        }
+    }
+}
