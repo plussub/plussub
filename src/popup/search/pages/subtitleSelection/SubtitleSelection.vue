@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
-import { searchRequest, OpensubtitlesStateResponse } from './searchRequest';
+import { searchQuery, SearchQueryResultEntry } from './searchQuery';
 import { download } from './download';
 import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
 import { setSrc, setState } from '@/app/state';
@@ -71,13 +71,13 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const entries = ref<OpensubtitlesStateResponse[]>([]);
+    const entries = ref<SearchQueryResultEntry[]>([]);
     const language = ref(window.plusSub_subtitleSearch.value.preferredLanguage);
     const filter = ref('');
     const dataReady = ref(false);
 
     const triggerSearch = () =>
-      searchRequest({
+      searchQuery({
         tmdb_id: props.tmdb_id,
         media_type: props.media_type,
         language: language.value
@@ -99,14 +99,14 @@ export default defineComponent({
       showLanguageSelection: ref(false),
       entries,
       filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
-      select: (openSubtitle: OpensubtitlesStateResponse) => {
+      select: (openSubtitle: SearchQueryResultEntry) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });
         setPreferredLanguage(language.value);
         selectOpenSubtitle({
           format: openSubtitle.SubFormat,
           languageName: openSubtitle.LanguageName,
-          rating: openSubtitle.SubRating,
+          rating: openSubtitle.SubRating.toString(),
           websiteLink: openSubtitle.SubtitlesLink
         });
         setState({ state: 'DOWNLOADING' });
