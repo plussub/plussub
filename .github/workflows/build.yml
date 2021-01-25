@@ -21,6 +21,7 @@ jobs:
         with:
           node-version: '12.x'
       - run: npm ci
+      - run: npm run gen
       - run: npm run build:${{ matrix.target }}
       - uses: actions/upload-artifact@v2
         with:

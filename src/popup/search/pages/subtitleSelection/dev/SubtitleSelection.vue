@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
-import { searchRequest, OpensubtitlesStateResponse } from './searchRequest';
+import { searchQuery, SearchQueryResultEntry } from './searchQuery';
 import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
 import { download } from './download';
 import { setSrc, setState } from '@/app/state';
@@ -95,7 +95,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const entries = ref<OpensubtitlesStateResponse[]>([]);
+    const entries = ref<SearchQueryResultEntry[]>([]);
 
     const language = ref<{iso639_2: string, iso639Name: string}>(languageList.find((e) => e.iso639_2 === window.plusSub_subtitleSearch.value.preferredLanguage) ?? {iso639_2: "en", iso639Name: "English"});
     const showLanguageSelection = ref(false);
@@ -115,7 +115,7 @@ export default defineComponent({
     const episodeList = computed(() => [0, ...Array.from({ length: episodeCount.value }).map((_, index) => index + 1)]);
 
     const triggerSearch = () =>
-      searchRequest({
+      searchQuery({
         tmdb_id: props.tmdb_id,
         language: language.value.iso639_2,
         season_number: props.media_type === 'tv' ? season.value : 0,
@@ -153,7 +153,7 @@ export default defineComponent({
       showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),
       entries,
       // filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
-      select: (openSubtitle: OpensubtitlesStateResponse) => {
+      select: (openSubtitle: SearchQueryResultEntry) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });
         setPreferredLanguage(language.value.iso639_2);

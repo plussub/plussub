@@ -89,6 +89,11 @@ module.exports = (env, argv) => {
         {
           test: /\.html$/i,
           loader: 'html-loader'
+        },
+        {
+          test: /\.(graphql|gql)$/,
+          exclude: /node_modules/,
+          loader: 'graphql-tag/loader',
         }
       ]
     },

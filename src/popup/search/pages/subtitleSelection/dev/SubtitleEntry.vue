@@ -15,13 +15,13 @@
 </template>
 
 <script lang="ts">
-import { OpensubtitlesStateResponse } from '@/search/pages/subtitleSelection/dev/searchRequest';
+import { SearchQueryResultEntry } from './searchQuery';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   props: {
     item: {
-      type: Object as PropType<OpensubtitlesStateResponse>,
+      type: Object as PropType<SearchQueryResultEntry>,
       required: true
     }
   },

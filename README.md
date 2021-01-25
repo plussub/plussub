@@ -8,6 +8,7 @@ is an extension which adds subtitle to HTML <video> tags via file or subtitle se
 ```
 # install dependencies
 npm install
+npm run gen
 
 # build chrome (dev)
 npm run start:chrome
@@ -22,6 +23,7 @@ npm run start:chrome
 ```
 # install dependencies
 npm install
+npm run gen
 
 # build firefox (dev)
 npm run start:firefox

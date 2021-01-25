@@ -15,3 +15,5 @@ manifest.json
 dist*
 
 src/_locales
+__gen_gql
+schema.graphql
