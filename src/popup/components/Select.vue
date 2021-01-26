@@ -18,21 +18,21 @@
       </span>
     </div>
 
-    <transition name="slide-accordion">
-      <div v-show="show" class="absolute mt-1 inset-x-0 inset-y-full z-30 grid h-0 w-full bg-primary-50 shadow search-toolbar--container--accordion">
+    <transition name="slide-select">
+      <div v-show="show" class="absolute mt-1 inset-x-0 inset-y-full z-30 grid h-0 w-full bg-primary-50 shadow search-toolbar--container--select">
         <div style="grid-column: 1 / -1; grid-row: 1 / 2" class="bg-primary-50"></div>
         <div class="w-full pt-1" style="grid-area: filter-bar">
           <InputField v-model="query" :placeholder="filterPlaceholder" placeholder-icon="filter" />
         </div>
         <div style="grid-area: space" class="bg-surface-50 text-on-surface-50 border-l border-r border-primary-700">&nbsp;</div>
-        <transition name="slide-accordion" appear>
+        <transition name="slide-select" appear>
           <div
             v-show="show"
             class="overflow-y-auto overflow-x-hidden bg-surface-50 text-on-surface-50 z-10 shadow-lg border-l border-r border-b rounded-b border-primary-700"
             style="grid-area: content"
           >
-            <div v-for="(item, idx) in filteredItems" :key="idx" class="w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer font-lg p-2" @click="select(item)">
-              <slot :item="item"><span>{{ item }}</span></slot>
+            <div v-for="(option, idx) in filteredOptions" :key="idx" class="w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer font-lg p-2" @click="select(option)">
+              <slot :item="option"><span>{{ option }}</span></slot>
             </div>
           </div>
         </transition>
@@ -68,7 +68,7 @@ export default defineComponent({
       type: Boolean as PropType<boolean>,
       required: true
     },
-    items: {
+    options: {
       type: Array as PropType<any[]>,
       required: true
     }
@@ -95,10 +95,10 @@ export default defineComponent({
         emit('update:show', !showInternal.value);
       },
 
-      filteredItems: computed(() => (query.value === '' ? props.items : props.filterFn(query.value))),
-      select: (item): void => {
+      filteredOptions: computed(() => (query.value === '' ? props.options : props.filterFn(query.value))),
+      select: (option): void => {
         showInternal.value = false;
-        emit('update:selected', item);
+        emit('update:selected', option);
       },
       clear: () => {
         query.value = '';
@@ -110,7 +110,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.search-toolbar--container--accordion {
+.search-toolbar--container--select {
   grid-template-areas:
     '. filter-bar .'
     '. space .'
@@ -119,14 +119,14 @@ export default defineComponent({
   grid-template-columns: 8px 1fr 8px;
 }
 
-.slide-accordion-enter-active,
-.slide-accordion-leave-active {
+.slide-select-enter-active,
+.slide-select-leave-active {
   transition: all 0.5s ease;
   max-height: 200px;
 }
 
-.slide-accordion-enter-from,
-.slide-accordion-leave-to {
+.slide-select-enter-from,
+.slide-select-leave-to {
   max-height: 0;
 }
 </style>

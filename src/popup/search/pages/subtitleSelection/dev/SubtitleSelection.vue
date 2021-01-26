@@ -5,35 +5,35 @@
         <div style="grid-area: filter-bar" class="pt-3 pb-2 bg-primary-50">
           <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2" />
           <div v-if="media_type === 'tv'" class="w-full flex">
-            <Accordion v-model:selected="season" v-model:show="showSeasonSelection" :items="seasonList" :filter-fn="seasonFilter" filter-placeholder="Filter seasons" class="px-3 mt-2">
+            <Select v-model:selected="season" v-model:show="showSeasonSelection" :options="seasonList" :filter-fn="seasonFilter" filter-placeholder="Filter seasons" class="px-3 mt-2">
               <template #currentSelected>
                 <span>Season {{ season }}</span>
               </template>
-            </Accordion>
-            <Accordion v-model:selected="episode" v-model:show="showEpisodeSelection" :items="episodeList" :filter-fn="episodeFilter" filter-placeholder="Filter episodes" class="px-3 mt-2">
+            </Select>
+            <Select v-model:selected="episode" v-model:show="showEpisodeSelection" :options="episodeList" :filter-fn="episodeFilter" filter-placeholder="Filter episodes" class="px-3 mt-2">
               <template #currentSelected>
                 <span>Episode {{ episode === 0 ? 'All' : episode }}</span>
               </template>
               <template #default="slotProps">
                 <span>{{ slotProps.item === 0 ? 'All' : slotProps.item }}</span>
               </template>
-            </Accordion>
+            </Select>
           </div>
-          <Accordion v-model:selected="language" v-model:show="showLanguageSelection" :items="languageList" filter-placeholder="Filter languages" :filter-fn="languageFilter" class="px-3 mt-2">
+          <Select v-model:selected="language" v-model:show="showLanguageSelection" :options="languageList" filter-placeholder="Filter languages" :filter-fn="languageFilter" class="px-3 mt-2">
             <template #currentSelected>
               <span>Subtitle language: {{ prettyLanguage }}</span>
             </template>
             <template #default="slotProps">
               <span>{{ slotProps.item.iso639Name }} ({{ slotProps.item.iso639_2 }})</span>
             </template>
-          </Accordion>
+          </Select>
         </div>
         <div v-show="showSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
           <LoadingBar :loading="!dataReady" class="w-full" />
         </div>
-        <div v-if="entries.length" class="overflow-y-auto" style="grid-area: search-results">
-          <div v-for="(item, index) in entries" :key="index">
+        <div v-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
+          <div v-for="(item, index) in filteredEntries" :key="index">
             <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
             <SubtitleEntryDev :item="item" @select="select" />
             <Divider class="border-surface-200" />
@@ -56,7 +56,7 @@ import { download } from './download';
 import { setSrc, setState } from '@/app/state';
 import { toHome, toSearch } from '@/navigation/state';
 
-import { default as Accordion } from './Accordion.vue';
+import { default as Select } from '@/components/Select.vue';
 import { default as Divider } from '@/components/Divider.vue';
 import { default as SubtitleEntryDev } from './SubtitleEntry.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
@@ -70,7 +70,7 @@ export default defineComponent({
   components: {
     InputField,
     LoadingBar,
-    Accordion,
+    Select,
     Divider,
     SubtitleEntryDev,
     PageLayout
@@ -97,7 +97,9 @@ export default defineComponent({
   setup(props) {
     const entries = ref<SearchQueryResultEntry[]>([]);
 
-    const language = ref<{iso639_2: string, iso639Name: string}>(languageList.find((e) => e.iso639_2 === window.plusSub_subtitleSearch.value.preferredLanguage) ?? {iso639_2: "en", iso639Name: "English"});
+    const language = ref<{ iso639_2: string; iso639Name: string }>(
+      languageList.find((e) => e.iso639_2 === window.plusSub_subtitleSearch.value.preferredLanguage) ?? { iso639_2: 'en', iso639Name: 'English' }
+    );
     const showLanguageSelection = ref(false);
 
     const filter = ref('');
@@ -152,7 +154,14 @@ export default defineComponent({
       showEpisodeSelection,
       showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),
       entries,
-      // filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
+      filteredEntries: computed(() =>
+        entries.value.filter(({ attributes }) => {
+          if(filter.value === ''){
+            return true;
+          }
+          return attributes.files[0].file_name?.toLowerCase().includes(filter.value.toLowerCase()) ?? false;
+        })
+      ),
       select: (openSubtitle: SearchQueryResultEntry) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });

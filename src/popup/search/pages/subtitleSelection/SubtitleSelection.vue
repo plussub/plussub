@@ -4,9 +4,16 @@
       <div class="w-full h-full grid relative justify-center subtitle-selection-content--container">
         <div style="grid-area: filter-bar" class="pt-3 pb-2 bg-primary-50">
           <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2" />
-          <LanguageAccordion v-model:selected="language" v-model:showLanguageSelection="showLanguageSelection" class="px-3 mt-2" />
+          <Select v-model:selected="language" v-model:show="showLanguageSelection" :options="languageList" filter-placeholder="Filter languages" :filter-fn="languageFilter" class="px-3 mt-2">
+            <template #currentSelected>
+              <span>Subtitle language: {{ prettyLanguage }}</span>
+            </template>
+            <template #default="slotProps">
+              <span>{{ slotProps.item.iso639Name }} ({{ slotProps.item.iso639_2 }})</span>
+            </template>
+          </Select>
         </div>
-        <div v-show="showLanguageSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
+        <div v-show="showSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
           <LoadingBar :loading="!dataReady" class="w-full" />
         </div>
@@ -34,19 +41,21 @@ import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
 import { setSrc, setState } from '@/app/state';
 import { toHome, toSearch } from '@/navigation/state';
 
-import { default as LanguageAccordion } from './LanguageAccordion.vue';
+import { default as Select } from '@/components/Select.vue';
 import { default as Divider } from '@/components/Divider.vue';
 import { default as SubtitleEntry } from './SubtitleEntry.vue';
 import { default as PageLayout } from '@/components/PageLayout.vue';
 import { default as LoadingBar } from '@/components/LoadingBar.vue';
 import { default as InputField } from '@/components/InputField.vue';
 import {parse, setRaw} from "@/subtitle/state";
+import languageList from "@/res/iso639List.json";
+import {capitalizeFirst} from "@/util/string";
 
 export default defineComponent({
   components: {
     InputField,
     LoadingBar,
-    LanguageAccordion,
+    Select,
     Divider,
     SubtitleEntry,
     PageLayout
@@ -72,7 +81,9 @@ export default defineComponent({
   },
   setup(props) {
     const entries = ref<SearchQueryResultEntry[]>([]);
-    const language = ref(window.plusSub_subtitleSearch.value.preferredLanguage);
+    const language = ref<{iso639_2: string, iso639Name: string}>(languageList.find((e) => e.iso639_2 === window.plusSub_subtitleSearch.value.preferredLanguage) ?? {iso639_2: "en", iso639Name: "English"});
+    const showLanguageSelection = ref(false);
+
     const filter = ref('');
     const dataReady = ref(false);
 
@@ -80,7 +91,7 @@ export default defineComponent({
       searchQuery({
         tmdb_id: props.tmdb_id,
         media_type: props.media_type,
-        language: language.value
+        language: language.value.iso639_2
       }).then((result) => {
         dataReady.value = true;
         entries.value = result;
@@ -95,14 +106,22 @@ export default defineComponent({
     return {
       dataReady,
       filter,
+      languageList,
+      languageFilter: (query: string) => {
+        const lowerCaseQuery = query.toLowerCase();
+        return languageList.filter(({ iso639Name, iso639_2 }) => iso639Name.toLowerCase().startsWith(query) || iso639_2.toLowerCase().startsWith(lowerCaseQuery));
+      },
       language,
+      prettyLanguage: computed(() => capitalizeFirst(language.value.iso639_2)),
       showLanguageSelection: ref(false),
       entries,
       filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
+      showSelection: computed(() => showLanguageSelection.value),
+
       select: (openSubtitle: SearchQueryResultEntry) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });
-        setPreferredLanguage(language.value);
+        setPreferredLanguage(language.value.iso639_2);
         selectOpenSubtitle({
           format: openSubtitle.SubFormat,
           languageName: openSubtitle.LanguageName,
