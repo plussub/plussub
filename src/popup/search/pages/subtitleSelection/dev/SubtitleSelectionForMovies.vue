@@ -4,21 +4,6 @@
       <div class="w-full h-full grid relative justify-center subtitle-selection-content--container">
         <div style="grid-area: filter-bar" class="pt-3 pb-2 bg-primary-50">
           <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2" />
-          <div v-if="media_type === 'tv'" class="w-full flex">
-            <Select v-model:selected="season" v-model:show="showSeasonSelection" :options="seasonList" :filter-fn="seasonFilter" filter-placeholder="Filter seasons" class="px-3 mt-2">
-              <template #currentSelected>
-                <span>Season {{ season }}</span>
-              </template>
-            </Select>
-            <Select v-model:selected="episode" v-model:show="showEpisodeSelection" :options="episodeList" :filter-fn="episodeFilter" filter-placeholder="Filter episodes" class="px-3 mt-2">
-              <template #currentSelected>
-                <span>Episode {{ episode === 0 ? 'All' : episode }}</span>
-              </template>
-              <template #default="slotProps">
-                <span>{{ slotProps.item === 0 ? 'All' : slotProps.item }}</span>
-              </template>
-            </Select>
-          </div>
           <Select v-model:selected="language" v-model:show="showLanguageSelection" :options="languageList" filter-placeholder="Filter languages" :filter-fn="languageFilter" class="px-3 mt-2">
             <template #currentSelected>
               <span>Subtitle language: {{ prettyLanguage }}</span>
@@ -50,7 +35,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
-import { searchQuery, SearchQueryResultEntry } from './searchQuery';
+import { searchQuery, SearchQueryResultEntry } from './searchQueryForMovies';
 import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
 import { download } from './download';
 import { setSrc, setState } from '@/app/state';
@@ -106,29 +91,17 @@ export default defineComponent({
 
     const dataReady = ref(false);
 
-    const season = ref(1);
-    const seasonCount = ref(40);
-    const showSeasonSelection = ref(false);
-    const seasonList = computed(() => Array.from({ length: seasonCount.value }).map((_, index) => index + 1));
-
-    const episode = ref(0);
-    const episodeCount = ref(99);
-    const showEpisodeSelection = ref(false);
-    const episodeList = computed(() => [0, ...Array.from({ length: episodeCount.value }).map((_, index) => index + 1)]);
-
     const triggerSearch = () =>
       searchQuery({
         tmdb_id: props.tmdb_id,
-        language: language.value.iso639_2,
-        season_number: props.media_type === 'tv' ? season.value : 0,
-        episode_number: props.media_type === 'tv' ? episode.value : 0
+        language: language.value.iso639_2
       }).then((result) => {
         dataReady.value = true;
         entries.value = result;
       });
     triggerSearch();
 
-    watch([language, season, episode], () => {
+    watch([language], () => {
       dataReady.value = false;
       triggerSearch();
     });
@@ -144,15 +117,7 @@ export default defineComponent({
       language,
       prettyLanguage: computed(() => capitalizeFirst(language.value.iso639_2)),
       showLanguageSelection,
-      season,
-      seasonList,
-      seasonFilter: (query: string) => seasonList.value.filter((e) => e.toString() === query.toString()),
-      showSeasonSelection,
-      episode,
-      episodeList,
-      episodeFilter: (query: string) => episodeList.value.filter((e) => e.toString() === query.toString()),
-      showEpisodeSelection,
-      showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),
+      showSelection: computed(() => showLanguageSelection.value),
       entries,
       filteredEntries: computed(() =>
         entries.value.filter(({ attributes }) => {

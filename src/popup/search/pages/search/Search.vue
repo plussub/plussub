@@ -41,7 +41,7 @@ import { defineComponent, PropType, ref, watch } from 'vue';
 import { searchQuery, SearchQueryResultEntry } from './searchQuery';
 import { debounce } from '@/composables';
 import { setTmdbInSelection } from '@/search/state';
-import { setCurrentSelectedSrc, toHome, toSubtitleSelection, toSettings } from '@/navigation/state';
+import { setCurrentSelectedSrc, toHome, toSubtitleSelectionForMovies, toSubtitleSelectionForSeries, toSettings } from '@/navigation/state';
 import { getVideoName } from '@/util/name';
 import { videoCount } from '@/video/state';
 
@@ -97,7 +97,8 @@ export default defineComponent({
       changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
       select: (tmdb: SearchQueryResultEntry): void => {
         setTmdbInSelection(tmdb);
-        toSubtitleSelection({
+        const to = tmdb.media_type === 'movie' ? toSubtitleSelectionForMovies : toSubtitleSelectionForSeries;
+        to({
           tmdb_id: tmdb.tmdb_id,
           media_type: tmdb.media_type,
           searchQuery: internalQuery.value,

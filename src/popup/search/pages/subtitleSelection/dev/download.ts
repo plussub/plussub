@@ -1,8 +1,9 @@
 import {getFormatFromFilename} from "@/subtitle/util";
 import {SubtitleFormat} from "@/subtitle/state/types";
-import {SearchQueryResultEntry} from "./searchQuery";
+import { SearchQueryResultEntry as  SearchQueryResultForSeriesEntry} from './searchQueryForSeries';
+import { SearchQueryResultEntry as  SearchQueryResultForMoviesEntry } from './searchQueryForMovies';
 
-export const download = async (entry: SearchQueryResultEntry): Promise<{ raw: string, format: SubtitleFormat }> => {
+export const download = async (entry: SearchQueryResultForSeriesEntry | SearchQueryResultForMoviesEntry): Promise<{ raw: string, format: SubtitleFormat }> => {
   const formatArgument = getFormatFromFilename(entry.attributes.files[0].file_name ?? '') ? {} : {sub_format: 'webvtt'};
 
   const { file_name, link } = await fetch('https://api.opensubtitles.com/api/v1/download', {

@@ -1,0 +1,19 @@
+query SubtitleSearchForMovies($tmdb_id: String!, $language: String!)
+{
+    subtitleSearch(tmdb_id: $tmdb_id, language: $language){
+        data {
+            attributes {
+                subtitle_id
+                language
+                format
+                ratings
+                url
+                hearing_impaired
+                files {
+                    file_id
+                    file_name
+                }
+            }
+        }
+    }
+}

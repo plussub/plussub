@@ -15,13 +15,14 @@
 </template>
 
 <script lang="ts">
-import { SearchQueryResultEntry } from './searchQuery';
+import { SearchQueryResultEntry as  SearchQueryResultForSeriesEntry} from './searchQueryForSeries';
+import { SearchQueryResultEntry as  SearchQueryResultForMoviesEntry } from './searchQueryForMovies';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   props: {
     item: {
-      type: Object as PropType<SearchQueryResultEntry>,
+      type: Object as PropType<SearchQueryResultForSeriesEntry | SearchQueryResultForMoviesEntry>,
       required: true
     }
   },

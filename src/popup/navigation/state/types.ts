@@ -2,7 +2,7 @@ import { Ref } from 'vue';
 import {VideoSrc} from "@/video/state";
 
 export type NavigationState = Ref<{
-  name: 'HOME' | 'SEARCH' | 'SUBTITLE-SELECTION' | 'TRANSCRIPT' | 'SETTINGS';
+  name: 'HOME' | 'SEARCH' | 'SUBTITLE-SELECTION-FOR-MOVIES' | 'SUBTITLE-SELECTION-FOR-SERIES' | 'TRANSCRIPT' | 'SETTINGS';
   params: any;
 }>;
 
