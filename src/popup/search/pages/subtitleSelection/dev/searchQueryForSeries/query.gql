@@ -1,20 +1,8 @@
+#import "../subtitleSearchFragment.gql"
 query SubtitleSearchForSeries($tmdb_id: String!, $language: String!, $season_number: Int, $episode_number: Int)
 {
     subtitleSearch(tmdb_id: $tmdb_id, language: $language, season_number: $season_number, episode_number: $episode_number){
-        data {
-            attributes {
-                subtitle_id
-                language
-                format
-                ratings
-                url
-                hearing_impaired
-                files {
-                    file_id
-                    file_name
-                }
-            }
-        }
+        ...SubtitleSearchFragmentResult
     }
 
     seasons(tmdb_id: $tmdb_id, language: $language) {

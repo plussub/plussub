@@ -94,6 +94,10 @@ module.exports = (env, argv) => {
           test: /\.(graphql|gql)$/,
           exclude: /node_modules/,
           loader: 'graphql-tag/loader',
+        },
+        {
+          test: /\.mjs$/,
+          type: 'javascript/auto'
         }
       ]
     },

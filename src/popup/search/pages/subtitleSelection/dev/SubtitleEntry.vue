@@ -15,14 +15,13 @@
 </template>
 
 <script lang="ts">
-import { SearchQueryResultEntry as  SearchQueryResultForSeriesEntry} from './searchQueryForSeries';
-import { SearchQueryResultEntry as  SearchQueryResultForMoviesEntry } from './searchQueryForMovies';
+import { SubtitleSearchFragmentResult_data } from './__gen_gql/SubtitleSearchFragmentResult';
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   props: {
     item: {
-      type: Object as PropType<SearchQueryResultForSeriesEntry | SearchQueryResultForMoviesEntry>,
+      type: Object as PropType<SubtitleSearchFragmentResult_data>,
       required: true
     }
   },

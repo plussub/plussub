@@ -96,7 +96,14 @@ export default defineComponent({
       toSettings,
       changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
       select: (tmdb: SearchQueryResultEntry): void => {
-        setTmdbInSelection(tmdb);
+        setTmdbInSelection({
+          tmdb_id: tmdb.tmdb_id,
+          media_type: tmdb.media_type,
+          poster_path: tmdb.poster_path,
+          release_date: tmdb.release_date ?? '',
+          title: tmdb.title,
+          vote_average: tmdb.vote_average ?? 0
+        });
         const to = tmdb.media_type === 'movie' ? toSubtitleSelectionForMovies : toSubtitleSelectionForSeries;
         to({
           tmdb_id: tmdb.tmdb_id,

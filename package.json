@@ -14,6 +14,7 @@
     "version": "node sync-manifest.js && git add src/manifest-chrome.json && git add src/manifest-firefox.json"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.7",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^3.0.0-2",

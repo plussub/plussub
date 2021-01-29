@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
-import { searchQuery, SearchQueryResultEntry } from './searchQueryForMovies';
+import { searchQuery } from './searchQueryForMovies';
 import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
 import { download } from './download';
 import { setSrc, setState } from '@/app/state';
@@ -50,6 +50,7 @@ import { default as InputField } from '@/components/InputField.vue';
 import { parse, setRaw } from '@/subtitle/state';
 import languageList from '@/res/iso639List.json';
 import { capitalizeFirst } from '@/util/string';
+import {SubtitleSearchFragmentResult_data} from "@/search/pages/subtitleSelection/dev/__gen_gql/SubtitleSearchFragmentResult";
 
 export default defineComponent({
   components: {
@@ -80,7 +81,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const entries = ref<SearchQueryResultEntry[]>([]);
+    const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
 
     const language = ref<{ iso639_2: string; iso639Name: string }>(
       languageList.find((e) => e.iso639_2 === window.plusSub_subtitleSearch.value.preferredLanguage) ?? { iso639_2: 'en', iso639Name: 'English' }
@@ -97,7 +98,7 @@ export default defineComponent({
         language: language.value.iso639_2
       }).then((result) => {
         dataReady.value = true;
-        entries.value = result;
+        entries.value = result.subtitleSearch.data;
       });
     triggerSearch();
 
@@ -127,7 +128,7 @@ export default defineComponent({
           return attributes.files[0].file_name?.toLowerCase().includes(filter.value.toLowerCase()) ?? false;
         })
       ),
-      select: (openSubtitle: SearchQueryResultEntry) => {
+      select: (openSubtitle: SubtitleSearchFragmentResult_data) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });
         setPreferredLanguage(language.value.iso639_2);

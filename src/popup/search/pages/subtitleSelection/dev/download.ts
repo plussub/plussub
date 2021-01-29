@@ -1,10 +1,9 @@
-import {getFormatFromFilename} from "@/subtitle/util";
-import {SubtitleFormat} from "@/subtitle/state/types";
-import { SearchQueryResultEntry as  SearchQueryResultForSeriesEntry} from './searchQueryForSeries';
-import { SearchQueryResultEntry as  SearchQueryResultForMoviesEntry } from './searchQueryForMovies';
+import { getFormatFromFilename } from '@/subtitle/util';
+import { SubtitleFormat } from '@/subtitle/state/types';
+import { SubtitleSearchFragmentResult_data } from './__gen_gql/SubtitleSearchFragmentResult';
 
-export const download = async (entry: SearchQueryResultForSeriesEntry | SearchQueryResultForMoviesEntry): Promise<{ raw: string, format: SubtitleFormat }> => {
-  const formatArgument = getFormatFromFilename(entry.attributes.files[0].file_name ?? '') ? {} : {sub_format: 'webvtt'};
+export const download = async (entry: SubtitleSearchFragmentResult_data): Promise<{ raw: string; format: SubtitleFormat }> => {
+  const formatArgument = getFormatFromFilename(entry.attributes.files[0].file_name ?? '') ? {} : { sub_format: 'webvtt' };
 
   const { file_name, link } = await fetch('https://api.opensubtitles.com/api/v1/download', {
     method: 'POST',
@@ -15,13 +14,12 @@ export const download = async (entry: SearchQueryResultForSeriesEntry | SearchQu
       'Accept-Encoding': 'gzip, deflate, br',
       'Api-Key': 'Th2A6DhpAl1kshBZlLqwwfZZd0i7p7Hn'
     }
-  })
-    .then((r) => r.json());
+  }).then((r) => r.json());
 
   const raw = await fetch(link).then((r) => r.text());
 
   const format = getFormatFromFilename(file_name);
-  if(!format){
+  if (!format) {
     return Promise.reject(`${format} is not supported`);
   }
 

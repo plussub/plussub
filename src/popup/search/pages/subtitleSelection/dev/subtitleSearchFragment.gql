@@ -1,0 +1,16 @@
+fragment SubtitleSearchFragmentResult on SubtitleSearchResult {
+    data {
+        attributes {
+            subtitle_id
+            language
+            format
+            ratings
+            url
+            hearing_impaired
+            files {
+                file_id
+                file_name
+            }
+        }
+    }
+}

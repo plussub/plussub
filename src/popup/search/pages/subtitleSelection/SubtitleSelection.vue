@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
-import { searchQuery, SearchQueryResultEntry } from './searchQuery';
+import { searchQuery, LegacySubtitleSearch_legacySubtitleSearch_entries } from './searchQuery';
 import { download } from './download';
 import { selectOpenSubtitle, setPreferredLanguage } from '@/search/state';
 import { setSrc, setState } from '@/app/state';
@@ -80,7 +80,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const entries = ref<SearchQueryResultEntry[]>([]);
+    const entries = ref<LegacySubtitleSearch_legacySubtitleSearch_entries[]>([]);
     const language = ref<{iso639_2: string, iso639Name: string}>(languageList.find((e) => e.iso639_2 === window.plusSub_subtitleSearch.value.preferredLanguage) ?? {iso639_2: "en", iso639Name: "English"});
     const showLanguageSelection = ref(false);
 
@@ -94,7 +94,7 @@ export default defineComponent({
         language: language.value.iso639_2
       }).then((result) => {
         dataReady.value = true;
-        entries.value = result;
+        entries.value = result.legacySubtitleSearch.entries;
       });
     triggerSearch();
 
@@ -118,7 +118,7 @@ export default defineComponent({
       filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
       showSelection: computed(() => showLanguageSelection.value),
 
-      select: (openSubtitle: SearchQueryResultEntry) => {
+      select: (openSubtitle: LegacySubtitleSearch_legacySubtitleSearch_entries) => {
         setState({ state: 'SELECTED' });
         setSrc({ src: 'SEARCH' });
         setPreferredLanguage(language.value.iso639_2);

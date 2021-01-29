@@ -1,9 +1,9 @@
 import JSZip from 'jszip';
 import {getFormatFromFilename} from "@/subtitle/util/getFormatFromFilename";
-import {SearchQueryResultEntry} from "./searchQuery";
+import {LegacySubtitleSearch_legacySubtitleSearch_entries} from "./searchQuery";
 import {SubtitleFormat} from "@/subtitle/state/types";
 
-export const download = async (entry: SearchQueryResultEntry): Promise<{ raw: string, format: SubtitleFormat }> => {
+export const download = async (entry: LegacySubtitleSearch_legacySubtitleSearch_entries): Promise<{ raw: string, format: SubtitleFormat }> => {
   if (!entry.ZipDownloadLink) {
     return Promise.reject('no link');
   }
