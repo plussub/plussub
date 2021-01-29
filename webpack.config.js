@@ -20,7 +20,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, `dist-${browser}`)
     },
     resolve: {
-      extensions: ['.ts', '.js', '.vue', '.json'],
+      extensions: ['.ts', '.js', '.vue', '.json', '.mjs'],
       alias: {
         '@': path.resolve(__dirname, 'src/popup'),
         // It seems the problem has been solve. https://github.com/vuejs/vue-cli/pull/5788
@@ -30,6 +30,7 @@ module.exports = (env, argv) => {
         // on the first HMR update and causes the page to reload.
         // vue: '@vue/runtime-dom',
         storage: path.resolve(__dirname, `src/popup/platform/storage/${browser}/index.ts`),
+        monkeyPatchApollo: path.resolve(__dirname, `src/popup/platform/monkeyPatchApollo/${browser}/index.ts`),
         onPageActionClicked: path.resolve(__dirname, `src/background/platform/onPageActionClicked/${browser}/index.ts`)
       }
     },
@@ -49,16 +50,6 @@ module.exports = (env, argv) => {
             'css-loader',
             'postcss-loader'
           ]
-        },
-        {
-          test: /\.js$/,
-          exclude: /(node_modules|bower_components)/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env']
-            }
-          }
         },
         {
           test: /\.(png|jpe?g|gif|svg)$/i,
@@ -93,13 +84,17 @@ module.exports = (env, argv) => {
         {
           test: /\.(graphql|gql)$/,
           exclude: /node_modules/,
-          loader: 'graphql-tag/loader',
+          loader: 'graphql-tag/loader'
         },
         {
           test: /\.mjs$/,
+          include: /node_modules/,
           type: 'javascript/auto'
         }
       ]
+    },
+    optimization: {
+
     },
     plugins: [
       new VueLoaderPlugin(),

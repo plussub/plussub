@@ -25,6 +25,7 @@
     "activeTab",
     "storage",
     "https://*.plus-sub.com/*",
+    "https://gqldev.plus-sub.com/*",
     "https://dl.opensubtitles.org/**/*",
     "webRequest"
   ]
