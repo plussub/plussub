@@ -1,0 +1,108 @@
+<template>
+  <div>
+    <Expandable :open="true">
+      <template #title>
+        <div class="font-medium font-header">
+          <span class="pr-2">Time</span><span>{{ currentTime }}</span>
+        </div>
+      </template>
+      <template #content>
+        <div class="grid offset-time--container">
+          <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
+            <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
+            <div class="w-full flex px-2 mt-0.5">
+              <input ref="range" :value="offsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6" @input="setOffsetTimeDebounced" />
+              <InputField v-model="offsetTime" step="100" type="number" class="pr-2" />
+            </div>
+          </div>
+          <div class="font-medium text-xs mx-2 flex" style="grid-area: preview-label">
+            <span class="flex-grow">Preview (next 3 subtitles)</span>
+            <label for="excerpt" class="pr-1">Excerpt</label>
+            <input id="excerpt" v-model="previewSelection" type="radio" value="excerpt" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />
+            <label for="diagram" class="pr-1">Diagram</label>
+            <input id="diagram" v-model="previewSelection" type="radio" value="diagram" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />
+          </div>
+          <Excerpt v-if="previewSelection === 'excerpt'" style="grid-area: preview; height: 150px; width: calc(100% - 12px)" />
+          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-5" />
+        </div>
+      </template>
+    </Expandable>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, inject, ref } from 'vue';
+import { computed } from '@vue/reactivity';
+import Expandable from '@/components/Expandable.vue';
+import Timeline from './Timeline.vue';
+import Excerpt from './Excerpt.vue';
+import InputField from '@/components/InputField.vue';
+import { debounce } from '@/composables';
+import { useTimeUpdate } from '@/video/composable';
+import { videoList } from '@/video/state';
+import Duration from 'luxon/src/duration';
+import { SubtitleStore } from '@/subtitle/store';
+
+export default defineComponent({
+  components: {
+    Excerpt,
+    Timeline,
+    InputField,
+    Expandable
+  },
+  setup() {
+    const subtitleStore = inject<SubtitleStore>('subtitleStore');
+
+    if (!subtitleStore) {
+      throw new Error('inject failed');
+    }
+
+    const currentTime = ref<string>(Duration.fromMillis(0).toFormat('hh:mm:ss'));
+
+    useTimeUpdate({
+      video: computed(() => videoList.value.find((e) => e.hasSubtitle)),
+      fn: ({ currentTime: currentTimeFromVideo }): void => {
+        currentTime.value = Duration.fromMillis(currentTimeFromVideo * 1000).toFormat('hh:mm:ss');
+      }
+    });
+
+    const offsetTime = computed({
+      get: () => subtitleStore.state.value.offsetTime,
+      set: (val) => {
+        const offsetTime = parseInt(val.toString());
+        subtitleStore.actions.setOffsetTime({ offsetTime: Number.isNaN(offsetTime) ? 0 : offsetTime });
+      }
+    });
+
+    const { fn: setOffsetTimeDebounced } = debounce<string>({
+      fn: (val) => val,
+      timeout: 50,
+      resultRef: offsetTime
+    });
+    const range = ref<HTMLInputElement | null>(null);
+
+    return {
+      currentTime,
+      range,
+      setOffsetTimeDebounced: () => setOffsetTimeDebounced(range.value?.value),
+      offsetTime,
+      reset: () => (offsetTime.value = 0),
+      previewSelection: ref('excerpt')
+    };
+  }
+});
+</script>
+
+<style scoped>
+.offset-time--container {
+  grid-template-areas:
+    '.'
+    'input-label'
+    'input'
+    '.'
+    'preview-label'
+    '.'
+    'preview';
+  grid-template-rows: 8px auto auto 16px auto 8px auto;
+}
+</style>

@@ -25,12 +25,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
+import {computed, defineComponent, inject, PropType} from 'vue';
 import { clear as storageClear } from 'storage';
 
-import { default as PageLayout } from '@/components/PageLayout.vue';
-import { setPreferredLanguage } from '@/search/state';
-import { setVersion } from '@/api/state';
+import PageLayout from '@/components/PageLayout.vue';
+import { SearchStore } from '@/search/store';
+import { ApiStore } from '@/api/store';
 import { videoCount } from '@/video/state';
 import { toHome, toSearch } from '@/navigation/state';
 
@@ -46,20 +46,26 @@ export default defineComponent({
     }
   },
   setup() {
+    const apiStore = inject<ApiStore>('apiStore');
+    const searchStore = inject<SearchStore>('searchStore');
+    if(!searchStore || !apiStore){
+      throw new Error('inject failed');
+    }
+
     return {
-      preferredLanguage: computed(() => window.plusSub_subtitleSearch.value.preferredLanguage),
+      preferredLanguage: computed(() => searchStore.state.value.preferredLanguage),
       apiVersion: computed({
         get() {
-          return window.plusSub_api.value.version;
+          return apiStore.state.value.version;
         },
-        set(val: 'stable' | 'dev') {
-          setVersion(val);
+        set(version: 'stable' | 'dev') {
+          apiStore.actions.setVersion({version});
         }
       }),
       clearUserData: async () => {
         await storageClear();
-        setPreferredLanguage('en');
-        setVersion('stable');
+        searchStore.actions.setPreferredLanguage({preferredLanguage: 'en'});
+        apiStore.actions.setVersion({version: 'stable'});
       },
       backFn: () => (videoCount.value === 1 ? toSearch() : toHome())
     };

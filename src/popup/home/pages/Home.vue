@@ -10,15 +10,15 @@
     </template>
     <template #content>
       <div class="flex flex-wrap h-full home-content--container" :class="{ 'bg-surface-100': current === 'search-card' || current === 'file-card' }">
-        <ResultFromSearch v-if="current === 'search-card'" class="m-2" :state="appState.state" :search-state="subtitleSearchState" @remove="remove">
+        <ResultFromSearch v-if="current === 'search-card'" class="m-2" @remove="remove">
           <template #settings>
-            <Settings :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
+            <Settings />
           </template>
         </ResultFromSearch>
 
-        <ResultFromFile v-else-if="current === 'file-card'" class="m-2" :state="appState.state" :file-state="fileState" @remove="remove">
+        <ResultFromFile v-else-if="current === 'file-card'" class="m-2" @remove="remove">
           <template #settings>
-            <Settings :offset-time="subtitleState.offsetTime" @offset-time="setOffsetTime" />
+            <Settings />
           </template>
         </ResultFromFile>
 
@@ -55,19 +55,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent, inject, PropType } from 'vue';
 
-import { default as PageLayout } from '@/components/PageLayout.vue';
-import { default as ResultFromSearch } from './components/ResultFromSearch.vue';
-import { default as ResultFromFile } from './components/ResultFromFile.vue';
-import { default as PageVideos } from './components/PageVideos.vue';
-import { default as Settings } from './components/Settings.vue';
+import PageLayout from '@/components/PageLayout.vue';
+import ResultFromSearch from '@/search/components/ResultFromSearch.vue';
+import ResultFromFile from '@/file/components/ResultFromFile.vue';
+import PageVideos from './components/PageVideos.vue';
+import Settings from '@/subtitle/components/Settings.vue';
 
-import { setCurrentSelectedSrc, toSearch, toTranscript, toSettings } from '@/navigation/state';
-import { subtitleState, setOffsetTime } from '@/subtitle/state';
-import { appState, reset } from '@/app/state';
-import { subtitleSearchState } from '@/search/state';
-import { fileState } from '@/file/state';
+import { setCurrentSelectedSrc, toSearch, toSettings, toTranscript } from '@/navigation/state';
+import { AppStore } from '@/app/store';
 
 export default defineComponent({
   components: {
@@ -85,19 +82,20 @@ export default defineComponent({
     }
   },
   setup() {
-    return {
-      appState,
-      subtitleState,
-      subtitleSearchState,
-      fileState,
+    const appStore = inject<AppStore>('appStore');
 
-      setOffsetTime,
+    if (!appStore) {
+      throw new Error('inject failed');
+    }
+
+    return {
+      appState: appStore.state,
 
       toTranscript,
       toSettings,
 
       remove: (): void => {
-        reset();
+        appStore.actions.reset();
         setCurrentSelectedSrc(null);
       },
       selectedSrc: (src: string): void => {
@@ -105,13 +103,13 @@ export default defineComponent({
         toSearch();
       },
       current: computed(() => {
-        if (appState.value.state !== 'NONE' && appState.value.src === 'SEARCH') {
+        if (appStore.state.value.state !== 'NONE' && appStore.state.value.src === 'SEARCH') {
           return 'search-card';
         }
-        if (appState.value.state !== 'NONE' && appState.value.src === 'FILE') {
+        if (appStore.state.value.state !== 'NONE' && appStore.state.value.src === 'FILE') {
           return 'file-card';
         }
-        if (appState.value.state === 'NONE') {
+        if (appStore.state.value.state === 'NONE') {
           return 'page-videos';
         }
         return 'unknown';
@@ -134,11 +132,11 @@ export default defineComponent({
   display: grid;
   justify-content: center;
   grid-template-areas:
-    '. current-sub .'
-    'videos videos videos'
-    '. contribution .';
+    'current-sub'
+    'videos'
+    'contribution';
   grid-template-rows: auto 1fr auto;
-  grid-template-columns: var(--content-lr-space) 1fr var(--content-lr-space);
+  grid-template-columns: 1fr;
   row-gap: 16px;
 }
 </style>

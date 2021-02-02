@@ -40,18 +40,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, PropType, ref } from 'vue';
+import { defineComponent, onUnmounted, PropType, ref, inject } from 'vue';
 import { getVideoName } from '@/util/name';
 import { OnLoadPayload, readFile } from './readFile';
 
 import { videoCount, videosWithSubtitle, highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
-import { setSrc, setState } from '@/app/state';
-import { parse, setRaw } from '@/subtitle/state';
+import { SubtitleStore } from '@/subtitle/store';
 import { getFormatFromFilename } from '@/subtitle/util';
-import { setFilename } from '@/file/state';
+import { FileStore } from '@/file/store';
 import { toHome } from '@/navigation/state';
-import { reset } from '@/app/state';
 import { setCurrentSelectedSrc } from '@/navigation/state';
+import {AppStore} from "@/app/store";
 
 export default defineComponent({
   props: {
@@ -62,6 +61,12 @@ export default defineComponent({
     }
   },
   setup() {
+    const appStore = inject<AppStore>('appStore');
+    const fileStore = inject<FileStore>('fileStore');
+    const subtitleStore = inject<SubtitleStore>('subtitleStore');
+    if(!appStore || !fileStore || !subtitleStore){
+      throw new Error("inject failed");
+    }
     const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
     const containerRef = ref();
@@ -80,23 +85,23 @@ export default defineComponent({
     };
 
     const onLoad = ({ fileName, result }: OnLoadPayload): void => {
-      setFilename({ filename: fileName });
-      setState({ state: 'SELECTED' });
-      setSrc({ src: 'FILE' });
+      fileStore.actions.setFilename({ filename: fileName });
+      appStore.actions.setState({ state: 'SELECTED' });
+      appStore.actions.setSrc({ src: 'FILE' });
       const format = getFormatFromFilename(fileName);
       if(!format){
         showFileErrorMsg('Unknown file format');
-        reset();
+        appStore.actions.reset();
         setCurrentSelectedSrc(null);
         return;
       }
-      setRaw({ raw: result, format, id: fileName });
+      subtitleStore.actions.setRaw({ raw: result, format, id: fileName });
 
       try {
-        parse();
+        subtitleStore.actions.parse();
       }catch(e){
         showFileErrorMsg('Parse error, not a valid subtitle file');
-        reset();
+        appStore.actions.reset();
         setCurrentSelectedSrc(null);
         return;
       }

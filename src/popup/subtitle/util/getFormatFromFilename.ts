@@ -1,4 +1,4 @@
-import {SubtitleFormat} from "@/subtitle/state/types";
+import {SubtitleFormat} from "@/subtitle/store";
 
 export const getFormatFromFilename = (filename: string): SubtitleFormat | null => {
   switch (true) {

@@ -1,6 +1,6 @@
 import { srcToIFrameSource, Video } from '@/video/state';
 import { GetBoundingClientRect, postWindowMessage, VideoBoundingClientRect } from '@/composables';
-import { appState } from '@/app/state';
+// import { appState } from '@/app/state';
 import { isElementNotInViewport } from '@/video/state/actions/highlight/isElementNotInViewport';
 
 export const highlightVideoInIFrame = (video: Video): void => {
@@ -27,9 +27,10 @@ export const highlightVideoInIFrame = (video: Video): void => {
   // Not use useWindowMessage as I want to remove event listener immediately
   // todo: implement once
   const handleMessageInPageVideos = (e) => {
-    if (appState.value.state !== 'NONE') {
-      return;
-    }
+    //todo appstore
+    // if (appState.value.state !== 'NONE') {
+    //   return;
+    // }
     const { plusSubAction, boundingClientRect } = e.data;
     if (plusSubAction === VideoBoundingClientRect) {
       window.removeEventListener('message', handleMessageInPageVideos);

@@ -5,31 +5,32 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
-import { init as initAppState } from '@/app/state';
+import { computed, defineComponent, PropType, provide } from 'vue';
+import { init as initAppStore } from '@/app/store';
 import { init as initVideoState } from '@/video/state';
-import { init as initFileState } from '@/file/state';
-import { init as initSubtitleState } from '@/subtitle/state';
-import { init as initSubtitleSearchState } from '@/search/state';
+import { init as initFileStore } from '@/file/store';
+import { init as initSubtitleStore } from '@/subtitle/store';
+import { init as initSearchStore } from '@/search/store';
 import { init as initNavigationState, navigationState, setupAutoNavigation } from '@/navigation/state';
-import { init as initApi } from '@/api/state';
+import { init as initApiStore } from '@/api/store';
 
-import { default as Home } from '@/home/pages/Home.vue';
-import { default as Search } from '@/search/pages/search/Search.vue';
-import { default as SubtitleSelection } from '@/search/pages/subtitleSelection/SubtitleSelection.vue';
-import { default as SubtitleSelectionForMovies } from '@/search/pages/subtitleSelection/dev/SubtitleSelectionForMovies.vue';
-import { default as SubtitleSelectionForSeries } from '@/search/pages/subtitleSelection/dev/SubtitleSelectionForSeries.vue';
-import { default as Transcript } from '@/transcript/pages/Transcript.vue';
-import { default as Settings } from '@/settings/pages/Settings.vue';
+import Home from '@/home/pages/Home.vue';
+import MovieTvSearch from '@/search/pages/movieTv/MovieTvSearch.vue';
+// legacy:
+import SubtitleSearch from '@/search/pages/subtitle/SubtitleSearch.vue';
+import SubtitleSearchForMovies from '@/search/pages/subtitleForMovies/SubtitleSearchForMovies.vue';
+import SubtitleSearchForSeries from '@/search/pages/subtitleForSeries/SubtitleSearchForSeries.vue';
+import Transcript from '@/subtitle/pages/Transcript.vue';
+import Settings from '@/settings/pages/Settings.vue';
 import '@/styles.css';
 
 export default defineComponent({
   components: {
     Home,
-    Search,
-    SubtitleSelection,
-    SubtitleSelectionForMovies,
-    SubtitleSelectionForSeries,
+    MovieTvSearch,
+    SubtitleSearch,
+    SubtitleSearchForMovies,
+    SubtitleSearchForSeries,
     Transcript,
     Settings
   },
@@ -44,26 +45,27 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const version = computed(() => window.plusSub_api.value.version);
-
-    initAppState();
+    const appStore = initAppStore();
+    provide('appStore', appStore);
     initNavigationState();
-    initSubtitleState();
+    const subtitleStore = initSubtitleStore({ use: { appStore } });
+    provide('subtitleStore', subtitleStore);
     initVideoState();
-    initFileState();
-    initSubtitleSearchState({ preferredLanguage: props.preferredLanguage });
-    initApi({ version: props.apiVersion });
+    provide('fileStore', initFileStore());
+    provide('searchStore', initSearchStore({ preferredLanguage: props.preferredLanguage }));
+    const apiStore = initApiStore({ version: props.apiVersion });
+    provide('apiStore', apiStore);
     setupAutoNavigation();
     return {
       component: computed(() => {
         if (navigationState.value.name === 'SEARCH') {
-          return Search;
-        } else if ((navigationState.value.name === 'SUBTITLE-SELECTION-FOR-MOVIES' || navigationState.value.name === 'SUBTITLE-SELECTION-FOR-SERIES') && version.value === 'stable') {
-          return SubtitleSelection;
-        } else if (navigationState.value.name === 'SUBTITLE-SELECTION-FOR-MOVIES' && version.value === 'dev') {
-          return SubtitleSelectionForMovies;
-        } else if (navigationState.value.name === 'SUBTITLE-SELECTION-FOR-SERIES' && version.value === 'dev') {
-          return SubtitleSelectionForSeries;
+          return MovieTvSearch;
+        } else if ((navigationState.value.name === 'SUBTITLE-SELECTION-FOR-MOVIES' || navigationState.value.name === 'SUBTITLE-SELECTION-FOR-SERIES') && apiStore.state.value.version === 'stable') {
+          return SubtitleSearch;
+        } else if (navigationState.value.name === 'SUBTITLE-SELECTION-FOR-MOVIES' && apiStore.state.value.version === 'dev') {
+          return SubtitleSearchForMovies;
+        } else if (navigationState.value.name === 'SUBTITLE-SELECTION-FOR-SERIES' && apiStore.state.value.version === 'dev') {
+          return SubtitleSearchForSeries;
         } else if (navigationState.value.name === 'TRANSCRIPT') {
           return Transcript;
         } else if (navigationState.value.name === 'SETTINGS') {

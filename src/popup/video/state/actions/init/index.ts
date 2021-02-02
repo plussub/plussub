@@ -3,7 +3,6 @@ import { srcToGlobalVideo, srcToHostVideo, srcToIFrameSource, srcToIFrameVideo, 
 import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideosInIFrame } from '@/composables';
 import { watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
-import { reset } from '@/app/state';
 import { currentSelectedVideoSrc } from '@/navigation/state';
 import { removeUrlHash } from '@/util/url';
 
@@ -39,7 +38,8 @@ export const init = (): void => {
     resetSrcToHostVideo();
     added.forEach((el) => el.addEventListener('loadedmetadata', resetSrcToHostVideo));
     if (removed.some((el) => [...el.textTracks].some(tracks => tracks.label === 'Plussub'))) {
-      reset();
+      //todo appstore
+      // reset();
     }
   });
 
@@ -72,7 +72,8 @@ export const init = (): void => {
     [RemoveVideoInIFrame]: ({ data: { currentSrc, frameSrc } }) => {
       currentSrc = removeUrlHash(currentSrc);
       if (srcToIFrameVideo.value[currentSrc]?.hasSubtitle) {
-        reset();
+        //todo appstore reset
+        // reset();
       }
       delete srcToIFrameVideo.value[currentSrc];
       delete srcToIFrameSource[frameSrc];

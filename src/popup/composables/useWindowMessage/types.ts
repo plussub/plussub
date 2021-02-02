@@ -1,4 +1,4 @@
-import { SubtitleEntry } from '@/subtitle/state/types';
+import { SubtitleEntry } from '@/subtitle/store';
 
 export const VideosInIFrame = 'VIDEOS_IN_I_FRAME' as const;
 export const Close = 'CLOSE' as const;

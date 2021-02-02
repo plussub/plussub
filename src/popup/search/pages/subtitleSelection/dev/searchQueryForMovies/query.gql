@@ -1,7 +1,0 @@
-#import "../subtitleSearchFragment.gql"
-query SubtitleSearchForMovies($tmdb_id: String!, $language: String!)
-{
-    subtitleSearch(tmdb_id: $tmdb_id, language: $language){
-        ...SubtitleSearchFragmentResult
-    }
-}

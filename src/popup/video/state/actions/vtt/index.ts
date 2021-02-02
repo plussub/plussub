@@ -2,7 +2,7 @@ import {Video} from "@/video/state/types";
 
 import {addVttToHostVideo, removeVttFromHostVideo} from './host';
 import {addVttToIFrameVideo, removeVttFromIFrameVideo} from './iframe';
-import {SubtitleEntry} from "@/subtitle/state/types";
+import {SubtitleEntry} from "@/subtitle/store";
 
 interface AddVttToPayload {
   video: Video;

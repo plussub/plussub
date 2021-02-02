@@ -1,5 +1,5 @@
 import { Video } from '@/video/state/types';
-import { SubtitleEntry } from '@/subtitle/state/types';
+import { SubtitleEntry } from '@/subtitle/store';
 
 export interface AddVttToHostVideoPayload {
   video: Pick<Video, 'el'>;

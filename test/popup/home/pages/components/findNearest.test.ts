@@ -1,4 +1,4 @@
-import { findNext } from '@/home/pages/components/findNext';
+import { findNext } from '@/subtitle/components/findNext';
 
 describe('findNext', () => {
   it('test', () => {
