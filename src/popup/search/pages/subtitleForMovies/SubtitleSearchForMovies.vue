@@ -32,10 +32,9 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, inject, PropType, ref, watch} from 'vue';
+import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
 import { searchQuery } from './searchQuery';
 import { download } from '@/search/download';
-import { toHome, toSearch } from '@/navigation/state';
 
 import SubtitleSearchEntry from '@/search/components/SubtitleSearchEntry.vue';
 import LanguageSelect from '@/search/components/LanguageSelect.vue';
@@ -48,8 +47,9 @@ import { SubtitleStore } from '@/subtitle/store';
 import languageList from '@/res/iso639List.json';
 import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
 import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpairedFilterButton.vue';
-import {AppStore} from "@/app/store";
-import {SearchStore} from "@/search/store";
+import { AppStore } from '@/app/store';
+import { SearchStore } from '@/search/store';
+import { NavigationStore } from '@/navigation/store';
 
 export default defineComponent({
   components: {
@@ -84,9 +84,10 @@ export default defineComponent({
     const appStore = inject<AppStore>('appStore');
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
+    const navigationStore = inject<NavigationStore>('navigationStore');
 
-    if(!appStore || !searchStore || !subtitleStore){
-      throw new Error("inject failed");
+    if (!appStore || !searchStore || !subtitleStore || !navigationStore) {
+      throw new Error('inject failed');
     }
     const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
 
@@ -141,7 +142,7 @@ export default defineComponent({
       select: (openSubtitle: SubtitleSearchFragmentResult_data) => {
         appStore.actions.setState({ state: 'SELECTED' });
         appStore.actions.setSrc({ src: 'SEARCH' });
-        searchStore.actions.setPreferredLanguage({preferredLanguage: language.value.iso639_2});
+        searchStore.actions.setPreferredLanguage({ preferredLanguage: language.value.iso639_2 });
         searchStore.actions.selectOpenSubtitle({
           format: openSubtitle.attributes.format ?? 'srt',
           languageName: openSubtitle.attributes.language,
@@ -156,12 +157,10 @@ export default defineComponent({
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));
 
-        toHome({
-          contentTransitionName: 'content-navigate-select-to-home'
-        });
+        navigationStore.actions.toHome({ contentTransitionName: 'content-navigate-select-to-home' });
       },
       backFn: (): void =>
-        toSearch({
+        navigationStore.actions.toMovieTvSearch({
           contentTransitionName: 'content-navigate-shallow',
           query: props.searchQuery
         })

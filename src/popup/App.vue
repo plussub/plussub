@@ -7,11 +7,12 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, provide } from 'vue';
 import { init as initAppStore } from '@/app/store';
+import { init as initCurrentSelectedVideoSrcStore } from '@/currentSelectedVideoSrc/store';
 import { init as initVideoState } from '@/video/state';
 import { init as initFileStore } from '@/file/store';
 import { init as initSubtitleStore } from '@/subtitle/store';
 import { init as initSearchStore } from '@/search/store';
-import { init as initNavigationState, navigationState, setupAutoNavigation } from '@/navigation/state';
+import { init as initNavigationStore } from '@/navigation/store';
 import { init as initApiStore } from '@/api/store';
 
 import Home from '@/home/pages/Home.vue';
@@ -47,7 +48,9 @@ export default defineComponent({
   setup(props) {
     const appStore = initAppStore();
     provide('appStore', appStore);
-    initNavigationState();
+    provide('currentSelectedVideoSrcStore', initCurrentSelectedVideoSrcStore());
+    const navigationStore = initNavigationStore();
+    provide('navigationStore', navigationStore);
     const subtitleStore = initSubtitleStore({ use: { appStore } });
     provide('subtitleStore', subtitleStore);
     initVideoState();
@@ -55,26 +58,58 @@ export default defineComponent({
     provide('searchStore', initSearchStore({ preferredLanguage: props.preferredLanguage }));
     const apiStore = initApiStore({ version: props.apiVersion });
     provide('apiStore', apiStore);
-    setupAutoNavigation();
+
+    // todo: auto navigation
+    // watch(
+    //     [videoCount, appStateState, videoList],
+    //     ([videoCount, _, videoList], [prevVideoCount,prev_, prevVideoList]) => {
+    //
+    //       // navigate if only 1 video exists
+    //       if (videoCount === 1 && navigationState.value.name === 'HOME' && appState.value.state === 'NONE') {
+    //         setCurrentSelectedSrc(videoList[0].src);
+    //         toSearch();
+    //         return;
+    //       }
+    //
+    //       // hack: set current src if video src change like vimeo next
+    //       if(videoCount === 1 && videoList[0].src !== (prevVideoList ?? [{src: null}])[0]?.src){
+    //         setCurrentSelectedSrc(videoList[0].src);
+    //       }
+    //
+    //       // navigate to selection if additional videos appear
+    //       if (videoCount > 1 && prevVideoCount === 1 && navigationState.value.name === 'SEARCH' && appState.value.state === 'NONE') {
+    //         setCurrentSelectedSrc(null);
+    //         toHome();
+    //         return;
+    //       }
+    //
+    //       if (videoCount === 0 && navigationState.value.name !== 'HOME') {
+    //         toHome();
+    //         return;
+    //       }
+    //     },
+    //     { immediate: true }
+    // );
+
     return {
       component: computed(() => {
-        if (navigationState.value.name === 'SEARCH') {
+        if (navigationStore.state.value.name === 'MOVIE-TV-SEARCH') {
           return MovieTvSearch;
-        } else if ((navigationState.value.name === 'SUBTITLE-SELECTION-FOR-MOVIES' || navigationState.value.name === 'SUBTITLE-SELECTION-FOR-SERIES') && apiStore.state.value.version === 'stable') {
+        } else if ((navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' || navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES') && apiStore.state.value.version === 'stable') {
           return SubtitleSearch;
-        } else if (navigationState.value.name === 'SUBTITLE-SELECTION-FOR-MOVIES' && apiStore.state.value.version === 'dev') {
+        } else if (navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' && apiStore.state.value.version === 'dev') {
           return SubtitleSearchForMovies;
-        } else if (navigationState.value.name === 'SUBTITLE-SELECTION-FOR-SERIES' && apiStore.state.value.version === 'dev') {
+        } else if (navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES' && apiStore.state.value.version === 'dev') {
           return SubtitleSearchForSeries;
-        } else if (navigationState.value.name === 'TRANSCRIPT') {
+        } else if (navigationStore.state.value.name === 'TRANSCRIPT') {
           return Transcript;
-        } else if (navigationState.value.name === 'SETTINGS') {
+        } else if (navigationStore.state.value.name === 'SETTINGS') {
           return Settings;
         } else {
           return Home;
         }
       }),
-      navigationState
+      navigationState: navigationStore.state
     };
   }
 });

@@ -1,7 +1,7 @@
 import { srcToGlobalVideo, Video } from '@/video/state';
 import { highlightVideoInHost } from '@/video/state/actions/highlight/host';
 import { highlightVideoInIFrame } from '@/video/state/actions/highlight/iframe';
-import { currentSelectedVideoSrc } from '@/navigation/state';
+// import { currentSelectedVideoSrc } from '@/navigation/state';
 
 interface HighlightVideoPayload {
   video?: Video;
@@ -18,10 +18,11 @@ export const highlightVideo = ({ video }: HighlightVideoPayload): void => {
 };
 
 export const highlightCurrentVideo = (): void => {
-  if (!currentSelectedVideoSrc.value) {
-    return;
-  }
-  highlightVideo({ video: srcToGlobalVideo.value[currentSelectedVideoSrc.value] });
+  // todo current selected video src
+  // if (!currentSelectedVideoSrc.value) {
+  //   return;
+  // }
+  // highlightVideo({ video: srcToGlobalVideo.value[currentSelectedVideoSrc.value] });
 };
 
 export const removeHighlightFromVideo = (): void => {

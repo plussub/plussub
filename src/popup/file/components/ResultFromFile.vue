@@ -34,6 +34,7 @@ import LoadingBar from '@/components/LoadingBar.vue';
 import { highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
 import { AppStore } from '@/app/store';
 import {SubtitleStore} from "@/subtitle/store";
+import {CurrentSelectedVideoSrcStore} from "@/currentSelectedVideoSrc/store";
 
 export default defineComponent({
   components: {
@@ -43,7 +44,8 @@ export default defineComponent({
     const appStore = inject<AppStore>('appStore');
     const fileStore = inject<FileStore>('fileStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    if (!appStore || !fileStore || !subtitleStore) {
+    const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
+    if (!appStore || !fileStore || !subtitleStore || !currentSelectedVideoSrcStore) {
       throw new Error('inject failed');
     }
 
@@ -57,6 +59,7 @@ export default defineComponent({
         appStore.actions.reset();
         fileStore.actions.reset();
         subtitleStore.actions.reset();
+        currentSelectedVideoSrcStore.actions.reset();
       },
       highlightCurrentVideo,
       removeHighlightFromVideo,

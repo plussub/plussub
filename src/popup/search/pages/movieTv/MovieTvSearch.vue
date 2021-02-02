@@ -41,7 +41,8 @@ import { defineComponent, inject, PropType, ref, watch } from 'vue';
 import { searchQuery, SearchQueryResultEntry } from './searchQuery';
 import { debounce } from '@/composables';
 import { SearchStore } from '@/search/store';
-import { setCurrentSelectedSrc, toHome, toSettings, toSubtitleSelectionForMovies, toSubtitleSelectionForSeries } from '@/navigation/state';
+import { NavigationStore } from '@/navigation/store';
+import { CurrentSelectedVideoSrcStore } from '@/currentSelectedVideoSrc/store';
 import { getVideoName } from '@/util/name';
 import { videoCount } from '@/video/state';
 
@@ -75,7 +76,9 @@ export default defineComponent({
   },
   setup(props) {
     const searchStore = inject<SearchStore>('searchStore');
-    if (!searchStore) {
+    const navigationStore = inject<NavigationStore>('navigationStore');
+    const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
+    if (!searchStore || !navigationStore || !currentSelectedVideoSrcStore) {
       throw new Error('inject failed');
     }
 
@@ -98,7 +101,7 @@ export default defineComponent({
       loading,
       videoCount,
       getVideoName,
-      toSettings,
+      toSettings: navigationStore.actions.toSettings,
       changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
       select: (tmdb: SearchQueryResultEntry): void => {
         searchStore.actions.setTmdbInSelection({
@@ -109,7 +112,7 @@ export default defineComponent({
           title: tmdb.title,
           vote_average: tmdb.vote_average ?? 0
         });
-        const to = tmdb.media_type === 'movie' ? toSubtitleSelectionForMovies : toSubtitleSelectionForSeries;
+        const to = tmdb.media_type === 'movie' ? navigationStore.actions.toSubtitleSearchForMovies : navigationStore.actions.toSubtitleSearchForSeries;
         to({
           tmdb_id: tmdb.tmdb_id,
           media_type: tmdb.media_type,
@@ -118,8 +121,8 @@ export default defineComponent({
         });
       },
       backFn: (): void => {
-        setCurrentSelectedSrc(null);
-        toHome();
+        currentSelectedVideoSrcStore.actions.reset();
+        navigationStore.actions.toHome();
       }
     };
   }

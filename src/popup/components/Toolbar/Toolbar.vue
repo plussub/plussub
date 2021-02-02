@@ -20,13 +20,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from 'vue';
+import {defineComponent, ref, PropType, inject} from 'vue';
 import { useDraggableArea } from '@/composables';
-import { default as Logo } from './Logo.vue';
+import Logo from './Logo.vue';
 
 import { close } from './close';
-import { default as logo } from '@/res/plussub128.png';
-import { toHome } from '@/navigation/state/actions';
+import logo from '@/res/plussub128.png';
+import { NavigationStore } from '@/navigation/store';
 
 export default defineComponent({
   components: {
@@ -45,11 +45,16 @@ export default defineComponent({
     }
   },
   setup() {
+    const navigationStore = inject<NavigationStore>('navigationStore');
+    if(!navigationStore){
+      throw new Error('inject failed');
+    }
+
     const draggableAreaRef = ref(null);
     useDraggableArea({ draggableAreaRef });
 
     return {
-      toHome,
+      toHome: navigationStore.actions.toHome,
       logo,
       close,
       draggableAreaRef

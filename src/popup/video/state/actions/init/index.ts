@@ -3,7 +3,6 @@ import { srcToGlobalVideo, srcToHostVideo, srcToIFrameSource, srcToIFrameVideo, 
 import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideosInIFrame } from '@/composables';
 import { watch } from 'vue';
 import { addVttTo, removeVttFrom } from '@/video/state';
-import { currentSelectedVideoSrc } from '@/navigation/state';
 import { removeUrlHash } from '@/util/url';
 
 const isValidVideo = (el: HTMLVideoElement): boolean => el.offsetWidth !== 0 && el.offsetHeight !== 0 && el.currentSrc !== '';
@@ -80,29 +79,31 @@ export const init = (): void => {
     }
   });
 
-  watch(
-    () => currentSelectedVideoSrc.value,
-    (src, prevSrc) => {
-      if (prevSrc && srcToGlobalVideo.value[prevSrc]) {
-        removeVttFrom({ video: srcToGlobalVideo.value[prevSrc] });
-      }
-    }
-  );
+  // todo: currentselectedvideosrc
+  // watch(
+  //   () => currentSelectedVideoSrc.value,
+  //   (src, prevSrc) => {
+  //     if (prevSrc && srcToGlobalVideo.value[prevSrc]) {
+  //       removeVttFrom({ video: srcToGlobalVideo.value[prevSrc] });
+  //     }
+  //   }
+  // );
 
   watch(
     () => window.plusSub_subtitle.value.withOffsetParsed,
     (subtitles) => {
-      if (!currentSelectedVideoSrc.value) {
-        console.warn('current selected is null');
+      // todo: currentselectedvideosrc
+      // if (!currentSelectedVideoSrc.value) {
+      //   console.warn('current selected is null');
         return;
-      }
-      const video = srcToGlobalVideo.value[currentSelectedVideoSrc.value];
-      const subtitleId = window.plusSub_subtitle.value.id;
-      if (!subtitleId) {
-        console.warn('subtitleId is null');
-        return;
-      }
-      addVttTo({ video, subtitles, subtitleId });
+      // }
+      // const video = srcToGlobalVideo.value[currentSelectedVideoSrc.value];
+      // const subtitleId = window.plusSub_subtitle.value.id;
+      // if (!subtitleId) {
+      //   console.warn('subtitleId is null');
+      //   return;
+      // }
+      // addVttTo({ video, subtitles, subtitleId });
     }
   );
 };

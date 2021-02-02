@@ -31,7 +31,6 @@ import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
 import { LegacySubtitleSearch_legacySubtitleSearch_entries, searchQuery } from './searchQuery';
 import { download } from './download';
 import { SearchStore } from '@/search/store';
-import { toHome, toSearch } from '@/navigation/state';
 
 import Divider from '@/components/Divider.vue';
 import LanguageSelect from '@/search/components/LanguageSelect.vue';
@@ -42,7 +41,8 @@ import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
 import languageList from '@/res/iso639List.json';
 import { AppStore } from '@/app/store';
-import {SubtitleStore} from "@/subtitle/store";
+import { SubtitleStore } from '@/subtitle/store';
+import { NavigationStore } from '@/navigation/store';
 
 export default defineComponent({
   components: {
@@ -76,8 +76,9 @@ export default defineComponent({
     const appStore = inject<AppStore>('appStore');
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
+    const navigationStore = inject<NavigationStore>('navigationStore');
 
-    if (!appStore || !searchStore || !subtitleStore) {
+    if (!appStore || !searchStore || !subtitleStore || !navigationStore) {
       throw new Error('inject failed');
     }
 
@@ -135,12 +136,10 @@ export default defineComponent({
             subtitleStore.actions.parse();
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));
-        toHome({
-          contentTransitionName: 'content-navigate-select-to-home'
-        });
+        navigationStore.actions.toHome({ contentTransitionName: 'content-navigate-select-to-home' });
       },
       backFn: (): void =>
-        toSearch({
+        navigationStore.actions.toMovieTvSearch({
           contentTransitionName: 'content-navigate-shallow',
           query: props.searchQuery
         })
