@@ -3,7 +3,15 @@
     <template #content>
       <div class="w-full h-full grid relative justify-center subtitle-selection-content--container">
         <div style="grid-area: filter-bar" class="pt-3 pb-2 bg-primary-50">
-          <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2" />
+          <div class="w-full flex pr-2">
+            <div class="w-full">
+              <InputField v-model="filter" placeholder="Filter subtitles" placeholder-icon="filter" class="px-2"/>
+            </div>
+            <div class="flex flex-col hover:cursor-pointer" :class="{ 'text-sub-text-on-surface-50': !onlyHearingImpaired, 'text-primary-700': onlyHearingImpaired, 'font-medium': onlyHearingImpaired }" @click="onlyHearingImpaired = !onlyHearingImpaired">
+              <fa icon="deaf" class="h-icon-sm"/>
+              <div class="text-sm">only</div>
+            </div>
+          </div>
           <div class="w-full flex">
             <Select v-model:selected="season" v-model:show="showSeasonSelection" :options="seasonList" :filter-fn="seasonFilter" filter-placeholder="Filter seasons" class="px-3 mt-2">
               <template #currentSelected>
@@ -138,10 +146,12 @@ export default defineComponent({
       dataReady.value = false;
       triggerSearch();
     });
+    const onlyHearingImpaired = ref(false);
 
     return {
       dataReady,
       filter,
+      onlyHearingImpaired,
       languageList,
       languageFilter: (query: string) => {
         const lowerCaseQuery = query.toLowerCase();
@@ -163,9 +173,10 @@ export default defineComponent({
       filteredEntries: computed(() =>
         entries.value.filter(({ attributes }) => {
           if(filter.value === ''){
-            return true;
+           return onlyHearingImpaired.value ? attributes.hearing_impaired : true;
           }
-          return attributes.files[0].file_name?.toLowerCase().includes(filter.value.toLowerCase()) ?? false;
+          const intermediate = attributes.files[0].file_name?.toLowerCase().includes(filter.value.toLowerCase()) ?? false;
+          return onlyHearingImpaired.value ?  intermediate && attributes.hearing_impaired : intermediate
         })
       ),
       select: (openSubtitle: SubtitleSearchFragmentResult_data) => {
