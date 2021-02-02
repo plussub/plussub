@@ -3,7 +3,7 @@
     <div style="grid-row: 1/2; grid-column: 1/2" class="z-10 px-2 grid w-full h-full text-white result-from-search--card--hero--text">
       <div class="absolute flex font-medium top-2.5 right-2.5">
         <div class="text-xs flex align-center">
-          <fa icon="times" class="h-icon-sm hover:text-destructive-icon" @click="$emit('remove')" />
+          <fa icon="times" class="h-icon-sm hover:text-destructive-icon" @click="remove" />
         </div>
       </div>
       <div style="grid-area: title" class="flex gap-2">
@@ -61,6 +61,7 @@ import { SearchStore } from '@/search/store';
 import LoadingBar from '@/components/LoadingBar.vue';
 import { highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
 import { AppStore } from '@/app/store';
+import {SubtitleStore} from "@/subtitle/store";
 
 export default defineComponent({
   components: {
@@ -70,7 +71,8 @@ export default defineComponent({
   setup() {
     const appStore = inject<AppStore>('appStore');
     const searchStore = inject<SearchStore>('searchStore');
-    if (!appStore || !searchStore) {
+    const subtitleStore = inject<SubtitleStore>('subtitleStore');
+    if (!appStore || !searchStore || !subtitleStore) {
       throw new Error('inject failed');
     }
     const mediaType = computed(() => capitalizeFirst(searchStore.state.value?.tmdb?.media_type));
@@ -83,6 +85,11 @@ export default defineComponent({
     return {
       appState: appStore.state,
       searchState: searchStore.state,
+      remove: () => {
+        appStore.actions.reset();
+        searchStore.actions.reset();
+        subtitleStore.actions.reset();
+      },
       highlightCurrentVideo,
       removeHighlightFromVideo,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),

@@ -10,13 +10,13 @@
     </template>
     <template #content>
       <div class="flex flex-wrap h-full home-content--container" :class="{ 'bg-surface-100': current === 'search-card' || current === 'file-card' }">
-        <ResultFromSearch v-if="current === 'search-card'" class="m-2" @remove="remove">
+        <ResultFromSearch v-if="current === 'search-card'" class="m-2">
           <template #settings>
             <Settings />
           </template>
         </ResultFromSearch>
 
-        <ResultFromFile v-else-if="current === 'file-card'" class="m-2" @remove="remove">
+        <ResultFromFile v-else-if="current === 'file-card'" class="m-2">
           <template #settings>
             <Settings />
           </template>

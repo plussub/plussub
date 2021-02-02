@@ -92,6 +92,8 @@ export default defineComponent({
       if(!format){
         showFileErrorMsg('Unknown file format');
         appStore.actions.reset();
+        fileStore.actions.reset();
+        subtitleStore.actions.reset();
         setCurrentSelectedSrc(null);
         return;
       }
@@ -102,6 +104,8 @@ export default defineComponent({
       }catch(e){
         showFileErrorMsg('Parse error, not a valid subtitle file');
         appStore.actions.reset();
+        fileStore.actions.reset();
+        subtitleStore.actions.reset();
         setCurrentSelectedSrc(null);
         return;
       }

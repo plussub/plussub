@@ -2,7 +2,7 @@
   <div class="relative bg-surface-50 grid w-full rounded-lg shadow-lg border border-primary-700 result-from-file--card">
     <div class="absolute flex font-medium top-2.5 right-2.5">
       <div class="text-xs flex align-center">
-        <fa icon="times" class="h-icon-sm hover:text-destructive-icon" @click="$emit('remove')" />
+        <fa icon="times" class="h-icon-sm hover:text-destructive-icon" @click="remove" />
       </div>
     </div>
     <div class="flex mt-2 px-2 gap-2" style="grid-area: header">
@@ -33,16 +33,17 @@ import { FileStore } from '@/file/store';
 import LoadingBar from '@/components/LoadingBar.vue';
 import { highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
 import { AppStore } from '@/app/store';
+import {SubtitleStore} from "@/subtitle/store";
 
 export default defineComponent({
   components: {
     LoadingBar
   },
-  emits: ['remove'],
   setup() {
     const appStore = inject<AppStore>('appStore');
     const fileStore = inject<FileStore>('fileStore');
-    if (!appStore || !fileStore) {
+    const subtitleStore = inject<SubtitleStore>('subtitleStore');
+    if (!appStore || !fileStore || !subtitleStore) {
       throw new Error('inject failed');
     }
 
@@ -52,6 +53,11 @@ export default defineComponent({
 
     return {
       appState: appStore.state,
+      remove: () => {
+        appStore.actions.reset();
+        fileStore.actions.reset();
+        subtitleStore.actions.reset();
+      },
       highlightCurrentVideo,
       removeHighlightFromVideo,
       infoTooltip: computed(() => [`filename - ${fileStore.state.value.filename}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n'))

@@ -36,16 +36,7 @@ export const init = (): AppStore => {
       reset: () => {
         window.plusSub_app.value.state = "NONE";
         window.plusSub_app.value.src = "NONE";
-        //todo appstore refactor caller: reset search reset subtitle reset file
       }
-      //  resetAll: () => {
-      // import { reset as resetSearch } from '@/search/state';
-      // import { reset as resetSubtitle } from '@/subtitle/state';
-      // import { reset as resetFile } from '@/file/state';
-      // resetSearch();
-      // resetSubtitle();
-      // resetFile();
-      //  }
     }
   };
 };
