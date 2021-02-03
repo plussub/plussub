@@ -31,7 +31,7 @@ import { clear as storageClear } from 'storage';
 import PageLayout from '@/components/PageLayout.vue';
 import { SearchStore } from '@/search/store';
 import { ApiStore } from '@/api/store';
-import { videoCount } from '@/video/state';
+import { VideoStore } from '@/video/store';
 import {NavigationStore} from "@/navigation/store";
 
 export default defineComponent({
@@ -49,7 +49,9 @@ export default defineComponent({
     const apiStore = inject<ApiStore>('apiStore');
     const searchStore = inject<SearchStore>('searchStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
-    if(!searchStore || !apiStore || !navigationStore){
+    const videoStore = inject<VideoStore>('videoStore');
+
+    if(!searchStore || !apiStore || !navigationStore || !videoStore){
       throw new Error('inject failed');
     }
 
@@ -68,7 +70,7 @@ export default defineComponent({
         searchStore.actions.setPreferredLanguage({preferredLanguage: 'en'});
         apiStore.actions.setVersion({version: 'stable'});
       },
-      backFn: () => (videoCount.value === 1 ? navigationStore.actions.toMovieTvSearch() : navigationStore.actions.toHome())
+      backFn: () => (videoStore.getters.videoCount.value === 1 ? navigationStore.actions.toMovieTvSearch() : navigationStore.actions.toHome())
     };
   }
 });

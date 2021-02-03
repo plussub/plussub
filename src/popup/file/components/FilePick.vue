@@ -37,7 +37,7 @@ import { defineComponent, onUnmounted, PropType, ref, inject } from 'vue';
 import { getVideoName } from '@/util/name';
 import { OnLoadPayload, readFile } from './readFile';
 
-import { videoCount, videosWithSubtitle, highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
+import { VideoStore } from '@/video/store';
 import { SubtitleStore } from '@/subtitle/store';
 import { getFormatFromFilename } from '@/subtitle/util';
 import { FileStore } from '@/file/store';
@@ -59,7 +59,8 @@ export default defineComponent({
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
     const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
-    if (!appStore || !fileStore || !subtitleStore || !navigationStore || !currentSelectedVideoSrcStore) {
+    const videoStore = inject<VideoStore>('videoStore');
+    if (!appStore || !fileStore || !subtitleStore || !navigationStore || !currentSelectedVideoSrcStore || !videoStore) {
       throw new Error('inject failed');
     }
     const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
@@ -69,7 +70,7 @@ export default defineComponent({
     const dragenter = (): void => containerRef.value.classList.add('bg-surface-200');
     const dragleave = (): void => containerRef.value.classList.remove('bg-surface-200');
 
-    onUnmounted(() => removeHighlightFromVideo());
+    onUnmounted(() => videoStore.actions.removeHighlightFromVideo());
 
     const showFileErrorMsg = (msg: string) => {
       fileErrorMsg.value = msg;
@@ -118,10 +119,10 @@ export default defineComponent({
       dragenter,
       dragleave,
       getVideoName,
-      highlightCurrentVideo,
-      removeHighlightFromVideo,
-      videoCount,
-      videosWithSubtitle,
+      highlightCurrentVideo: () => videoStore.actions.highlightVideo({videoSrc: currentSelectedVideoSrcStore.state.value}),
+      removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
+      videoCount: videoStore.getters.videoCount,
+      videosWithSubtitle: videoStore.getters.videosWithSubtitle,
 
       drop: (event: DragEvent): void => {
         let droppedFiles = event.dataTransfer?.files;

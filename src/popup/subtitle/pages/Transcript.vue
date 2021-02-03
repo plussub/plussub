@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
-import { setCurrentTime as setCurrentTimeState, videoList } from '@/video/state';
+import { VideoStore } from '@/video/store';
 import { SubtitleStore } from '@/subtitle/store';
 import Duration from 'luxon/src/duration.js';
 import { useTimeUpdate } from '@/video/composable';
@@ -56,15 +56,15 @@ export default defineComponent({
   },
   setup() {
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    if (!subtitleStore) {
+    const videoStore = inject<VideoStore>('videoStore');
+    if (!subtitleStore || !videoStore) {
       throw new Error('inject failed');
     }
 
     const currentTime = ref<number>(0);
-    const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
 
     useTimeUpdate({
-      video,
+      video: videoStore.getters.firstVideoWithSubtitle,
       fn: ({ currentTime: currentTimeFromVideo }): void => {
         currentTime.value = currentTimeFromVideo;
       }
@@ -88,7 +88,6 @@ export default defineComponent({
     return {
       currentPos,
       transcriptContentContainer,
-      video,
       subtitleTexts: computed(() =>
         subtitleStore.state.value.withOffsetParsed.map(({ from, text }) => ({
           formattedFrom: Duration.fromMillis(from).toFormat('mm:ss'),
@@ -97,12 +96,14 @@ export default defineComponent({
         }))
       ),
       setCurrentTime: ({ time }: { time: number }): void => {
-        if (!video.value) {
+        const video = videoStore.getters.firstVideoWithSubtitle.value;
+
+        if (!video) {
           return;
         }
         // +0.001 because the "from" is often the same as previous "to", use this to advoid showing previous subtitle text
-        setCurrentTimeState({
-          video: video.value,
+        videoStore.actions.setCurrentTime({
+          video,
           time: time + 0.001
         });
       },

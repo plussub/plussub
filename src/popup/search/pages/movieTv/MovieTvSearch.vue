@@ -44,7 +44,7 @@ import { SearchStore } from '@/search/store';
 import { NavigationStore } from '@/navigation/store';
 import { CurrentSelectedVideoSrcStore } from '@/currentSelectedVideoSrc/store';
 import { getVideoName } from '@/util/name';
-import { videoCount } from '@/video/state';
+import { VideoStore } from '@/video/store';
 
 import FilePick from '@/file/components/FilePick.vue';
 import PageLayout from '@/components/PageLayout.vue';
@@ -78,7 +78,9 @@ export default defineComponent({
     const searchStore = inject<SearchStore>('searchStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
     const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
-    if (!searchStore || !navigationStore || !currentSelectedVideoSrcStore) {
+    const videoStore = inject<VideoStore>('videoStore');
+
+    if (!searchStore || !navigationStore || !currentSelectedVideoSrcStore || !videoStore) {
       throw new Error('inject failed');
     }
 
@@ -99,7 +101,7 @@ export default defineComponent({
       internalQuery,
       searchResults,
       loading,
-      videoCount,
+      videoCount: videoStore.getters.videoCount,
       getVideoName,
       toSettings: navigationStore.actions.toSettings,
       changeQueryToSuggested: () => (internalQuery.value = getVideoName()),

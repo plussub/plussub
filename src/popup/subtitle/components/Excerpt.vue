@@ -19,20 +19,23 @@ import { computed } from '@vue/reactivity';
 import { SubtitleStore } from '@/subtitle/store';
 import Duration from 'luxon/src/duration';
 import { findNext } from './findNext';
-import { videoList } from '@/video/state';
+import { VideoStore} from '@/video/store';
 import { useTimeUpdate } from '@/video/composable';
 
 export default defineComponent({
   setup() {
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    if (!subtitleStore) {
+    const videoStore = inject<VideoStore>('videoStore');
+
+    if (!subtitleStore || !videoStore) {
       throw new Error('inject failed');
     }
 
     const currentTime = ref<number>(0);
 
+    // todo fix with video src
     useTimeUpdate({
-      video: computed(() => videoList.value.find((e) => e.hasSubtitle)),
+      video: videoStore.getters.firstVideoWithSubtitle,
       fn: ({ currentTime: currentTimeFromVideo }): void => {
         currentTime.value = currentTimeFromVideo;
       }

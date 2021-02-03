@@ -6,7 +6,7 @@
 import {defineComponent, inject, onMounted, ref, watch} from 'vue';
 import { Chart, ChartPoint } from 'chart.js';
 import { computed } from '@vue/reactivity';
-import { videoList } from '@/video/state';
+import { VideoStore } from '@/video/store';
 import { useTimeUpdate } from '@/video/composable';
 import { SubtitleStore } from '@/subtitle/store';
 import Duration from 'luxon/src/duration.js';
@@ -15,12 +15,12 @@ import { findNext } from './findNext';
 export default defineComponent({
   setup() {
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    if (!subtitleStore) {
+    const videoStore = inject<VideoStore>('videoStore');
+    if (!subtitleStore || !videoStore) {
       throw new Error('inject failed');
     }
 
     const canvas = ref<HTMLCanvasElement | null>(null);
-    const video = computed(() => videoList.value.find((e) => e.hasSubtitle));
     const chart = ref<null | Chart>(null);
     const currentPos = ref(0);
     const parsedPartial = computed(() => subtitleStore.state.value.withOffsetParsed.filter((e, idx) => idx >= currentPos.value && idx < currentPos.value + 3));
@@ -63,8 +63,9 @@ export default defineComponent({
 
     const videoTimePoint = { x: 0, y: 0 };
     const videoTimePointLine = { x: 0, y: 12 };
+    // todo fix with video src
     useTimeUpdate({
-      video,
+      video: videoStore.getters.firstVideoWithSubtitle,
       fn: ({ currentTime }): void => {
         videoTimePoint.x = currentTime * 1000;
         videoTimePointLine.x = currentTime * 1000;

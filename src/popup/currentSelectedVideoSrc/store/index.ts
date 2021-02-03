@@ -1,5 +1,5 @@
 import { computed, ComputedRef, Ref, ref } from 'vue';
-import { VideoSrc } from '@/video/state';
+export type VideoSrc = string;
 
 export type CurrentSelectedVideoSrcState = VideoSrc | null;
 

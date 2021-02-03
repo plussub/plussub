@@ -1,5 +1,5 @@
 import { onUnmounted, Ref, watch } from 'vue';
-import { srcToIFrameSource, Video } from '@/video/state';
+import { Video, srcToIFrameSource } from '@/video/store';
 import { postWindowMessage, StartTranscript, StopTranscript, useWindowMessage, VideoCurrentTime } from '@/composables/useWindowMessage';
 
 export interface FnPayload {

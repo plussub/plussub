@@ -59,7 +59,7 @@ import { computed, defineComponent, inject, onUnmounted } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 import { SearchStore } from '@/search/store';
 import LoadingBar from '@/components/LoadingBar.vue';
-import { highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
+import { VideoStore } from '@/video/store';
 import { AppStore } from '@/app/store';
 import {SubtitleStore} from "@/subtitle/store";
 import {CurrentSelectedVideoSrcStore} from "@/currentSelectedVideoSrc/store";
@@ -74,15 +74,16 @@ export default defineComponent({
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
+    const videoStore = inject<VideoStore>('videoStore');
 
-    if (!appStore || !searchStore || !subtitleStore || !currentSelectedVideoSrcStore) {
+    if (!appStore || !searchStore || !subtitleStore || !currentSelectedVideoSrcStore || !videoStore) {
       throw new Error('inject failed');
     }
     const mediaType = computed(() => capitalizeFirst(searchStore.state.value?.tmdb?.media_type));
     const releaseDate = computed(() => searchStore.state.value.tmdb?.release_date.substr(0, 4) ?? null);
 
     onUnmounted(() => {
-      removeHighlightFromVideo();
+      videoStore.actions.removeHighlightFromVideo();
     });
 
     return {
@@ -94,8 +95,8 @@ export default defineComponent({
         subtitleStore.actions.reset();
         currentSelectedVideoSrcStore.actions.reset();
       },
-      highlightCurrentVideo,
-      removeHighlightFromVideo,
+      highlightCurrentVideo: videoStore.actions.highlightVideo({videoSrc: currentSelectedVideoSrcStore.state.value}),
+      removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() =>
         [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n')

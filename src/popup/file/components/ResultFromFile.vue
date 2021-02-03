@@ -31,10 +31,10 @@ import { computed, defineComponent, inject, onUnmounted } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 import { FileStore } from '@/file/store';
 import LoadingBar from '@/components/LoadingBar.vue';
-import { highlightCurrentVideo, removeHighlightFromVideo } from '@/video/state';
 import { AppStore } from '@/app/store';
 import {SubtitleStore} from "@/subtitle/store";
 import {CurrentSelectedVideoSrcStore} from "@/currentSelectedVideoSrc/store";
+import {VideoStore} from "@/video/store";
 
 export default defineComponent({
   components: {
@@ -45,12 +45,14 @@ export default defineComponent({
     const fileStore = inject<FileStore>('fileStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
-    if (!appStore || !fileStore || !subtitleStore || !currentSelectedVideoSrcStore) {
+    const videoStore = inject<VideoStore>('videoStore');
+
+    if (!appStore || !fileStore || !subtitleStore || !currentSelectedVideoSrcStore || !videoStore) {
       throw new Error('inject failed');
     }
 
     onUnmounted(() => {
-      removeHighlightFromVideo();
+      videoStore.actions.removeHighlightFromVideo();
     });
 
     return {
@@ -61,8 +63,8 @@ export default defineComponent({
         subtitleStore.actions.reset();
         currentSelectedVideoSrcStore.actions.reset();
       },
-      highlightCurrentVideo,
-      removeHighlightFromVideo,
+      highlightCurrentVideo: () => videoStore.actions.highlightVideo({videoSrc: currentSelectedVideoSrcStore.state.value}),
+      removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
       infoTooltip: computed(() => [`filename - ${fileStore.state.value.filename}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n'))
     };
   }

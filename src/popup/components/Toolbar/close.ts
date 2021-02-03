@@ -1,6 +1,6 @@
 import { useApp } from '@/inHost';
 import { postWindowMessage } from '@/composables';
-import { srcToIFrameSource } from '@/video/state';
+import { srcToIFrameSource } from '@/video/store';
 
 export const close = (): void => {
   Object.values(srcToIFrameSource).forEach((iFrameSource) => {

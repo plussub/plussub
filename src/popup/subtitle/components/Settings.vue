@@ -39,7 +39,7 @@ import Excerpt from './Excerpt.vue';
 import InputField from '@/components/InputField.vue';
 import { debounce } from '@/composables';
 import { useTimeUpdate } from '@/video/composable';
-import { videoList } from '@/video/state';
+import { VideoStore } from '@/video/store';
 import Duration from 'luxon/src/duration';
 import { SubtitleStore } from '@/subtitle/store';
 
@@ -52,15 +52,16 @@ export default defineComponent({
   },
   setup() {
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
+    const videoStore = inject<VideoStore>('videoStore');
 
-    if (!subtitleStore) {
+    if (!subtitleStore || !videoStore) {
       throw new Error('inject failed');
     }
 
     const currentTime = ref<string>(Duration.fromMillis(0).toFormat('hh:mm:ss'));
 
     useTimeUpdate({
-      video: computed(() => videoList.value.find((e) => e.hasSubtitle)),
+      video: videoStore.getters.firstVideoWithSubtitle,
       fn: ({ currentTime: currentTimeFromVideo }): void => {
         currentTime.value = Duration.fromMillis(currentTimeFromVideo * 1000).toFormat('hh:mm:ss');
       }

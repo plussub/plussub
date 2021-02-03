@@ -5,10 +5,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, provide } from 'vue';
+import { computed, defineComponent, PropType, provide, watch } from 'vue';
 import { init as initAppStore } from '@/app/store';
 import { init as initCurrentSelectedVideoSrcStore } from '@/currentSelectedVideoSrc/store';
-import { init as initVideoState } from '@/video/state';
+import { init as initVideoStore } from '@/video/store';
 import { init as initFileStore } from '@/file/store';
 import { init as initSubtitleStore } from '@/subtitle/store';
 import { init as initSearchStore } from '@/search/store';
@@ -24,6 +24,7 @@ import SubtitleSearchForSeries from '@/search/pages/subtitleForSeries/SubtitleSe
 import Transcript from '@/subtitle/pages/Transcript.vue';
 import Settings from '@/settings/pages/Settings.vue';
 import '@/styles.css';
+import { RemoveVideoInIFrame, useVideoElementMutationObserver, useWindowMessage, VideosInIFrame } from '@/composables';
 
 export default defineComponent({
   components: {
@@ -48,16 +49,73 @@ export default defineComponent({
   setup(props) {
     const appStore = initAppStore();
     provide('appStore', appStore);
-    provide('currentSelectedVideoSrcStore', initCurrentSelectedVideoSrcStore());
+    const currentSelectedVideoSrcStore = initCurrentSelectedVideoSrcStore();
+    provide('currentSelectedVideoSrcStore', currentSelectedVideoSrcStore);
     const navigationStore = initNavigationStore();
     provide('navigationStore', navigationStore);
     const subtitleStore = initSubtitleStore({ use: { appStore } });
     provide('subtitleStore', subtitleStore);
-    initVideoState();
-    provide('fileStore', initFileStore());
-    provide('searchStore', initSearchStore({ preferredLanguage: props.preferredLanguage }));
+    const videoStore = initVideoStore();
+    provide('videoStore', videoStore);
+    const fileStore = initFileStore();
+    provide('fileStore', fileStore);
+    const searchStore = initSearchStore({ preferredLanguage: props.preferredLanguage });
+    provide('searchStore', searchStore);
     const apiStore = initApiStore({ version: props.apiVersion });
     provide('apiStore', apiStore);
+
+    videoStore.actions.findVideosInCurrentFrame();
+
+    // handles also if the source or the src changes
+    [...document.querySelectorAll('video')].forEach((el) => el.addEventListener('loadedmetadata', () => videoStore.actions.findVideosInCurrentFrame()));
+
+    // new videos added to the page
+    useVideoElementMutationObserver(({ added, removed }) => {
+      videoStore.actions.findVideosInCurrentFrame();
+      added.forEach((el) => el.addEventListener('loadedmetadata', () => videoStore.actions.findVideosInCurrentFrame()));
+      // video with plussub subtitle was removed
+      if (removed.some((el) => [...el.textTracks].some((tracks) => tracks.label === 'Plussub'))) {
+        appStore.actions.reset();
+        subtitleStore.actions.reset();
+        searchStore.actions.reset();
+        fileStore.actions.reset();
+        currentSelectedVideoSrcStore.actions.reset();
+      }
+    });
+
+    useWindowMessage({
+      [VideosInIFrame]: (payload) => {
+        videoStore.actions.addIFrameVideos(payload);
+      },
+      [RemoveVideoInIFrame]: (payload) => {
+        const { removedVideoWithSubtitle } = videoStore.actions.removeIFrameVideos(payload);
+        if (removedVideoWithSubtitle) {
+          appStore.actions.reset();
+          subtitleStore.actions.reset();
+          searchStore.actions.reset();
+          fileStore.actions.reset();
+          currentSelectedVideoSrcStore.actions.reset();
+        }
+      }
+    });
+
+    watch(
+      () => currentSelectedVideoSrcStore.state.value,
+      (src, prevSrc) => videoStore.actions.removeVttFrom({ videoSrc: prevSrc})
+    );
+
+    watch(
+      () => subtitleStore.state.value.withOffsetParsed,
+      (subtitles) => {
+        const videoSrc = currentSelectedVideoSrcStore.state.value;
+        const subtitleId = subtitleStore.state.value.id;
+        if (!subtitleId || !videoSrc) {
+          console.warn('subtitleId is null or video src null');
+          return;
+        }
+        videoStore.actions.addVttTo({ videoSrc, subtitles, subtitleId });
+      }
+    );
 
     // todo: auto navigation
     // watch(
@@ -95,7 +153,10 @@ export default defineComponent({
       component: computed(() => {
         if (navigationStore.state.value.name === 'MOVIE-TV-SEARCH') {
           return MovieTvSearch;
-        } else if ((navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' || navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES') && apiStore.state.value.version === 'stable') {
+        } else if (
+          (navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' || navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES') &&
+          apiStore.state.value.version === 'stable'
+        ) {
           return SubtitleSearch;
         } else if (navigationStore.state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' && apiStore.state.value.version === 'dev') {
           return SubtitleSearchForMovies;

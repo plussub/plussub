@@ -10,7 +10,7 @@
           :key="index"
           style="grid-template-columns: 8px 1fr auto"
           class="grid hover:cursor-pointer video-item hover:bg-primary-700 hover:text-on-primary-700"
-          @mouseenter="highlightVideo({video})"
+          @mouseenter="highlightVideo({videoSrc: video.src})"
           @mouseleave="removeHighlightFromVideo"
           @click="selectVideo(video, index)"
         >
@@ -27,10 +27,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted } from 'vue';
-import { Video, videoList, highlightVideo, removeHighlightFromVideo } from '@/video/state';
+import {defineComponent, inject, onUnmounted} from 'vue';
+import {Video, VideoStore} from '@/video/store';
 
-import { default as Divider } from '@/components/Divider.vue';
+import Divider from '@/components/Divider.vue';
 
 export default defineComponent({
   components: {
@@ -38,14 +38,18 @@ export default defineComponent({
   },
   emits: ['selected-src'],
   setup(_, { emit }) {
+    const videoStore = inject<VideoStore>('videoStore');
+    if (!videoStore) {
+      throw new Error('inject failed');
+    }
     onUnmounted(() => {
-      removeHighlightFromVideo();
+      videoStore.actions.removeHighlightFromVideo();
     });
 
     return {
-      highlightVideo,
-      removeHighlightFromVideo,
-      videoList,
+      highlightVideo: videoStore.actions.highlightVideo,
+      removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
+      videoList: videoStore.getters.videoList,
       selectVideo: (video: Video): void => emit('selected-src', video.src)
     };
   }
