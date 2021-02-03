@@ -2,7 +2,6 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
-const ExtensionReloader = require('webpack-extension-reloader');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
@@ -12,6 +11,7 @@ module.exports = (env, argv) => {
   }
 
   return {
+    devtool: false,
     mode: argv.mode ? argv.mode : 'development',
     entry: { popup: './popup/index.ts', background: './background/index.ts' },
     context: path.resolve(__dirname, 'src'),
@@ -98,7 +98,6 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new VueLoaderPlugin(),
-      new ExtensionReloader(),
       new CopyPlugin({
         patterns: [
           { from: `manifest-${browser}.json`, to: 'manifest.json' },

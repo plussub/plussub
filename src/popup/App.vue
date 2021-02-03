@@ -7,7 +7,6 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, provide, watch } from 'vue';
 import { init as initAppStore } from '@/app/store';
-import { init as initCurrentSelectedVideoSrcStore } from '@/currentSelectedVideoSrc/store';
 import { init as initVideoStore } from '@/video/store';
 import { init as initFileStore } from '@/file/store';
 import { init as initSubtitleStore } from '@/subtitle/store';
@@ -49,8 +48,6 @@ export default defineComponent({
   setup(props) {
     const appStore = initAppStore();
     provide('appStore', appStore);
-    const currentSelectedVideoSrcStore = initCurrentSelectedVideoSrcStore();
-    provide('currentSelectedVideoSrcStore', currentSelectedVideoSrcStore);
     const navigationStore = initNavigationStore();
     provide('navigationStore', navigationStore);
     const subtitleStore = initSubtitleStore({ use: { appStore } });
@@ -79,7 +76,7 @@ export default defineComponent({
         subtitleStore.actions.reset();
         searchStore.actions.reset();
         fileStore.actions.reset();
-        currentSelectedVideoSrcStore.actions.reset();
+        videoStore.actions.removeCurrentVideo();
       }
     });
 
@@ -94,26 +91,26 @@ export default defineComponent({
           subtitleStore.actions.reset();
           searchStore.actions.reset();
           fileStore.actions.reset();
-          currentSelectedVideoSrcStore.actions.reset();
+          videoStore.actions.removeCurrentVideo();
         }
       }
     });
 
     watch(
-      () => currentSelectedVideoSrcStore.state.value,
-      (src, prevSrc) => videoStore.actions.removeVttFrom({ videoSrc: prevSrc})
+      () => videoStore.getters.currentVideo.value,
+      (video, prevVideo) => videoStore.actions.removeVttFrom({ video: prevVideo})
     );
 
     watch(
       () => subtitleStore.state.value.withOffsetParsed,
       (subtitles) => {
-        const videoSrc = currentSelectedVideoSrcStore.state.value;
+        const video = videoStore.getters.currentVideo.value;
         const subtitleId = subtitleStore.state.value.id;
-        if (!subtitleId || !videoSrc) {
-          console.warn('subtitleId is null or video src null');
+        if (!subtitleId || !video) {
+          console.warn('subtitleId is null or video null');
           return;
         }
-        videoStore.actions.addVttTo({ videoSrc, subtitles, subtitleId });
+        videoStore.actions.addVttTo({ video, subtitles, subtitleId });
       }
     );
 

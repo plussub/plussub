@@ -10,9 +10,9 @@
           :key="index"
           style="grid-template-columns: 8px 1fr auto"
           class="grid hover:cursor-pointer video-item hover:bg-primary-700 hover:text-on-primary-700"
-          @mouseenter="highlightVideo({videoSrc: video.src})"
+          @mouseenter="highlightVideo({ video: video })"
           @mouseleave="removeHighlightFromVideo"
-          @click="selectVideo(video, index)"
+          @click="selectVideo(video)"
         >
           <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
           <div class="flex items-center h-11" style="grid-column: 2 / 3">
@@ -27,19 +27,21 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, inject, onUnmounted} from 'vue';
-import {Video, VideoStore} from '@/video/store';
+import { defineComponent, inject, onUnmounted } from 'vue';
+import { Video, VideoStore } from '@/video/store';
 
 import Divider from '@/components/Divider.vue';
+import { NavigationStore } from '@/navigation/store';
 
 export default defineComponent({
   components: {
     Divider
   },
-  emits: ['selected-src'],
-  setup(_, { emit }) {
+  setup() {
     const videoStore = inject<VideoStore>('videoStore');
-    if (!videoStore) {
+    const navigationStore = inject<NavigationStore>('navigationStore');
+
+    if (!videoStore || !navigationStore) {
       throw new Error('inject failed');
     }
     onUnmounted(() => {
@@ -50,7 +52,10 @@ export default defineComponent({
       highlightVideo: videoStore.actions.highlightVideo,
       removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
       videoList: videoStore.getters.videoList,
-      selectVideo: (video: Video): void => emit('selected-src', video.src)
+      selectVideo: (video: Video) => {
+        videoStore.actions.setCurrentVideo({ video });
+        navigationStore.actions.toMovieTvSearch();
+      }
     };
   }
 });

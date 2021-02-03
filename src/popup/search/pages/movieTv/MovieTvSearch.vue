@@ -42,7 +42,6 @@ import { searchQuery, SearchQueryResultEntry } from './searchQuery';
 import { debounce } from '@/composables';
 import { SearchStore } from '@/search/store';
 import { NavigationStore } from '@/navigation/store';
-import { CurrentSelectedVideoSrcStore } from '@/currentSelectedVideoSrc/store';
 import { getVideoName } from '@/util/name';
 import { VideoStore } from '@/video/store';
 
@@ -77,10 +76,9 @@ export default defineComponent({
   setup(props) {
     const searchStore = inject<SearchStore>('searchStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
-    const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
     const videoStore = inject<VideoStore>('videoStore');
 
-    if (!searchStore || !navigationStore || !currentSelectedVideoSrcStore || !videoStore) {
+    if (!searchStore || !navigationStore || !videoStore) {
       throw new Error('inject failed');
     }
 
@@ -123,7 +121,7 @@ export default defineComponent({
         });
       },
       backFn: (): void => {
-        currentSelectedVideoSrcStore.actions.reset();
+        videoStore.actions.removeCurrentVideo();
         navigationStore.actions.toHome();
       }
     };

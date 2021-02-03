@@ -22,7 +22,7 @@
           </template>
         </ResultFromFile>
 
-        <PageVideos v-else-if="current === 'page-videos'" class="w-full" @selected-src="selectedSrc" />
+        <PageVideos v-else-if="current === 'page-videos'" class="w-full"/>
 
         <div class="text-xs w-full flex flex-wrap items-center self-end justify-center mb-1 gap-1">
           <span>
@@ -60,12 +60,11 @@ import { computed, defineComponent, inject, PropType } from 'vue';
 import PageLayout from '@/components/PageLayout.vue';
 import ResultFromSearch from '@/search/components/ResultFromSearch.vue';
 import ResultFromFile from '@/file/components/ResultFromFile.vue';
-import PageVideos from './components/PageVideos.vue';
+import PageVideos from '@/video/components/PageVideos.vue';
 import Settings from '@/subtitle/components/Settings.vue';
 
 import { AppStore } from '@/app/store';
 import {NavigationStore} from "@/navigation/store";
-import {CurrentSelectedVideoSrcStore} from "@/currentSelectedVideoSrc/store";
 
 export default defineComponent({
   components: {
@@ -85,9 +84,8 @@ export default defineComponent({
   setup() {
     const appStore = inject<AppStore>('appStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
-    const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
 
-    if (!appStore || !navigationStore || !currentSelectedVideoSrcStore) {
+    if (!appStore || !navigationStore) {
       throw new Error('inject failed');
     }
 
@@ -95,10 +93,6 @@ export default defineComponent({
       appState: appStore.state,
       toTranscript: navigationStore.actions.toTranscript,
       toSettings: navigationStore.actions.toSettings,
-      selectedSrc: (src: string): void => {
-        currentSelectedVideoSrcStore.actions.setCurrent(src);
-        navigationStore.actions.toMovieTvSearch();
-      },
       current: computed(() => {
         if (appStore.state.value.state !== 'NONE' && appStore.state.value.src === 'SEARCH') {
           return 'search-card';

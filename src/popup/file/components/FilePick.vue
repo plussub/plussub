@@ -42,7 +42,6 @@ import { SubtitleStore } from '@/subtitle/store';
 import { getFormatFromFilename } from '@/subtitle/util';
 import { FileStore } from '@/file/store';
 import { NavigationStore } from '@/navigation/store';
-import { CurrentSelectedVideoSrcStore } from '@/currentSelectedVideoSrc/store';
 import { AppStore } from '@/app/store';
 
 export default defineComponent({
@@ -58,9 +57,9 @@ export default defineComponent({
     const fileStore = inject<FileStore>('fileStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
-    const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
     const videoStore = inject<VideoStore>('videoStore');
-    if (!appStore || !fileStore || !subtitleStore || !navigationStore || !currentSelectedVideoSrcStore || !videoStore) {
+
+    if (!appStore || !fileStore || !subtitleStore || !navigationStore || !videoStore) {
       throw new Error('inject failed');
     }
     const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
@@ -90,7 +89,7 @@ export default defineComponent({
         appStore.actions.reset();
         fileStore.actions.reset();
         subtitleStore.actions.reset();
-        currentSelectedVideoSrcStore.actions.reset();
+        videoStore.actions.removeCurrentVideo();
         return;
       }
       subtitleStore.actions.setRaw({ raw: result, format, id: fileName });
@@ -102,7 +101,7 @@ export default defineComponent({
         appStore.actions.reset();
         fileStore.actions.reset();
         subtitleStore.actions.reset();
-        currentSelectedVideoSrcStore.actions.reset();
+        videoStore.actions.removeCurrentVideo();
         return;
       }
 
@@ -119,7 +118,7 @@ export default defineComponent({
       dragenter,
       dragleave,
       getVideoName,
-      highlightCurrentVideo: () => videoStore.actions.highlightVideo({videoSrc: currentSelectedVideoSrcStore.state.value}),
+      highlightCurrentVideo: () => videoStore.actions.highlightVideo({ video: videoStore.getters.currentVideo.value }),
       removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
       videoCount: videoStore.getters.videoCount,
       videosWithSubtitle: videoStore.getters.videosWithSubtitle,

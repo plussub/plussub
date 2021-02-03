@@ -33,7 +33,6 @@ import { FileStore } from '@/file/store';
 import LoadingBar from '@/components/LoadingBar.vue';
 import { AppStore } from '@/app/store';
 import {SubtitleStore} from "@/subtitle/store";
-import {CurrentSelectedVideoSrcStore} from "@/currentSelectedVideoSrc/store";
 import {VideoStore} from "@/video/store";
 
 export default defineComponent({
@@ -44,10 +43,9 @@ export default defineComponent({
     const appStore = inject<AppStore>('appStore');
     const fileStore = inject<FileStore>('fileStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
     const videoStore = inject<VideoStore>('videoStore');
 
-    if (!appStore || !fileStore || !subtitleStore || !currentSelectedVideoSrcStore || !videoStore) {
+    if (!appStore || !fileStore || !subtitleStore || !videoStore) {
       throw new Error('inject failed');
     }
 
@@ -61,9 +59,9 @@ export default defineComponent({
         appStore.actions.reset();
         fileStore.actions.reset();
         subtitleStore.actions.reset();
-        currentSelectedVideoSrcStore.actions.reset();
+        videoStore.actions.removeCurrentVideo();
       },
-      highlightCurrentVideo: () => videoStore.actions.highlightVideo({videoSrc: currentSelectedVideoSrcStore.state.value}),
+      highlightCurrentVideo: () => videoStore.actions.highlightVideo({ video: videoStore.getters.currentVideo.value }),
       removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
       infoTooltip: computed(() => [`filename - ${fileStore.state.value.filename}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n'))
     };

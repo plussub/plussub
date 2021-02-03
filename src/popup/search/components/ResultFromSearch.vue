@@ -62,7 +62,6 @@ import LoadingBar from '@/components/LoadingBar.vue';
 import { VideoStore } from '@/video/store';
 import { AppStore } from '@/app/store';
 import {SubtitleStore} from "@/subtitle/store";
-import {CurrentSelectedVideoSrcStore} from "@/currentSelectedVideoSrc/store";
 
 export default defineComponent({
   components: {
@@ -73,10 +72,9 @@ export default defineComponent({
     const appStore = inject<AppStore>('appStore');
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const currentSelectedVideoSrcStore = inject<CurrentSelectedVideoSrcStore>('currentSelectedVideoSrcStore');
     const videoStore = inject<VideoStore>('videoStore');
 
-    if (!appStore || !searchStore || !subtitleStore || !currentSelectedVideoSrcStore || !videoStore) {
+    if (!appStore || !searchStore || !subtitleStore || !videoStore) {
       throw new Error('inject failed');
     }
     const mediaType = computed(() => capitalizeFirst(searchStore.state.value?.tmdb?.media_type));
@@ -93,9 +91,9 @@ export default defineComponent({
         appStore.actions.reset();
         searchStore.actions.reset();
         subtitleStore.actions.reset();
-        currentSelectedVideoSrcStore.actions.reset();
+        videoStore.actions.removeCurrentVideo();
       },
-      highlightCurrentVideo: videoStore.actions.highlightVideo({videoSrc: currentSelectedVideoSrcStore.state.value}),
+      highlightCurrentVideo: () => videoStore.actions.highlightVideo({ video: videoStore.getters.currentVideo.value }),
       removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() =>

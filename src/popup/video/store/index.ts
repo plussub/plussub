@@ -1,8 +1,9 @@
-import { computed, ComputedRef, ref } from 'vue';
-import { VideoSrc } from '@/currentSelectedVideoSrc/store';
+import {computed, ComputedRef, Ref, ref} from 'vue';
 import { removeUrlHash } from '@/util/url';
 import { AddSubtitle, GetBoundingClientRect, postWindowMessage, RemoveSubtitle, RemoveVideoInIFrameEvent, SetVideoTime, VideoBoundingClientRect, VideosInIFrameEvent } from '@/composables';
 import { SubtitleEntry } from '@/subtitle/store';
+
+type VideoSrc = string;
 
 export interface Video {
   src: string;
@@ -17,6 +18,7 @@ export interface IFrameSource {
   origin: string;
 }
 
+// todo: do not export
 // don't make source(of iframe) reactive as it will cause cors problem
 export const srcToIFrameSource: Record<VideoSrc, IFrameSource> = {};
 
@@ -25,19 +27,30 @@ export interface VideoState {
   srcToIFrameVideo: Record<VideoSrc, Video>;
 }
 
+type CurrentSelectedVideoState = Video | null;
+
+declare global {
+  interface Window {
+    plusSub_currentSelectedVideo: Ref<CurrentSelectedVideoState>;
+  }
+}
+
 export interface VideoStore {
   state: ComputedRef<VideoState>;
   actions: {
+    setCurrentVideo: (payload: {video: Video}) => void;
+    removeCurrentVideo: () => void;
     findVideosInCurrentFrame: () => void;
     addIFrameVideos: (payload: MessageEvent<VideosInIFrameEvent>) => void;
     removeIFrameVideos: (payload: MessageEvent<RemoveVideoInIFrameEvent>) => { removedVideoWithSubtitle: boolean };
-    addVttTo: (payload: { videoSrc: VideoSrc; subtitles: SubtitleEntry[]; subtitleId: string }) => void;
-    removeVttFrom: (payload: { videoSrc: VideoSrc | null }) => void;
+    addVttTo: (payload: { video: Video; subtitles: SubtitleEntry[]; subtitleId: string }) => void;
+    removeVttFrom: (payload: { video: Video | null }) => void;
     setCurrentTime: (payload: { video: Video; time: number }) => void;
-    highlightVideo: (payload: { videoSrc: VideoSrc|null }) => void;
+    highlightVideo: (payload: { video: Video | null }) => void;
     removeHighlightFromVideo: () => void;
   };
   getters: {
+    currentVideo: ComputedRef<Video | null>;
     srcToGlobalVideo: ComputedRef<Record<VideoSrc, Video>>;
     videoList: ComputedRef<Video[]>;
     videosWithSubtitle: ComputedRef<Video[]>;
@@ -65,6 +78,8 @@ const findVideosInCurrentFrame = (): Record<VideoSrc, Video> =>
   );
 
 export const init = (): VideoStore => {
+  window.plusSub_currentSelectedVideo = window.plusSub_currentSelectedVideo ? ref(window.plusSub_currentSelectedVideo.value) : ref<CurrentSelectedVideoState>(null);
+
   const state = ref<VideoState>({
     srcToHostVideo: {},
     srcToIFrameVideo: {}
@@ -81,6 +96,12 @@ export const init = (): VideoStore => {
   return {
     state: computed(() => state.value),
     actions: {
+      setCurrentVideo: ({video}: {video: Video}) => {
+        window.plusSub_currentSelectedVideo.value = video;
+      },
+      removeCurrentVideo: () => {
+        window.plusSub_currentSelectedVideo.value = null;
+      },
       findVideosInCurrentFrame: () => {
         state.value.srcToHostVideo = findVideosInCurrentFrame();
       },
@@ -116,8 +137,7 @@ export const init = (): VideoStore => {
           removedVideoWithSubtitle
         };
       },
-      addVttTo: ({ videoSrc, subtitles, subtitleId }: { videoSrc: VideoSrc; subtitles: SubtitleEntry[]; subtitleId: string }): void => {
-        const video = srcToGlobalVideo.value[videoSrc];
+      addVttTo: ({ video, subtitles, subtitleId }: { video: Video; subtitles: SubtitleEntry[]; subtitleId: string }): void => {
         if (video.in === 'HOST') {
           if (!video.el) {
             return;
@@ -155,11 +175,7 @@ export const init = (): VideoStore => {
         }
         video.hasSubtitle = true;
       },
-      removeVttFrom: ({ videoSrc }: { videoSrc: VideoSrc | null  }): void => {
-        if(!videoSrc){
-          return;
-        }
-        const video = srcToGlobalVideo.value[videoSrc];
+      removeVttFrom: ({ video }: { video: Video | null  }): void => {
         if (!video) {
           return;
         }
@@ -209,11 +225,7 @@ export const init = (): VideoStore => {
           });
         }
       },
-      highlightVideo: ({ videoSrc }: { videoSrc: VideoSrc | null }): void => {
-        if(!videoSrc){
-          return;
-        }
-        const video = srcToGlobalVideo.value[videoSrc];
+      highlightVideo: ({ video }: { video: Video | null }): void => {
         if (!video) {
           return;
         }
@@ -296,6 +308,7 @@ export const init = (): VideoStore => {
       }
     },
     getters: {
+      currentVideo: computed(() => window.plusSub_currentSelectedVideo.value),
       srcToGlobalVideo,
       videoList,
       videosWithSubtitle,
