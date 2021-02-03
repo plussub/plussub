@@ -47,7 +47,7 @@ import { SubtitleStore } from '@/subtitle/store';
 import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
 import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpairedFilterButton.vue';
 import { AppStore } from '@/app/store';
-import {ISO639, SearchStore} from '@/search/store';
+import { ISO639, SearchStore } from '@/search/store';
 import { NavigationStore } from '@/navigation/store';
 
 export default defineComponent({
@@ -88,12 +88,12 @@ export default defineComponent({
     if (!appStore || !searchStore || !subtitleStore || !navigationStore) {
       throw new Error('inject failed');
     }
-    const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
+    const filter = ref('');
 
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
-    const filter = ref('');
+    const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
 
     const dataReady = ref(false);
 
@@ -114,7 +114,6 @@ export default defineComponent({
     const onlyHearingImpaired = ref(false);
 
     return {
-      dataReady,
       filter,
       onlyHearingImpaired,
 
@@ -123,6 +122,7 @@ export default defineComponent({
 
       showSelection: computed(() => showLanguageSelection.value),
 
+      dataReady,
       entries,
       filteredEntries: computed(() =>
         entries.value.filter(({ attributes }) => {

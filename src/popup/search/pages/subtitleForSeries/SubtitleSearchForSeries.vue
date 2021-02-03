@@ -98,10 +98,6 @@ export default defineComponent({
       throw new Error('inject failed');
     }
 
-    const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
-
-    const dataReady = ref(false);
-
     const filter = ref('');
 
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
@@ -114,6 +110,9 @@ export default defineComponent({
     const episode = ref(0);
     const episodeCount = ref(99);
     const showEpisodeSelection = ref(false);
+
+    const dataReady = ref(false);
+    const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
 
     const triggerSearch = () =>
       searchQuery({
@@ -136,7 +135,6 @@ export default defineComponent({
     const onlyHearingImpaired = ref(false);
 
     return {
-      dataReady,
       filter,
       onlyHearingImpaired,
 
@@ -152,6 +150,8 @@ export default defineComponent({
       showEpisodeSelection,
 
       showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),
+
+      dataReady,
       entries,
       filteredEntries: computed(() =>
         entries.value.filter(({ attributes }) => {

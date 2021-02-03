@@ -81,13 +81,13 @@ export default defineComponent({
       throw new Error('inject failed');
     }
 
-    const entries = ref<LegacySubtitleSearch_legacySubtitleSearch_entries[]>([]);
+    const filter = ref('');
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
-    const filter = ref('');
     const dataReady = ref(false);
 
+    const entries = ref<LegacySubtitleSearch_legacySubtitleSearch_entries[]>([]);
     const triggerSearch = () =>
       searchQuery({
         tmdb_id: props.tmdb_id,
@@ -105,13 +105,16 @@ export default defineComponent({
     });
 
     return {
-      dataReady,
       filter,
+
       language,
       showLanguageSelection,
+
+      showSelection: computed(() => showLanguageSelection.value),
+
+      dataReady,
       entries,
       filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
-      showSelection: computed(() => showLanguageSelection.value),
 
       select: (openSubtitle: LegacySubtitleSearch_legacySubtitleSearch_entries) => {
         appStore.actions.setState({ state: 'SELECTED' });
