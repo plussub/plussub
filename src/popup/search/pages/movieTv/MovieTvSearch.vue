@@ -89,7 +89,7 @@ export default defineComponent({
 
     const searchQuerySubject = new Subject<string>();
     const searchRequestObservable = searchQuerySubject.pipe(
-      throttleTime(1500, asyncScheduler, {
+      throttleTime(750, asyncScheduler, {
         trailing: true,
         leading: true
       }),
