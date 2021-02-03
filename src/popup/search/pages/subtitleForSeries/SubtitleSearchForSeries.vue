@@ -38,7 +38,7 @@
 <script lang="ts">
 import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
 import { searchQuery } from './searchQuery';
-import { SearchStore } from '@/search/store';
+import {ISO639, SearchStore} from '@/search/store';
 import { download } from '@/search/download';
 
 import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpairedFilterButton.vue';
@@ -52,7 +52,6 @@ import Divider from '@/components/Divider.vue';
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
-import languageList from '@/res/iso639List.json';
 import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
 import { AppStore } from '@/app/store';
 import { SubtitleStore } from '@/subtitle/store';
@@ -105,12 +104,7 @@ export default defineComponent({
 
     const filter = ref('');
 
-    const language = ref<{ iso639_2: string; iso639Name: string }>(
-      languageList.find((e) => e.iso639_2 === searchStore.state.value.preferredLanguage) ?? {
-        iso639_2: 'en',
-        iso639Name: 'English'
-      }
-    );
+    const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
     const season = ref(1);

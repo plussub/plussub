@@ -1,5 +1,6 @@
-import {computed, ComputedRef, Ref, ref} from 'vue';
+import { computed, ComputedRef, Ref, ref } from 'vue';
 import { set as storageSet } from 'storage';
+import languageList from '@/res/iso639List.json';
 
 export interface TmdbState {
   tmdb_id: string;
@@ -24,6 +25,11 @@ export interface SearchState {
   preferredLanguage: string;
 }
 
+export interface ISO639 {
+  iso639_2: string;
+  iso639Name: string;
+}
+
 export interface SearchStore {
   state: ComputedRef<SearchState>;
   actions: {
@@ -31,6 +37,9 @@ export interface SearchStore {
     selectOpenSubtitle: (payload: OpensubtitlesState) => void;
     setPreferredLanguage: (payload: Pick<SearchState, 'preferredLanguage'>) => void;
     setTmdbInSelection: (payload: TmdbState) => void;
+  };
+  getters: {
+    getPreferredLanguageAsIso639: ComputedRef<ISO639>;
   };
 }
 
@@ -86,6 +95,15 @@ export const init = ({ preferredLanguage }: { preferredLanguage: string }): Sear
           preferredLanguage: window.plusSub_search.value.preferredLanguage
         };
       }
+    },
+    getters: {
+      getPreferredLanguageAsIso639: computed(
+        () =>
+          languageList.find((e) => e.iso639_2 === window.plusSub_search.value.preferredLanguage) ?? {
+            iso639_2: 'en',
+            iso639Name: 'English'
+          }
+      )
     }
   };
 };

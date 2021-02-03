@@ -30,7 +30,7 @@
 import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
 import { LegacySubtitleSearch_legacySubtitleSearch_entries, searchQuery } from './searchQuery';
 import { download } from './download';
-import { SearchStore } from '@/search/store';
+import {ISO639, SearchStore} from '@/search/store';
 
 import Divider from '@/components/Divider.vue';
 import LanguageSelect from '@/search/components/LanguageSelect.vue';
@@ -39,7 +39,6 @@ import SubtitleEntry from './SubtitleSearchEntry.vue';
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
-import languageList from '@/res/iso639List.json';
 import { AppStore } from '@/app/store';
 import { SubtitleStore } from '@/subtitle/store';
 import { NavigationStore } from '@/navigation/store';
@@ -83,12 +82,7 @@ export default defineComponent({
     }
 
     const entries = ref<LegacySubtitleSearch_legacySubtitleSearch_entries[]>([]);
-    const language = ref<{ iso639_2: string; iso639Name: string }>(
-      languageList.find((e) => e.iso639_2 === searchStore.state.value.preferredLanguage) ?? {
-        iso639_2: 'en',
-        iso639Name: 'English'
-      }
-    );
+    const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
     const filter = ref('');

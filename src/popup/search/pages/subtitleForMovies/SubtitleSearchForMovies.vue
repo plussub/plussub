@@ -44,11 +44,10 @@ import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
 import { SubtitleStore } from '@/subtitle/store';
-import languageList from '@/res/iso639List.json';
 import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
 import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpairedFilterButton.vue';
 import { AppStore } from '@/app/store';
-import { SearchStore } from '@/search/store';
+import {ISO639, SearchStore} from '@/search/store';
 import { NavigationStore } from '@/navigation/store';
 
 export default defineComponent({
@@ -91,12 +90,7 @@ export default defineComponent({
     }
     const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
 
-    const language = ref<{ iso639_2: string; iso639Name: string }>(
-      languageList.find((e) => e.iso639_2 === searchStore.state.value.preferredLanguage) ?? {
-        iso639_2: 'en',
-        iso639Name: 'English'
-      }
-    );
+    const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
     const filter = ref('');
