@@ -37,9 +37,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, PropType, ref, watch } from 'vue';
+import { defineComponent, inject, onUnmounted, PropType, ref, watch } from 'vue';
 import { searchQuery, SearchQueryResultEntry } from './searchQuery';
-import { debounce } from '@/composables';
 import { SearchStore } from '@/search/store';
 import { NavigationStore } from '@/navigation/store';
 import { getVideoName } from '@/util/name';
@@ -51,6 +50,8 @@ import Divider from '@/components/Divider.vue';
 import MovieTvSearchEntry from './MovieTvSearchEntry.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import { default as InputField } from '@/components/InputField.vue';
+import { asyncScheduler, from, merge, Subject } from 'rxjs';
+import { concatMap, map, throttleTime } from 'rxjs/operators';
 
 export default defineComponent({
   components: {
@@ -83,17 +84,27 @@ export default defineComponent({
     }
 
     const internalQuery = ref(props.query ?? '');
-    const searchResults = ref([]);
+    const searchResults = ref<SearchQueryResultEntry[]>([]);
     const loading = ref(false);
 
-    const { fn: req } = debounce<SearchQueryResultEntry[]>({
-      fn: searchQuery,
-      timeout: 1500,
-      resultRef: searchResults,
-      loadingRef: loading
-    });
+    const subject = new Subject<string>();
+    const searchRequestObservable = subject.pipe(
+      throttleTime(1500, asyncScheduler, {
+        trailing: true,
+        leading: true
+      }),
+      concatMap((query) => from(searchQuery({ query })))
+    );
+    const loadingObservable = merge(subject.pipe(map(() => true)), searchRequestObservable.pipe(map(() => false)));
+    const loadingSubscription = loadingObservable.subscribe((value) => (loading.value = value));
+    const searchRequestSubscription = searchRequestObservable.subscribe((result) => (searchResults.value = result));
 
-    watch(internalQuery, (query) => req({ query }), { immediate: true });
+    watch(internalQuery, (query) => subject.next(query), { immediate: true });
+
+    onUnmounted(() => {
+      searchRequestSubscription.unsubscribe();
+      loadingSubscription.unsubscribe();
+    });
 
     return {
       internalQuery,

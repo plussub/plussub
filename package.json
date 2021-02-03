@@ -25,6 +25,7 @@
     "chart.js": "^2.9.4",
     "jszip": "^3.5.0",
     "luxon": "^1.25.0",
+    "rxjs": "^6.6.3",
     "typeface-roboto": "^1.1.13",
     "typeface-rubik": "^1.1.13",
     "uuid": "^8.3.0",
