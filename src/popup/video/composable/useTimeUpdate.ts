@@ -1,6 +1,6 @@
 import { onUnmounted, Ref, watch } from 'vue';
-import { Video, srcToIFrameSource } from '@/video/store';
-import { postWindowMessage, StartTranscript, StopTranscript, useWindowMessage, VideoCurrentTime } from '@/composables/useWindowMessage';
+import { Video } from '@/video/store';
+import { useWindowMessage, VideoCurrentTime } from '@/composables/useWindowMessage';
 
 export interface FnPayload {
   currentTime: number;
@@ -16,21 +16,22 @@ export const useTimeUpdate = ({ video, fn }: Payload): void => {
 
   const removeListenerInHost = (video: Video) => video.el?.removeEventListener('timeupdate', handler);
   const removeListenerInIFrame = (video: Video) => {
-    if (!video.src) {
-      return;
-    }
-    const iFrameSource = srcToIFrameSource[video.src];
-    if (!iFrameSource) {
-      return;
-    }
-    postWindowMessage({
-      window: iFrameSource.window,
-      origin: iFrameSource.origin,
-      payload: {
-        plusSubAction: StopTranscript,
-        src: video.src
-      }
-    });
+    // todo
+    // if (!video.src) {
+    //   return;
+    // }
+    // const iFrameSource = srcToIFrameSource[video.src];
+    // if (!iFrameSource) {
+    //   return;
+    // }
+    // postWindowMessage({
+    //   window: iFrameSource.window,
+    //   origin: iFrameSource.origin,
+    //   payload: {
+    //     plusSubAction: StopTranscript,
+    //     src: video.src
+    //   }
+    // });
   };
   onUnmounted(() => (video.value ? removeListenerInHost(video.value) : null));
   onUnmounted(() => (video.value ? removeListenerInIFrame(video.value) : null));
@@ -54,21 +55,22 @@ export const useTimeUpdate = ({ video, fn }: Payload): void => {
       if (currentVideo.in === 'HOST') {
         currentVideo.el?.addEventListener('timeupdate', handler);
       } else {
-        const iFrameSource = srcToIFrameSource[currentVideo.src];
-        if (!iFrameSource) {
-          return;
-        }
-        // todo: fix correct, race condition with mount and unmount between components
-        setTimeout(() => {
-          postWindowMessage({
-            window: iFrameSource.window,
-            origin: iFrameSource.origin,
-            payload: {
-              plusSubAction: StartTranscript,
-              src: currentVideo.src
-            }
-          });
-        })
+        // todo: fix
+        // const iFrameSource = srcToIFrameSource[currentVideo.src];
+        // if (!iFrameSource) {
+        //   return;
+        // }
+        // // todo: fix correct, race condition with mount and unmount between components
+        // setTimeout(() => {
+        //   postWindowMessage({
+        //     window: iFrameSource.window,
+        //     origin: iFrameSource.origin,
+        //     payload: {
+        //       plusSubAction: StartTranscript,
+        //       src: currentVideo.src
+        //     }
+        //   });
+        // })
       }
     },
     { immediate: true }

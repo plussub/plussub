@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, provide, watch } from 'vue';
+import {computed, defineComponent, onUnmounted, PropType, provide, watch} from 'vue';
 import { init as initAppStore } from '@/app/store';
 import { init as initVideoStore } from '@/video/store';
 import { init as initFileStore } from '@/file/store';
@@ -114,6 +114,9 @@ export default defineComponent({
       }
     );
 
+    onUnmounted(() => {
+      videoStore.actions.unmount();
+    });
     // todo: auto navigation
     // watch(
     //     [videoCount, appStateState, videoList],

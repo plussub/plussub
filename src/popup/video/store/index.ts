@@ -1,5 +1,4 @@
-import {computed, ComputedRef, Ref, ref} from 'vue';
-import { removeUrlHash } from '@/util/url';
+import { computed, ComputedRef, Ref, ref } from 'vue';
 import { AddSubtitle, GetBoundingClientRect, postWindowMessage, RemoveSubtitle, RemoveVideoInIFrameEvent, SetVideoTime, VideoBoundingClientRect, VideosInIFrameEvent } from '@/composables';
 import { SubtitleEntry } from '@/subtitle/store';
 
@@ -18,9 +17,8 @@ export interface IFrameSource {
   origin: string;
 }
 
-// todo: do not export
 // don't make source(of iframe) reactive as it will cause cors problem
-export const srcToIFrameSource: Record<VideoSrc, IFrameSource> = {};
+const srcToIFrameSource: Record<VideoSrc, IFrameSource> = {};
 
 export interface VideoState {
   srcToHostVideo: Record<VideoSrc, Video>;
@@ -38,7 +36,7 @@ declare global {
 export interface VideoStore {
   state: ComputedRef<VideoState>;
   actions: {
-    setCurrentVideo: (payload: {video: Video}) => void;
+    setCurrentVideo: (payload: { video: Video }) => void;
     removeCurrentVideo: () => void;
     findVideosInCurrentFrame: () => void;
     addIFrameVideos: (payload: MessageEvent<VideosInIFrameEvent>) => void;
@@ -48,6 +46,7 @@ export interface VideoStore {
     setCurrentTime: (payload: { video: Video; time: number }) => void;
     highlightVideo: (payload: { video: Video | null }) => void;
     removeHighlightFromVideo: () => void;
+    unmount: () => void;
   };
   getters: {
     currentVideo: ComputedRef<Video | null>;
@@ -62,20 +61,28 @@ export interface VideoStore {
 const cues: Record<string, VTTCue[]> = {};
 const isValidVideo = (el: HTMLVideoElement): boolean => el.offsetWidth !== 0 && el.offsetHeight !== 0 && el.currentSrc !== '';
 export const isElementNotInViewport = (el: Element) => el.getBoundingClientRect().top >= (window.innerHeight || document.documentElement.clientHeight) || el.getBoundingClientRect().bottom <= 0;
-const findVideosInCurrentFrame = (): Record<VideoSrc, Video> =>
-  Object.fromEntries(
+
+const urlToVideoSrc = (url: URL) => url.origin + url.pathname + url.search;
+
+const findVideosInCurrentFrame = (): Record<VideoSrc, Video> => {
+  return Object.fromEntries(
     [...document.querySelectorAll('video')]
       .filter((el) => isValidVideo(el))
-      .map((el) => [
-        removeUrlHash(el.currentSrc),
+      .map((el) => ({
+        el,
+        videoSrc: urlToVideoSrc(new URL(el.currentSrc))
+      }))
+      .map(({ el, videoSrc }) => [
+        videoSrc,
         {
-          src: removeUrlHash(el.currentSrc),
+          src: videoSrc,
           in: 'HOST',
           hasSubtitle: el.classList.contains('plussub'),
           el
         }
       ])
   );
+};
 
 export const init = (): VideoStore => {
   window.plusSub_currentSelectedVideo = window.plusSub_currentSelectedVideo ? ref(window.plusSub_currentSelectedVideo.value) : ref<CurrentSelectedVideoState>(null);
@@ -96,7 +103,7 @@ export const init = (): VideoStore => {
   return {
     state: computed(() => state.value),
     actions: {
-      setCurrentVideo: ({video}: {video: Video}) => {
+      setCurrentVideo: ({ video }: { video: Video }) => {
         window.plusSub_currentSelectedVideo.value = video;
       },
       removeCurrentVideo: () => {
@@ -107,7 +114,7 @@ export const init = (): VideoStore => {
       },
       addIFrameVideos: (payload: MessageEvent<VideosInIFrameEvent>) => {
         payload.data.videos.forEach((e) => {
-          srcToIFrameSource[removeUrlHash(e.currentSrc)] = {
+          srcToIFrameSource[urlToVideoSrc(new URL(e.currentSrc))] = {
             window: payload.source as Window,
             frameSrc: payload.data.frameSrc,
             origin: payload.origin
@@ -118,10 +125,10 @@ export const init = (): VideoStore => {
           state.value.srcToIFrameVideo,
           Object.fromEntries(
             payload.data.videos.map((e) => [
-              removeUrlHash(e.currentSrc),
+              urlToVideoSrc(new URL(e.currentSrc)),
               {
                 hasSubtitle: e.hasSubtitle,
-                src: removeUrlHash(e.currentSrc),
+                src: urlToVideoSrc(new URL(e.currentSrc)),
                 in: 'I_FRAME'
               }
             ])
@@ -129,9 +136,9 @@ export const init = (): VideoStore => {
         );
       },
       removeIFrameVideos: (payload: MessageEvent<RemoveVideoInIFrameEvent>): { removedVideoWithSubtitle: boolean } => {
-        const currentSrc = removeUrlHash(payload.data.currentSrc);
-        const removedVideoWithSubtitle = state.value.srcToIFrameVideo.value[currentSrc]?.hasSubtitle;
-        delete state.value.srcToIFrameVideo.value[currentSrc];
+        const videoSrc = urlToVideoSrc(new URL(payload.data.currentSrc));
+        const removedVideoWithSubtitle = state.value.srcToIFrameVideo.value[videoSrc]?.hasSubtitle;
+        delete state.value.srcToIFrameVideo.value[videoSrc];
         delete srcToIFrameSource[payload.data.frameSrc];
         return {
           removedVideoWithSubtitle
@@ -175,7 +182,7 @@ export const init = (): VideoStore => {
         }
         video.hasSubtitle = true;
       },
-      removeVttFrom: ({ video }: { video: Video | null  }): void => {
+      removeVttFrom: ({ video }: { video: Video | null }): void => {
         if (!video) {
           return;
         }
@@ -305,6 +312,17 @@ export const init = (): VideoStore => {
           return;
         }
         overlayHightlight.style.cssText = `width: 0px; height: 0px;`;
+      },
+      unmount: () => {
+        Object.values(srcToIFrameSource).forEach((iFrameSource) => {
+          postWindowMessage({
+            window: iFrameSource.window,
+            origin: iFrameSource.origin,
+            payload: {
+              plusSubAction: 'CLOSE'
+            }
+          });
+        });
       }
     },
     getters: {
