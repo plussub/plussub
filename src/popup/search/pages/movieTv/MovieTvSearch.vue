@@ -87,19 +87,19 @@ export default defineComponent({
     const searchResults = ref<SearchQueryResultEntry[]>([]);
     const loading = ref(false);
 
-    const subject = new Subject<string>();
-    const searchRequestObservable = subject.pipe(
+    const searchQuerySubject = new Subject<string>();
+    const searchRequestObservable = searchQuerySubject.pipe(
       throttleTime(1500, asyncScheduler, {
         trailing: true,
         leading: true
       }),
       concatMap((query) => from(searchQuery({ query })))
     );
-    const loadingObservable = merge(subject.pipe(map(() => true)), searchRequestObservable.pipe(map(() => false)));
+    const loadingObservable = merge(searchQuerySubject.pipe(map(() => true)), searchRequestObservable.pipe(map(() => false)));
     const loadingSubscription = loadingObservable.subscribe((value) => (loading.value = value));
     const searchRequestSubscription = searchRequestObservable.subscribe((result) => (searchResults.value = result));
 
-    watch(internalQuery, (query) => subject.next(query), { immediate: true });
+    watch(internalQuery, (query) => searchQuerySubject.next(query), { immediate: true });
 
     onUnmounted(() => {
       searchRequestSubscription.unsubscribe();
