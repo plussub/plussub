@@ -8,7 +8,7 @@
         </div>
         <div v-show="showSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
-          <LoadingBar :loading="!dataReady" class="w-full" />
+          <LoadingBar :loading="loading" class="w-full" />
         </div>
         <div v-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in filteredEntries" :key="index">
@@ -17,7 +17,7 @@
             <Divider class="border-surface-200" />
           </div>
         </div>
-        <div v-else class="self-center text-center leading-loose" style="grid-area: search-results">
+        <div v-else-if="!loading" class="self-center text-center leading-loose" style="grid-area: search-results">
           <div>Sorry, no subtitle found.</div>
           <div>(╯°□°)╯︵ ┻━┻</div>
         </div>
@@ -27,10 +27,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
+import { computed, defineComponent, inject, onUnmounted, PropType, ref, watch } from 'vue';
 import { LegacySubtitleSearch_legacySubtitleSearch_entries, searchQuery } from './searchQuery';
 import { download } from './download';
-import {ISO639, SearchStore} from '@/search/store';
+import { ISO639, SearchStore } from '@/search/store';
 
 import Divider from '@/components/Divider.vue';
 import LanguageSelect from '@/search/components/LanguageSelect.vue';
@@ -42,6 +42,9 @@ import InputField from '@/components/InputField.vue';
 import { AppStore } from '@/app/store';
 import { SubtitleStore } from '@/subtitle/store';
 import { NavigationStore } from '@/navigation/store';
+import { concatMap, tap } from 'rxjs/operators';
+import { from, Subject } from 'rxjs';
+import { LegacySubtitleSearchVariables } from '@/search/pages/subtitle/searchQuery/__gen_gql/LegacySubtitleSearch';
 
 export default defineComponent({
   components: {
@@ -85,24 +88,32 @@ export default defineComponent({
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
-    const dataReady = ref(false);
-
+    const loading = ref(false);
     const entries = ref<LegacySubtitleSearch_legacySubtitleSearch_entries[]>([]);
-    const triggerSearch = () =>
-      searchQuery({
-        tmdb_id: props.tmdb_id,
-        media_type: props.media_type,
-        language: language.value.iso639_2
-      }).then((result) => {
-        dataReady.value = true;
+
+    const searchQuerySubject = new Subject<LegacySubtitleSearchVariables>();
+    const searchRequestSubscription = searchQuerySubject
+      .pipe(
+        tap(() => (loading.value = true)),
+        concatMap((variables) => from(searchQuery(variables)))
+      )
+      .subscribe((result) => {
+        loading.value = false;
         entries.value = result.legacySubtitleSearch.entries;
       });
-    triggerSearch();
 
-    watch(language, () => {
-      dataReady.value = false;
-      triggerSearch();
-    });
+    watch(
+      language,
+      (language) =>
+        searchQuerySubject.next({
+          language: language.iso639_2,
+          media_type: props.media_type,
+          tmdb_id: props.tmdb_id
+        }),
+      { immediate: true }
+    );
+
+    onUnmounted(() => searchRequestSubscription.unsubscribe());
 
     return {
       filter,
@@ -112,7 +123,7 @@ export default defineComponent({
 
       showSelection: computed(() => showLanguageSelection.value),
 
-      dataReady,
+      loading,
       entries,
       filteredEntries: computed(() => entries.value.filter(({ SubFileName }) => filter.value === '' || SubFileName.toLowerCase().includes(filter.value.toLowerCase()))),
 

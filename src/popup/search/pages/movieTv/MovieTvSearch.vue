@@ -17,8 +17,8 @@
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
           <LoadingBar :loading="loading && internalQuery !== ''" class="w-full" />
         </div>
-        <div v-if="searchResults.length" class="overflow-y-auto" style="grid-area: search-results">
-          <div v-for="(item, index) in searchResults" :key="index">
+        <div v-if="entries.length" class="overflow-y-auto" style="grid-area: search-results">
+          <div v-for="(item, index) in entries" :key="index">
             <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
             <MovieTvSearchEntry :item="item" @select="select" />
             <Divider style="grid-column: 1/3" class="border-surface-200" />
@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { defineComponent, inject, onUnmounted, PropType, ref, watch } from 'vue';
-import { searchQuery, SearchQueryResultEntry } from './searchQuery';
+import { searchQuery, VideoSearch_videoSearch_entries } from './searchQuery';
 import { SearchStore } from '@/search/store';
 import { NavigationStore } from '@/navigation/store';
 import { getVideoName } from '@/util/name';
@@ -49,9 +49,9 @@ import PageLayout from '@/components/PageLayout.vue';
 import Divider from '@/components/Divider.vue';
 import MovieTvSearchEntry from './MovieTvSearchEntry.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
-import { default as InputField } from '@/components/InputField.vue';
-import { asyncScheduler, from, merge, Subject } from 'rxjs';
-import { concatMap, map, throttleTime } from 'rxjs/operators';
+import InputField from '@/components/InputField.vue';
+import { asyncScheduler, from, Subject } from 'rxjs';
+import { concatMap, filter, tap, throttleTime } from 'rxjs/operators';
 
 export default defineComponent({
   components: {
@@ -84,37 +84,38 @@ export default defineComponent({
     }
 
     const internalQuery = ref(props.query ?? '');
-    const searchResults = ref<SearchQueryResultEntry[]>([]);
-    const loading = ref(false);
+    const loading = ref(true);
+    const entries = ref<VideoSearch_videoSearch_entries[]>([]);
 
     const searchQuerySubject = new Subject<string>();
-    const searchRequestObservable = searchQuerySubject.pipe(
-      throttleTime(750, asyncScheduler, {
-        trailing: true,
-        leading: true
-      }),
-      concatMap((query) => from(searchQuery({ query })))
-    );
-    const loadingObservable = merge(searchQuerySubject.pipe(map(() => true)), searchRequestObservable.pipe(map(() => false)));
-    const loadingSubscription = loadingObservable.subscribe((value) => (loading.value = value));
-    const searchRequestSubscription = searchRequestObservable.subscribe((result) => (searchResults.value = result));
-
+    const searchRequestSubscription = searchQuerySubject
+      .pipe(
+        filter((v) => v.trim() !== ''),
+        tap(() => (loading.value = true)),
+        throttleTime(750, asyncScheduler, {
+          trailing: true,
+          leading: true
+        }),
+        concatMap((query) => from(searchQuery({ query })))
+      )
+      .subscribe((result) => {
+        loading.value = false;
+        entries.value = result.videoSearch.entries;
+      });
     watch(internalQuery, (query) => searchQuerySubject.next(query), { immediate: true });
 
-    onUnmounted(() => {
-      searchRequestSubscription.unsubscribe();
-      loadingSubscription.unsubscribe();
-    });
+    onUnmounted(() => searchRequestSubscription.unsubscribe());
 
     return {
       internalQuery,
-      searchResults,
       loading,
+      entries,
+
       videoCount: videoStore.getters.videoCount,
       getVideoName,
       toSettings: navigationStore.actions.toSettings,
       changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
-      select: (tmdb: SearchQueryResultEntry): void => {
+      select: (tmdb: VideoSearch_videoSearch_entries): void => {
         searchStore.actions.setTmdbInSelection({
           tmdb_id: tmdb.tmdb_id,
           media_type: tmdb.media_type,

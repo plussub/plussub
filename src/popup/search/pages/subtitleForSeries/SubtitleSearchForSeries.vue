@@ -17,7 +17,7 @@
         </div>
         <div v-show="showSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
-          <LoadingBar :loading="!dataReady" class="w-full" />
+          <LoadingBar :loading="loading" class="w-full" />
         </div>
         <div v-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in filteredEntries" :key="index">
@@ -26,7 +26,7 @@
             <Divider class="border-surface-200" />
           </div>
         </div>
-        <div v-else-if="dataReady" class="self-center text-center leading-loose" style="grid-area: search-results">
+        <div v-else-if="!loading" class="self-center text-center leading-loose" style="grid-area: search-results">
           <div>Sorry, no subtitle found.</div>
           <div>(╯°□°)╯︵ ┻━┻</div>
         </div>
@@ -36,9 +36,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
-import { searchQuery } from './searchQuery';
-import {ISO639, SearchStore} from '@/search/store';
+import { computed, defineComponent, inject, onUnmounted, PropType, ref, watch } from 'vue';
+import { searchQuery, SubtitleSearchForSeriesVariables } from './searchQuery';
+import { ISO639, SearchStore } from '@/search/store';
 import { download } from '@/search/download';
 
 import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpairedFilterButton.vue';
@@ -56,6 +56,8 @@ import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSe
 import { AppStore } from '@/app/store';
 import { SubtitleStore } from '@/subtitle/store';
 import { NavigationStore } from '@/navigation/store';
+import { from, Subject } from 'rxjs';
+import { concatMap, tap } from 'rxjs/operators';
 
 export default defineComponent({
   components: {
@@ -111,27 +113,35 @@ export default defineComponent({
     const episodeCount = ref(99);
     const showEpisodeSelection = ref(false);
 
-    const dataReady = ref(false);
     const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
 
-    const triggerSearch = () =>
-      searchQuery({
-        tmdb_id: props.tmdb_id,
-        language: language.value.iso639_2,
-        season_number: season.value,
-        episode_number: episode.value
-      }).then((result) => {
-        dataReady.value = true;
-        entries.value = result.subtitleSearch.data;
-        seasonCount.value = result.seasons.seasons.length;
-        episodeCount.value = result.seasons.seasons.find((s) => s.season_number === season.value)?.episode_count ?? 0;
-      });
-    triggerSearch();
+    const loading = ref(true);
 
-    watch([language, season, episode], () => {
-      dataReady.value = false;
-      triggerSearch();
-    });
+    const searchQuerySubject = new Subject<SubtitleSearchForSeriesVariables>();
+    const searchRequestSubscription = searchQuerySubject
+      .pipe(
+        tap(() => (loading.value = true)),
+        concatMap((variables) => from(searchQuery(variables)))
+      )
+      .subscribe((result) => {
+        loading.value = false;
+        entries.value = result.subtitleSearch.data;
+      });
+
+    watch(
+      [language, season, episode],
+      ([language, season, episode]) =>
+        searchQuerySubject.next({
+          language: language.iso639_2,
+          tmdb_id: props.tmdb_id,
+          season_number: season,
+          episode_number: episode
+        }),
+      { immediate: true }
+    );
+
+    onUnmounted(() => searchRequestSubscription.unsubscribe());
+
     const onlyHearingImpaired = ref(false);
 
     return {
@@ -151,7 +161,7 @@ export default defineComponent({
 
       showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),
 
-      dataReady,
+      loading,
       entries,
       filteredEntries: computed(() =>
         entries.value.filter(({ attributes }) => {

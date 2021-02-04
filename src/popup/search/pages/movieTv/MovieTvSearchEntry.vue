@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue';
-import { SearchQueryResultEntry } from './searchQuery';
+import { VideoSearch_videoSearch_entries } from './searchQuery';
 import { capitalizeFirst } from '@/util/string';
 
 import { default as posterFallback } from '@/res/posterFallback.png';
@@ -29,7 +29,7 @@ import { default as posterFallback } from '@/res/posterFallback.png';
 export default defineComponent({
   props: {
     item: {
-      type: Object as PropType<SearchQueryResultEntry>,
+      type: Object as PropType<VideoSearch_videoSearch_entries>,
       required: true
     }
   },

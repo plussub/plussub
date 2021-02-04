@@ -13,7 +13,7 @@
         </div>
         <div v-show="showSelection" class="w-full h-full overflow-hidden bg-surface-700 bg-opacity-50 backdrop-filter-blur" style="grid-row: 3/5; grid-column: 1/4" />
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
-          <LoadingBar :loading="!dataReady" class="w-full" />
+          <LoadingBar :loading="loading" class="w-full" />
         </div>
         <div v-if="filteredEntries.length" class="overflow-y-auto" style="grid-area: search-results">
           <div v-for="(item, index) in filteredEntries" :key="index">
@@ -22,7 +22,7 @@
             <Divider class="border-surface-200" />
           </div>
         </div>
-        <div v-else-if="dataReady" class="self-center text-center leading-loose" style="grid-area: search-results">
+        <div v-else-if="!loading" class="self-center text-center leading-loose" style="grid-area: search-results">
           <div>Sorry, no subtitle found.</div>
           <div>(╯°□°)╯︵ ┻━┻</div>
         </div>
@@ -32,8 +32,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
-import { searchQuery } from './searchQuery';
+import { computed, defineComponent, inject, onUnmounted, PropType, ref, watch } from 'vue';
+import {searchQuery, SubtitleSearchForMoviesVariables} from './searchQuery';
 import { download } from '@/search/download';
 
 import SubtitleSearchEntry from '@/search/components/SubtitleSearchEntry.vue';
@@ -49,6 +49,8 @@ import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpa
 import { AppStore } from '@/app/store';
 import { ISO639, SearchStore } from '@/search/store';
 import { NavigationStore } from '@/navigation/store';
+import { from, Subject } from 'rxjs';
+import { concatMap, tap } from 'rxjs/operators';
 
 export default defineComponent({
   components: {
@@ -95,22 +97,31 @@ export default defineComponent({
 
     const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
 
-    const dataReady = ref(false);
+    const loading = ref(true);
 
-    const triggerSearch = () =>
-      searchQuery({
-        tmdb_id: props.tmdb_id,
-        language: language.value.iso639_2
-      }).then((result) => {
-        dataReady.value = true;
+    const searchQuerySubject = new Subject<SubtitleSearchForMoviesVariables>();
+    const searchRequestSubscription = searchQuerySubject
+      .pipe(
+        tap(() => (loading.value = true)),
+        concatMap((variables) => from(searchQuery(variables)))
+      )
+      .subscribe((result) => {
+        loading.value = false;
         entries.value = result.subtitleSearch.data;
       });
-    triggerSearch();
 
-    watch([language], () => {
-      dataReady.value = false;
-      triggerSearch();
-    });
+    watch(
+      language,
+      (language) =>
+        searchQuerySubject.next({
+          language: language.iso639_2,
+          tmdb_id: props.tmdb_id
+        }),
+      { immediate: true }
+    );
+
+    onUnmounted(() => searchRequestSubscription.unsubscribe());
+
     const onlyHearingImpaired = ref(false);
 
     return {
@@ -122,7 +133,7 @@ export default defineComponent({
 
       showSelection: computed(() => showLanguageSelection.value),
 
-      dataReady,
+      loading,
       entries,
       filteredEntries: computed(() =>
         entries.value.filter(({ attributes }) => {
