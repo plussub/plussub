@@ -107,7 +107,7 @@ export default defineComponent({
             return;
           }
 
-          // todo: validate if necessary
+          // todo: handle vimeo next
           // hack: set current src if video src change like vimeo next
           // if(videoCount === 1 && videoList[0].src !== (prevVideoList ?? [{src: null}])[0]?.src){
           //   setCurrentSelectedSrc(videoList[0].src);

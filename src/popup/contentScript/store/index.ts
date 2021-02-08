@@ -30,10 +30,7 @@ export const init = (): ContentScriptStore => {
     .pipe<MessageEvent<{ plusSubActionFromContentScript: string; }>>(filter((e) => e.data.plusSubActionFromContentScript === 'REGISTER_ME_REQUEST_FROM_IFRAME'))
     .subscribe((e) => {
       originToSource[e.origin] = e.source as Window;
-      console.warn('popup: register me from iframe');
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      e.source.postMessage({ plusSubActionFromPopup: 'REGISTER_ACK' }, '*');
+      (e.source as Window).postMessage({ plusSubActionFromPopup: 'REGISTER_ACK' }, '*');
       connectionSubject.next({ action: 'ADD', origin: e.origin });
     });
 

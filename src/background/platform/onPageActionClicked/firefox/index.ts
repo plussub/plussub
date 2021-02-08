@@ -5,7 +5,8 @@ browser.browserAction.onClicked.addListener(async () => {
     console.warn('insert css failed', e);
   }
   try {
-    await browser.tabs.executeScript({ file: './popup.js', allFrames: true });
+    await browser.tabs.executeScript({ file: './contentScript.js', allFrames: true });
+    await browser.tabs.executeScript({ file: './popup.js', allFrames: false });
   } catch (e) {
     console.warn('insert script failed', e);
   }
