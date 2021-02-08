@@ -3,11 +3,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, inject, onMounted, ref, watch} from 'vue';
+import { defineComponent, inject, onMounted, ref, watch } from 'vue';
 import { Chart, ChartPoint } from 'chart.js';
 import { computed } from '@vue/reactivity';
 import { VideoStore } from '@/video/store';
-import { useTimeUpdate } from '@/video/composable';
 import { SubtitleStore } from '@/subtitle/store';
 import Duration from 'luxon/src/duration.js';
 import { findNext } from './findNext';
@@ -63,17 +62,13 @@ export default defineComponent({
 
     const videoTimePoint = { x: 0, y: 0 };
     const videoTimePointLine = { x: 0, y: 12 };
-    // todo fix with video src
-    useTimeUpdate({
-      video: videoStore.getters.firstVideoWithSubtitle,
-      fn: ({ currentTime }): void => {
-        videoTimePoint.x = currentTime * 1000;
-        videoTimePointLine.x = currentTime * 1000;
-        chart.value?.update();
-        const pos = findNext(Math.ceil(currentTime * 1000), subtitleStore.state.value.withOffsetParsed);
-        if (pos !== -1) {
-          currentPos.value = pos;
-        }
+    videoStore.actions.useTimeUpdate(({ time }): void => {
+      videoTimePoint.x = time * 1000;
+      videoTimePointLine.x = time * 1000;
+      chart.value?.update();
+      const pos = findNext(Math.ceil(time * 1000), subtitleStore.state.value.withOffsetParsed);
+      if (pos !== -1) {
+        currentPos.value = pos;
       }
     });
 

@@ -50,7 +50,7 @@ export default defineComponent({
     }
 
     onUnmounted(() => {
-      videoStore.actions.removeHighlightFromVideo();
+      videoStore.actions.removeHighlight();
     });
 
     return {
@@ -59,10 +59,10 @@ export default defineComponent({
         appStore.actions.reset();
         fileStore.actions.reset();
         subtitleStore.actions.reset();
-        videoStore.actions.removeCurrentVideo();
+        videoStore.actions.removeCurrent();
       },
-      highlightCurrentVideo: () => videoStore.actions.highlightVideo({ video: videoStore.getters.currentVideo.value }),
-      removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
+      highlightCurrentVideo: () => videoStore.actions.highlight({ video: videoStore.getters.current.value }),
+      removeHighlightFromVideo: videoStore.actions.removeHighlight,
       infoTooltip: computed(() => [`filename - ${fileStore.state.value.filename}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n'))
     };
   }

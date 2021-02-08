@@ -36,7 +36,6 @@ import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
 import { VideoStore } from '@/video/store';
 import { SubtitleStore } from '@/subtitle/store';
 import Duration from 'luxon/src/duration.js';
-import { useTimeUpdate } from '@/video/composable';
 
 import PageLayout from '@/components/PageLayout.vue';
 import { binarySearch } from './binarySearch';
@@ -63,11 +62,8 @@ export default defineComponent({
 
     const currentTime = ref<number>(0);
 
-    useTimeUpdate({
-      video: videoStore.getters.firstVideoWithSubtitle,
-      fn: ({ currentTime: currentTimeFromVideo }): void => {
-        currentTime.value = currentTimeFromVideo;
-      }
+    videoStore.actions.useTimeUpdate(({ time }): void => {
+        currentTime.value = time;
     });
 
     const currentPos = ref(-1);
@@ -96,16 +92,8 @@ export default defineComponent({
         }))
       ),
       setCurrentTime: ({ time }: { time: number }): void => {
-        const video = videoStore.getters.firstVideoWithSubtitle.value;
-
-        if (!video) {
-          return;
-        }
         // +0.001 because the "from" is often the same as previous "to", use this to advoid showing previous subtitle text
-        videoStore.actions.setCurrentTime({
-          video,
-          time: time + 0.001
-        });
+        videoStore.actions.setTime({time: time + 0.001});
       },
       currentTimePretty: computed(() => Duration.fromMillis(currentTime.value * 1000).toFormat('mm:ss')),
       infoTooltip: computed(() => [`left click - jump to time point`, `shift + left click - copy text to clipboard`].join('\n')),

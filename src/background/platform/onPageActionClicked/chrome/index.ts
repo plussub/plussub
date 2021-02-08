@@ -3,12 +3,13 @@
 // @ts-ignore
 chrome.action.onClicked.addListener(() => {
   try {
-    chrome.tabs.insertCSS({ file: './font.css', allFrames: true, runAt: 'document_start' });
+    chrome.tabs.insertCSS({ file: './font.css', allFrames: false, runAt: 'document_start' });
   } catch (e) {
     console.warn('insert css failed', e);
   }
   try {
-    chrome.tabs.executeScript({ file: './popup.js', allFrames: true });
+    // chrome.tabs.executeScript({ file: './contentScript.js', allFrames: true });
+    chrome.tabs.executeScript({ file: './popup.js', allFrames: false });
   } catch (e) {
     console.warn('insert script failed', e);
   }

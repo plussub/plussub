@@ -15,6 +15,7 @@ export type SubtitleFormat = '.srt' | '.vtt' | '.ass' | '.ssa';
 export interface SubtitleState {
   id: string | null;
   raw: string | null;
+  language: string | null;
   parsed: SubtitleEntry[];
   withOffsetParsed: SubtitleEntry[];
   offsetTime: number;
@@ -22,7 +23,7 @@ export interface SubtitleState {
 }
 
 
-export type SetRawPayload = Pick<SubtitleState, 'raw' | 'id'> & {format: NonNullable<SubtitleState['format']>};
+export type SetRawPayload = Pick<SubtitleState, 'raw' | 'id' | 'language'> & {format: NonNullable<SubtitleState['format']>};
 
 export interface SubtitleStore {
   state: ComputedRef<SubtitleState>;
@@ -53,6 +54,7 @@ export const init = ({use}: InitPayload): SubtitleStore => {
     : ref<SubtitleState>({
       id: null,
       raw: null,
+      language: null,
       parsed: [],
       format: null,
       withOffsetParsed: [],
@@ -67,16 +69,18 @@ export const init = ({use}: InitPayload): SubtitleStore => {
           id: null,
           raw: null,
           format: null,
+          language: null,
           parsed: [],
           withOffsetParsed: [],
           offsetTime: 0
         };
       },
-      setRaw: ({ raw, format, id }: SetRawPayload) : void => {
+      setRaw: ({ raw, format, id, language }: SetRawPayload) : void => {
         window.plusSub_subtitle.value = {
           id,
           raw,
           format,
+          language,
           parsed: [],
           withOffsetParsed: [],
           offsetTime: 0,
@@ -86,6 +90,7 @@ export const init = ({use}: InitPayload): SubtitleStore => {
         window.plusSub_subtitle.value = {
           id: window.plusSub_subtitle.value.id,
           raw: window.plusSub_subtitle.value.raw,
+          language: window.plusSub_subtitle.value.language,
           parsed: window.plusSub_subtitle.value.parsed,
           format:  window.plusSub_subtitle.value.format,
           offsetTime,
@@ -110,6 +115,7 @@ export const init = ({use}: InitPayload): SubtitleStore => {
             raw,
             parsed,
             format,
+            language: window.plusSub_subtitle.value.language,
             offsetTime: window.plusSub_subtitle.value.offsetTime,
             withOffsetParsed: parsed.map((e: SubtitleEntry) => ({
               ...e,

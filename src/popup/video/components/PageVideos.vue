@@ -45,15 +45,15 @@ export default defineComponent({
       throw new Error('inject failed');
     }
     onUnmounted(() => {
-      videoStore.actions.removeHighlightFromVideo();
+      videoStore.actions.removeHighlight();
     });
 
     return {
-      highlightVideo: videoStore.actions.highlightVideo,
-      removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
-      videoList: videoStore.getters.videoList,
+      highlightVideo: videoStore.actions.highlight,
+      removeHighlightFromVideo: videoStore.actions.removeHighlight,
+      videoList: videoStore.getters.list,
       selectVideo: (video: Video) => {
-        videoStore.actions.setCurrentVideo({ video });
+        videoStore.actions.setCurrent({ video });
         navigationStore.actions.toMovieTvSearch();
       }
     };

@@ -1,8 +1,17 @@
 import {computed, ComputedRef, ref} from 'vue';
+import MovieTvSearch from "@/search/pages/movieTv/MovieTvSearch.vue";
+import SubtitleSearch from "@/search/pages/subtitle/SubtitleSearch.vue";
+import SubtitleSearchForMovies from "@/search/pages/subtitleForMovies/SubtitleSearchForMovies.vue";
+import SubtitleSearchForSeries from "@/search/pages/subtitleForSeries/SubtitleSearchForSeries.vue";
+import Transcript from "@/subtitle/pages/Transcript.vue";
+import Settings from "@/settings/pages/Settings.vue";
+import Home from "@/home/pages/Home.vue";
+import {ApiStore} from "@/api/store";
 
 export type NavigationState = {
   name: 'HOME' | 'SETTINGS' | 'MOVIE-TV-SEARCH' | 'SUBTITLE-SEARCH-FOR-MOVIES' | 'SUBTITLE-SEARCH-FOR-SERIES' | 'TRANSCRIPT';
   params: any;
+  component: any;
 };
 
 export interface ToHomePayload {
@@ -44,32 +53,59 @@ export interface NavigationStore {
   };
 }
 
-export const init = (): NavigationStore => {
+interface InitPayload {
+  use: {
+    apiStore: ApiStore
+  }
+}
+
+
+export const init = ({use}: InitPayload): NavigationStore => {
+
+  const component = computed(() => {
+    if (state.value.name === 'MOVIE-TV-SEARCH') {
+      return MovieTvSearch;
+    } else if ((state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' || state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES') && use.apiStore.state.value.version === 'stable') {
+      return SubtitleSearch;
+    } else if (state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' && use.apiStore.state.value.version === 'dev') {
+      return SubtitleSearchForMovies;
+    } else if (state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES' && use.apiStore.state.value.version === 'dev') {
+      return SubtitleSearchForSeries;
+    } else if (state.value.name === 'TRANSCRIPT') {
+      return Transcript;
+    } else if (state.value.name === 'SETTINGS') {
+      return Settings;
+    } else {
+      return Home;
+    }
+  });
+
   const state = ref<NavigationState>({
     name: 'HOME',
-    params: {}
+    params: {},
+    component
   });
 
   return {
     state: computed(() => state.value),
     actions: {
       toHome: (params: ToHomePayload = {contentTransitionName: 'content-navigate-shallow'}): void => {
-        state.value = {name: 'HOME', params};
+        state.value = {name: 'HOME', params, component};
       },
       toSettings: (params: ToSettingsPayload =  { contentTransitionName: 'content-navigate-deeper'}): void => {
-        state.value = {name: 'SETTINGS', params};
+        state.value = {name: 'SETTINGS', params, component};
       },
       toMovieTvSearch: (params: ToMovieTvSearchPayload = {contentTransitionName: 'content-navigate-deeper'}): void => {
-        state.value = {name: 'MOVIE-TV-SEARCH', params};
+        state.value = {name: 'MOVIE-TV-SEARCH', params, component};
       },
       toSubtitleSearchForMovies: (params: ToSubtitleSearchForMoviesPayload): void => {
-        state.value = {name: 'SUBTITLE-SEARCH-FOR-MOVIES', params};
+        state.value = {name: 'SUBTITLE-SEARCH-FOR-MOVIES', params, component};
       },
       toSubtitleSearchForSeries: (params: ToSubtitleSearchForSeriesPayload): void => {
-        state.value = {name: 'SUBTITLE-SEARCH-FOR-SERIES', params};
+        state.value = {name: 'SUBTITLE-SEARCH-FOR-SERIES', params, component};
       },
       toTranscript: (params: ToTranscriptPayload = {contentTransitionName: 'content-navigate-deeper'}): void => {
-        state.value = {name: 'TRANSCRIPT', params};
+        state.value = {name: 'TRANSCRIPT', params, component};
       }
     }
   };

@@ -14,6 +14,13 @@
       "19": "res/icons/browseraction.png"
     }
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "all_frames": true,
+      "js": ["contentScript.js"]
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   },

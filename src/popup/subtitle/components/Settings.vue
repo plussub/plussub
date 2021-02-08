@@ -11,7 +11,7 @@
           <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
             <div class="w-full flex px-2 mt-0.5">
-              <input ref="range" :value="offsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6" @input="setOffsetTimeDebounced" />
+              <input ref="range" :value="offsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6" @input="setOffsetTime" />
               <InputField v-model="offsetTime" step="100" type="number" class="pr-2" />
             </div>
           </div>
@@ -31,17 +31,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref } from 'vue';
+import {defineComponent, inject, onUnmounted, ref} from 'vue';
 import { computed } from '@vue/reactivity';
 import Expandable from '@/components/Expandable.vue';
 import Timeline from './Timeline.vue';
 import Excerpt from './Excerpt.vue';
 import InputField from '@/components/InputField.vue';
-import { debounce } from '@/composables';
-import { useTimeUpdate } from '@/video/composable';
 import { VideoStore } from '@/video/store';
 import Duration from 'luxon/src/duration';
 import { SubtitleStore } from '@/subtitle/store';
+import { asyncScheduler, Subject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 export default defineComponent({
   components: {
@@ -60,11 +60,8 @@ export default defineComponent({
 
     const currentTime = ref<string>(Duration.fromMillis(0).toFormat('hh:mm:ss'));
 
-    useTimeUpdate({
-      video: videoStore.getters.firstVideoWithSubtitle,
-      fn: ({ currentTime: currentTimeFromVideo }): void => {
-        currentTime.value = Duration.fromMillis(currentTimeFromVideo * 1000).toFormat('hh:mm:ss');
-      }
+    videoStore.actions.useTimeUpdate(({ time }): void => {
+      currentTime.value = Duration.fromMillis(time * 1000).toFormat('hh:mm:ss');
     });
 
     const offsetTime = computed({
@@ -74,18 +71,18 @@ export default defineComponent({
         subtitleStore.actions.setOffsetTime({ offsetTime: Number.isNaN(offsetTime) ? 0 : offsetTime });
       }
     });
-
-    const { fn: setOffsetTimeDebounced } = debounce<string>({
-      fn: (val) => val,
-      timeout: 50,
-      resultRef: offsetTime
+    const offsetTimeSubject = new Subject<string>();
+    offsetTimeSubject.pipe(throttleTime(50, asyncScheduler, { leading: true, trailing: true })).subscribe((val) => {
+      offsetTime.value = parseInt(val.toString());
     });
+    onUnmounted(() => offsetTimeSubject.unsubscribe());
+
     const range = ref<HTMLInputElement | null>(null);
 
     return {
       currentTime,
       range,
-      setOffsetTimeDebounced: () => setOffsetTimeDebounced(range.value?.value),
+      setOffsetTime: () => offsetTimeSubject.next(range.value?.value),
       offsetTime,
       reset: () => (offsetTime.value = 0),
       previewSelection: ref('excerpt')

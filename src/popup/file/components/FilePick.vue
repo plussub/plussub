@@ -69,7 +69,7 @@ export default defineComponent({
     const dragenter = (): void => containerRef.value.classList.add('bg-surface-200');
     const dragleave = (): void => containerRef.value.classList.remove('bg-surface-200');
 
-    onUnmounted(() => videoStore.actions.removeHighlightFromVideo());
+    onUnmounted(() => videoStore.actions.removeHighlight());
 
     const showFileErrorMsg = (msg: string) => {
       fileErrorMsg.value = msg;
@@ -89,10 +89,10 @@ export default defineComponent({
         appStore.actions.reset();
         fileStore.actions.reset();
         subtitleStore.actions.reset();
-        videoStore.actions.removeCurrentVideo();
+        videoStore.actions.removeCurrent();
         return;
       }
-      subtitleStore.actions.setRaw({ raw: result, format, id: fileName });
+      subtitleStore.actions.setRaw({ raw: result, format, id: fileName, language: null });
 
       try {
         subtitleStore.actions.parse();
@@ -101,7 +101,7 @@ export default defineComponent({
         appStore.actions.reset();
         fileStore.actions.reset();
         subtitleStore.actions.reset();
-        videoStore.actions.removeCurrentVideo();
+        videoStore.actions.removeCurrent();
         return;
       }
 
@@ -118,10 +118,9 @@ export default defineComponent({
       dragenter,
       dragleave,
       getVideoName,
-      highlightCurrentVideo: () => videoStore.actions.highlightVideo({ video: videoStore.getters.currentVideo.value }),
-      removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
-      videoCount: videoStore.getters.videoCount,
-      videosWithSubtitle: videoStore.getters.videosWithSubtitle,
+      highlightCurrentVideo: () => videoStore.actions.highlight({ video: videoStore.getters.current.value }),
+      removeHighlightFromVideo: videoStore.actions.removeHighlight,
+      videoCount: videoStore.getters.count,
 
       drop: (event: DragEvent): void => {
         let droppedFiles = event.dataTransfer?.files;

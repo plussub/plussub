@@ -185,7 +185,7 @@ export default defineComponent({
 
         download(openSubtitle)
           .then(({ raw, format }) => {
-            subtitleStore.actions.setRaw({ raw, format, id: openSubtitle.attributes.files[0].file_name });
+            subtitleStore.actions.setRaw({ raw, format, id: openSubtitle.attributes.files[0].file_name, language: language.value.iso639_2 });
             subtitleStore.actions.parse();
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));

@@ -1,28 +1,19 @@
-import { computed, ComputedRef, Ref, ref } from 'vue';
-import { AddSubtitle, GetBoundingClientRect, postWindowMessage, RemoveSubtitle, RemoveVideoInIFrameEvent, SetVideoTime, VideoBoundingClientRect, VideosInIFrameEvent } from '@/composables';
+import {computed, ComputedRef, onUnmounted, Ref, ref, watch} from 'vue';
 import { SubtitleEntry } from '@/subtitle/store';
+import { ContentScriptStore } from '@/contentScript/store';
+import { filter } from 'rxjs/operators';
+import {Subject} from "rxjs";
 
-type VideoSrc = string;
+interface InitPayload {
+  use: {
+    contentScriptStore: ContentScriptStore;
+  };
+}
 
 export interface Video {
-  src: string;
+  id: string;
   hasSubtitle: boolean;
-  in: 'I_FRAME' | 'HOST';
-  el?: HTMLVideoElement;
-}
-
-export interface IFrameSource {
-  window: Window;
-  frameSrc: string;
   origin: string;
-}
-
-// don't make source(of iframe) reactive as it will cause cors problem
-const srcToIFrameSource: Record<VideoSrc, IFrameSource> = {};
-
-export interface VideoState {
-  srcToHostVideo: Record<VideoSrc, Video>;
-  srcToIFrameVideo: Record<VideoSrc, Video>;
 }
 
 type CurrentSelectedVideoState = Video | null;
@@ -34,304 +25,163 @@ declare global {
 }
 
 export interface VideoStore {
-  state: ComputedRef<VideoState>;
   actions: {
-    setCurrentVideo: (payload: { video: Video }) => void;
-    removeCurrentVideo: () => void;
-    findVideosInCurrentFrame: () => void;
-    addIFrameVideos: (payload: MessageEvent<VideosInIFrameEvent>) => void;
-    removeIFrameVideos: (payload: MessageEvent<RemoveVideoInIFrameEvent>) => { removedVideoWithSubtitle: boolean };
-    addVttTo: (payload: { video: Video; subtitles: SubtitleEntry[]; subtitleId: string }) => void;
-    removeVttFrom: (payload: { video: Video | null }) => void;
-    setCurrentTime: (payload: { video: Video; time: number }) => void;
-    highlightVideo: (payload: { video: Video | null }) => void;
-    removeHighlightFromVideo: () => void;
-    unmount: () => void;
+    setCurrent: (payload: { video: Pick<Video, 'id'> }) => void;
+    removeCurrent: () => void;
+    addVtt: (payload: { subtitles: SubtitleEntry[]; subtitleId: string; language: string }) => void;
+    removeVtt: () => void;
+    setTime: (payload: { time: number }) => void;
+    useTimeUpdate: (fn: (payload: { time: number }) => void) => void;
+    highlight: (payload: { video: Pick<Video, 'id'> | null }) => void;
+    removeHighlight: () => void;
   };
   getters: {
-    currentVideo: ComputedRef<Video | null>;
-    srcToGlobalVideo: ComputedRef<Record<VideoSrc, Video>>;
-    videoList: ComputedRef<Video[]>;
-    videosWithSubtitle: ComputedRef<Video[]>;
-    firstVideoWithSubtitle: ComputedRef<Video | undefined>;
-    videoCount: ComputedRef<number>;
+    current: ComputedRef<Video | null>;
+    list: ComputedRef<Video[]>;
+    count: ComputedRef<number>;
   };
 }
 
-const cues: Record<string, VTTCue[]> = {};
-const isValidVideo = (el: HTMLVideoElement): boolean => el.offsetWidth !== 0 && el.offsetHeight !== 0 && el.currentSrc !== '';
-export const isElementNotInViewport = (el: Element) => el.getBoundingClientRect().top >= (window.innerHeight || document.documentElement.clientHeight) || el.getBoundingClientRect().bottom <= 0;
-
-const urlToVideoSrc = (url: URL) => url.origin + url.pathname + url.search;
-
-const findVideosInCurrentFrame = (): Record<VideoSrc, Video> => {
-  return Object.fromEntries(
-    [...document.querySelectorAll('video')]
-      .filter((el) => isValidVideo(el))
-      .map((el) => ({
-        el,
-        videoSrc: urlToVideoSrc(new URL(el.currentSrc))
-      }))
-      .map(({ el, videoSrc }) => [
-        videoSrc,
-        {
-          src: videoSrc,
-          in: 'HOST',
-          hasSubtitle: el.classList.contains('plussub'),
-          el
-        }
-      ])
-  );
-};
-
-export const init = (): VideoStore => {
+export const init = ({ use }: InitPayload): VideoStore => {
   window.plusSub_currentSelectedVideo = window.plusSub_currentSelectedVideo ? ref(window.plusSub_currentSelectedVideo.value) : ref<CurrentSelectedVideoState>(null);
 
-  const state = ref<VideoState>({
-    srcToHostVideo: {},
-    srcToIFrameVideo: {}
+  const videos = ref<Record<string, Video>>({});
+
+  const findVideoResultSubscription = use.contentScriptStore.state.messageObservable.pipe(filter((e) => e.data.plusSubActionFromContentScript === 'FIND_VIDEOS_RESULT')).subscribe((e) => {
+    videos.value = {
+      ...Object.fromEntries(Object.entries(videos.value).filter(([id]) => !e.data.videos.removed.includes(id))),
+      ...e.data.videos.founded
+    };
+    const currentSelected = window.plusSub_currentSelectedVideo.value;
+    if (currentSelected && e.data.videos.removed.includes(currentSelected.id)) {
+      console.warn('current selected video was removed');
+      window.plusSub_currentSelectedVideo.value = null;
+    }
   });
 
-  const srcToGlobalVideo = computed(() => ({
-    ...state.value.srcToHostVideo,
-    ...state.value.srcToIFrameVideo
-  }));
+  const timeSubject = new Subject<number>();
+  const timeUpdateSubscription = use.contentScriptStore.state.messageObservable
+    .pipe(filter((e) => e.data.plusSubActionFromContentScript === 'TIME_UPDATE'))
+    .subscribe((e) => timeSubject.next(e.data.time));
 
-  const videoList = computed(() => Object.values(srcToGlobalVideo.value));
-  const videosWithSubtitle = computed(() => videoList.value.filter((e) => e.hasSubtitle));
+  const iFrameConnectionSubscription = use.contentScriptStore.state.connectionObservable.subscribe((e) => {
+    if (e.action === 'ADD') {
+      use.contentScriptStore.actions.sendCommand(e.origin, { plusSubActionFromPopup: 'FIND_VIDEOS' });
+    }
+  });
+
+  onUnmounted(() => {
+    iFrameConnectionSubscription.unsubscribe();
+    findVideoResultSubscription.unsubscribe();
+    timeUpdateSubscription.unsubscribe();
+  })
+
+
+  const removeVtt = ({id, origin}: Pick<Video, 'id' | 'origin'>) => {
+    use.contentScriptStore.actions.sendCommand(origin, {
+      plusSubActionFromPopup: 'REMOVE_SUBTITLE',
+      video: {
+        id
+      }
+    });
+  }
+
+  watch(
+    () => window.plusSub_currentSelectedVideo.value,
+    (current, prev) => {
+      if(current === null && prev !== null){
+        removeVtt(prev);
+      }
+    }
+  );
+
 
   return {
-    state: computed(() => state.value),
     actions: {
-      setCurrentVideo: ({ video }: { video: Video }) => {
-        window.plusSub_currentSelectedVideo.value = video;
+      setCurrent: ({ video: { id } }: { video: Pick<Video, 'id'> }) => {
+        window.plusSub_currentSelectedVideo.value = videos.value[id] ?? null;
       },
-      removeCurrentVideo: () => {
+      removeCurrent: () => {
         window.plusSub_currentSelectedVideo.value = null;
       },
-      findVideosInCurrentFrame: () => {
-        state.value.srcToHostVideo = findVideosInCurrentFrame();
+      addVtt: ({ subtitles, subtitleId, language }: { subtitles: SubtitleEntry[]; subtitleId: string, language: string }): void => {
+        const video = window.plusSub_currentSelectedVideo.value;
+        if(!video){
+          return;
+        }
+        use.contentScriptStore.actions.sendCommand(video.origin, {
+          plusSubActionFromPopup: 'ADD_SUBTITLE',
+          video: {
+            id: video.id
+          },
+          subtitle: {
+            id: subtitleId,
+            entries: JSON.parse(JSON.stringify(subtitles)),
+            language
+          }
+        });
       },
-      addIFrameVideos: (payload: MessageEvent<VideosInIFrameEvent>) => {
-        payload.data.videos.forEach((e) => {
-          srcToIFrameSource[urlToVideoSrc(new URL(e.currentSrc))] = {
-            window: payload.source as Window,
-            frameSrc: payload.data.frameSrc,
-            origin: payload.origin
-          };
+      removeVtt: (): void => {
+        const video = window.plusSub_currentSelectedVideo.value;
+        if(!video){
+          return;
+        }
+        removeVtt(video);
+      },
+      setTime: ({ time }: { time: number }): void => {
+        const video = window.plusSub_currentSelectedVideo.value;
+        if (!video) {
+          console.warn('setTime: current video not found');
+          return;
+        }
+        use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
+          plusSubActionFromPopup: 'SET_TIME',
+          id: video.id,
+          time
+        });
+      },
+
+      useTimeUpdate: (fn: (payload: { time: number }) => void) => {
+        const video = window.plusSub_currentSelectedVideo.value;
+        if(!video){
+          console.warn('useTimeUpdate: current video not found');
+          return;
+        }
+
+        use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
+          plusSubActionFromPopup: 'ENABLE_TIME_UPDATE',
+          id: video.id
         });
 
-        Object.assign(
-          state.value.srcToIFrameVideo,
-          Object.fromEntries(
-            payload.data.videos.map((e) => [
-              urlToVideoSrc(new URL(e.currentSrc)),
-              {
-                hasSubtitle: e.hasSubtitle,
-                src: urlToVideoSrc(new URL(e.currentSrc)),
-                in: 'I_FRAME'
-              }
-            ])
-          )
-        );
-      },
-      removeIFrameVideos: (payload: MessageEvent<RemoveVideoInIFrameEvent>): { removedVideoWithSubtitle: boolean } => {
-        const videoSrc = urlToVideoSrc(new URL(payload.data.currentSrc));
-        const removedVideoWithSubtitle = state.value.srcToIFrameVideo.value[videoSrc]?.hasSubtitle;
-        delete state.value.srcToIFrameVideo.value[videoSrc];
-        delete srcToIFrameSource[payload.data.frameSrc];
-        return {
-          removedVideoWithSubtitle
-        };
-      },
-      addVttTo: ({ video, subtitles, subtitleId }: { video: Video; subtitles: SubtitleEntry[]; subtitleId: string }): void => {
-        if (video.in === 'HOST') {
-          if (!video.el) {
-            return;
-          }
-          if (cues[subtitleId]) {
-            cues[subtitleId].forEach((c, idx) => {
-              c.startTime = subtitles[idx].from / 1000;
-              c.endTime = subtitles[idx].to / 1000;
-            });
-            return;
-          }
-          cues[subtitleId] = subtitles.map((srt) => new VTTCue(srt.from / 1000, srt.to / 1000, `<c.plussub>${srt.text}</c.plussub>`));
-          Array.from(video.el.textTracks).forEach((track) => (track.mode = 'hidden'));
-          const track = video.el.addTextTrack('subtitles', `Plussub`, 'en');
-          cues[subtitleId].forEach((cue) => track.addCue(cue));
-          track.mode = 'showing';
-          video.el.classList.add('plussub');
-        } else {
-          const iFrameSource = srcToIFrameSource[video.src];
-          if (!iFrameSource) {
-            return;
-          }
-          postWindowMessage({
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            window: iFrameSource.window,
-            origin: iFrameSource.origin,
-            payload: {
-              plusSubAction: AddSubtitle,
-              src: video.src,
-              // get rid of all proxies ... dont knnow a better way yet -_(*.*)_-
-              subtitles: JSON.parse(JSON.stringify(subtitles)),
-              subtitleId
-            }
+        const sub = timeSubject.subscribe(time => fn({time}))
+
+        onUnmounted(() => {
+          sub.unsubscribe();
+          use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
+            plusSubActionFromPopup: 'DISABLE_TIME_UPDATE'
           });
-        }
-        video.hasSubtitle = true;
+        });
       },
-      removeVttFrom: ({ video }: { video: Video | null }): void => {
+      highlight: ({ video }: { video: Pick<Video, 'id'> | null }): void => {
         if (!video) {
+          console.warn('highlight: video not found');
           return;
         }
-        if (video.in === 'HOST') {
-          if (!video.el) {
-            return;
-          }
-          Object.keys(cues).forEach((k) => delete cues[k]);
-          video.el.classList.remove('plussub');
-          Array.from(video.el.textTracks)
-            .filter((track) => track.label === 'Plussub')
-            .forEach((track) => (track.mode = 'disabled'));
-        } else {
-          const iFrameSource = srcToIFrameSource[video.src];
-          if (!iFrameSource) {
-            return;
-          }
-          postWindowMessage({
-            window: iFrameSource.window,
-            origin: iFrameSource.origin,
-            payload: {
-              plusSubAction: RemoveSubtitle,
-              src: video.src
-            }
-          });
-        }
-        video.hasSubtitle = false;
+        use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
+          plusSubActionFromPopup: 'HIGHLIGHT_VIDEO',
+          id: video.id
+        });
       },
-      setCurrentTime: ({ video, time }: { video: Video; time: number }): void => {
-        if (video.in === 'HOST') {
-          if (video.el) {
-            video.el.currentTime = time;
-          }
-        } else {
-          const iFrameSource = srcToIFrameSource[video.src];
-          if (!iFrameSource) {
-            return;
-          }
-          postWindowMessage({
-            window: iFrameSource.window,
-            origin: iFrameSource.origin,
-            payload: {
-              plusSubAction: SetVideoTime,
-              src: video.src,
-              time
-            }
-          });
-        }
-      },
-      highlightVideo: ({ video }: { video: Video | null }): void => {
-        if (!video) {
-          return;
-        }
-        if (video.in === 'HOST') {
-          if (!video.el) {
-            return;
-          }
-
-          if (isElementNotInViewport(video.el)) {
-            video.el.scrollIntoView({ block: 'center' });
-            const plussubShadow = document.getElementById('plussubShadow');
-            if (!plussubShadow) {
-              return;
-            }
-            plussubShadow.style.top = `${(window.scrollY + 30).toString()}px`;
-          }
-
-          const overlayHighlight = document.getElementById('plussub-overlay-highlight');
-          if (!overlayHighlight) {
-            return;
-          }
-
-          const { top, left, height, width } = video.el.getBoundingClientRect();
-          overlayHighlight.style.cssText = `position: absolute; z-index: 9999; background-color: rgba(40, 58, 90, 0.8); width: ${width}px; height: ${height}px; top: ${window.scrollY + top}px; left: ${
-            window.scrollX + left
-          }px;`;
-        } else {
-          const el = document.querySelector(`iframe[src="${srcToIFrameSource[video.src].frameSrc}"]`);
-          if (!el) {
-            return;
-          }
-
-          if (isElementNotInViewport(el)) {
-            el.scrollIntoView({ block: 'center' });
-            const plussubShadow = document.getElementById('plussubShadow');
-            if (!plussubShadow) {
-              return;
-            }
-            plussubShadow.style.top = `${(window.scrollY + 30).toString()}px`;
-          }
-
-          const overlayHighlight = document.getElementById('plussub-overlay-highlight');
-          if (!overlayHighlight) {
-            return;
-          }
-          console.warn('before declare');
-
-          // Not use useWindowMessage as I want to remove event listener immediately
-          // todo: implement once
-          const handleMessageInPageVideos = (e) => {
-            const { plusSubAction, boundingClientRect } = e.data;
-            if (plusSubAction === VideoBoundingClientRect) {
-              window.removeEventListener('message', handleMessageInPageVideos);
-              const iframeBoundingClientRect = el.getBoundingClientRect();
-              const iFrameTop = iframeBoundingClientRect.top;
-              const iFrameLeft = iframeBoundingClientRect.left;
-              const { top, left, height, width } = boundingClientRect;
-              overlayHighlight.style.cssText = `position: absolute; z-index: 9999; background-color: rgba(40, 58, 90, 0.8); width: ${width}px; height: ${height}px; top: ${
-                window.scrollY + top + iFrameTop
-              }px; left: ${window.scrollX + left + iFrameLeft}px;`;
-            }
-          };
-          window.addEventListener('message', handleMessageInPageVideos);
-          postWindowMessage({
-            window: srcToIFrameSource[video.src].window,
-            origin: srcToIFrameSource[video.src].origin,
-            payload: {
-              plusSubAction: GetBoundingClientRect,
-              src: video.src
-            }
-          });
-        }
-      },
-      removeHighlightFromVideo: () => {
-        const overlayHightlight = document.getElementById('plussub-overlay-highlight');
-        if (!overlayHightlight) {
-          return;
-        }
-        overlayHightlight.style.cssText = `width: 0px; height: 0px;`;
-      },
-      unmount: () => {
-        Object.values(srcToIFrameSource).forEach((iFrameSource) => {
-          postWindowMessage({
-            window: iFrameSource.window,
-            origin: iFrameSource.origin,
-            payload: {
-              plusSubAction: 'CLOSE'
-            }
-          });
+      removeHighlight: () => {
+        new Set(Object.values(videos.value).map(({ origin }) => origin)).forEach((origin) => {
+          use.contentScriptStore.actions.sendCommand(origin, { plusSubActionFromPopup: 'REMOVE_HIGHLIGHT_FROM_VIDEO' });
         });
       }
     },
     getters: {
-      currentVideo: computed(() => window.plusSub_currentSelectedVideo.value),
-      srcToGlobalVideo,
-      videoList,
-      videosWithSubtitle,
-      firstVideoWithSubtitle: computed(() => videosWithSubtitle.value[0]),
-      videoCount: computed(() => videoList.value.length)
+      current: computed(() => window.plusSub_currentSelectedVideo.value),
+      list: computed(() => Object.values(videos.value)),
+      count: computed(() => Object.keys(videos.value).length )
     }
   };
 };

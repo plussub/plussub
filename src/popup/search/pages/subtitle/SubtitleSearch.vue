@@ -140,7 +140,7 @@ export default defineComponent({
         appStore.actions.setState({ state: 'DOWNLOADING' });
         download(openSubtitle)
           .then(({ raw, format }) => {
-            subtitleStore.actions.setRaw({ raw, format, id: openSubtitle.SubHash });
+            subtitleStore.actions.setRaw({ raw, format, id: openSubtitle.SubHash, language: language.value.iso639_2 });
             subtitleStore.actions.parse();
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));

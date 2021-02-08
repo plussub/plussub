@@ -20,7 +20,6 @@ import { SubtitleStore } from '@/subtitle/store';
 import Duration from 'luxon/src/duration';
 import { findNext } from './findNext';
 import { VideoStore} from '@/video/store';
-import { useTimeUpdate } from '@/video/composable';
 
 export default defineComponent({
   setup() {
@@ -33,12 +32,8 @@ export default defineComponent({
 
     const currentTime = ref<number>(0);
 
-    // todo fix with video src
-    useTimeUpdate({
-      video: videoStore.getters.firstVideoWithSubtitle,
-      fn: ({ currentTime: currentTimeFromVideo }): void => {
-        currentTime.value = currentTimeFromVideo;
-      }
+    videoStore.actions.useTimeUpdate(({ time }): void => {
+        currentTime.value = time;
     });
 
     const currentPos = ref(-1);

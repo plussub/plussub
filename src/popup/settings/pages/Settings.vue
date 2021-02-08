@@ -54,7 +54,6 @@ export default defineComponent({
     if(!searchStore || !apiStore || !navigationStore || !videoStore){
       throw new Error('inject failed');
     }
-
     return {
       preferredLanguage: computed(() => searchStore.state.value.preferredLanguage),
       apiVersion: computed({
@@ -70,7 +69,7 @@ export default defineComponent({
         searchStore.actions.setPreferredLanguage({preferredLanguage: 'en'});
         apiStore.actions.setVersion({version: 'stable'});
       },
-      backFn: () => (videoStore.getters.videoCount.value === 1 ? navigationStore.actions.toMovieTvSearch() : navigationStore.actions.toHome())
+      backFn: () => (videoStore.getters.count.value === 1 ? navigationStore.actions.toMovieTvSearch() : navigationStore.actions.toHome())
     };
   }
 });

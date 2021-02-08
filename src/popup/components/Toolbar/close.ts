@@ -1,4 +1,4 @@
-import { useApp } from '@/inHost';
+import { useApp } from '@/index';
 
 export const close = (): void => {
   const app = useApp();

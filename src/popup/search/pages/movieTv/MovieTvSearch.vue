@@ -111,7 +111,7 @@ export default defineComponent({
       loading,
       entries,
 
-      videoCount: videoStore.getters.videoCount,
+      videoCount: videoStore.getters.count,
       getVideoName,
       toSettings: navigationStore.actions.toSettings,
       changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
@@ -133,7 +133,7 @@ export default defineComponent({
         });
       },
       backFn: (): void => {
-        videoStore.actions.removeCurrentVideo();
+        videoStore.actions.removeCurrent();
         navigationStore.actions.toHome();
       }
     };

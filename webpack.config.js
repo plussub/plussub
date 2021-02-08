@@ -6,14 +6,14 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
   const browser = (argv.browser ? argv.browser.toLowerCase() : 'unknown').trim();
-  if(browser !== 'chrome' && browser !== 'firefox'){
+  if (browser !== 'chrome' && browser !== 'firefox') {
     throw new Error(`unknown browser: ${browser}`);
   }
 
   return {
     devtool: false,
     mode: argv.mode ? argv.mode : 'development',
-    entry: { popup: './popup/index.ts', background: './background/index.ts' },
+    entry: { popup: './popup/index.ts', background: './background/index.ts', contentScript: './contentScript/index.ts' },
     context: path.resolve(__dirname, 'src'),
     output: {
       filename: '[name].js',
@@ -93,9 +93,7 @@ module.exports = (env, argv) => {
         }
       ]
     },
-    optimization: {
-
-    },
+    optimization: {},
     plugins: [
       new VueLoaderPlugin(),
       new CopyPlugin({

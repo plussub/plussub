@@ -81,7 +81,7 @@ export default defineComponent({
     const releaseDate = computed(() => searchStore.state.value.tmdb?.release_date.substr(0, 4) ?? null);
 
     onUnmounted(() => {
-      videoStore.actions.removeHighlightFromVideo();
+      videoStore.actions.removeHighlight();
     });
 
     return {
@@ -91,10 +91,10 @@ export default defineComponent({
         appStore.actions.reset();
         searchStore.actions.reset();
         subtitleStore.actions.reset();
-        videoStore.actions.removeCurrentVideo();
+        videoStore.actions.removeCurrent();
       },
-      highlightCurrentVideo: () => videoStore.actions.highlightVideo({ video: videoStore.getters.currentVideo.value }),
-      removeHighlightFromVideo: videoStore.actions.removeHighlightFromVideo,
+      highlightCurrentVideo: () => videoStore.actions.highlight({ video: videoStore.getters.current.value }),
+      removeHighlightFromVideo: videoStore.actions.removeHighlight,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() =>
         [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n')
