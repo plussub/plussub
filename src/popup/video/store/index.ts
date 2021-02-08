@@ -3,6 +3,7 @@ import { SubtitleEntry } from '@/subtitle/store';
 import { ContentScriptStore } from '@/contentScript/store';
 import { filter } from 'rxjs/operators';
 import {Subject} from "rxjs";
+import {nanoid} from "nanoid";
 
 interface InitPayload {
   use: {
@@ -148,9 +149,15 @@ export const init = ({ use }: InitPayload): VideoStore => {
           return;
         }
 
+        const subscriptionId = nanoid(12);
         use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
-          plusSubActionFromPopup: 'ENABLE_TIME_UPDATE',
-          id: video.id
+          plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
+          video: {
+            id: video.id
+          },
+          subscription: {
+            id: subscriptionId
+          }
         });
 
         const sub = timeSubject.subscribe(time => fn({time}))
@@ -158,7 +165,13 @@ export const init = ({ use }: InitPayload): VideoStore => {
         onUnmounted(() => {
           sub.unsubscribe();
           use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
-            plusSubActionFromPopup: 'DISABLE_TIME_UPDATE'
+            plusSubActionFromPopup: 'UNSUBSCRIBE_TO_TIME_UPDATE',
+            video: {
+              id: video.id
+            },
+            subscription: {
+              id: subscriptionId
+            }
           });
         });
       },
