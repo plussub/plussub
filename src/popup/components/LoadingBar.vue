@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style="box-sizing: border-box">
     <transition name="fade-loading-bar" mode="out-in">
-      <div v-if="loading || error" class="h-px relative border-t border-solid border-surface-200 w-full">
+      <div v-if="loading || error" class="h-px relative border-t border-solid border-surface-200 mr-1">
         <div class="absolute h-1" :class="{'loading-bar': !error, 'bg-primary-700': !error, 'bg-error-icon': error, 'w-full': error}">&nbsp;</div>
       </div>
     </transition>
@@ -54,7 +54,7 @@ export default defineComponent({
     width: 0;
   }
   50% {
-    width: 100%;
+    width: calc(100% - 5px);
   }
   100% {
     right: 0;

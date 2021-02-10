@@ -50,8 +50,8 @@ import Divider from '@/components/Divider.vue';
 import MovieTvSearchEntry from './MovieTvSearchEntry.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
-import { asyncScheduler, from, Subject } from 'rxjs';
-import { concatMap, filter, tap, throttleTime } from 'rxjs/operators';
+import { asyncScheduler, from, Subject, merge } from 'rxjs';
+import { switchMap, filter, debounceTime, map, throttleTime, tap } from 'rxjs/operators';
 
 export default defineComponent({
   components: {
@@ -88,20 +88,23 @@ export default defineComponent({
     const entries = ref<VideoSearch_videoSearch_entries[]>([]);
 
     const searchQuerySubject = new Subject<string>();
-    const searchRequestSubscription = searchQuerySubject
-      .pipe(
-        filter((v) => v.trim() !== ''),
-        tap(() => (loading.value = true)),
-        throttleTime(750, asyncScheduler, {
-          trailing: true,
-          leading: true
-        }),
-        concatMap((query) => from(searchQuery({ query })))
-      )
-      .subscribe((result) => {
+    const searchRequestObservable = searchQuerySubject.pipe(
+      map((q) => q.trim()),
+      tap(() => (loading.value = true)),
+      throttleTime(750, asyncScheduler, {
+        trailing: true,
+        leading: true
+      }),
+      switchMap((query) => (query !== '' ? from(searchQuery({ query })) : from(Promise.resolve({ videoSearch: { entries: [] }, query: '' }))))
+    );
+
+    const searchRequestSubscription = searchRequestObservable.subscribe((result) => {
+      if (result.query === internalQuery.value.trim()) {
         loading.value = false;
         entries.value = result.videoSearch.entries;
-      });
+      }
+    });
+
     watch(internalQuery, (query) => searchQuerySubject.next(query), { immediate: true });
 
     onUnmounted(() => searchRequestSubscription.unsubscribe());
