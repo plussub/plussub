@@ -1,8 +1,8 @@
 import { VideoMap } from './VideoMap';
 import { postMessage } from './postMessage';
-import { filter, mergeMap, skip, takeUntil } from 'rxjs/operators';
+import { filter, mergeMap, share, skip, takeUntil } from 'rxjs/operators';
 import { fromEvent, merge, Observable } from 'rxjs';
-import { create as _createVideoElementMutationObservable } from './videoElementMutationObservable';
+import { create as createVideoElementMutationObservable } from './videoElementMutationObservable';
 import { MessageEventFromPopup } from './types';
 
 interface Payload {
@@ -24,25 +24,23 @@ export const init = ({ messageObservable, connectionObservable }: Payload): Resu
 
   messageObservable.pipe(filter((e) => e.data.plusSubActionFromPopup === 'FIND_VIDEOS')).subscribe(() => findVideos());
 
-
   const disconnect = connectionObservable.pipe(
     skip(1),
     filter((c) => !c)
   );
 
-  const createVideoElementMutationObservable = () =>
-    _createVideoElementMutationObservable().pipe(
-      filter(({ added }) => added.length > 0),
-      takeUntil(disconnect),
-      mergeMap(({ added }) => merge(...added.map((el) => fromEvent(el, 'loadedmetadata').pipe(takeUntil(disconnect)))))
-    );
-
   const createLoadedmetadataObservables = () => [...document.querySelectorAll('video')].map((el) => fromEvent(el, 'loadedmetadata').pipe(takeUntil(disconnect)));
+  const videoElementMutationObservable = createVideoElementMutationObservable().pipe(share(), takeUntil(disconnect));
+
+  const newAddedVideosLoadedmetadataObservables = videoElementMutationObservable.pipe(
+    filter(({ added }) => added.length > 0),
+    mergeMap(({ added }) => merge(...added.map((el) => fromEvent(el, 'loadedmetadata').pipe(takeUntil(disconnect)))))
+  );
 
   connectionObservable
     .pipe(
       filter((v) => v),
-      mergeMap(() => merge(...createLoadedmetadataObservables(), createVideoElementMutationObservable()))
+      mergeMap(() => merge(...createLoadedmetadataObservables(), videoElementMutationObservable, newAddedVideosLoadedmetadataObservables))
     )
     .subscribe(() => findVideos());
 
