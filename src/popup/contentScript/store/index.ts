@@ -82,7 +82,9 @@ export const init = (): ContentScriptStore => {
       sendCommand: (origin: string, payload: Record<string, unknown>) => {
         const source = originToSource[origin];
         if (!source) {
-          console.warn(`source for origin ${{ origin }} not found`);
+          console.warn(`source for origin ${ origin } not found`);
+          console.warn(payload);
+          console.warn(originToSource);
           return;
         }
         source.postMessage(payload, '*');

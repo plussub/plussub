@@ -44,9 +44,7 @@ export const init = ({ messageObservable, connectionObservable }: Payload): Resu
       filter((v) => v),
       mergeMap(() => merge(...createLoadedmetadataObservables(), createVideoElementMutationObservable()))
     )
-    .subscribe(() => {
-      findVideos();
-    });
+    .subscribe(() => findVideos());
 
   return {
     videoMap

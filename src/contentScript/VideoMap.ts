@@ -28,7 +28,11 @@ export class VideoMap {
 
     const includedButWithSameCurrentSrc = included.filter(({ el }) => this.elementToVideo.get(el)!.src === normalizeCurrentSrc(new URL(el.currentSrc)));
     const includedButWithNewCurrentSrc = included.filter(({ el }) => this.elementToVideo.get(el)!.src !== normalizeCurrentSrc(new URL(el.currentSrc)));
-    includedButWithNewCurrentSrc.forEach(({ el }) => el.classList.remove('plussub'));
+    includedButWithNewCurrentSrc.forEach(({ el }) => {
+      //todo maybe only hide plussub subtitle?
+      Array.from(el.textTracks).forEach((track) => (track.mode = 'hidden'));
+      el.classList.remove('plussub');
+    });
     const changedCurrentSrc = includedButWithNewCurrentSrc.map((video) => ({
       id: nanoid(12),
       el: video.el,

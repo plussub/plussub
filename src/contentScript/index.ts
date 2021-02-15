@@ -16,7 +16,7 @@ import { MessageEventFromPopup } from './types';
     share()
   );
 
-  messageObservable.subscribe(e => console.warn(e.data));
+  messageObservable.subscribe((e) => console.warn(e.data));
 
   type RequestForRegisterMessageEvent = MessageEventFromPopup<'REQUEST_FOR_REGISTER'> & { data: { id: string } };
 
@@ -43,8 +43,7 @@ import { MessageEventFromPopup } from './types';
   initSubtitle({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
   initTime({
     getElementFrom: (id: string) => videoMap.getElementFrom(id),
-    messageObservable,
-    connectionObservable
+    messageObservable
   });
 
   postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' });

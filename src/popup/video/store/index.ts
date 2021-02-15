@@ -1,9 +1,9 @@
-import {computed, ComputedRef, onUnmounted, Ref, ref, watch} from 'vue';
+import { computed, ComputedRef, onUnmounted, Ref, ref, watch } from 'vue';
 import { SubtitleEntry } from '@/subtitle/store';
 import { ContentScriptStore } from '@/contentScript/store';
 import { filter } from 'rxjs/operators';
-import {Subject} from "rxjs";
-import {nanoid} from "nanoid";
+import { Subject } from 'rxjs';
+import { nanoid } from 'nanoid';
 
 interface InitPayload {
   use: {
@@ -75,27 +75,25 @@ export const init = ({ use }: InitPayload): VideoStore => {
     iFrameConnectionSubscription.unsubscribe();
     findVideoResultSubscription.unsubscribe();
     timeUpdateSubscription.unsubscribe();
-  })
+  });
 
-
-  const removeVtt = ({id, origin}: Pick<Video, 'id' | 'origin'>) => {
+  const removeVtt = ({ id, origin }: Pick<Video, 'id' | 'origin'>) => {
     use.contentScriptStore.actions.sendCommand(origin, {
       plusSubActionFromPopup: 'REMOVE_SUBTITLE',
       video: {
         id
       }
     });
-  }
+  };
 
   watch(
     () => window.plusSub_currentSelectedVideo.value,
     (current, prev) => {
-      if(current === null && prev !== null){
+      if (current === null && prev !== null) {
         removeVtt(prev);
       }
     }
   );
-
 
   return {
     actions: {
@@ -105,9 +103,9 @@ export const init = ({ use }: InitPayload): VideoStore => {
       removeCurrent: () => {
         window.plusSub_currentSelectedVideo.value = null;
       },
-      addVtt: ({ subtitles, subtitleId, language }: { subtitles: SubtitleEntry[]; subtitleId: string, language: string }): void => {
+      addVtt: ({ subtitles, subtitleId, language }: { subtitles: SubtitleEntry[]; subtitleId: string; language: string }): void => {
         const video = window.plusSub_currentSelectedVideo.value;
-        if(!video){
+        if (!video) {
           return;
         }
         use.contentScriptStore.actions.sendCommand(video.origin, {
@@ -124,7 +122,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
       },
       removeVtt: (): void => {
         const video = window.plusSub_currentSelectedVideo.value;
-        if(!video){
+        if (!video) {
           return;
         }
         removeVtt(video);
@@ -144,27 +142,31 @@ export const init = ({ use }: InitPayload): VideoStore => {
 
       useTimeUpdate: (fn: (payload: { time: number }) => void) => {
         const video = window.plusSub_currentSelectedVideo.value;
-        if(!video){
+        if (!video) {
           console.warn('useTimeUpdate: current video not found');
           return;
         }
+        const origin = video.origin;
 
         const subscriptionId = nanoid(12);
-        use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
-          plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
-          video: {
-            id: video.id
-          },
-          subscription: {
-            id: subscriptionId
-          }
-        });
+        // todo trigger after content script synced
+        setTimeout(() => {
+          use.contentScriptStore.actions.sendCommand(origin, {
+            plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
+            video: {
+              id: video.id
+            },
+            subscription: {
+              id: subscriptionId
+            }
+          });
+        }, 1000);
 
-        const sub = timeSubject.subscribe(time => fn({time}))
+        const sub = timeSubject.subscribe((time) => fn({ time }));
 
         onUnmounted(() => {
           sub.unsubscribe();
-          use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
+          use.contentScriptStore.actions.sendCommand(origin, {
             plusSubActionFromPopup: 'UNSUBSCRIBE_TO_TIME_UPDATE',
             subscription: {
               id: subscriptionId
@@ -191,7 +193,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
     getters: {
       current: computed(() => window.plusSub_currentSelectedVideo.value),
       list: computed(() => Object.values(videos.value)),
-      count: computed(() => Object.keys(videos.value).length )
+      count: computed(() => Object.keys(videos.value).length)
     }
   };
 };

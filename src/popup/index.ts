@@ -7,7 +7,6 @@ let app: App;
 
 export const init = async (): Promise<void> => {
   if (document.getElementById('plusSubShadow')) {
-    console.warn('fuck');
     document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`)
   } else {
 
