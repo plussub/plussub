@@ -113,6 +113,18 @@ export default defineComponent({
     const episodeCount = ref(99);
     const showEpisodeSelection = ref(false);
 
+    const setSetShowSelection = (apply: boolean, { language, season, episode }: { language: boolean; season: boolean; episode: boolean }) => {
+      if(!apply){
+        return;
+      }
+      showLanguageSelection.value = language;
+      showSeasonSelection.value = season;
+      showEpisodeSelection.value = episode;
+    };
+    watch(showLanguageSelection, (show) => setSetShowSelection(show, { language: show, season: false, episode: false }));
+    watch(showSeasonSelection, (show) => setSetShowSelection(show, { language: false, season: show, episode: false }));
+    watch(showEpisodeSelection, (show) => setSetShowSelection(show, { language: false, season: false, episode: show }));
+
     const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
 
     const loading = ref(true);
@@ -185,7 +197,12 @@ export default defineComponent({
 
         download(openSubtitle)
           .then(({ raw, format }) => {
-            subtitleStore.actions.setRaw({ raw, format, id: openSubtitle.attributes.files[0].file_name, language: language.value.iso639_2 });
+            subtitleStore.actions.setRaw({
+              raw,
+              format,
+              id: openSubtitle.attributes.files[0].file_name,
+              language: language.value.iso639_2
+            });
             subtitleStore.actions.parse();
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));

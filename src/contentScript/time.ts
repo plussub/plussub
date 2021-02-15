@@ -17,46 +17,48 @@ export const init = ({ messageObservable, connectionObservable, getElementFrom }
     el.currentTime = e.data.time;
   });
 
-  let timeUpdateSubscription: Subscription | undefined;
-  const elToCount = new Map<HTMLVideoElement, number>();
+  const idToSubscription = new Map<string, Subscription>();
+  const elToObservable = new Map<HTMLVideoElement, Observable<Event>>();
+
   messageObservable
-    .pipe<MessageEvent<{ plusSubActionFromPopup: string; video: { id: string }; subscription: { id: string } }>>(filter((k) => k.data.plusSubActionFromPopup === 'SUBSCRIBE_TO_TIME_UPDATE'))
+    .pipe<MessageEvent<{ plusSubActionFromPopup: string; video: { id: string }; subscription: { id: string } }>>(
+      filter((k) => k.data.plusSubActionFromPopup === 'SUBSCRIBE_TO_TIME_UPDATE'),
+    )
     .subscribe((e) => {
       const el = getElementFrom(e.data.video.id);
-      if (!el) {
+      if (!el || idToSubscription.has(e.data.subscription.id)) {
         return;
       }
-      const count = elToCount.get(el) ?? 0;
+      const observable = elToObservable.get(el) ?? fromEvent(el, 'timeupdate');
+      elToObservable.set(el, observable);
 
-      if(count > 0){
-        elToCount.set(el, count+1);
-        return;
-      }
-      elToCount.set(el, 1);
-      // timeUpdateSubscription?.unsubscribe();
-      timeUpdateSubscription = fromEvent(el, 'timeupdate').subscribe(() => {
-        postMessage({
-          plusSubActionFromContentScript: 'TIME_UPDATE',
-          time: el.currentTime
-        });
-      });
+      idToSubscription.set(
+        e.data.subscription.id,
+        observable.subscribe(() =>
+          postMessage({
+            plusSubActionFromContentScript: 'TIME_UPDATE',
+            time: el.currentTime
+          })
+        )
+      );
     });
 
-  messageObservable.pipe<MessageEvent<{ plusSubActionFromPopup: string; video: { id: string }, subscription: { id: string } }>>(filter((k) => k.data.plusSubActionFromPopup === 'UNSUBSCRIBE_TO_TIME_UPDATE')).subscribe((e) => {
-    const el = getElementFrom(e.data.video.id);
-    if (!el) {
-      return;
-    }
-    const count = elToCount.get(el) ?? 0;
-    elToCount.set(el, count>0 ? count-1 : 0);
-    if(count-1 <= 0){
-      timeUpdateSubscription?.unsubscribe();
-    }
-  });
+  messageObservable
+    .pipe<MessageEvent<{ plusSubActionFromPopup: string; subscription: { id: string } }>>(filter((k) => k.data.plusSubActionFromPopup === 'UNSUBSCRIBE_TO_TIME_UPDATE'))
+    .subscribe((e) => {
+      const subscription = idToSubscription.get(e.data.subscription.id);
+      if(!subscription){
+       return;
+      }
+      subscription.unsubscribe();
+      idToSubscription.delete(e.data.subscription.id);
+    });
 
   connectionObservable.subscribe((connected) => {
     if (!connected) {
-      timeUpdateSubscription?.unsubscribe();
+      [...idToSubscription.values()].forEach((subscription) => subscription.unsubscribe());
+      idToSubscription.clear();
+
     }
   });
 };

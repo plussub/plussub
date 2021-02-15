@@ -166,9 +166,6 @@ export const init = ({ use }: InitPayload): VideoStore => {
           sub.unsubscribe();
           use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
             plusSubActionFromPopup: 'UNSUBSCRIBE_TO_TIME_UPDATE',
-            video: {
-              id: video.id
-            },
             subscription: {
               id: subscriptionId
             }

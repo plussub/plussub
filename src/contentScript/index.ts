@@ -1,38 +1,50 @@
-import { fromEvent, merge, Subject, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { combineLatest, fromEvent, Subject } from 'rxjs';
+import { distinct, filter, share, startWith } from 'rxjs/operators';
 import { postMessage } from './postMessage';
 import { init as initHighlight } from './highlight';
 import { init as initVideo } from './video';
 import { init as initSubtitle } from './subtitle';
 import { init as initTime } from './time';
+import { MessageEventFromPopup } from './types';
 
 (async () => {
   const connectionSubject = new Subject<boolean>();
-  let connected = false;
-  connectionSubject.subscribe((event) => {
-    connected = event;
-  });
+  const connectionObservable = connectionSubject.pipe(startWith(false));
 
-  const messageObservable = fromEvent<MessageEvent>(window.self, 'message').pipe(filter((k) => k.data.plusSubActionFromPopup));
+  const messageObservable = fromEvent<MessageEvent>(window.self, 'message').pipe(
+    filter<MessageEvent, MessageEventFromPopup<string>>((e): e is MessageEventFromPopup<string> => typeof e.data.plusSubActionFromPopup === 'string'),
+    share()
+  );
 
-  messageObservable.pipe<MessageEvent<{ plusSubActionFromPopup: string }>>(filter((k) => k.data.plusSubActionFromPopup === 'REQUEST_FOR_REGISTER')).subscribe(() => {
-    if (connected) {
-      return;
-    }
-    postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' });
-  });
+  messageObservable.subscribe(e => console.warn(e.data));
 
-  messageObservable.pipe<MessageEvent<{ plusSubActionFromPopup: string }>>(filter((k) => k.data.plusSubActionFromPopup === 'REGISTER_ACK')).subscribe(() => connectionSubject.next(true));
+  type RequestForRegisterMessageEvent = MessageEventFromPopup<'REQUEST_FOR_REGISTER'> & { data: { id: string } };
 
-  messageObservable.pipe<MessageEvent<{ plusSubActionFromPopup: string }>>(filter((k) => k.data.plusSubActionFromPopup === 'UNMOUNT')).subscribe(() => connectionSubject.next(false));
+  combineLatest([
+    connectionObservable,
+    messageObservable.pipe(filter<MessageEventFromPopup<string>, RequestForRegisterMessageEvent>((e): e is RequestForRegisterMessageEvent => e.data.plusSubActionFromPopup === 'REQUEST_FOR_REGISTER'))
+  ])
+    .pipe(
+      filter(([connected]) => !connected),
+      distinct(([, x]) => x.data.id)
+    )
+    .subscribe((v) => postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' }));
 
-  const { videoMap } = initVideo({ messageObservable, connectionObservable: connectionSubject });
+  messageObservable
+    .pipe(filter<MessageEventFromPopup<string>, MessageEventFromPopup<'REGISTER_ACK'>>((e): e is MessageEventFromPopup<'REGISTER_ACK'> => e.data.plusSubActionFromPopup === 'REGISTER_ACK'))
+    .subscribe(() => connectionSubject.next(true));
+
+  messageObservable
+    .pipe(filter<MessageEventFromPopup<string>, MessageEventFromPopup<'UNMOUNT'>>((e): e is MessageEventFromPopup<'UNMOUNT'> => e.data.plusSubActionFromPopup === 'UNMOUNT'))
+    .subscribe(() => connectionSubject.next(false));
+
+  const { videoMap } = initVideo({ messageObservable, connectionObservable });
   initHighlight({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
   initSubtitle({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
   initTime({
     getElementFrom: (id: string) => videoMap.getElementFrom(id),
     messageObservable,
-    connectionObservable: connectionSubject
+    connectionObservable
   });
 
   postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' });

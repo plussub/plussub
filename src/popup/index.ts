@@ -7,8 +7,12 @@ let app: App;
 
 export const init = async (): Promise<void> => {
   if (document.getElementById('plusSubShadow')) {
+    console.warn('fuck');
     document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`)
   } else {
+
+    console.warn('init');
+
     const {preferredLanguage, api} = await storageGet(['preferredLanguage', 'api']);
     app = createApp(appComponent, {preferredLanguage: preferredLanguage ?? 'en', apiVersion: api ?? 'stable'}).component('fa', FontAwesomeIcon);
     document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`);
