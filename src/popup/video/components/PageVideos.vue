@@ -15,8 +15,9 @@
           @click="selectVideo(video)"
         >
           <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
-          <div class="flex items-center h-11" style="grid-column: 2 / 3">
+          <div class="flex flex-col gap-1 h-11 my-2 justify-center" style="grid-column: 2 / 3">
             <div>Video {{ index + 1 }}</div>
+            <div v-if="false" class="text-xs">({{ video.id }})</div>
           </div>
           <Divider style="grid-column: 1/3" class="border-surface-200" />
         </div>
