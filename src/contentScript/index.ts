@@ -38,14 +38,16 @@ import { MessageEventFromPopup } from './types';
     .pipe(filter<MessageEventFromPopup<string>, MessageEventFromPopup<'UNMOUNT'>>((e): e is MessageEventFromPopup<'UNMOUNT'> => e.data.plusSubActionFromPopup === 'UNMOUNT'))
     .subscribe(() => connectionSubject.next(false));
 
-  const { videoMap } = initVideo({ messageObservable, connectionObservable });
-  const highlightObservable = initHighlight({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
-  initSubtitle({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
-  initTime({
-    getElementFrom: (id: string) => videoMap.getElementFrom(id),
-    messageObservable
-  });
+  const videoObservable = initVideo({ messageObservable });
+  const getElementFrom = (id: string) => document.querySelector<HTMLVideoElement>(`video[data-plus-sub-id="${id}"]`);
 
-  merge(highlightObservable).subscribe();
+  const highlightObservable = initHighlight({ messageObservable, getElementFrom});
+  // initSubtitle({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
+  // initTime({
+  //   getElementFrom: (id: string) => videoMap.getElementFrom(id),
+  //   messageObservable
+  // });
+  //
+  merge(videoObservable, highlightObservable).subscribe();
   postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' });
 })();
