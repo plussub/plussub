@@ -16,6 +16,9 @@ jest.mock('@/../contentScript/highlight/isElementNotInViewport', () => ({
 describe('cs: highlight test', () => {
   beforeEach(() => {
     jest.resetAllMocks();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window.scrollY = 0;
   });
   const highlightVideoActionFromPopup = { data: { plusSubActionFromPopup: 'HIGHLIGHT_VIDEO' } };
   const removeHighlightVideoActionFromPopup = { data: { plusSubActionFromPopup: 'REMOVE_HIGHLIGHT_FROM_VIDEO' } };
@@ -23,14 +26,14 @@ describe('cs: highlight test', () => {
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const htmlElement = {
-    getBoundingClientRect: () => ({ top: 100, left: 100, height: 100, width: 100 }),
-    scrollIntoView: jest.fn(() => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      window.scrollY = 1000;
-    })
-  } as HTMLVideoElement;
+  const createHtmlElement = (): HTMLVideoElement => ({
+      getBoundingClientRect: () => ({ top: 100, left: 100, height: 100, width: 100 }),
+      scrollIntoView: jest.fn(() => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        window.scrollY = 1000;
+      })
+    }) as HTMLVideoElement;
 
   describe('highlight', () => {
     it('should emit not emit (el is null)', async () => {
@@ -43,6 +46,7 @@ describe('cs: highlight test', () => {
 
     it('should emit but should not adjust popup because element is in viewport', async () => {
       (isElementNotInViewport as jest.Mock).mockReturnValue(false);
+      const htmlElement = createHtmlElement();
 
       const observable = init({
         messageObservable: hot('--1--', { 1: highlightVideoActionFromPopup }),
@@ -69,6 +73,7 @@ describe('cs: highlight test', () => {
 
     it('should emit and should adjust popup because element is not viewport', async () => {
       (isElementNotInViewport as jest.Mock).mockReturnValue(true);
+      const htmlElement = createHtmlElement();
 
       const observable = init({
         messageObservable: hot('--1--', { 1: highlightVideoActionFromPopup }),
@@ -120,6 +125,7 @@ describe('cs: highlight test', () => {
 
   it('highlight then unrelated event then remove highlight', () => {
     (isElementNotInViewport as jest.Mock).mockReturnValue(false);
+    const htmlElement = createHtmlElement();
 
     const observable = init({
       messageObservable: hot('--1-2-3-', {
