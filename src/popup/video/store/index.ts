@@ -57,8 +57,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
     const currentSelected = window.plusSub_currentSelectedVideo.value;
     if (currentSelected) {
       const currentFromContentScript = e.data.videos[currentSelected.id];
-      if (!currentFromContentScript || currentSelected.hasSubtitle !== currentFromContentScript.hasSubtitle) {
-        console.warn('current selected video was removed');
+      if (!currentFromContentScript || (currentSelected.hasSubtitle && !currentFromContentScript.hasSubtitle)) {
         window.plusSub_currentSelectedVideo.value = null;
       }
     }

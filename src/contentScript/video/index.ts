@@ -7,9 +7,10 @@ import { nanoid } from 'nanoid';
 
 interface Payload {
   messageObservable: Observable<MessageEventFromPopup<string>>;
+  hasSubtitle: (el: HTMLVideoElement) => boolean;
 }
 
-export const init = ({ messageObservable }: Payload): Observable<{ origin: string; videos: Record<string, { id: string; hasSubtitle: boolean; origin: string }> }> => {
+export const init = ({ messageObservable, hasSubtitle}: Payload): Observable<{ origin: string; videos: Record<string, { id: string; hasSubtitle: boolean; origin: string }> }> => {
   const currentQuerySelectorObservable = from([...document.querySelectorAll('video')]);
   const videoElementMutationObservable = createVideoElementMutationObservable().pipe(share());
   const addedWithMutationObservable = videoElementMutationObservable.pipe(
@@ -24,7 +25,7 @@ export const init = ({ messageObservable }: Payload): Observable<{ origin: strin
 
   const addedVideoObservable = merge(currentQuerySelectorObservable, addedWithMutationObservable, loadedmetadataObservable).pipe(
     tap((el) => {
-      el.dataset.plusSubId = !el.dataset.plusSubId || !el.querySelector('texttrack') ? nanoid(12) : el.dataset.plusSubId;
+      el.dataset.plusSubId = !el.dataset.plusSubId || !hasSubtitle(el) ? nanoid(12) : el.dataset.plusSubId;
     })
   );
   const findVideosFromPopupObservable = messageObservable.pipe(filter((e) => e.data.plusSubActionFromPopup === 'FIND_VIDEOS'));
@@ -37,7 +38,7 @@ export const init = ({ messageObservable }: Payload): Observable<{ origin: strin
           el.dataset.plusSubId,
           {
             id: el.dataset.plusSubId,
-            hasSubtitle: el.querySelector('texttrack') !== null,
+            hasSubtitle: hasSubtitle(el),
             origin: window.location.origin
           }
         ])

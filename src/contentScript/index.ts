@@ -6,7 +6,7 @@ import { init as initVideo } from './video';
 import { init as initSubtitle } from './subtitle';
 import { init as initTime } from './time';
 import { MessageEventFromPopup } from './types';
-import {Ref} from "vue";
+import { Ref } from 'vue';
 
 declare global {
   interface Window {
@@ -14,9 +14,8 @@ declare global {
   }
 }
 
-
 (async () => {
-  if(window.plussub_contentscript){
+  if (window.plussub_contentscript) {
     return;
   }
   window.plussub_contentscript = true;
@@ -50,15 +49,16 @@ declare global {
   );
 
   const getElementFrom = (id: string) => document.querySelector<HTMLVideoElement>(`video[data-plus-sub-id="${id}"]`);
+  const hasSubtitle = (el: HTMLVideoElement) => [...el.textTracks].find((track) => track.label === '+Sub' && (track.mode !== 'disabled')) !== undefined;
 
-  const videoObservable = initVideo({ messageObservable });
+  const videoObservable = initVideo({ messageObservable, hasSubtitle });
   const highlightObservable = initHighlight({ messageObservable, getElementFrom });
-  // initSubtitle({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
+  const subtitleObservable = initSubtitle({ messageObservable, getElementFrom });
   // initTime({
   //   getElementFrom: (id: string) => videoMap.getElementFrom(id),
   //   messageObservable
   // });
   //
-  merge(requestForRegisterMeFromPopupObservable, registerAckFromPopupObservable, unmountFromPopupObservable, videoObservable, highlightObservable).subscribe();
+  merge(requestForRegisterMeFromPopupObservable, registerAckFromPopupObservable, unmountFromPopupObservable, videoObservable, highlightObservable, subtitleObservable).subscribe();
   postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' });
 })();
