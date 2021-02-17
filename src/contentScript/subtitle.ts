@@ -38,11 +38,12 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
 
   const addSubtitleObservable = addSubtitleFromPopupObservable.pipe(
     map<{ el: HTMLVideoElement; messageEvent: AddSubtitleMessageEvent }, { track: TextTrack; messageEvent: AddSubtitleMessageEvent }>(({ el, messageEvent }) => {
-      console.warn(messageEvent.data.subtitle.id);
       const track =
         [...el.textTracks].find((track) => track.label === '+Sub' && (track.mode !== 'disabled' || track['plusSubId'] === messageEvent.data.subtitle.id)) ??
         el.addTextTrack('subtitles', `+Sub`, messageEvent.data.subtitle.language);
+
       track['plusSubId'] = messageEvent.data.subtitle.id;
+
       return {
         track,
         messageEvent
