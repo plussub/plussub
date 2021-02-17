@@ -49,16 +49,13 @@ declare global {
   );
 
   const getElementFrom = (id: string) => document.querySelector<HTMLVideoElement>(`video[data-plus-sub-id="${id}"]`);
-  const hasSubtitle = (el: HTMLVideoElement) => [...el.textTracks].find((track) => track.label === '+Sub' && (track.mode !== 'disabled')) !== undefined;
+  const hasSubtitle = (el: HTMLVideoElement) => [...el.textTracks].find((track) => track.label === '+Sub' && track.mode !== 'disabled') !== undefined;
 
   const videoObservable = initVideo({ messageObservable, hasSubtitle });
   const highlightObservable = initHighlight({ messageObservable, getElementFrom });
   const subtitleObservable = initSubtitle({ messageObservable, getElementFrom });
-  // initTime({
-  //   getElementFrom: (id: string) => videoMap.getElementFrom(id),
-  //   messageObservable
-  // });
-  //
-  merge(requestForRegisterMeFromPopupObservable, registerAckFromPopupObservable, unmountFromPopupObservable, videoObservable, highlightObservable, subtitleObservable).subscribe();
+  const timeObservable = initTime({ messageObservable, getElementFrom });
+
+  merge(requestForRegisterMeFromPopupObservable, registerAckFromPopupObservable, unmountFromPopupObservable, videoObservable, highlightObservable, subtitleObservable, timeObservable).subscribe();
   postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' });
 })();
