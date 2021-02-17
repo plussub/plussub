@@ -107,12 +107,6 @@ export default defineComponent({
             return;
           }
 
-          // todo: handle vimeo next
-          // hack: set current src if video src change like vimeo next
-          // if(videoCount === 1 && videoList[0].src !== (prevVideoList ?? [{src: null}])[0]?.src){
-          //   setCurrentSelectedSrc(videoList[0].src);
-          // }
-
           // navigate to selection if additional videos appear
           if (videoCount > 1 && prevVideoCount === 1 && navigationStore.state.value.name === 'MOVIE-TV-SEARCH' && appState.state === 'NONE') {
             videoStore.actions.removeCurrent();

@@ -1,4 +1,4 @@
-import { combineLatest, fromEvent, Subject } from 'rxjs';
+import { combineLatest, fromEvent, Subject, merge } from 'rxjs';
 import { distinct, filter, share, startWith } from 'rxjs/operators';
 import { postMessage } from './postMessage';
 import { init as initHighlight } from './highlight';
@@ -39,12 +39,13 @@ import { MessageEventFromPopup } from './types';
     .subscribe(() => connectionSubject.next(false));
 
   const { videoMap } = initVideo({ messageObservable, connectionObservable });
-  initHighlight({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
+  const highlightObservable = initHighlight({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
   initSubtitle({ getElementFrom: (id: string) => videoMap.getElementFrom(id), messageObservable });
   initTime({
     getElementFrom: (id: string) => videoMap.getElementFrom(id),
     messageObservable
   });
 
+  merge(highlightObservable).subscribe();
   postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' });
 })();
