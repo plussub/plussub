@@ -9,7 +9,7 @@ interface Payload {
   messageObservable: Observable<MessageEventFromPopup<string>>;
 }
 
-export const init = ({ messageObservable }: Payload): Observable<Record<string, { id: string; hasSubtitle: boolean; origin: string }>> => {
+export const init = ({ messageObservable }: Payload): Observable<{ origin: string; videos: Record<string, { id: string; hasSubtitle: boolean; origin: string }> }> => {
   const currentQuerySelectorObservable = from([...document.querySelectorAll('video')]);
   const videoElementMutationObservable = createVideoElementMutationObservable().pipe(share());
   const addedWithMutationObservable = videoElementMutationObservable.pipe(
@@ -31,8 +31,8 @@ export const init = ({ messageObservable }: Payload): Observable<Record<string, 
   const removedVideoElementObservable = videoElementMutationObservable.pipe(filter(({ removed }) => removed.length > 0));
 
   return merge(addedVideoObservable, removedVideoElementObservable, findVideosFromPopupObservable).pipe(
-    map(() =>
-      Object.fromEntries<{ id: string; hasSubtitle: boolean; origin: string }>(
+    map(() => ({
+      videos: Object.fromEntries<{ id: string; hasSubtitle: boolean; origin: string }>(
         [...document.querySelectorAll<HTMLVideoElement & { dataset: { plusSubId: string } }>('video[data-plus-sub-id]')].map((el) => [
           el.dataset.plusSubId,
           {
@@ -41,12 +41,14 @@ export const init = ({ messageObservable }: Payload): Observable<Record<string, 
             origin: window.location.origin
           }
         ])
-      )
-    ),
-    tap((videos) =>
+      ),
+      origin: window.location.origin
+    })),
+    tap(({ videos, origin }) =>
       postMessage({
         plusSubActionFromContentScript: 'FIND_VIDEOS_RESULT',
-        videos
+        videos,
+        origin
       })
     )
   );

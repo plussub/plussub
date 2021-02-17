@@ -49,10 +49,13 @@ export const init = ({ use }: InitPayload): VideoStore => {
   const videos = ref<Record<string, Video>>({});
 
   const findVideoResultSubscription = use.contentScriptStore.state.messageObservable.pipe(filter((e) => e.data.plusSubActionFromContentScript === 'FIND_VIDEOS_RESULT')).subscribe((e) => {
-    videos.value = e.data.videos;
+    videos.value = {
+      ...Object.fromEntries(Object.entries(videos.value).filter(([, { origin }]) => origin !== e.data.origin)),
+      ...e.data.videos
+    };
 
     const currentSelected = window.plusSub_currentSelectedVideo.value;
-    if(currentSelected){
+    if (currentSelected) {
       const currentFromContentScript = e.data.videos[currentSelected.id];
       if (!currentFromContentScript || currentSelected.hasSubtitle !== currentFromContentScript.hasSubtitle) {
         console.warn('current selected video was removed');
