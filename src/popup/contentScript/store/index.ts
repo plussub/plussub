@@ -59,7 +59,7 @@ export const init = (): ContentScriptStore => {
   const sendSubject = new Subject<{ origin: string; payload: Record<string, unknown> }>();
   const sendObservable = sendSubject.pipe(
     tap(({ origin, payload }) => {
-      console.warn('send to origin' + origin + ' command: ' + payload.plusSubActionFromPopup);
+      // console.warn('send to origin' + origin + ' command: ' + payload.plusSubActionFromPopup);
       const connection = connectionMap.get(origin);
       if (connection) {
         connection.source.postMessage(payload, '*');
