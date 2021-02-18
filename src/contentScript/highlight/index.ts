@@ -37,7 +37,6 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
   const [notInViewportObservable, inViewportObservable] = partition(highlightVideoObservable, ({ el }) => isElementNotInViewport(el));
   const scrollIntoViewObservable = notInViewportObservable.pipe(
     tap(({ el }) => {
-      console.warn("scrollintoview");
       el.scrollIntoView({ block: 'center' });
       postMessage({ plusSubActionFromContentScript: 'ADJUST_POPUP' });
     })

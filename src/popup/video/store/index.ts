@@ -1,8 +1,8 @@
 import { computed, ComputedRef, onUnmounted, Ref, ref, watch } from 'vue';
 import { SubtitleEntry } from '@/subtitle/store';
-import { ContentScriptStore } from '@/contentScript/store';
-import { filter } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { ContentScriptStore, MessageEventFromContentScript } from '@/contentScript/store';
+import { filter, tap } from 'rxjs/operators';
+import { merge, Subject } from 'rxjs';
 import { nanoid } from 'nanoid';
 
 interface InitPayload {
@@ -48,37 +48,40 @@ export const init = ({ use }: InitPayload): VideoStore => {
 
   const videos = ref<Record<string, Video>>({});
 
-  const findVideoResultSubscription = use.contentScriptStore.state.messageObservable.pipe(filter((e) => e.data.plusSubActionFromContentScript === 'FIND_VIDEOS_RESULT')).subscribe((e) => {
-    videos.value = {
-      ...Object.fromEntries(Object.entries(videos.value).filter(([, { origin }]) => origin !== e.data.origin)),
-      ...e.data.videos
-    };
+  type FindVideosResultMessageEvent = MessageEventFromContentScript<'FIND_VIDEOS_RESULT'> & { data: { videos: Record<string, { id: string; hasSubtitle: boolean; origin: string }>; origin: string } };
 
-    const currentSelected = window.plusSub_currentSelectedVideo.value;
-    if (currentSelected) {
-      const currentFromContentScript = e.data.videos[currentSelected.id];
-      if (!currentFromContentScript || (currentSelected.hasSubtitle && !currentFromContentScript.hasSubtitle)) {
-        window.plusSub_currentSelectedVideo.value = null;
+  const findVideoResultObservable = use.contentScriptStore.state.messageObservable.pipe(
+    filter<MessageEventFromContentScript<string>, FindVideosResultMessageEvent>((e): e is FindVideosResultMessageEvent => e.data.plusSubActionFromContentScript === 'FIND_VIDEOS_RESULT'),
+    tap((e) => {
+      videos.value = {
+        ...Object.fromEntries(Object.entries(videos.value).filter(([, { origin }]) => origin !== e.data.origin)),
+        ...e.data.videos
+      };
+
+      const currentSelected = window.plusSub_currentSelectedVideo.value;
+      if (currentSelected && currentSelected.origin === e.data.origin) {
+        const currentFromContentScript = e.data.videos[currentSelected.id];
+        if (!currentFromContentScript || (currentSelected.hasSubtitle && !currentFromContentScript.hasSubtitle)) {
+          console.warn("currentSelected removed");
+          window.plusSub_currentSelectedVideo.value = null;
+        }
       }
-    }
-  });
+    })
+  );
 
   const timeSubject = new Subject<number>();
-  const timeUpdateSubscription = use.contentScriptStore.state.messageObservable
-    .pipe(filter((e) => e.data.plusSubActionFromContentScript === 'TIME_UPDATE'))
-    .subscribe((e) => timeSubject.next(e.data.time));
+  const timeUpdateObservable = use.contentScriptStore.state.messageObservable.pipe(
+    filter((e) => e.data.plusSubActionFromContentScript === 'TIME_UPDATE'),
+    tap((e) => timeSubject.next(e.data.time))
+  );
 
-  const iFrameConnectionSubscription = use.contentScriptStore.state.connectionObservable.subscribe((e) => {
-    if (e.action === 'ADD') {
-      use.contentScriptStore.actions.sendCommand(e.origin, { plusSubActionFromPopup: 'FIND_VIDEOS' });
-    }
-  });
+  const iFrameConnectionObservable = use.contentScriptStore.state.connectionObservable.pipe(
+    filter((e) => e.action === 'ADD'),
+    tap((e) => use.contentScriptStore.actions.sendCommand(e.origin, { plusSubActionFromPopup: 'FIND_VIDEOS' }))
+  );
 
-  onUnmounted(() => {
-    iFrameConnectionSubscription.unsubscribe();
-    findVideoResultSubscription.unsubscribe();
-    timeUpdateSubscription.unsubscribe();
-  });
+  const subscription = merge(findVideoResultObservable, timeUpdateObservable, iFrameConnectionObservable).subscribe();
+  onUnmounted(() => subscription.unsubscribe());
 
   const removeVtt = ({ id, origin }: Pick<Video, 'id' | 'origin'>) => {
     use.contentScriptStore.actions.sendCommand(origin, {
@@ -152,18 +155,21 @@ export const init = ({ use }: InitPayload): VideoStore => {
         const origin = video.origin;
 
         const subscriptionId = nanoid(12);
-        // todo trigger after content script synced
-        setTimeout(() => {
-          use.contentScriptStore.actions.sendCommand(origin, {
-            plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
-            video: {
-              id: video.id
-            },
-            subscription: {
-              id: subscriptionId
-            }
-          });
-        }, 1000);
+
+        // todo: race condition, stuff is not connected yet but component.mount did already trigger
+        setTimeout(
+          () =>
+            use.contentScriptStore.actions.sendCommand(origin, {
+              plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
+              video: {
+                id: video.id
+              },
+              subscription: {
+                id: subscriptionId
+              }
+            }),
+          250
+        );
 
         const sub = timeSubject.subscribe((time) => fn({ time }));
 

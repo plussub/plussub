@@ -24,7 +24,7 @@ declare global {
 
   const messageObservable = fromEvent<MessageEvent>(window.self, 'message').pipe(
     filter<MessageEvent, MessageEventFromPopup<string>>((e): e is MessageEventFromPopup<string> => typeof e.data.plusSubActionFromPopup === 'string'),
-    tap((e) => console.warn(e.data)),
+    // tap((e) => console.warn(e.data)),
     share()
   );
 
