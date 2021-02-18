@@ -1,16 +1,11 @@
 import { combineLatest, from, fromEvent, merge, Observable, Subject } from 'rxjs';
-import { distinct, filter, map, mergeMap, scan, share, shareReplay, tap } from 'rxjs/operators';
+import { distinct, filter, map, mergeMap, scan, share, shareReplay, startWith, tap } from 'rxjs/operators';
 import { onUnmounted } from 'vue';
 import { nanoid } from 'nanoid';
 
-interface ConnectionEvent {
-  action: 'ADD' | 'REMOVE';
-  origin: string;
-}
-
 export interface ContentScriptStore {
   state: {
-    connectionObservable: Observable<ConnectionEvent>;
+    connectionObservable: Observable<any>;
     messageObservable: Observable<any>;
   };
   actions: {
@@ -27,65 +22,64 @@ export interface MessageEventFromContentScript<T extends string> extends Message
 }
 
 export const init = (): ContentScriptStore => {
-  const connectionObservable = fromEvent<MessageEvent>(window.top, 'message').pipe(
-    filter<MessageEvent, MessageEventFromContentScript<string>>((e): e is MessageEventFromContentScript<string> => e.data.plusSubActionFromContentScript)
+  const messageObservable = fromEvent<MessageEvent>(window.top, 'message').pipe(
+    filter<MessageEvent, MessageEventFromContentScript<string>>((e): e is MessageEventFromContentScript<string> => e.data.plusSubActionFromContentScript),
+    share()
   );
+
+  type ConnectionEvent =
+    | {
+        action: 'ADD';
+        origin: string;
+        source: Window;
+      }
+    | {
+        action: 'REMOVE';
+        origin: string;
+      };
+
   const connectionSubject = new Subject<ConnectionEvent>();
-  const unmountSubject = new Subject<boolean>();
-  const sendSubject = new Subject<{ origin: string; payload: Record<string, unknown> }>();
-  const messageObservable = new Subject<any>();
+  // use map, failed to solve with stream. maybe revist it later
+  const connectionMap = new Map<string, { source: Window; origin: string }>();
 
-  const messageBridgeObservable = connectionObservable.pipe(
-    share(),
-    filter((e): e is MessageEventFromContentScript<'REGISTER_ME_REQUEST_FROM_IFRAME'> => e.data.plusSubActionFromContentScript !== 'REGISTER_ME_REQUEST_FROM_IFRAME'),
-    tap((e) => messageObservable.next(e))
-  );
-
-  const registerObservable = connectionObservable.pipe(
-    share(),
+  const registerMeRequestFromIFrameFromContentScript = messageObservable.pipe(
     filter<MessageEventFromContentScript<string>, MessageEventFromContentScript<'REGISTER_ME_REQUEST_FROM_IFRAME'>>(
       (e): e is MessageEventFromContentScript<'REGISTER_ME_REQUEST_FROM_IFRAME'> => e.data.plusSubActionFromContentScript === 'REGISTER_ME_REQUEST_FROM_IFRAME'
     ),
-    map(({ origin, source }) => {
-      return {
-        [origin]: {
-          source: source as Window,
-          origin
-        }
-      };
-    }),
-    scan((acc, cur) => ({ ...acc, ...cur }))
-    // tap((e) => e.source.postMessage({ plusSubActionFromPopup: 'REGISTER_ACK' }, '*')),
-    // tap((e) => connectionSubject.next({ action: 'ADD', origin: e.origin }))
+    map(({ origin, source }) => ({
+      origin,
+      source: source as Window
+    })),
+    tap(({ origin, source }) => source.postMessage({ plusSubActionFromPopup: 'REGISTER_ACK' }, '*')),
+    tap(({ origin, source }) => connectionMap.set(origin, { source, origin })),
+    tap(({ origin, source }) => connectionSubject.next({ action: 'ADD', origin, source }))
   );
 
-  const sendRegisterAckObservable = registerObservable.pipe(
-    shareReplay(1),
-    mergeMap((e) => from(Object.values(e))),
-    distinct((e) => e.origin),
-    tap((e) => e.source.postMessage({ plusSubActionFromPopup: 'REGISTER_ACK' }, '*')),
-    tap((e) => connectionSubject.next({ action: 'ADD', origin: e.origin }))
+  //
+  const sendSubject = new Subject<{ origin: string; payload: Record<string, unknown> }>();
+  const sendObservable = sendSubject.pipe(
+    tap(({ origin, payload }) => {
+      console.warn('send to origin' + origin + ' command: ' + payload.plusSubActionFromPopup);
+      const connection = connectionMap.get(origin);
+      if (connection) {
+        connection.source.postMessage(payload, '*');
+      } else {
+        console.warn('connection not set, race condition ?');
+        console.warn(connectionMap);
+      }
+    })
   );
-
-  const unmountObservable = combineLatest([unmountSubject, registerObservable]).pipe(
-    shareReplay(1),
-    mergeMap(([, e]) => from(Object.values(e))),
+  const unmountSubject = new Subject<boolean>();
+  const unmountObservable = unmountSubject.pipe(
     tap((e) => {
-      e.source.postMessage({ plusSubActionFromPopup: 'UNMOUNT' }, '*');
-      connectionSubject.next({ action: 'REMOVE', origin: e.origin });
+      [...connectionMap.values()].forEach(({ source }) => {
+        source.postMessage({ plusSubActionFromPopup: 'UNMOUNT' }, '*');
+      });
+      connectionMap.clear();
     })
   );
 
-  const sendObservable = combineLatest([sendSubject, registerObservable.pipe(shareReplay(1))]).pipe(
-    map(([send, register]) => {
-      const val = Object.values(register).find((reg) => reg.origin === send.origin);
-      return val ? { source: val.source, ...send } : undefined;
-    }),
-    filter((e): e is { source: Window; payload: Record<string, unknown>; origin: string } => e !== undefined),
-    tap(({ source, payload }) => source.postMessage(payload, '*'))
-  );
-
-  const subscription = merge(messageBridgeObservable, registerObservable, sendRegisterAckObservable, unmountObservable, sendObservable).subscribe();
+  const subscription = merge(messageObservable, registerMeRequestFromIFrameFromContentScript, sendObservable, unmountObservable).subscribe();
 
   onUnmounted(() => {
     unmountSubject.next(true);
@@ -94,8 +88,8 @@ export const init = (): ContentScriptStore => {
 
   return {
     state: {
-      messageObservable: messageObservable,
-      connectionObservable: connectionSubject
+      messageObservable,
+      connectionObservable: connectionSubject.asObservable()
     },
     actions: {
       requestAllContentScriptsToRegister: () => {

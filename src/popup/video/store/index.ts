@@ -1,8 +1,8 @@
 import { computed, ComputedRef, onUnmounted, Ref, ref, watch } from 'vue';
 import { SubtitleEntry } from '@/subtitle/store';
 import { ContentScriptStore, MessageEventFromContentScript } from '@/contentScript/store';
-import { filter, tap } from 'rxjs/operators';
-import { merge, Subject } from 'rxjs';
+import { filter, first, share, shareReplay, tap } from 'rxjs/operators';
+import { combineLatest, merge, Subject } from 'rxjs';
 import { nanoid } from 'nanoid';
 
 interface InitPayload {
@@ -62,7 +62,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
       if (currentSelected && currentSelected.origin === e.data.origin) {
         const currentFromContentScript = e.data.videos[currentSelected.id];
         if (!currentFromContentScript || (currentSelected.hasSubtitle && !currentFromContentScript.hasSubtitle)) {
-          console.warn("currentSelected removed");
+          console.warn('currentSelected removed');
           window.plusSub_currentSelectedVideo.value = null;
         }
       }
@@ -153,16 +153,16 @@ export const init = ({ use }: InitPayload): VideoStore => {
           return;
         }
         const origin = video.origin;
-
+        const videoId = video.id;
         const subscriptionId = nanoid(12);
 
-        // todo: race condition, stuff is not connected yet but component.mount did already trigger
+        // fixme: race condition, stuff is not connected yet but component.mount did already trigger
         setTimeout(
           () =>
             use.contentScriptStore.actions.sendCommand(origin, {
               plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
               video: {
-                id: video.id
+                id: videoId
               },
               subscription: {
                 id: subscriptionId
