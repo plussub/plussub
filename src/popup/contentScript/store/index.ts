@@ -1,5 +1,5 @@
-import { combineLatest, from, fromEvent, merge, Observable, Subject } from 'rxjs';
-import { distinct, filter, map, mergeMap, scan, share, shareReplay, startWith, tap } from 'rxjs/operators';
+import { fromEvent, merge, Observable, Subject } from 'rxjs';
+import { filter, map, share, tap } from 'rxjs/operators';
 import { onUnmounted } from 'vue';
 import { nanoid } from 'nanoid';
 
