@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, onUnmounted, PropType, ref, watch } from 'vue';
+import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
 import { searchQuery, SubtitleSearchForSeriesVariables } from './searchQuery';
 import { ISO639, SearchStore } from '@/search/store';
 import { download } from '@/search/download';
@@ -57,7 +57,8 @@ import { AppStore } from '@/app/store';
 import { SubtitleStore } from '@/subtitle/store';
 import { NavigationStore } from '@/navigation/store';
 import { from, Subject } from 'rxjs';
-import { concatMap, tap } from 'rxjs/operators';
+import {concatMap, switchMap, takeUntil, tap} from 'rxjs/operators';
+import { useUnmountObservable } from '@/composables';
 
 export default defineComponent({
   components: {
@@ -95,6 +96,7 @@ export default defineComponent({
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
+    const unmountObservable = useUnmountObservable();
 
     if (!appStore || !searchStore || !subtitleStore || !navigationStore) {
       throw new Error('inject failed');
@@ -114,7 +116,7 @@ export default defineComponent({
     const showEpisodeSelection = ref(false);
 
     const setSetShowSelection = (apply: boolean, { language, season, episode }: { language: boolean; season: boolean; episode: boolean }) => {
-      if(!apply){
+      if (!apply) {
         return;
       }
       showLanguageSelection.value = language;
@@ -130,15 +132,17 @@ export default defineComponent({
     const loading = ref(true);
 
     const searchQuerySubject = new Subject<SubtitleSearchForSeriesVariables>();
-    const searchRequestSubscription = searchQuerySubject
+    searchQuerySubject
       .pipe(
         tap(() => (loading.value = true)),
-        concatMap((variables) => from(searchQuery(variables)))
+        switchMap((variables) => from(searchQuery(variables))),
+        tap((result) => {
+          loading.value = false;
+          entries.value = result.subtitleSearch.data;
+        }),
+        takeUntil(unmountObservable)
       )
-      .subscribe((result) => {
-        loading.value = false;
-        entries.value = result.subtitleSearch.data;
-      });
+      .subscribe();
 
     watch(
       [language, season, episode],
@@ -151,8 +155,6 @@ export default defineComponent({
         }),
       { immediate: true }
     );
-
-    onUnmounted(() => searchRequestSubscription.unsubscribe());
 
     const onlyHearingImpaired = ref(false);
 

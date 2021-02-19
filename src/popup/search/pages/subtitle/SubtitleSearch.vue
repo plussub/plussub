@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, onUnmounted, PropType, ref, watch } from 'vue';
+import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
 import { LegacySubtitleSearch_legacySubtitleSearch_entries, searchQuery } from './searchQuery';
 import { download } from './download';
 import { ISO639, SearchStore } from '@/search/store';
@@ -42,9 +42,10 @@ import InputField from '@/components/InputField.vue';
 import { AppStore } from '@/app/store';
 import { SubtitleStore } from '@/subtitle/store';
 import { NavigationStore } from '@/navigation/store';
-import { concatMap, tap } from 'rxjs/operators';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { from, Subject } from 'rxjs';
 import { LegacySubtitleSearchVariables } from '@/search/pages/subtitle/searchQuery/__gen_gql/LegacySubtitleSearch';
+import { useUnmountObservable } from '@/composables';
 
 export default defineComponent({
   components: {
@@ -79,6 +80,7 @@ export default defineComponent({
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
+    const unmountObservable = useUnmountObservable();
 
     if (!appStore || !searchStore || !subtitleStore || !navigationStore) {
       throw new Error('inject failed');
@@ -92,15 +94,17 @@ export default defineComponent({
     const entries = ref<LegacySubtitleSearch_legacySubtitleSearch_entries[]>([]);
 
     const searchQuerySubject = new Subject<LegacySubtitleSearchVariables>();
-    const searchRequestSubscription = searchQuerySubject
+    searchQuerySubject
       .pipe(
         tap(() => (loading.value = true)),
-        concatMap((variables) => from(searchQuery(variables)))
+        switchMap((variables) => from(searchQuery(variables))),
+        tap((result) => {
+          loading.value = false;
+          entries.value = result.legacySubtitleSearch.entries;
+        }),
+        takeUntil(unmountObservable)
       )
-      .subscribe((result) => {
-        loading.value = false;
-        entries.value = result.legacySubtitleSearch.entries;
-      });
+      .subscribe();
 
     watch(
       language,
@@ -112,8 +116,6 @@ export default defineComponent({
         }),
       { immediate: true }
     );
-
-    onUnmounted(() => searchRequestSubscription.unsubscribe());
 
     return {
       filter,

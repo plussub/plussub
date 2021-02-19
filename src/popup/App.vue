@@ -23,7 +23,8 @@ import SubtitleSearchForSeries from '@/search/pages/subtitleForSeries/SubtitleSe
 import Transcript from '@/subtitle/pages/Transcript.vue';
 import Settings from '@/settings/pages/Settings.vue';
 import '@/styles.css';
-import {filter} from "rxjs/operators";
+import { filter, takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 export default defineComponent({
   components: {
@@ -50,7 +51,7 @@ export default defineComponent({
     provide('appStore', appStore);
     const apiStore = initApiStore({ version: props.apiVersion });
     provide('apiStore', apiStore);
-    const navigationStore = initNavigationStore({use: {apiStore}});
+    const navigationStore = initNavigationStore({ use: { apiStore } });
     provide('navigationStore', navigationStore);
     const subtitleStore = initSubtitleStore({ use: { appStore } });
     provide('subtitleStore', subtitleStore);
@@ -62,16 +63,18 @@ export default defineComponent({
     const searchStore = initSearchStore({ preferredLanguage: props.preferredLanguage });
     provide('searchStore', searchStore);
 
+    const unmountSubject = new Subject<undefined>();
     contentScriptStore.actions.requestAllContentScriptsToRegister();
-
-    const adjustPopupSubscription = contentScriptStore.state.messageObservable
-        .pipe(filter((e) => e.data.plusSubActionFromContentScript === 'ADJUST_POPUP'))
-        .subscribe(() => document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`));
+    contentScriptStore.state.messageObservable.pipe(
+      filter((e) => e.data.plusSubActionFromContentScript === 'ADJUST_POPUP'),
+      tap(() => document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`)),
+      takeUntil(unmountSubject)
+    );
 
     watch(
       () => videoStore.getters.current.value,
       (video) => {
-        if(video === null){
+        if (video === null) {
           appStore.actions.reset();
           subtitleStore.actions.reset();
           searchStore.actions.reset();
@@ -88,37 +91,35 @@ export default defineComponent({
           console.warn('subtitleId is null');
           return;
         }
-        videoStore.actions.addVtt({ subtitles, subtitleId, language: subtitleStore.state.value.language ?? "en" });
+        videoStore.actions.addVtt({ subtitles, subtitleId, language: subtitleStore.state.value.language ?? 'en' });
       }
     );
 
-    onUnmounted(() => {
-      adjustPopupSubscription.unsubscribe();
-    });
+    onUnmounted(() => unmountSubject.next(undefined));
 
     watch(
-        [videoStore.getters.count, appStore.state, videoStore.getters.list, videoStore.getters.current],
-        ([videoCount, appState, videoList], [prevVideoCount, prevAppState, prevVideoList]) => {
-          // navigate if only 1 video exists
-          if (videoCount === 1 && videoList[0] && navigationStore.state.value.name === 'HOME' && appState.state === 'NONE') {
-            videoStore.actions.setCurrent({video: videoList[0]});
-            navigationStore.actions.toMovieTvSearch();
-            return;
-          }
+      [videoStore.getters.count, appStore.state, videoStore.getters.list, videoStore.getters.current],
+      ([videoCount, appState, videoList], [prevVideoCount, prevAppState, prevVideoList]) => {
+        // navigate if only 1 video exists
+        if (videoCount === 1 && videoList[0] && navigationStore.state.value.name === 'HOME' && appState.state === 'NONE') {
+          videoStore.actions.setCurrent({ video: videoList[0] });
+          navigationStore.actions.toMovieTvSearch();
+          return;
+        }
 
-          // navigate to selection if additional videos appear
-          if (videoCount > 1 && prevVideoCount === 1 && navigationStore.state.value.name === 'MOVIE-TV-SEARCH' && appState.state === 'NONE') {
-            videoStore.actions.removeCurrent();
-            navigationStore.actions.toHome();
-            return;
-          }
+        // navigate to selection if additional videos appear
+        if (videoCount > 1 && prevVideoCount === 1 && navigationStore.state.value.name === 'MOVIE-TV-SEARCH' && appState.state === 'NONE') {
+          videoStore.actions.removeCurrent();
+          navigationStore.actions.toHome();
+          return;
+        }
 
-          if (videoCount === 0 && navigationStore.state.value.name !== 'HOME') {
-            navigationStore.actions.toHome();
-            return;
-          }
-        },
-        { immediate: true }
+        if (videoCount === 0 && navigationStore.state.value.name !== 'HOME') {
+          navigationStore.actions.toHome();
+          return;
+        }
+      },
+      { immediate: true }
     );
 
     return {

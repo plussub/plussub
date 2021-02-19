@@ -32,8 +32,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, onUnmounted, PropType, ref, watch } from 'vue';
-import {searchQuery, SubtitleSearchForMoviesVariables} from './searchQuery';
+import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
+import { searchQuery, SubtitleSearchForMoviesVariables } from './searchQuery';
 import { download } from '@/search/download';
 
 import SubtitleSearchEntry from '@/search/components/SubtitleSearchEntry.vue';
@@ -50,7 +50,8 @@ import { AppStore } from '@/app/store';
 import { ISO639, SearchStore } from '@/search/store';
 import { NavigationStore } from '@/navigation/store';
 import { from, Subject } from 'rxjs';
-import { concatMap, tap } from 'rxjs/operators';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
+import { useUnmountObservable } from '@/composables';
 
 export default defineComponent({
   components: {
@@ -86,6 +87,7 @@ export default defineComponent({
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
+    const unmountObservable = useUnmountObservable();
 
     if (!appStore || !searchStore || !subtitleStore || !navigationStore) {
       throw new Error('inject failed');
@@ -100,15 +102,17 @@ export default defineComponent({
     const loading = ref(true);
 
     const searchQuerySubject = new Subject<SubtitleSearchForMoviesVariables>();
-    const searchRequestSubscription = searchQuerySubject
+    searchQuerySubject
       .pipe(
         tap(() => (loading.value = true)),
-        concatMap((variables) => from(searchQuery(variables)))
+        switchMap((variables) => from(searchQuery(variables))),
+        tap((result) => {
+          loading.value = false;
+          entries.value = result.subtitleSearch.data;
+        }),
+        takeUntil(unmountObservable)
       )
-      .subscribe((result) => {
-        loading.value = false;
-        entries.value = result.subtitleSearch.data;
-      });
+      .subscribe();
 
     watch(
       language,
@@ -119,8 +123,6 @@ export default defineComponent({
         }),
       { immediate: true }
     );
-
-    onUnmounted(() => searchRequestSubscription.unsubscribe());
 
     const onlyHearingImpaired = ref(false);
 
@@ -157,7 +159,12 @@ export default defineComponent({
 
         download(openSubtitle)
           .then(({ raw, format }) => {
-            subtitleStore.actions.setRaw({ raw, format, id: openSubtitle.attributes.files[0].file_name, language: language.value.iso639_2  });
+            subtitleStore.actions.setRaw({
+              raw,
+              format,
+              id: openSubtitle.attributes.files[0].file_name,
+              language: language.value.iso639_2
+            });
             subtitleStore.actions.parse();
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));

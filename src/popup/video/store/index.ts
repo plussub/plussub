@@ -1,7 +1,7 @@
 import { computed, ComputedRef, onUnmounted, Ref, ref, watch } from 'vue';
 import { SubtitleEntry } from '@/subtitle/store';
 import { ContentScriptStore, MessageEventFromContentScript } from '@/contentScript/store';
-import { filter, first, share, shareReplay, tap } from 'rxjs/operators';
+import { filter, first, share, shareReplay, takeUntil, tap } from 'rxjs/operators';
 import { combineLatest, merge, Subject } from 'rxjs';
 import { nanoid } from 'nanoid';
 
@@ -80,8 +80,9 @@ export const init = ({ use }: InitPayload): VideoStore => {
     tap((e) => use.contentScriptStore.actions.sendCommand(e.origin, { plusSubActionFromPopup: 'FIND_VIDEOS' }))
   );
 
-  const subscription = merge(findVideoResultObservable, timeUpdateObservable, iFrameConnectionObservable).subscribe();
-  onUnmounted(() => subscription.unsubscribe());
+  const unmountSubject = new Subject<undefined>();
+  merge(findVideoResultObservable, timeUpdateObservable, iFrameConnectionObservable).pipe(takeUntil(unmountSubject)).subscribe();
+  onUnmounted(() => unmountSubject.next(undefined));
 
   const removeVtt = ({ id, origin }: Pick<Video, 'id' | 'origin'>) => {
     use.contentScriptStore.actions.sendCommand(origin, {
@@ -155,7 +156,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
         const origin = video.origin;
         const videoId = video.id;
         const subscriptionId = nanoid(12);
-
+        const unmountSubject = new Subject<undefined>();
         // fixme: race condition, stuff is not connected yet but component.mount did already trigger
         setTimeout(
           () =>
@@ -171,10 +172,13 @@ export const init = ({ use }: InitPayload): VideoStore => {
           250
         );
 
-        const sub = timeSubject.subscribe((time) => fn({ time }));
+        timeSubject.pipe(
+          tap((time) => fn({ time })),
+          takeUntil(unmountSubject)
+        ).subscribe();
 
         onUnmounted(() => {
-          sub.unsubscribe();
+          unmountSubject.next(undefined);
           use.contentScriptStore.actions.sendCommand(origin, {
             plusSubActionFromPopup: 'UNSUBSCRIBE_TO_TIME_UPDATE',
             subscription: {

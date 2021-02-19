@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, inject, onUnmounted, ref} from 'vue';
+import { defineComponent, inject, ref } from 'vue';
 import { computed } from '@vue/reactivity';
 import Expandable from '@/components/Expandable.vue';
 import Timeline from './Timeline.vue';
@@ -41,7 +41,8 @@ import { VideoStore } from '@/video/store';
 import Duration from 'luxon/src/duration';
 import { SubtitleStore } from '@/subtitle/store';
 import { asyncScheduler, Subject } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { takeUntil, tap, throttleTime } from 'rxjs/operators';
+import { useUnmountObservable } from '@/composables';
 
 export default defineComponent({
   components: {
@@ -53,6 +54,7 @@ export default defineComponent({
   setup() {
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const videoStore = inject<VideoStore>('videoStore');
+    const unmountObservable = useUnmountObservable();
 
     if (!subtitleStore || !videoStore) {
       throw new Error('inject failed');
@@ -72,10 +74,15 @@ export default defineComponent({
       }
     });
     const offsetTimeSubject = new Subject<string>();
-    offsetTimeSubject.pipe(throttleTime(50, asyncScheduler, { leading: true, trailing: true })).subscribe((val) => {
-      offsetTime.value = parseInt(val.toString());
-    });
-    onUnmounted(() => offsetTimeSubject.unsubscribe());
+    offsetTimeSubject
+      .pipe(
+        throttleTime(50, asyncScheduler, { leading: true, trailing: true }),
+        tap((val) => {
+          offsetTime.value = parseInt(val.toString());
+        }),
+        takeUntil(unmountObservable)
+      )
+      .subscribe();
 
     const range = ref<HTMLInputElement | null>(null);
 

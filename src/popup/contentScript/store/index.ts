@@ -1,5 +1,5 @@
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
-import { filter, map, share, tap } from 'rxjs/operators';
+import { filter, map, share, takeUntil, tap } from 'rxjs/operators';
 import { onUnmounted } from 'vue';
 import { nanoid } from 'nanoid';
 
@@ -79,12 +79,9 @@ export const init = (): ContentScriptStore => {
     })
   );
 
-  const subscription = merge(messageObservable, registerMeRequestFromIFrameFromContentScript, sendObservable, unmountObservable).subscribe();
+  merge(messageObservable, registerMeRequestFromIFrameFromContentScript, sendObservable, unmountObservable).pipe(takeUntil(unmountObservable)).subscribe();
 
-  onUnmounted(() => {
-    unmountSubject.next(true);
-    subscription.unsubscribe();
-  });
+  onUnmounted(() => unmountSubject.next(true));
 
   return {
     state: {
