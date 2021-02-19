@@ -97,9 +97,12 @@ export default defineComponent({
     });
 
     watch(
-        [videoStore.getters.count, appStore.state, videoStore.getters.list],
+        [videoStore.getters.count, appStore.state, videoStore.getters.list, videoStore.getters.current],
         ([videoCount, appState, videoList], [prevVideoCount, prevAppState, prevVideoList]) => {
 
+          console.warn(videoCount);
+          console.warn(appState.state)
+          console.warn(navigationStore.state.value)
           // navigate if only 1 video exists
           if (videoCount === 1 && videoList[0] && navigationStore.state.value.name === 'HOME' && appState.state === 'NONE') {
             videoStore.actions.setCurrent({video: videoList[0]});
