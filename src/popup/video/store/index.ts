@@ -1,8 +1,8 @@
 import { computed, ComputedRef, onUnmounted, Ref, ref, watch } from 'vue';
 import { SubtitleEntry } from '@/subtitle/store';
 import { ContentScriptStore, MessageEventFromContentScript } from '@/contentScript/store';
-import { filter, first, share, shareReplay, takeUntil, tap } from 'rxjs/operators';
-import { combineLatest, merge, Subject } from 'rxjs';
+import {filter, first, mergeMap, share, shareReplay, takeUntil, tap} from 'rxjs/operators';
+import {combineLatest, from, merge, Subject} from 'rxjs';
 import { nanoid } from 'nanoid';
 
 interface InitPayload {
@@ -70,14 +70,15 @@ export const init = ({ use }: InitPayload): VideoStore => {
   );
 
   const timeSubject = new Subject<number>();
+  type TimeUpdateMessageEvent = MessageEventFromContentScript<'TIME_UPDATE'> & { data: { time: number } };
   const timeUpdateObservable = use.contentScriptStore.state.messageObservable.pipe(
-    filter((e) => e.data.plusSubActionFromContentScript === 'TIME_UPDATE'),
+    filter<MessageEventFromContentScript<string>, TimeUpdateMessageEvent>((e): e is TimeUpdateMessageEvent => e.data.plusSubActionFromContentScript === 'TIME_UPDATE'),
     tap((e) => timeSubject.next(e.data.time))
   );
 
   const iFrameConnectionObservable = use.contentScriptStore.state.connectionObservable.pipe(
-    filter((e) => e.action === 'ADD'),
-    tap((e) => use.contentScriptStore.actions.sendCommand(e.origin, { plusSubActionFromPopup: 'FIND_VIDEOS' }))
+    mergeMap((e) => from(Object.values(e).map(e => e.origin))),
+    tap((origin) => use.contentScriptStore.actions.sendCommand(origin, { plusSubActionFromPopup: 'FIND_VIDEOS' }))
   );
 
   const unmountSubject = new Subject<undefined>();
@@ -157,25 +158,23 @@ export const init = ({ use }: InitPayload): VideoStore => {
         const videoId = video.id;
         const subscriptionId = nanoid(12);
         const unmountSubject = new Subject<undefined>();
-        // fixme: race condition, stuff is not connected yet but component.mount did already trigger
-        setTimeout(
-          () =>
-            use.contentScriptStore.actions.sendCommand(origin, {
-              plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
-              video: {
-                id: videoId
-              },
-              subscription: {
-                id: subscriptionId
-              }
-            }),
-          250
-        );
 
-        timeSubject.pipe(
-          tap((time) => fn({ time })),
-          takeUntil(unmountSubject)
-        ).subscribe();
+        use.contentScriptStore.actions.sendCommand(origin, {
+          plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
+          video: {
+            id: videoId
+          },
+          subscription: {
+            id: subscriptionId
+          }
+        });
+
+        timeSubject
+          .pipe(
+            tap((time) => fn({ time })),
+            takeUntil(unmountSubject)
+          )
+          .subscribe();
 
         onUnmounted(() => {
           unmountSubject.next(undefined);
