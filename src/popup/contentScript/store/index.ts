@@ -55,6 +55,10 @@ export const init = (): ContentScriptStore => {
     tap(({ origin, source }) => connectionSubject.next({ action: 'ADD', origin, source }))
   );
 
+  const foo = connectionSubject.pipe(
+    tap(event => console.log(event))
+  );
+
   //
   const sendSubject = new Subject<{ origin: string; payload: Record<string, unknown> }>();
   const sendObservable = sendSubject.pipe(
