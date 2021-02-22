@@ -43,6 +43,7 @@ import { getFormatFromFilename } from '@/subtitle/util';
 import { FileStore } from '@/file/store';
 import { NavigationStore } from '@/navigation/store';
 import { AppStore } from '@/app/store';
+import {TrackStore} from "@/track/store";
 
 export default defineComponent({
   props: {
@@ -58,8 +59,9 @@ export default defineComponent({
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
     const videoStore = inject<VideoStore>('videoStore');
+    const trackStore = inject<TrackStore>('trackStore');
 
-    if (!appStore || !fileStore || !subtitleStore || !navigationStore || !videoStore) {
+    if (!appStore || !fileStore || !subtitleStore || !navigationStore || !videoStore || !trackStore) {
       throw new Error('inject failed');
     }
     const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
@@ -96,6 +98,7 @@ export default defineComponent({
 
       try {
         subtitleStore.actions.parse();
+        trackStore.actions.track({source: 'file', language: ''});
       } catch (e) {
         showFileErrorMsg('Parse error, not a valid subtitle file');
         appStore.actions.reset();

@@ -52,6 +52,7 @@ import { NavigationStore } from '@/navigation/store';
 import { from, Subject } from 'rxjs';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
+import {TrackStore} from "@/track/store";
 
 export default defineComponent({
   components: {
@@ -87,9 +88,11 @@ export default defineComponent({
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
+    const trackStore = inject<TrackStore>('trackStore');
+
     const unmountObservable = useUnmountObservable();
 
-    if (!appStore || !searchStore || !subtitleStore || !navigationStore) {
+    if (!appStore || !searchStore || !subtitleStore || !navigationStore || !trackStore) {
       throw new Error('inject failed');
     }
     const filter = ref('');
@@ -166,6 +169,7 @@ export default defineComponent({
               language: language.value.iso639_2
             });
             subtitleStore.actions.parse();
+            trackStore.actions.track({source: 'search-for-movie', language: language.value.iso639_2});
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));
 

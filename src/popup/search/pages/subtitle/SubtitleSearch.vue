@@ -46,6 +46,7 @@ import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { from, Subject } from 'rxjs';
 import { LegacySubtitleSearchVariables } from '@/search/pages/subtitle/searchQuery/__gen_gql/LegacySubtitleSearch';
 import { useUnmountObservable } from '@/composables';
+import {TrackStore} from "@/track/store";
 
 export default defineComponent({
   components: {
@@ -80,9 +81,11 @@ export default defineComponent({
     const searchStore = inject<SearchStore>('searchStore');
     const subtitleStore = inject<SubtitleStore>('subtitleStore');
     const navigationStore = inject<NavigationStore>('navigationStore');
+    const trackStore = inject<TrackStore>('trackStore');
+
     const unmountObservable = useUnmountObservable();
 
-    if (!appStore || !searchStore || !subtitleStore || !navigationStore) {
+    if (!appStore || !searchStore || !subtitleStore || !navigationStore || !trackStore) {
       throw new Error('inject failed');
     }
 
@@ -144,6 +147,7 @@ export default defineComponent({
           .then(({ raw, format }) => {
             subtitleStore.actions.setRaw({ raw, format, id: openSubtitle.SubHash, language: language.value.iso639_2 });
             subtitleStore.actions.parse();
+            trackStore.actions.track({source: 'legacy-search', language: language.value.iso639_2});
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));
         navigationStore.actions.toHome({ contentTransitionName: 'content-navigate-select-to-home' });

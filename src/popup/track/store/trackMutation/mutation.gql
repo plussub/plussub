@@ -1,0 +1,3 @@
+mutation Track($origin: String!, $source: String!, $language: String!) {
+    track(origin: $origin, source: $source, language: $language)
+}
