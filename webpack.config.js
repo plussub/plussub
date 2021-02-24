@@ -100,7 +100,8 @@ module.exports = (env, argv) => {
         patterns: [
           { from: `manifest-${browser}.json`, to: 'manifest.json' },
           { from: 'res', to: 'res' },
-          { from: 'popup/font.css', to: 'font.css' }
+          { from: 'popup/font.css', to: 'font.css' },
+          { from: 'contentScript/contentScript.css', to: 'contentScript.css' }
         ]
       })
     ]

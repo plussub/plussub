@@ -20,6 +20,7 @@
         "<all_urls>"
       ],
       "all_frames": true,
+      "css": ["contentScript.css"],
       "js": [
         "contentScript.js"
       ]

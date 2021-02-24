@@ -1,6 +1,7 @@
 browser.browserAction.onClicked.addListener(async () => {
   try {
     await browser.tabs.insertCSS({ file: './font.css', allFrames: true, runAt: 'document_start' });
+    await browser.tabs.insertCSS({ file: './contentScript.css', allFrames: true, runAt: 'document_start' });
   } catch (e) {
     console.warn('insert css failed', e);
   }
