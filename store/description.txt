@@ -1,0 +1,30 @@
+Load subtitle into any video.
+
+Add a subtitle, with a few clicks, to the current video.
+
+By using +Sub, you can search and select your desired subtitle which will be displayed on the video.
+
+This plugin supports Amazon Video, Netflix, Youtube and many more.
+
+You can either way to use the built-in search (powered by tmdb and opensubtitles), to search your desired movie in the desired language
+or you can simply use the file dialog to add any subtitle on your local machine.
+
++Sub has the capability to synchronize the subtitle with the given video.
+You can simply adjust the offset time in the +Sub Dialog, which will directly applied to the subtitle.
+
++Sub has can show the transcript from the given subtitle, which is even copyable with shift+left-click.
+You can also jump to the given time point in the video with a click into the transcript.
+
+Following formats are supported:
+ - *.srt
+ - *.vtt
+ - *.ass
+ - *.ssa
+
++Sub supports the iframes, like embedded youtube videos in a blog.
+
+Github:
+www.github.com/plussub/plussub
+
+If you have questions don't bother to join me in slack:
+https://join.slack.com/t/sub-que5339/shared_invite/zt-mly4w10z-0i1xqK7404oB23o~KXVWIg
