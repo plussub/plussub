@@ -8,9 +8,18 @@
       </div>
       <div style="grid-area: title" class="flex gap-2">
         <div class="font-header text-xl2 font-medium">{{ searchState.tmdb.title }}</div>
-        <div class="self-center" :title="infoTooltip">
-          <fa icon="question-circle" class="h-icon-sm hover:text-primary-700" />
-        </div>
+        <sl-tooltip class="self-center" style="--max-width: 500px;" placement="right">
+           <fa icon="question-circle" class="h-icon-sm hover:text-primary-700" />
+            <div slot="content">
+              <div>
+                {{infoTooltip}}
+              </div>
+              <div>
+                {{infoTooltip}}
+              </div>
+            </div>
+        </sl-tooltip>
+
       </div>
       <div style="grid-area: subtitle" class="text-sm">
         {{ subHeader }}
@@ -97,7 +106,7 @@ export default defineComponent({
       removeHighlightFromVideo: videoStore.actions.removeHighlight,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() =>
-        [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n')
+        [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n\t')
       ),
       tmdbLink: computed(() => `https://www.themoviedb.org/${searchStore.state.value?.tmdb?.media_type}/${searchStore.state.value.tmdb?.tmdb_id}`)
     };

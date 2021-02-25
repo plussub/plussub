@@ -1,12 +1,11 @@
 <template>
   <div>
-    <Expandable :open="true">
-      <template #title>
-        <div class="font-medium font-header">
-          <span class="pr-2">Time</span><span>{{ currentTime }}</span>
-        </div>
-      </template>
-      <template #content>
+
+    <sl-tab-group>
+      <sl-tab slot="nav" panel="time">Time</sl-tab>
+      <sl-tab slot="nav" panel="appearance">Appearance</sl-tab>
+
+      <sl-tab-panel name="time">
         <div class="grid offset-time--container">
           <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">
             <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>
@@ -25,8 +24,58 @@
           <Excerpt v-if="previewSelection === 'excerpt'" style="grid-area: preview; height: 150px; width: calc(100% - 12px)" />
           <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-5" />
         </div>
-      </template>
-    </Expandable>
+      </sl-tab-panel>
+      <sl-tab-panel name="appearance"><sl-color-picker opacity inline v-on="{ 'sl-change': wat }"></sl-color-picker></sl-tab-panel>
+    </sl-tab-group>
+
+<!--    <sl-details :summary="currentTime">-->
+<!--      <div class="grid offset-time&#45;&#45;container">-->
+<!--        <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">-->
+<!--          <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>-->
+<!--          <div class="w-full flex px-2 mt-0.5">-->
+<!--            <input ref="range" :value="offsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6" @input="setOffsetTime" />-->
+<!--            <InputField v-model="offsetTime" step="100" type="number" class="pr-2" />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="font-medium text-xs mx-2 flex" style="grid-area: preview-label">-->
+<!--          <span class="flex-grow">Preview (next 3 subtitles)</span>-->
+<!--          <label for="excerpt" class="pr-1">Excerpt</label>-->
+<!--          <input id="excerpt" v-model="previewSelection" type="radio" value="excerpt" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />-->
+<!--          <label for="diagram" class="pr-1">Diagram</label>-->
+<!--          <input id="diagram" v-model="previewSelection" type="radio" value="diagram" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />-->
+<!--        </div>-->
+<!--        <Excerpt v-if="previewSelection === 'excerpt'" style="grid-area: preview; height: 150px; width: calc(100% - 12px)" />-->
+<!--        <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-5" />-->
+<!--      </div>-->
+<!--    </sl-details>-->
+
+<!--    <Expandable :open="true">-->
+<!--      <template #title>-->
+<!--        <div class="font-medium font-header">-->
+<!--          <span class="pr-2">Time</span><span>{{ currentTime }}</span>-->
+<!--        </div>-->
+<!--      </template>-->
+<!--      <template #content>-->
+<!--        <div class="grid offset-time&#45;&#45;container">-->
+<!--          <div class="flex w-full flex-wrap mx-2 focus-within:text-primary-700" style="grid-area: input">-->
+<!--            <div class="text-xs font-medium w-full" style="grid-area: input-label">Offset time (in ms)</div>-->
+<!--            <div class="w-full flex px-2 mt-0.5">-->
+<!--              <input ref="range" :value="offsetTime" type="range" step="100" min="-3000" max="3000" style="width: 30%" class="mr-6" @input="setOffsetTime" />-->
+<!--              <InputField v-model="offsetTime" step="100" type="number" class="pr-2" />-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="font-medium text-xs mx-2 flex" style="grid-area: preview-label">-->
+<!--            <span class="flex-grow">Preview (next 3 subtitles)</span>-->
+<!--            <label for="excerpt" class="pr-1">Excerpt</label>-->
+<!--            <input id="excerpt" v-model="previewSelection" type="radio" value="excerpt" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />-->
+<!--            <label for="diagram" class="pr-1">Diagram</label>-->
+<!--            <input id="diagram" v-model="previewSelection" type="radio" value="diagram" class="mr-1 text-primary-700 focus:ring-0 focus:ring-offset-0" />-->
+<!--          </div>-->
+<!--          <Excerpt v-if="previewSelection === 'excerpt'" style="grid-area: preview; height: 150px; width: calc(100% - 12px)" />-->
+<!--          <Timeline v-else style="grid-area: preview; height: 80px; width: calc(100% - 12px)" class="mt-5" />-->
+<!--        </div>-->
+<!--      </template>-->
+<!--    </Expandable>-->
   </div>
 </template>
 
@@ -92,7 +141,8 @@ export default defineComponent({
       setOffsetTime: () => offsetTimeSubject.next(range.value?.value),
       offsetTime,
       reset: () => (offsetTime.value = 0),
-      previewSelection: ref('excerpt')
+      previewSelection: ref('excerpt'),
+      wat: (event) => console.warn(event)
     };
   }
 });

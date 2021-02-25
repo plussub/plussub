@@ -11,6 +11,7 @@ export const init = async (): Promise<void> => {
   } else {
     const {preferredLanguage, api} = await storageGet(['preferredLanguage', 'api']);
     app = createApp(appComponent, {preferredLanguage: preferredLanguage ?? 'en', apiVersion: api ?? 'stable'}).component('fa', FontAwesomeIcon);
+    app.config.isCustomElement = tag => tag.startsWith('sl-')
     document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`);
 
     const appShadowDiv = document.createElement('div');
