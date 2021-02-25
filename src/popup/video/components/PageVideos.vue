@@ -4,6 +4,12 @@
       <div>Page Videos</div>
     </div>
     <div style="grid-area: content">
+      <div class="q-pa-md row items-start q-gutter-md">
+        <q-color v-model="hexa" class="my-picker" />
+      </div>
+
+      <q-btn color="primary" label="Primary" />
+
       <div v-if="videoList.length">
         <div
           v-for="(video, index) in videoList"
@@ -28,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, onUnmounted } from 'vue';
+import {defineComponent, inject, onUnmounted, ref} from 'vue';
 import { Video, VideoStore } from '@/video/store';
 
 import Divider from '@/components/Divider.vue';
@@ -50,6 +56,7 @@ export default defineComponent({
     });
 
     return {
+      hexa: ref('#FF00FFCC'),
       highlightVideo: videoStore.actions.highlight,
       removeHighlightFromVideo: videoStore.actions.removeHighlight,
       videoList: videoStore.getters.list,
