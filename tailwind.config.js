@@ -43,7 +43,7 @@ module.exports = {
         grabbing: 'grabbing'
       },
       height: {
-        'icon-sm': '12px',
+        'icon-sm': '16px',
         icon: '24px',
         'icon-lg': '48px',
         fit: 'fit-content'
@@ -62,5 +62,5 @@ module.exports = {
       display: ['hover']
     }
   },
-  plugins: [require('@tailwindcss/forms')]
+  // plugins: [require('@tailwindcss/forms')]
 };

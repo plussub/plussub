@@ -27,6 +27,7 @@ import '@/styles.css';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
+
 export default defineComponent({
   components: {
     Home,
@@ -135,6 +136,29 @@ export default defineComponent({
 <style>
 :host {
   all: initial;
+
+  --sl-color-primary-50: #ecfeff;
+  --sl-color-primary-100: #cffafe;
+  --sl-color-primary-200: #a5f3fc;
+  --sl-color-primary-300: #67e8f9;
+  --sl-color-primary-400: #22d3ee;
+  --sl-color-primary-500: #06b6d4;
+  --sl-color-primary-600: #0891b2;
+  --sl-color-primary-700: #0e7490;
+  --sl-color-primary-800: #155e75;
+  --sl-color-primary-900: #164e63;
+
+  --sl-color-gray-50: #f9fafb;
+  --sl-color-gray-100: #f3f4f6;
+  --sl-color-gray-200: #e5e7eb;
+  --sl-color-gray-300: #d1d5db;
+  --sl-color-gray-400: #9ca3af;
+  --sl-color-gray-500: #6b7280;
+  --sl-color-gray-600: #4b5563;
+  --sl-color-gray-700: #374151;
+  --sl-color-gray-800: #1f2937;
+  --sl-color-gray-900: #111827;
+  --sl-color-gray-950: #0d131e;
 }
 </style>
 <style scoped>
@@ -143,7 +167,6 @@ export default defineComponent({
   width: 400px;
   max-height: 1200px;
   min-height: 400px;
-  height: 1200px;
   grid-template-rows: auto 1fr;
   grid-template-columns: 100%;
 }

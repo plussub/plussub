@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
-import { searchQuery, SubtitleSearchForSeriesVariables } from './searchQuery';
+import {searchQuery, SubtitleSearchForSeries_seasons_seasons, SubtitleSearchForSeriesVariables} from './searchQuery';
 import { ISO639, SearchStore } from '@/search/store';
 import { download } from '@/search/download';
 
@@ -110,12 +110,12 @@ export default defineComponent({
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
+    const seasons = ref<SubtitleSearchForSeries_seasons_seasons[]>([]);
+
     const season = ref(1);
-    const seasonCount = ref(40);
     const showSeasonSelection = ref(false);
 
     const episode = ref(0);
-    const episodeCount = ref(99);
     const showEpisodeSelection = ref(false);
 
     const setSetShowSelection = (apply: boolean, { language, season, episode }: { language: boolean; season: boolean; episode: boolean }) => {
@@ -142,6 +142,7 @@ export default defineComponent({
         tap((result) => {
           loading.value = false;
           entries.value = result.subtitleSearch.data;
+          seasons.value = result.seasons.seasons;
         }),
         takeUntil(unmountObservable)
       )
@@ -169,11 +170,11 @@ export default defineComponent({
       showLanguageSelection,
 
       season,
-      seasonCount,
+      seasonCount: computed(() => seasons.value?.length ?? 0),
       showSeasonSelection,
 
       episode,
-      episodeCount,
+      episodeCount: computed(() => seasons.value?.find((s => s.season_number === season.value))?.episode_count ?? 0),
       showEpisodeSelection,
 
       showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),

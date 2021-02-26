@@ -2,24 +2,23 @@
   <div class="relative bg-surface-50 grid w-full rounded-lg shadow-lg border border-primary-700 result-from-search--card">
     <div style="grid-row: 1/2; grid-column: 1/2" class="z-10 px-2 grid w-full h-full text-white result-from-search--card--hero--text">
       <div class="absolute flex font-medium top-2.5 right-2.5">
-        <div class="text-xs flex align-center">
-          <fa icon="times" class="h-icon-sm hover:text-destructive-icon" @click="remove" />
+        <div class="text-xs flex align-center text-primary-color-700">
+          <fa icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="remove" />
         </div>
       </div>
       <div style="grid-area: title" class="flex gap-2">
         <div class="font-header text-xl2 font-medium">{{ searchState.tmdb.title }}</div>
-        <sl-tooltip class="self-center" style="--max-width: 500px;" placement="right">
-           <fa icon="question-circle" class="h-icon-sm hover:text-primary-700" />
-            <div slot="content">
-              <div>
-                {{infoTooltip}}
-              </div>
-              <div>
-                {{infoTooltip}}
-              </div>
+        <sl-tooltip class="self-center" style="--max-width: 500px" placement="right">
+          <fa icon="question-circle" class="h-icon-sm hover:text-primary-700" />
+          <div slot="content">
+            <div>
+              {{ infoTooltip }}
             </div>
+            <div>
+              {{ infoTooltip }}
+            </div>
+          </div>
         </sl-tooltip>
-
       </div>
       <div style="grid-area: subtitle" class="text-sm">
         {{ subHeader }}
@@ -51,15 +50,17 @@
     <div style="grid-area: loading">
       <LoadingBar :loading="appState.state !== 'DONE'" :error="appState.state === 'ERROR'" class="w-full" />
     </div>
-    <div class="px-4" style="grid-area: settings">
+    <div style="grid-area: settings">
       <slot name="settings" />
     </div>
-    <div class="justify-self-end self-center px-4" style="grid-area: actions">
-      <a class="w-full flex text-primary-500 hover:text-primary-700" @mouseenter="highlightCurrentVideo" @mouseleave="removeHighlightFromVideo">
-        <span class="pr-1"> Highlight video </span>
-        <fa icon="crosshairs" class="h-icon-sm self-center" />
-      </a>
-    </div>
+    <IconButton
+      class="justify-end self-center px-4 w-full"
+      style="grid-area: actions"
+      label="Highlight video"
+      icon="crosshairs"
+      @mouseenter="highlightCurrentVideo"
+      @mouseleave="removeHighlightFromVideo"
+    />
   </div>
 </template>
 
@@ -70,11 +71,13 @@ import { SearchStore } from '@/search/store';
 import LoadingBar from '@/components/LoadingBar.vue';
 import { VideoStore } from '@/video/store';
 import { AppStore } from '@/app/store';
-import {SubtitleStore} from "@/subtitle/store";
+import { SubtitleStore } from '@/subtitle/store';
+import IconButton from '@/components/IconButton.vue';
 
 export default defineComponent({
   components: {
-    LoadingBar
+    LoadingBar,
+    IconButton
   },
   emits: ['remove'],
   setup() {
@@ -106,7 +109,9 @@ export default defineComponent({
       removeHighlightFromVideo: videoStore.actions.removeHighlight,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() =>
-        [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n\t')
+        [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join(
+          '\n\t'
+        )
       ),
       tmdbLink: computed(() => `https://www.themoviedb.org/${searchStore.state.value?.tmdb?.media_type}/${searchStore.state.value.tmdb?.tmdb_id}`)
     };
@@ -119,13 +124,12 @@ export default defineComponent({
   grid-template-areas:
     'header  '
     'loading '
-    '.       '
     'settings'
     '.       '
     '.       '
     'actions '
     '.       ';
-  grid-template-rows: var(--image-height) 1px 16px auto 16px 8px 50px 8px;
+  grid-template-rows: var(--image-height) 1px auto 16px 8px 50px 8px;
   grid-template-columns: 1fr;
 }
 

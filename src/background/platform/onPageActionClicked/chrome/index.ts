@@ -4,6 +4,7 @@
 chrome.action.onClicked.addListener(async () => {
   try {
     await chrome.tabs.insertCSS({ file: './font.css', allFrames: false, runAt: 'document_start' });
+    await chrome.tabs.insertCSS({ file: './shoelace.css', allFrames: false, runAt: 'document_start' });
   } catch (e) {
     console.warn('insert css failed', e);
   }

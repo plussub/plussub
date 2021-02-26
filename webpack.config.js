@@ -38,7 +38,12 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.vue$/,
-          loader: 'vue-loader'
+          loader: 'vue-loader',
+          options: {
+            compilerOptions: {
+              isCustomElement: (tag) => /^sl-/.test(tag)
+            }
+          }
         },
         {
           test: /\.css$/,
@@ -101,6 +106,9 @@ module.exports = (env, argv) => {
           { from: `manifest-${browser}.json`, to: 'manifest.json' },
           { from: 'res', to: 'res' },
           { from: 'popup/font.css', to: 'font.css' },
+          { from: '../node_modules/@shoelace-style/shoelace/dist/esm', to: 'shoelace' },
+          { from: '../node_modules/@shoelace-style/shoelace/dist/shoelace/shoelace.css', to: 'shoelace/shoelace.css' },
+          { from: '../node_modules/@shoelace-style/shoelace/dist/shoelace/icons', to: 'shoelace/icons' },
           { from: 'contentScript/contentScript.css', to: 'contentScript.css' }
         ]
       })

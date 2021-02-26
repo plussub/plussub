@@ -18,7 +18,11 @@
 
         <ResultFromFile v-else-if="current === 'file-card'" class="m-2">
           <template #settings>
-            <Settings />
+            <Settings>
+              <template #info>
+                <FileInfo/>
+              </template>(
+            </Settings>
           </template>
         </ResultFromFile>
 
@@ -60,6 +64,7 @@ import { computed, defineComponent, inject, PropType } from 'vue';
 import PageLayout from '@/components/PageLayout.vue';
 import ResultFromSearch from '@/search/components/ResultFromSearch.vue';
 import ResultFromFile from '@/file/components/ResultFromFile.vue';
+import FileInfo from '@/file/components/FileInfo.vue';
 import PageVideos from '@/video/components/PageVideos.vue';
 import Settings from '@/subtitle/components/Settings.vue';
 
@@ -71,6 +76,7 @@ export default defineComponent({
     PageLayout,
     ResultFromSearch,
     ResultFromFile,
+    FileInfo,
     PageVideos,
     Settings
   },
@@ -113,7 +119,7 @@ export default defineComponent({
 <style scoped>
 .home-content--container {
   min-height: 300px;
-  max-height: 500px;
+  max-height: 700px;
 }
 
 .home-content--container-old {
