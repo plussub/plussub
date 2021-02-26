@@ -17,7 +17,6 @@
     "@apollo/client": "^3.4.0-beta.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/vue-fontawesome": "^3.0.0-2",
     "@plussub/srt-vtt-parser": "^1.0.5",
     "apollo": "^2.32.1",
     "ass-compiler": "^0.1.1",
@@ -29,7 +28,7 @@
     "typeface-roboto": "^1.1.13",
     "typeface-rubik": "^1.1.13",
     "uuid": "^8.3.0",
-    "vue": "^3.0.4"
+    "vue": "^3.0.6"
   },
   "engine": "node >= 0.10",
   "devDependencies": {
@@ -41,7 +40,7 @@
     "@types/jest": "^26.0.16",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
-    "@vue/compiler-sfc": "^3.0.4",
+    "@vue/compiler-sfc": "^3.0.6",
     "autoprefixer": "^10.1.0",
     "copy-webpack-plugin": "^6.3.2",
     "css-loader": "^5.0.1",
@@ -63,7 +62,6 @@
     "typescript": "^4.1.2",
     "url-loader": "^4.1.1",
     "vue-loader": "^16.1.1",
-    "vue-template-compiler": "^2.6.12",
     "web-ext": "^5.4.1",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.1.0"

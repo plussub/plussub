@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
-import { searchQuery, SubtitleSearchForSeriesVariables } from './searchQuery';
+import {searchQuery, SubtitleSearchForSeries_seasons_seasons, SubtitleSearchForSeriesVariables} from './searchQuery';
 import { ISO639, SearchStore } from '@/search/store';
 import { download } from '@/search/download';
 
@@ -110,12 +110,12 @@ export default defineComponent({
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
+    const seasons = ref<SubtitleSearchForSeries_seasons_seasons[]>([]);
+
     const season = ref(1);
-    const seasonCount = ref(40);
     const showSeasonSelection = ref(false);
 
     const episode = ref(0);
-    const episodeCount = ref(99);
     const showEpisodeSelection = ref(false);
 
     const setSetShowSelection = (apply: boolean, { language, season, episode }: { language: boolean; season: boolean; episode: boolean }) => {
@@ -136,27 +136,28 @@ export default defineComponent({
 
     const searchQuerySubject = new Subject<SubtitleSearchForSeriesVariables>();
     searchQuerySubject
-      .pipe(
-        tap(() => (loading.value = true)),
-        switchMap((variables) => from(searchQuery(variables))),
-        tap((result) => {
-          loading.value = false;
-          entries.value = result.subtitleSearch.data;
-        }),
-        takeUntil(unmountObservable)
-      )
-      .subscribe();
+        .pipe(
+            tap(() => (loading.value = true)),
+            switchMap((variables) => from(searchQuery(variables))),
+            tap((result) => {
+              loading.value = false;
+              entries.value = result.subtitleSearch.data;
+              seasons.value = result.seasons.seasons;
+            }),
+            takeUntil(unmountObservable)
+        )
+        .subscribe();
 
     watch(
-      [language, season, episode],
-      ([language, season, episode]) =>
-        searchQuerySubject.next({
-          language: language.iso639_2,
-          tmdb_id: props.tmdb_id,
-          season_number: season,
-          episode_number: episode
-        }),
-      { immediate: true }
+        [language, season, episode],
+        ([language, season, episode]) =>
+            searchQuerySubject.next({
+              language: language.iso639_2,
+              tmdb_id: props.tmdb_id,
+              season_number: season,
+              episode_number: episode
+            }),
+        { immediate: true }
     );
 
     const onlyHearingImpaired = ref(false);
@@ -169,11 +170,11 @@ export default defineComponent({
       showLanguageSelection,
 
       season,
-      seasonCount,
+      seasonCount: computed(() => seasons.value?.length ?? 0),
       showSeasonSelection,
 
       episode,
-      episodeCount,
+      episodeCount: computed(() => seasons.value?.find((s => s.season_number === season.value))?.episode_count ?? 0),
       showEpisodeSelection,
 
       showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),
@@ -181,13 +182,13 @@ export default defineComponent({
       loading,
       entries,
       filteredEntries: computed(() =>
-        entries.value.filter(({ attributes }) => {
-          if (filter.value === '') {
-            return onlyHearingImpaired.value ? attributes.hearing_impaired : true;
-          }
-          const intermediate = attributes.files[0].file_name?.toLowerCase().includes(filter.value.toLowerCase()) ?? false;
-          return onlyHearingImpaired.value ? intermediate && attributes.hearing_impaired : intermediate;
-        })
+          entries.value.filter(({ attributes }) => {
+            if (filter.value === '') {
+              return onlyHearingImpaired.value ? attributes.hearing_impaired : true;
+            }
+            const intermediate = attributes.files[0].file_name?.toLowerCase().includes(filter.value.toLowerCase()) ?? false;
+            return onlyHearingImpaired.value ? intermediate && attributes.hearing_impaired : intermediate;
+          })
       ),
       select: (openSubtitle: SubtitleSearchFragmentResult_data) => {
         appStore.actions.setState({ state: 'SELECTED' });
@@ -201,25 +202,25 @@ export default defineComponent({
         });
 
         download(openSubtitle)
-          .then(({ raw, format }) => {
-            subtitleStore.actions.setRaw({
-              raw,
-              format,
-              id: openSubtitle.attributes.files[0].file_name,
-              language: language.value.iso639_2
-            });
-            subtitleStore.actions.parse();
-            trackStore.actions.track({source: 'search-for-series', language: language.value.iso639_2});
-          })
-          .catch(() => appStore.actions.setState({ state: 'ERROR' }));
+            .then(({ raw, format }) => {
+              subtitleStore.actions.setRaw({
+                raw,
+                format,
+                id: openSubtitle.attributes.files[0].file_name,
+                language: language.value.iso639_2
+              });
+              subtitleStore.actions.parse();
+              trackStore.actions.track({source: 'search-for-series', language: language.value.iso639_2});
+            })
+            .catch(() => appStore.actions.setState({ state: 'ERROR' }));
 
         navigationStore.actions.toHome({ contentTransitionName: 'content-navigate-select-to-home' });
       },
       backFn: (): void =>
-        navigationStore.actions.toMovieTvSearch({
-          contentTransitionName: 'content-navigate-shallow',
-          query: props.searchQuery
-        })
+          navigationStore.actions.toMovieTvSearch({
+            contentTransitionName: 'content-navigate-shallow',
+            query: props.searchQuery
+          })
     };
   }
 });

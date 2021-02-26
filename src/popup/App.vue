@@ -141,7 +141,7 @@ export default defineComponent({
 .app--container {
   max-width: 400px;
   width: 400px;
-  max-height: 720px;
+  max-height: 1200px;
   min-height: 400px;
   grid-template-rows: auto 1fr;
   grid-template-columns: 100%;

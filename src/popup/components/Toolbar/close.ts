@@ -4,7 +4,7 @@ export const close = (): void => {
   const app = useApp();
   const appDiv = document.getElementById('plusSubShadow')?.shadowRoot?.getElementById('plussub');
   // unmount app otherwise watch will continue to work
-  app.unmount(appDiv as Element);
+  app.unmount();
 
   document.getElementById('plusSubShadow')?.remove();
 };

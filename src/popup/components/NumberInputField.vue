@@ -1,18 +1,19 @@
 <template>
   <div class="grid focus-within:text-primary-700" style="display: grid; grid-template-areas: 'bar'; grid-template-columns: 1fr auto; grid-template-rows: 30px">
     <input
-        ref="input"
-        :value="modelValue"
-        class="w-full rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50"
-        autofocus
-        style="grid-area: bar"
-        :placeholder="placeholder"
-        v-bind="$attrs"
-        @input="$emit('update:modelValue', $event.target.value)"
-        @keydown.stop
-        @keypress.stop
+      ref="input"
+      :value="modelValue"
+      class="w-full rounded focus:border-primary-500 focus:ring focus:ring-primary-700 focus:ring-opacity-50"
+      autofocus
+      type="number"
+      style="grid-area: bar"
+      :placeholder="placeholder"
+      v-bind="$attrs"
+      @input="$emit('update:modelValue', $event.target.value)"
+      @keydown.stop
+      @keypress.stop
     />
-    <div class="justify-self-end self-center mr-2 text" :class="{'mr-2': type === 'text', 'mr-10': type === 'number'}" style="grid-area: bar">
+    <div class="justify-self-end self-center mr-2 text" :class="{ 'mr-2': type === 'text', 'mr-10': type === 'number' }" style="grid-area: bar">
       <fa v-if="modelValue || placeholderIcon === ''" icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="clear" />
       <fa v-else :icon="placeholderIcon" class="h-icon-sm" />
     </div>
@@ -20,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 
 export default defineComponent({
   props: {
@@ -46,10 +47,16 @@ export default defineComponent({
     return {
       input,
       clear: () => {
-        emit('update:modelValue', "");
+        emit('update:modelValue', '');
         input.value?.focus();
       }
     };
   }
 });
 </script>
+
+<style>
+input[type='number']::-webkit-inner-spin-button {
+  opacity: 1;
+}
+</style>
