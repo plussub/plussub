@@ -1,21 +1,18 @@
 <template>
   <div style="box-sizing: border-box">
     <transition name="fade-loading-bar" mode="out-in">
-      <div v-if="loading || error" class="h-px relative border-t border-solid border-surface-200 mr-1">
-        <div class="absolute h-1" :class="{'loading-bar': !error, 'bg-primary-700': !error, 'bg-error-icon': error, 'w-full': error}">&nbsp;</div>
-      </div>
+      <sl-progress-bar v-if="loading || error" :percentage="100" :indeterminate="loading" :class="{error}" style="--height: 1px"></sl-progress-bar>
     </transition>
-
     <Divider class="w-full border-surface-400" />
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from 'vue';
 import { default as Divider } from '@/components/Divider.vue';
 
 export default defineComponent({
   components: {
-    Divider,
+    Divider
   },
   props: {
     loading: {
@@ -44,8 +41,12 @@ export default defineComponent({
   max-height: 0;
 }
 
-.loading-bar{
-  animation: loading-bar 2.5s infinite ease-in-out
+.loading-bar {
+  --height: 1px;
+}
+
+sl-progress-bar.error::part(indicator) {
+  background-color: var(--sl-color-danger-500);
 }
 
 @keyframes loading-bar {
