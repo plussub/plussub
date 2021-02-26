@@ -5,7 +5,7 @@
       :options="seasonList"
       :filter-fn="filter"
       filter-placeholder="Filter episodes"
-      class="px-3 mt-2"
+      class="px-2 mt-2"
       @update:selected="$emit('update:selected', $event)"
       @update:show="$emit('update:show', $event)"
   >

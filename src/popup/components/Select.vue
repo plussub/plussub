@@ -1,6 +1,6 @@
 <template>
   <div class="relative w-full">
-    <div class="flex">
+    <div class="flex rounded border px-2 pt-2 pb-1" :class="{ 'border-primary-500': show, ring: show, 'ring-primary-700': show, 'ring-opacity-50': show }" style="background-color: white">
       <a class="flex-grow" :class="{ 'text-primary-700': show, 'font-medium': show }" @click="toggleShow">
         <slot name="currentSelected">
           <span> Current selected: {{ selected }}</span>

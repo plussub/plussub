@@ -1,5 +1,5 @@
 <template>
-  <div class="grid focus-within:text-primary-700" style="display: grid; grid-template-areas: 'bar'; grid-template-columns: 1fr auto; grid-template-rows: 30px">
+  <div class="grid focus-within:text-primary-700 border-0" style="display: grid; grid-template-areas: 'bar'; grid-template-columns: 1fr auto; grid-template-rows: 30px; background-color: transparent">
     <input
       ref="input"
       :value="modelValue"
@@ -13,7 +13,7 @@
       @keydown.stop
       @keypress.stop
     />
-    <div class="justify-self-end self-center mr-2 text" :class="{ 'mr-2': type === 'text', 'mr-10': type === 'number' }" style="grid-area: bar">
+    <div class="justify-self-end self-center mr-8 text" :class="{ 'mr-2': type === 'text', 'mr-10': type === 'number' }" style="grid-area: bar">
       <fa v-if="modelValue || placeholderIcon === ''" icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="clear" />
       <fa v-else :icon="placeholderIcon" class="h-icon-sm" />
     </div>

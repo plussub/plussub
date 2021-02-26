@@ -37,10 +37,8 @@ import { VideoStore } from '@/video/store';
 import Duration from 'luxon/src/duration';
 import { SubtitleStore } from '@/subtitle/store';
 import RangeInputField from '@/components/RangeInputField.vue';
-import RadioPair from '@/components/RadioPair.vue';
 export default defineComponent({
   components: {
-    RadioPair,
     RangeInputField,
     Excerpt,
     Timeline,

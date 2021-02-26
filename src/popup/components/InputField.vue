@@ -8,6 +8,7 @@
         style="grid-area: bar"
         :placeholder="placeholder"
         v-bind="$attrs"
+        type="text"
         @input="$emit('update:modelValue', $event.target.value)"
         @keydown.stop
         @keypress.stop
