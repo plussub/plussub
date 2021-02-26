@@ -2,7 +2,7 @@
   <sl-tab-group class="plussub-tab-group">
     <sl-tab slot="nav" panel="time">
       <fa icon="clock" class="h-icon-sm mr-2" />
-      Time {{ currentTime }}
+      <span class="mr-2">Time</span> <span style="font-family: var(--sl-font-mono)">{{ currentTime }}</span>
     </sl-tab>
     <sl-tab slot="nav" panel="appearance">
       <fa icon="palette" class="h-icon-sm mr-2" />
