@@ -4,7 +4,7 @@
     <input type="color" v-model="color">
     <RangeInputField step="1" min="0" max="255"/>
 
-    <div class="font-medium">Background color</div>
+    <div class="font-medium">Bg color</div>
     <input type="color" v-model="backgroundColor">
     <RangeInputField step="1" min="0" max="255"/>
 
