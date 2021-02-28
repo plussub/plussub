@@ -8,11 +8,11 @@
     <div class="flex mt-2 px-2 gap-2" style="grid-area: header">
       <div class="font-header font-medium text-2xl">Subtitle via file</div>
     </div>
-    <div class="px-4" style="grid-area: settings">
+    <div style="grid-area: settings">
       <slot name="settings" />
     </div>
-    <IconButton
-        class="justify-end self-center px-4 w-full"
+    <SuffixIconButton
+        class="justify-end self-center px-4 flex"
         style="grid-area: actions"
         label="Highlight video"
         icon="crosshairs"
@@ -29,11 +29,11 @@ import { FileStore } from '@/file/store';
 import { AppStore } from '@/app/store';
 import { SubtitleStore } from '@/subtitle/store';
 import { VideoStore } from '@/video/store';
-import IconButton from '@/components/IconButton.vue';
+import SuffixIconButton from '@/components/SuffixIconButton.vue';
 
 export default defineComponent({
   components: {
-    IconButton
+    SuffixIconButton
   },
   setup() {
     const appStore = inject<AppStore>('appStore');

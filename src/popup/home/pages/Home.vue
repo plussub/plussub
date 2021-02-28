@@ -21,7 +21,7 @@
             <Settings>
               <template #info>
                 <FileInfo/>
-              </template>(
+              </template>
             </Settings>
           </template>
         </ResultFromFile>

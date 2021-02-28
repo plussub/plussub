@@ -13,7 +13,7 @@
         @keydown.stop
         @keypress.stop
     />
-    <div class="justify-self-end self-center mr-2 text" :class="{'mr-2': type === 'text', 'mr-10': type === 'number'}" style="grid-area: bar">
+    <div class="justify-self-end self-center mr-2 text" style="grid-area: bar">
       <fa v-if="modelValue || placeholderIcon === ''" icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="clear" />
       <fa v-else :icon="placeholderIcon" class="h-icon-sm" />
     </div>

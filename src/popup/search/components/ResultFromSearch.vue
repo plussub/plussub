@@ -42,19 +42,11 @@
     <div style="grid-area: loading">
       <LoadingBar :loading="appState.state !== 'DONE'" :error="appState.state === 'ERROR'" class="w-full" />
     </div>
-    <div class="px-4" style="grid-area: settings">
+    <div style="grid-area: settings">
       <slot name="settings" />
     </div>
-    <IconButton
-        class="justify-end self-center px-4 w-full"
-        style="grid-area: actions"
-        label="Highlight video"
-        icon="crosshairs"
-        @mouseenter="highlightCurrentVideo"
-        @mouseleave="removeHighlightFromVideo"
-    />
-    <IconButton
-        class="justify-end self-center px-4 w-full"
+    <SuffixIconButton
+        class="justify-end self-center px-4 flex"
         style="grid-area: actions"
         label="Highlight video"
         icon="crosshairs"
@@ -72,11 +64,12 @@ import LoadingBar from '@/components/LoadingBar.vue';
 import { VideoStore } from '@/video/store';
 import { AppStore } from '@/app/store';
 import {SubtitleStore} from "@/subtitle/store";
-import IconButton from '@/components/IconButton.vue';
+import SuffixIconButton from '@/components/SuffixIconButton.vue';
+
 export default defineComponent({
   components: {
     LoadingBar,
-    IconButton
+    SuffixIconButton
   },
   emits: ['remove'],
   setup() {
