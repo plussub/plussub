@@ -1,6 +1,6 @@
 {
   "name": "+Sub",
-  "version": "4.18.3",
+  "version": "5.0.0",
   "manifest_version": 3,
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
@@ -20,7 +20,9 @@
         "<all_urls>"
       ],
       "all_frames": true,
-      "css": ["contentScript.css"],
+      "css": [
+        "contentScript.css"
+      ],
       "js": [
         "contentScript.js"
       ]
