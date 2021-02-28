@@ -1,7 +1,9 @@
 <template>
   <div style="grid-template-columns: auto 1fr; grid-column-gap: 0.5rem" class="grid w-full leading-relaxed">
-    <div class="font-medium">Filename</div>
-    <div>{{ filename }}</div>
+    <div class="font-medium">Format</div>
+    <div>{{ format }}</div>
+    <div class="font-medium">Language</div>
+    <div>{{ language }}</div>
   </div>
 </template>
 
@@ -11,9 +13,10 @@ import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   setup() {
-    const fileStore = useInjectStore('fileStore');
+    const searchStore = useInjectStore('searchStore');
     return {
-      filename: fileStore.state.value.filename
+      format: searchStore.state.value.openSubtitle?.format,
+      language: searchStore.state.value.openSubtitle?.languageName
     };
   }
 });

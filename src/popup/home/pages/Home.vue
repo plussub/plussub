@@ -12,7 +12,11 @@
       <div class="flex flex-wrap h-full home-content--container" :class="{ 'bg-surface-100': current === 'search-card' || current === 'file-card' }">
         <ResultFromSearch v-if="current === 'search-card'" class="m-2">
           <template #settings>
-            <Settings />
+            <Settings>
+              <template #info>
+                <SearchResultInfo/>
+              </template>
+            </Settings>
           </template>
         </ResultFromSearch>
 
@@ -68,9 +72,11 @@ import FileInfo from '@/file/components/FileInfo.vue';
 import PageVideos from '@/video/components/PageVideos.vue';
 import Settings from '@/subtitle/components/Settings.vue';
 import { useInjectStore } from '@/composables/useInjectStore';
+import SearchResultInfo from "@/search/components/SearchResultInfo.vue";
 
 export default defineComponent({
   components: {
+    SearchResultInfo,
     PageLayout,
     ResultFromSearch,
     ResultFromFile,

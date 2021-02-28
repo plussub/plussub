@@ -8,14 +8,11 @@
       </div>
       <div style="grid-area: title" class="flex gap-2">
         <div class="font-header text-xl2 font-medium">{{ searchState.tmdb.title }}</div>
-        <div class="self-center" :title="infoTooltip">
-          <fa icon="question-circle" class="h-icon-sm hover:text-primary-700" />
-        </div>
       </div>
       <div style="grid-area: subtitle" class="text-sm">
         {{ subHeader }}
       </div>
-      <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 8px" class="grid w-full text-xs leading-relaxed">
+      <div style="grid-area: detail; grid-template-columns: auto 1fr; grid-column-gap: 0.5rem" class="grid w-full text-xs leading-relaxed">
         <div style="grid-column: 1 / 3">Rating</div>
         <div style="grid-column: 1 / 2" class="px-2">
           <a :href="tmdbLink" target="_blank" class="inline-flex gap-1 w-full text-primary-500 hover:text-primary-700 hover:underline">
@@ -94,11 +91,6 @@ export default defineComponent({
       highlightCurrentVideo: () => videoStore.actions.highlight({ video: videoStore.getters.current.value }),
       removeHighlightFromVideo: videoStore.actions.removeHighlight,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
-      infoTooltip: computed(() =>
-        [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join(
-          '\n'
-        )
-      ),
       tmdbLink: computed(() => `https://www.themoviedb.org/${searchStore.state.value?.tmdb?.media_type}/${searchStore.state.value.tmdb?.tmdb_id}`)
     };
   }
