@@ -159,15 +159,18 @@ export const init = ({ use }: InitPayload): VideoStore => {
         const subscriptionId = nanoid(12);
         const unmountSubject = new Subject<undefined>();
 
-        use.contentScriptStore.actions.sendCommand(origin, {
-          plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
-          video: {
-            id: videoId
-          },
-          subscription: {
-            id: subscriptionId
-          }
-        });
+        // workaround race condition if popup will be initialized
+        setTimeout(() => {
+          use.contentScriptStore.actions.sendCommand(origin, {
+            plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
+            video: {
+              id: videoId
+            },
+            subscription: {
+              id: subscriptionId
+            }
+          });
+        }, 200);
 
         timeSubject
           .pipe(
