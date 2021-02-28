@@ -46,6 +46,10 @@ export default defineComponent({
     apiVersion: {
       type: String as PropType<'dev' | 'stable'>,
       required: true
+    },
+    style: {
+      type: Object as PropType<Record<string, string>>,
+      required: true
     }
   },
   setup(props) {
@@ -66,7 +70,7 @@ export default defineComponent({
     provide('searchStore', searchStore);
     const trackStore = initTrackStore();
     provide('trackStore', trackStore);
-    const appearanceStore = initAppearanceStore({ use: { contentScriptStore } });
+    const appearanceStore = initAppearanceStore({ use: { contentScriptStore }, initStyle: props.style });
     provide('appearanceStore', appearanceStore);
 
     const unmountSubject = new Subject<undefined>();
