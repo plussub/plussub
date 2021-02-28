@@ -20,7 +20,7 @@ export interface AppearanceStore {
   };
 }
 
-type ApplyStylePayload = Record<'color' | 'backgroundColor', string>;
+type ApplyStylePayload = Record<'color' | 'backgroundColor' | 'fontSize', string>;
 
 declare global {
   interface Window {
@@ -36,12 +36,14 @@ export const init = ({ use, initStyle }: InitPayload): AppearanceStore => {
     tap((origin) => {
       const color = window.plussub_currentStyle.color ? { '--plusSub-cue-color': window.plussub_currentStyle.color } : {};
       const backgroundColor = window.plussub_currentStyle.backgroundColor ? { '--plusSub-cue-background-color': window.plussub_currentStyle.backgroundColor } : {};
+      const fontSize = window.plussub_currentStyle.backgroundColor ? { '--plusSub-cue-font-size': `${window.plussub_currentStyle.fontSize}px` } : {};
 
       use.contentScriptStore.actions.sendCommand(origin, {
         plusSubActionFromPopup: 'APPLY_STYLE',
         style: {
           ...color,
-          ...backgroundColor
+          ...backgroundColor,
+          ...fontSize
         }
       });
     })
@@ -62,12 +64,14 @@ export const init = ({ use, initStyle }: InitPayload): AppearanceStore => {
 
         const color = window.plussub_currentStyle.color ? { '--plusSub-cue-color': window.plussub_currentStyle.color } : {};
         const backgroundColor = window.plussub_currentStyle.backgroundColor ? { '--plusSub-cue-background-color': window.plussub_currentStyle.backgroundColor } : {};
+        const fontSize = window.plussub_currentStyle.backgroundColor ? { '--plusSub-cue-font-size': `${window.plussub_currentStyle.fontSize}px` } : {};
 
         use.contentScriptStore.actions.sendCommandAll({
           plusSubActionFromPopup: 'APPLY_STYLE',
           style: {
             ...color,
-            ...backgroundColor
+            ...backgroundColor,
+            ...fontSize
           }
         });
       }

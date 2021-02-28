@@ -51,7 +51,13 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
     }),
     tap(({ track, messageEvent }) => {
       [...(track.cues ?? [])].forEach((cue) => track.removeCue(cue));
-      messageEvent.data.subtitle.entries.map((vtt) => new VTTCue(vtt.from / 1000, vtt.to / 1000, `<c.plussub>${vtt.text}</c.plussub>`)).forEach((cue) => track.addCue(cue));
+      messageEvent.data.subtitle.entries
+        .map((vtt) => {
+          const cue =  new VTTCue(vtt.from / 1000, vtt.to / 1000, `<c.plussub>${vtt.text}</c.plussub>`);
+          cue.size = 100;
+          return cue;
+        })
+        .forEach((cue) => track.addCue(cue));
       track.mode = 'showing';
     })
   );

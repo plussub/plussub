@@ -1,6 +1,6 @@
 ::cue( .plusSub ) {
     color: var(--plusSub-cue-color);
-    background-color: var(--plusSub-cue-background-color);
+    /*background-color: var(--plusSub-cue-background-color);*/
     font-size: var(--plusSub-cue-font-size);
     font-weight: var(--plusSub-cue-font-weight);
     line-height: var(--plusSub-cue-line-height);
