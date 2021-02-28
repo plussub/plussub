@@ -37,12 +37,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, PropType, ref, watch } from 'vue';
+import { defineComponent, PropType, ref, watch } from 'vue';
 import { searchQuery, VideoSearch_videoSearch_entries } from './searchQuery';
-import { SearchStore } from '@/search/store';
-import { NavigationStore } from '@/navigation/store';
 import { getVideoName } from '@/util/name';
-import { VideoStore } from '@/video/store';
 
 import FilePick from '@/file/components/FilePick.vue';
 import PageLayout from '@/components/PageLayout.vue';
@@ -53,7 +50,7 @@ import InputField from '@/components/InputField.vue';
 import { asyncScheduler, from, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, tap, throttleTime } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
-import {useInjectStore} from "@/composables/useInjectStore";
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -88,31 +85,33 @@ export default defineComponent({
     const entries = ref<VideoSearch_videoSearch_entries[]>([]);
 
     const searchQuerySubject = new Subject<string>();
-    searchQuerySubject.pipe(
-      map((q) => q.trim()),
-      tap(() => (loading.value = true)),
-      throttleTime(750, asyncScheduler, {
-        trailing: true,
-        leading: true
-      }),
-      switchMap((query) =>
-        query !== ''
-          ? from(searchQuery({ query }))
-          : from(
-              Promise.resolve({
-                videoSearch: { entries: [] },
-                query: ''
-              })
-            )
-      ),
-      tap((result) => {
-        if (result.query === internalQuery.value.trim()) {
-          loading.value = false;
-          entries.value = result.videoSearch.entries;
-        }
-      }),
-      takeUntil(unmountObservable)
-    ).subscribe();
+    searchQuerySubject
+      .pipe(
+        map((q) => q.trim()),
+        tap(() => (loading.value = true)),
+        throttleTime(750, asyncScheduler, {
+          trailing: true,
+          leading: true
+        }),
+        switchMap((query) =>
+          query !== ''
+            ? from(searchQuery({ query }))
+            : from(
+                Promise.resolve({
+                  videoSearch: { entries: [] },
+                  query: ''
+                })
+              )
+        ),
+        tap((result) => {
+          if (result.query === internalQuery.value.trim()) {
+            loading.value = false;
+            entries.value = result.videoSearch.entries;
+          }
+        }),
+        takeUntil(unmountObservable)
+      )
+      .subscribe();
 
     watch(internalQuery, (query) => searchQuerySubject.next(query), { immediate: true });
 

@@ -2,7 +2,7 @@
   <div style="box-sizing: border-box">
     <transition name="fade-loading-bar" mode="out-in">
       <div v-if="loading || error" class="h-px relative border-t border-solid border-surface-200 mr-1">
-        <div class="absolute h-1" :class="{'loading-bar': !error, 'bg-primary-700': !error, 'bg-error-icon': error, 'w-full': error}">&nbsp;</div>
+        <div class="absolute h-1" :class="{ 'loading-bar': !error, 'bg-primary-700': !error, 'bg-error-icon': error, 'w-full': error }">&nbsp;</div>
       </div>
     </transition>
 
@@ -10,12 +10,12 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import { defineComponent, PropType } from 'vue';
 import { default as Divider } from '@/components/Divider.vue';
 
 export default defineComponent({
   components: {
-    Divider,
+    Divider
   },
   props: {
     loading: {
@@ -44,10 +44,12 @@ export default defineComponent({
   max-height: 0;
 }
 
-.loading-bar{
-  animation: loading-bar 2.5s infinite ease-in-out
+.loading-bar {
+  animation: loading-bar 2.5s infinite ease-in-out;
 }
+</style>
 
+<style>
 @keyframes loading-bar {
   0% {
     left: 0;

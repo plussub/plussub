@@ -1,9 +1,6 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <a class="self-center pr-4" v-if="appState.state !== 'NONE'" @click="toTranscript()">
-        <fa type="local" icon="caption" class="h-icon hover:text-on-primary-hover-500"></fa>
-      </a>
       <a class="self-center pr-4" @click="toSettings()">
         <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
       </a>
@@ -97,7 +94,6 @@ export default defineComponent({
 
     return {
       appState: appStore.state,
-      toTranscript: navigationStore.actions.toTranscript,
       toSettings: navigationStore.actions.toSettings,
       current: computed(() => {
         if (appStore.state.value.state !== 'NONE' && appStore.state.value.src === 'SEARCH') {
@@ -119,7 +115,7 @@ export default defineComponent({
 <style scoped>
 .home-content--container {
   min-height: 300px;
-  max-height: 700px;
+  max-height: 720px;
 }
 
 .home-content--container-old {

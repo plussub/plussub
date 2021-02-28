@@ -1,5 +1,5 @@
 <template>
-  <input ref="range" :value="modelValue" @input="setValue" type="range" v-bind="$attrs" />
+  <input :value="modelValue" type="range" v-bind="$attrs" @input="setValue" />
 </template>
 
 <script lang="ts">
@@ -26,7 +26,7 @@ export default defineComponent({
         )
         .subscribe();
     return {
-      setValue: (event) => emit('update:modelValue', subject.next(event.target.value))
+      setValue: (event) =>  subject.next(event.target.value)
     };
   }
 });
