@@ -53,6 +53,7 @@ import InputField from '@/components/InputField.vue';
 import { asyncScheduler, from, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, tap, throttleTime } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
+import {useInjectStore} from "@/composables/useInjectStore";
 
 export default defineComponent({
   components: {
@@ -76,14 +77,11 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const searchStore = inject<SearchStore>('searchStore');
-    const navigationStore = inject<NavigationStore>('navigationStore');
-    const videoStore = inject<VideoStore>('videoStore');
-    const unmountObservable = useUnmountObservable();
+    const searchStore = useInjectStore('searchStore');
+    const navigationStore = useInjectStore('navigationStore');
+    const videoStore = useInjectStore('videoStore');
 
-    if (!searchStore || !navigationStore || !videoStore) {
-      throw new Error('inject failed');
-    }
+    const unmountObservable = useUnmountObservable();
 
     const internalQuery = ref(props.query ?? '');
     const loading = ref(true);

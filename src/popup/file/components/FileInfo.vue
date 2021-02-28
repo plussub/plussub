@@ -1,21 +1,17 @@
 <template>
-  <div>
-    filename: {{filename}}
-  </div>
+  <div>filename: {{ filename }}</div>
 </template>
 
 <script lang="ts">
-import {defineComponent, inject} from "vue";
-import {FileStore} from "@/file/store";
+import { defineComponent } from 'vue';
+import { useInjectStore } from '@/composables/useInjectStore';
+
 export default defineComponent({
-  setup(){
-    const fileStore = inject<FileStore>('fileStore');
-    if (!fileStore) {
-      throw new Error('inject failed');
-    }
+  setup() {
+    const fileStore = useInjectStore('fileStore');
     return {
       filename: fileStore.state.value.filename
-    }
+    };
   }
 });
 </script>

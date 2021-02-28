@@ -12,38 +12,31 @@
       <slot name="settings" />
     </div>
     <SuffixIconButton
-        class="justify-end self-center px-4 flex"
-        style="grid-area: actions"
-        label="Highlight video"
-        icon="crosshairs"
-        @mouseenter="highlightCurrentVideo"
-        @mouseleave="removeHighlightFromVideo"
+      class="justify-end self-center px-4 flex"
+      style="grid-area: actions"
+      label="Highlight video"
+      icon="crosshairs"
+      @mouseenter="highlightCurrentVideo"
+      @mouseleave="removeHighlightFromVideo"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, onUnmounted } from 'vue';
+import { computed, defineComponent, onUnmounted } from 'vue';
 import { capitalizeFirst } from '@/util/string';
-import { FileStore } from '@/file/store';
-import { AppStore } from '@/app/store';
-import { SubtitleStore } from '@/subtitle/store';
-import { VideoStore } from '@/video/store';
 import SuffixIconButton from '@/components/SuffixIconButton.vue';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
     SuffixIconButton
   },
   setup() {
-    const appStore = inject<AppStore>('appStore');
-    const fileStore = inject<FileStore>('fileStore');
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const videoStore = inject<VideoStore>('videoStore');
-
-    if (!appStore || !fileStore || !subtitleStore || !videoStore) {
-      throw new Error('inject failed');
-    }
+    const appStore = useInjectStore('appStore');
+    const fileStore = useInjectStore('fileStore');
+    const subtitleStore = useInjectStore('subtitleStore');
+    const videoStore = useInjectStore('videoStore');
 
     onUnmounted(() => {
       videoStore.actions.removeHighlight();

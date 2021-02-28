@@ -25,14 +25,11 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, inject, PropType} from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import { clear as storageClear } from 'storage';
 
 import PageLayout from '@/components/PageLayout.vue';
-import { SearchStore } from '@/search/store';
-import { ApiStore } from '@/api/store';
-import { VideoStore } from '@/video/store';
-import {NavigationStore} from "@/navigation/store";
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -46,14 +43,11 @@ export default defineComponent({
     }
   },
   setup() {
-    const apiStore = inject<ApiStore>('apiStore');
-    const searchStore = inject<SearchStore>('searchStore');
-    const navigationStore = inject<NavigationStore>('navigationStore');
-    const videoStore = inject<VideoStore>('videoStore');
+    const apiStore = useInjectStore('apiStore');
+    const searchStore = useInjectStore('searchStore');
+    const navigationStore = useInjectStore('navigationStore');
+    const videoStore = useInjectStore('videoStore');
 
-    if(!searchStore || !apiStore || !navigationStore || !videoStore){
-      throw new Error('inject failed');
-    }
     return {
       preferredLanguage: computed(() => searchStore.state.value.preferredLanguage),
       apiVersion: computed({
@@ -61,13 +55,13 @@ export default defineComponent({
           return apiStore.state.value.version;
         },
         set(version: 'stable' | 'dev') {
-          apiStore.actions.setVersion({version});
+          apiStore.actions.setVersion({ version });
         }
       }),
       clearUserData: async () => {
         await storageClear();
-        searchStore.actions.setPreferredLanguage({preferredLanguage: 'en'});
-        apiStore.actions.setVersion({version: 'stable'});
+        searchStore.actions.setPreferredLanguage({ preferredLanguage: 'en' });
+        apiStore.actions.setVersion({ version: 'stable' });
       },
       backFn: () => (videoStore.getters.count.value === 1 ? navigationStore.actions.toMovieTvSearch() : navigationStore.actions.toHome())
     };

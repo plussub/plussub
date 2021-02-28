@@ -35,14 +35,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref } from 'vue';
-import { computed } from '@vue/reactivity';
-import { VideoStore } from '@/video/store';
+import { defineComponent, ref } from 'vue';
 import Duration from 'luxon/src/duration';
-import { SubtitleStore } from '@/subtitle/store';
 import PrefixIconButton from '@/components/PrefixIconButton.vue';
 import Divider from '@/components/Divider.vue';
 import TimeSettings from '@/subtitle/components/TimeSettings.vue';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -51,10 +49,7 @@ export default defineComponent({
     PrefixIconButton
   },
   setup() {
-    const videoStore = inject<VideoStore>('videoStore');
-    if (!videoStore) {
-      throw new Error('inject failed');
-    }
+    const videoStore = useInjectStore('videoStore');
     const currentTime = ref<string>(Duration.fromMillis(0).toFormat('hh:mm:ss'));
     videoStore.actions.useTimeUpdate(({ time }): void => {
       currentTime.value = Duration.fromMillis(time * 1000).toFormat('hh:mm:ss');

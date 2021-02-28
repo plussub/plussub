@@ -33,21 +33,17 @@ import { Video, VideoStore } from '@/video/store';
 
 import Divider from '@/components/Divider.vue';
 import { NavigationStore } from '@/navigation/store';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
     Divider
   },
   setup() {
-    const videoStore = inject<VideoStore>('videoStore');
-    const navigationStore = inject<NavigationStore>('navigationStore');
+    const videoStore = useInjectStore('videoStore');
+    const navigationStore = useInjectStore('navigationStore');
 
-    if (!videoStore || !navigationStore) {
-      throw new Error('inject failed');
-    }
-    onUnmounted(() => {
-      videoStore.actions.removeHighlight();
-    });
+    onUnmounted(() => videoStore.actions.removeHighlight());
 
     return {
       highlightVideo: videoStore.actions.highlight,

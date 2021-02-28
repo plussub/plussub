@@ -1,6 +1,6 @@
 <template>
   <div class="px-2 overflow-y-auto">
-    <div v-for="item in excerpt" :key="item.text">
+    <div v-for="(item,idx) in excerpt" :key="idx">
       <div class="mt-4 text-xs font-medium flex items-center">
         <span class="mr-2">{{ formatTime(item.from) }}</span>
         <fa icon="arrow-right" class="mr-2 h-icon-sm inline-block" />
@@ -14,26 +14,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { computed } from '@vue/reactivity';
-import { SubtitleStore } from '@/subtitle/store';
 import Duration from 'luxon/src/duration';
 import { findNext } from './findNext';
-import { VideoStore} from '@/video/store';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   setup() {
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const videoStore = inject<VideoStore>('videoStore');
-
-    if (!subtitleStore || !videoStore) {
-      throw new Error('inject failed');
-    }
+    const subtitleStore = useInjectStore('subtitleStore');
+    const videoStore = useInjectStore('videoStore');
 
     const currentTime = ref<number>(0);
 
     videoStore.actions.useTimeUpdate(({ time }): void => {
-        currentTime.value = time;
+      currentTime.value = time;
     });
 
     const currentPos = ref(-1);

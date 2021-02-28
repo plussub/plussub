@@ -1,7 +1,7 @@
 <template>
   <div ref="draggableAreaRef" class="grid shadow home-toolbar--container--content cursor-grab active:cursor-grabbing bg-primary-500 text-on-primary-500">
     <a v-if="hasBack" style="grid-area: logo" @click="backFn ? backFn() : toHome()">
-      <fa icon="chevron-left" class="h-full py-2 pl-1 hover:text-on-primary-hover-500"/>
+      <fa icon="chevron-left" class="h-full py-2 pl-1 hover:text-on-primary-hover-500" />
     </a>
     <div v-else>
       <logo style="grid-area: logo" class="h-full w-full" />
@@ -20,13 +20,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, PropType, inject} from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import { useDraggableArea } from '@/composables';
 import Logo from './Logo.vue';
 
 import { close } from './close';
 import logo from '@/res/plussub128.png';
-import { NavigationStore } from '@/navigation/store';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -45,10 +45,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const navigationStore = inject<NavigationStore>('navigationStore');
-    if(!navigationStore){
-      throw new Error('inject failed');
-    }
+    const navigationStore = useInjectStore('navigationStore');
 
     const draggableAreaRef = ref(null);
     useDraggableArea({ draggableAreaRef });

@@ -46,25 +46,22 @@
       <slot name="settings" />
     </div>
     <SuffixIconButton
-        class="justify-end self-center px-4 flex"
-        style="grid-area: actions"
-        label="Highlight video"
-        icon="crosshairs"
-        @mouseenter="highlightCurrentVideo"
-        @mouseleave="removeHighlightFromVideo"
+      class="justify-end self-center px-4 flex"
+      style="grid-area: actions"
+      label="Highlight video"
+      icon="crosshairs"
+      @mouseenter="highlightCurrentVideo"
+      @mouseleave="removeHighlightFromVideo"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, onUnmounted } from 'vue';
+import { computed, defineComponent, onUnmounted } from 'vue';
 import { capitalizeFirst } from '@/util/string';
-import { SearchStore } from '@/search/store';
 import LoadingBar from '@/components/LoadingBar.vue';
-import { VideoStore } from '@/video/store';
-import { AppStore } from '@/app/store';
-import {SubtitleStore} from "@/subtitle/store";
 import SuffixIconButton from '@/components/SuffixIconButton.vue';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -73,14 +70,11 @@ export default defineComponent({
   },
   emits: ['remove'],
   setup() {
-    const appStore = inject<AppStore>('appStore');
-    const searchStore = inject<SearchStore>('searchStore');
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const videoStore = inject<VideoStore>('videoStore');
+    const appStore = useInjectStore('appStore');
+    const searchStore = useInjectStore('searchStore');
+    const subtitleStore = useInjectStore('subtitleStore');
+    const videoStore = useInjectStore('videoStore');
 
-    if (!appStore || !searchStore || !subtitleStore || !videoStore) {
-      throw new Error('inject failed');
-    }
     const mediaType = computed(() => capitalizeFirst(searchStore.state.value?.tmdb?.media_type));
     const releaseDate = computed(() => searchStore.state.value.tmdb?.release_date.substr(0, 4) ?? null);
 
@@ -101,7 +95,9 @@ export default defineComponent({
       removeHighlightFromVideo: videoStore.actions.removeHighlight,
       subHeader: computed(() => `${mediaType.value} ${releaseDate.value ? `/ ${releaseDate.value}` : ''}`),
       infoTooltip: computed(() =>
-        [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n')
+        [`format - ${searchStore.state.value.openSubtitle?.format}`, `language - ${searchStore.state.value.openSubtitle?.languageName}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join(
+          '\n'
+        )
       ),
       tmdbLink: computed(() => `https://www.themoviedb.org/${searchStore.state.value?.tmdb?.media_type}/${searchStore.state.value.tmdb?.tmdb_id}`)
     };

@@ -33,17 +33,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, PropType, ref, inject } from 'vue';
+import { defineComponent, onUnmounted, PropType, ref } from 'vue';
 import { getVideoName } from '@/util/name';
 import { OnLoadPayload, readFile } from './readFile';
-
-import { VideoStore } from '@/video/store';
-import { SubtitleStore } from '@/subtitle/store';
 import { getFormatFromFilename } from '@/subtitle/util';
-import { FileStore } from '@/file/store';
-import { NavigationStore } from '@/navigation/store';
-import { AppStore } from '@/app/store';
-import {TrackStore} from "@/track/store";
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   props: {
@@ -54,16 +48,13 @@ export default defineComponent({
     }
   },
   setup() {
-    const appStore = inject<AppStore>('appStore');
-    const fileStore = inject<FileStore>('fileStore');
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const navigationStore = inject<NavigationStore>('navigationStore');
-    const videoStore = inject<VideoStore>('videoStore');
-    const trackStore = inject<TrackStore>('trackStore');
+    const appStore = useInjectStore('appStore');
+    const fileStore = useInjectStore('fileStore');
+    const subtitleStore = useInjectStore('subtitleStore');
+    const navigationStore = useInjectStore('navigationStore');
+    const videoStore = useInjectStore('videoStore');
+    const trackStore = useInjectStore('trackStore');
 
-    if (!appStore || !fileStore || !subtitleStore || !navigationStore || !videoStore || !trackStore) {
-      throw new Error('inject failed');
-    }
     const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
     const containerRef = ref();
@@ -98,7 +89,7 @@ export default defineComponent({
 
       try {
         subtitleStore.actions.parse();
-        trackStore.actions.track({source: 'file', language: ''});
+        trackStore.actions.track({ source: 'file', language: '' });
       } catch (e) {
         showFileErrorMsg('Parse error, not a valid subtitle file');
         appStore.actions.reset();

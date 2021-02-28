@@ -18,15 +18,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { computed } from '@vue/reactivity';
 import Timeline from './Timeline.vue';
 import Excerpt from './Excerpt.vue';
 import NumberInputField from '@/components/NumberInputField.vue';
-import { VideoStore } from '@/video/store';
 import Duration from 'luxon/src/duration';
-import { SubtitleStore } from '@/subtitle/store';
 import RangeInputField from '@/components/RangeInputField.vue';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -36,12 +35,9 @@ export default defineComponent({
     NumberInputField
   },
   setup() {
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const videoStore = inject<VideoStore>('videoStore');
-    const picker = ref<HTMLInputElement | null>(null);
-    if (!subtitleStore || !videoStore) {
-      throw new Error('inject failed');
-    }
+    const subtitleStore = useInjectStore('subtitleStore');
+    const videoStore = useInjectStore('videoStore');
+
     const currentTime = ref<string>(Duration.fromMillis(0).toFormat('hh:mm:ss'));
     videoStore.actions.useTimeUpdate(({ time }): void => {
       currentTime.value = Duration.fromMillis(time * 1000).toFormat('hh:mm:ss');
@@ -58,7 +54,6 @@ export default defineComponent({
     });
     return {
       currentTime,
-      picker,
       offsetTime,
       reset: () => (offsetTime.value = 0),
       previewSelection: ref('excerpt')

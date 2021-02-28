@@ -20,13 +20,13 @@
           <template #settings>
             <Settings>
               <template #info>
-                <FileInfo/>
+                <FileInfo />
               </template>
             </Settings>
           </template>
         </ResultFromFile>
 
-        <PageVideos v-else-if="current === 'page-videos'" class="w-full"/>
+        <PageVideos v-else-if="current === 'page-videos'" class="w-full" />
 
         <div class="text-xs w-full flex flex-wrap items-center self-end justify-center mb-1 gap-1">
           <span>
@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 
 import PageLayout from '@/components/PageLayout.vue';
 import ResultFromSearch from '@/search/components/ResultFromSearch.vue';
@@ -67,9 +67,7 @@ import ResultFromFile from '@/file/components/ResultFromFile.vue';
 import FileInfo from '@/file/components/FileInfo.vue';
 import PageVideos from '@/video/components/PageVideos.vue';
 import Settings from '@/subtitle/components/Settings.vue';
-
-import { AppStore } from '@/app/store';
-import {NavigationStore} from "@/navigation/store";
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -88,12 +86,8 @@ export default defineComponent({
     }
   },
   setup() {
-    const appStore = inject<AppStore>('appStore');
-    const navigationStore = inject<NavigationStore>('navigationStore');
-
-    if (!appStore || !navigationStore) {
-      throw new Error('inject failed');
-    }
+    const appStore = useInjectStore('appStore');
+    const navigationStore = useInjectStore('navigationStore');
 
     return {
       appState: appStore.state,

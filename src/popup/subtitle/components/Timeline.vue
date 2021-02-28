@@ -3,21 +3,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, onMounted, ref, watch } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 import { Chart, ChartPoint } from 'chart.js';
 import { computed } from '@vue/reactivity';
-import { VideoStore } from '@/video/store';
-import { SubtitleStore } from '@/subtitle/store';
 import Duration from 'luxon/src/duration.js';
 import { findNext } from './findNext';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   setup() {
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const videoStore = inject<VideoStore>('videoStore');
-    if (!subtitleStore || !videoStore) {
-      throw new Error('inject failed');
-    }
+    const subtitleStore = useInjectStore('subtitleStore');
+    const videoStore = useInjectStore('videoStore');
 
     const canvas = ref<HTMLCanvasElement | null>(null);
     const chart = ref<null | Chart>(null);

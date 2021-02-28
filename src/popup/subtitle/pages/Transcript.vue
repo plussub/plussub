@@ -32,14 +32,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
-import { VideoStore } from '@/video/store';
-import { SubtitleStore } from '@/subtitle/store';
+import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import Duration from 'luxon/src/duration.js';
 
 import PageLayout from '@/components/PageLayout.vue';
 import { binarySearch } from './binarySearch';
 import LoadingBar from '@/components/LoadingBar.vue';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -54,16 +53,13 @@ export default defineComponent({
     }
   },
   setup() {
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const videoStore = inject<VideoStore>('videoStore');
-    if (!subtitleStore || !videoStore) {
-      throw new Error('inject failed');
-    }
+    const subtitleStore = useInjectStore('subtitleStore');
+    const videoStore = useInjectStore('videoStore');
 
     const currentTime = ref<number>(0);
 
     videoStore.actions.useTimeUpdate(({ time }): void => {
-        currentTime.value = time;
+      currentTime.value = time;
     });
 
     const currentPos = ref(-1);
@@ -93,7 +89,7 @@ export default defineComponent({
       ),
       setCurrentTime: ({ time }: { time: number }): void => {
         // +0.001 because the "from" is often the same as previous "to", use this to advoid showing previous subtitle text
-        videoStore.actions.setTime({time: time + 0.001});
+        videoStore.actions.setTime({ time: time + 0.001 });
       },
       currentTimePretty: computed(() => Duration.fromMillis(currentTime.value * 1000).toFormat('mm:ss')),
       infoTooltip: computed(() => [`left click - jump to time point`, `shift + left click - copy text to clipboard`].join('\n')),

@@ -27,10 +27,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
+import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import { LegacySubtitleSearch_legacySubtitleSearch_entries, searchQuery } from './searchQuery';
 import { download } from './download';
-import { ISO639, SearchStore } from '@/search/store';
+import { ISO639 } from '@/search/store';
 
 import Divider from '@/components/Divider.vue';
 import LanguageSelect from '@/search/components/LanguageSelect.vue';
@@ -39,14 +39,11 @@ import SubtitleEntry from './SubtitleSearchEntry.vue';
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
-import { AppStore } from '@/app/store';
-import { SubtitleStore } from '@/subtitle/store';
-import { NavigationStore } from '@/navigation/store';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { from, Subject } from 'rxjs';
 import { LegacySubtitleSearchVariables } from '@/search/pages/subtitle/searchQuery/__gen_gql/LegacySubtitleSearch';
 import { useUnmountObservable } from '@/composables';
-import {TrackStore} from "@/track/store";
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -77,17 +74,13 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const appStore = inject<AppStore>('appStore');
-    const searchStore = inject<SearchStore>('searchStore');
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const navigationStore = inject<NavigationStore>('navigationStore');
-    const trackStore = inject<TrackStore>('trackStore');
+    const appStore = useInjectStore('appStore');
+    const searchStore = useInjectStore('searchStore');
+    const subtitleStore = useInjectStore('subtitleStore');
+    const navigationStore = useInjectStore('navigationStore');
+    const trackStore = useInjectStore('trackStore');
 
     const unmountObservable = useUnmountObservable();
-
-    if (!appStore || !searchStore || !subtitleStore || !navigationStore || !trackStore) {
-      throw new Error('inject failed');
-    }
 
     const filter = ref('');
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
@@ -147,7 +140,7 @@ export default defineComponent({
           .then(({ raw, format }) => {
             subtitleStore.actions.setRaw({ raw, format, id: openSubtitle.SubHash, language: language.value.iso639_2 });
             subtitleStore.actions.parse();
-            trackStore.actions.track({source: 'legacy-search', language: language.value.iso639_2});
+            trackStore.actions.track({ source: 'legacy-search', language: language.value.iso639_2 });
           })
           .catch(() => appStore.actions.setState({ state: 'ERROR' }));
         navigationStore.actions.toHome({ contentTransitionName: 'content-navigate-select-to-home' });

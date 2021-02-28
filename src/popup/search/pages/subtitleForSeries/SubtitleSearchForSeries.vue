@@ -36,9 +36,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, PropType, ref, watch } from 'vue';
-import {searchQuery, SubtitleSearchForSeries_seasons_seasons, SubtitleSearchForSeriesVariables} from './searchQuery';
-import { ISO639, SearchStore } from '@/search/store';
+import { computed, defineComponent, PropType, ref, watch } from 'vue';
+import { searchQuery, SubtitleSearchForSeries_seasons_seasons, SubtitleSearchForSeriesVariables } from './searchQuery';
+import { ISO639 } from '@/search/store';
 import { download } from '@/search/download';
 
 import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpairedFilterButton.vue';
@@ -53,13 +53,10 @@ import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
 import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
-import { AppStore } from '@/app/store';
-import { SubtitleStore } from '@/subtitle/store';
-import { NavigationStore } from '@/navigation/store';
 import { from, Subject } from 'rxjs';
-import {concatMap, switchMap, takeUntil, tap} from 'rxjs/operators';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
-import {TrackStore} from "@/track/store";
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {
@@ -93,17 +90,13 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const appStore = inject<AppStore>('appStore');
-    const searchStore = inject<SearchStore>('searchStore');
-    const subtitleStore = inject<SubtitleStore>('subtitleStore');
-    const navigationStore = inject<NavigationStore>('navigationStore');
-    const trackStore = inject<TrackStore>('trackStore');
+    const appStore = useInjectStore('appStore');
+    const subtitleStore = useInjectStore('subtitleStore');
+    const searchStore = useInjectStore('searchStore');
+    const navigationStore = useInjectStore('navigationStore');
+    const trackStore = useInjectStore('trackStore');
 
     const unmountObservable = useUnmountObservable();
-
-    if (!appStore || !searchStore || !subtitleStore || !navigationStore || !trackStore) {
-      throw new Error('inject failed');
-    }
 
     const filter = ref('');
 
@@ -136,28 +129,28 @@ export default defineComponent({
 
     const searchQuerySubject = new Subject<SubtitleSearchForSeriesVariables>();
     searchQuerySubject
-        .pipe(
-            tap(() => (loading.value = true)),
-            switchMap((variables) => from(searchQuery(variables))),
-            tap((result) => {
-              loading.value = false;
-              entries.value = result.subtitleSearch.data;
-              seasons.value = result.seasons.seasons;
-            }),
-            takeUntil(unmountObservable)
-        )
-        .subscribe();
+      .pipe(
+        tap(() => (loading.value = true)),
+        switchMap((variables) => from(searchQuery(variables))),
+        tap((result) => {
+          loading.value = false;
+          entries.value = result.subtitleSearch.data;
+          seasons.value = result.seasons.seasons;
+        }),
+        takeUntil(unmountObservable)
+      )
+      .subscribe();
 
     watch(
-        [language, season, episode],
-        ([language, season, episode]) =>
-            searchQuerySubject.next({
-              language: language.iso639_2,
-              tmdb_id: props.tmdb_id,
-              season_number: season,
-              episode_number: episode
-            }),
-        { immediate: true }
+      [language, season, episode],
+      ([language, season, episode]) =>
+        searchQuerySubject.next({
+          language: language.iso639_2,
+          tmdb_id: props.tmdb_id,
+          season_number: season,
+          episode_number: episode
+        }),
+      { immediate: true }
     );
 
     const onlyHearingImpaired = ref(false);
@@ -174,7 +167,7 @@ export default defineComponent({
       showSeasonSelection,
 
       episode,
-      episodeCount: computed(() => seasons.value?.find((s => s.season_number === season.value))?.episode_count ?? 0),
+      episodeCount: computed(() => seasons.value?.find((s) => s.season_number === season.value)?.episode_count ?? 0),
       showEpisodeSelection,
 
       showSelection: computed(() => showLanguageSelection.value || showSeasonSelection.value || showEpisodeSelection.value),
@@ -182,13 +175,13 @@ export default defineComponent({
       loading,
       entries,
       filteredEntries: computed(() =>
-          entries.value.filter(({ attributes }) => {
-            if (filter.value === '') {
-              return onlyHearingImpaired.value ? attributes.hearing_impaired : true;
-            }
-            const intermediate = attributes.files[0].file_name?.toLowerCase().includes(filter.value.toLowerCase()) ?? false;
-            return onlyHearingImpaired.value ? intermediate && attributes.hearing_impaired : intermediate;
-          })
+        entries.value.filter(({ attributes }) => {
+          if (filter.value === '') {
+            return onlyHearingImpaired.value ? attributes.hearing_impaired : true;
+          }
+          const intermediate = attributes.files[0].file_name?.toLowerCase().includes(filter.value.toLowerCase()) ?? false;
+          return onlyHearingImpaired.value ? intermediate && attributes.hearing_impaired : intermediate;
+        })
       ),
       select: (openSubtitle: SubtitleSearchFragmentResult_data) => {
         appStore.actions.setState({ state: 'SELECTED' });
@@ -202,25 +195,25 @@ export default defineComponent({
         });
 
         download(openSubtitle)
-            .then(({ raw, format }) => {
-              subtitleStore.actions.setRaw({
-                raw,
-                format,
-                id: openSubtitle.attributes.files[0].file_name,
-                language: language.value.iso639_2
-              });
-              subtitleStore.actions.parse();
-              trackStore.actions.track({source: 'search-for-series', language: language.value.iso639_2});
-            })
-            .catch(() => appStore.actions.setState({ state: 'ERROR' }));
+          .then(({ raw, format }) => {
+            subtitleStore.actions.setRaw({
+              raw,
+              format,
+              id: openSubtitle.attributes.files[0].file_name,
+              language: language.value.iso639_2
+            });
+            subtitleStore.actions.parse();
+            trackStore.actions.track({ source: 'search-for-series', language: language.value.iso639_2 });
+          })
+          .catch(() => appStore.actions.setState({ state: 'ERROR' }));
 
         navigationStore.actions.toHome({ contentTransitionName: 'content-navigate-select-to-home' });
       },
       backFn: (): void =>
-          navigationStore.actions.toMovieTvSearch({
-            contentTransitionName: 'content-navigate-shallow',
-            query: props.searchQuery
-          })
+        navigationStore.actions.toMovieTvSearch({
+          contentTransitionName: 'content-navigate-shallow',
+          query: props.searchQuery
+        })
     };
   }
 });
