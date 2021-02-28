@@ -1,12 +1,12 @@
-import { combineLatest, fromEvent, Subject, merge } from 'rxjs';
+import { combineLatest, fromEvent, merge, Subject } from 'rxjs';
 import { distinct, filter, share, startWith, tap } from 'rxjs/operators';
 import { postMessage } from './postMessage';
 import { init as initHighlight } from './highlight';
 import { init as initVideo } from './video';
 import { init as initSubtitle } from './subtitle';
 import { init as initTime } from './time';
+import { init as initAppearance } from './appearance';
 import { MessageEventFromPopup } from './types';
-import { Ref } from 'vue';
 
 declare global {
   interface Window {
@@ -55,7 +55,17 @@ declare global {
   const highlightObservable = initHighlight({ messageObservable, getElementFrom });
   const subtitleObservable = initSubtitle({ messageObservable, getElementFrom });
   const timeObservable = initTime({ messageObservable, getElementFrom });
+  const appearanceObservable = initAppearance({ messageObservable });
 
-  merge(requestForRegisterMeFromPopupObservable, registerAckFromPopupObservable, unmountFromPopupObservable, videoObservable, highlightObservable, subtitleObservable, timeObservable).subscribe();
+  merge(
+    requestForRegisterMeFromPopupObservable,
+    registerAckFromPopupObservable,
+    unmountFromPopupObservable,
+    videoObservable,
+    highlightObservable,
+    subtitleObservable,
+    timeObservable,
+    appearanceObservable
+  ).subscribe();
   postMessage({ plusSubActionFromContentScript: 'REGISTER_ME_REQUEST_FROM_IFRAME' });
 })();

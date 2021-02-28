@@ -11,6 +11,7 @@ export interface ContentScriptStore {
   actions: {
     requestAllContentScriptsToRegister: () => void;
     sendCommand: (origin: string, payload: Record<string, unknown>) => void;
+    sendCommandAll: (payload: Record<string, unknown>) => void;
   };
 }
 
@@ -81,6 +82,12 @@ export const init = (): ContentScriptStore => {
       }
     })
   );
+
+  const sendAllSubject = new Subject<{ payload: Record<string, unknown> }>();
+  const sendAllObservable = combineLatest([sendAllSubject, connectionObservable]).pipe(
+    tap(([{ payload }, connections]) => Object.values(connections).forEach(({ source }) => source.postMessage(payload, '*')))
+  );
+
   const unmountSubject = new Subject<undefined>();
 
   const connectionCleanUpObservable = combineLatest([connectionObservable, unmountSubject]).pipe(
@@ -88,7 +95,9 @@ export const init = (): ContentScriptStore => {
     take(1)
   );
 
-  merge(messageObservable, registerMeRequestFromIFrameFromContentScript, sendObservable, connectionObservable, connectionCleanUpObservable).pipe(takeUntil(connectionCleanUpObservable)).subscribe();
+  merge(messageObservable, registerMeRequestFromIFrameFromContentScript, sendObservable, connectionObservable, connectionCleanUpObservable, sendAllObservable)
+    .pipe(takeUntil(connectionCleanUpObservable))
+    .subscribe();
 
   onUnmounted(() => unmountSubject.next(undefined));
 
@@ -114,7 +123,9 @@ export const init = (): ContentScriptStore => {
         sendSubject.next({
           origin,
           payload
-        })
+        }),
+
+      sendCommandAll: (payload: Record<string, unknown>) => sendAllSubject.next({payload})
     }
   };
 };

@@ -15,6 +15,7 @@ import { init as initSearchStore } from '@/search/store';
 import { init as initNavigationStore } from '@/navigation/store';
 import { init as initApiStore } from '@/api/store';
 import { init as initTrackStore } from '@/track/store';
+import { init as initAppearanceStore } from '@/appearance/store';
 
 import Home from '@/home/pages/Home.vue';
 import MovieTvSearch from '@/search/pages/movieTv/MovieTvSearch.vue';
@@ -65,6 +66,8 @@ export default defineComponent({
     provide('searchStore', searchStore);
     const trackStore = initTrackStore();
     provide('trackStore', trackStore);
+    const appearanceStore = initAppearanceStore({ use: { contentScriptStore } });
+    provide('appearanceStore', appearanceStore);
 
     const unmountSubject = new Subject<undefined>();
     contentScriptStore.actions.requestAllContentScriptsToRegister();
