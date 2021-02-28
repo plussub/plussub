@@ -29,6 +29,7 @@
     <div class="mx-9 mt-8">
       <TimeSettings v-if="selectedArea === 'time'"></TimeSettings>
       <div v-if="selectedArea === 'style'">asdf</div>
+      <TranscriptPanel v-if="selectedArea === 'transcript'"/>
       <slot v-if="selectedArea === 'info'" name="info"></slot>
     </div>
   </div>
@@ -41,9 +42,11 @@ import PrefixIconButton from '@/components/PrefixIconButton.vue';
 import Divider from '@/components/Divider.vue';
 import TimeSettings from '@/subtitle/components/TimeSettings.vue';
 import { useInjectStore } from '@/composables/useInjectStore';
+import TranscriptPanel from "@/subtitle/components/TranscriptPanel.vue";
 
 export default defineComponent({
   components: {
+    TranscriptPanel,
     TimeSettings,
     Divider,
     PrefixIconButton
