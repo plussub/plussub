@@ -38,6 +38,7 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
 
   const addSubtitleObservable = addSubtitleFromPopupObservable.pipe(
     map<{ el: HTMLVideoElement; messageEvent: AddSubtitleMessageEvent }, { track: TextTrack; messageEvent: AddSubtitleMessageEvent }>(({ el, messageEvent }) => {
+      el.dataset.plusSubState = 'injected';
       const track =
         [...el.textTracks].find((track) => track.label === '+Sub' && (track.mode !== 'disabled' || track['plusSubId'] === messageEvent.data.subtitle.id)) ??
         el.addTextTrack('subtitles', `+Sub`, messageEvent.data.subtitle.language);
@@ -53,7 +54,7 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
       [...(track.cues ?? [])].forEach((cue) => track.removeCue(cue));
       messageEvent.data.subtitle.entries
         .map((vtt) => {
-          const cue =  new VTTCue(vtt.from / 1000, vtt.to / 1000, `<c.plussub>${vtt.text}</c.plussub>`);
+          const cue = new VTTCue(vtt.from / 1000, vtt.to / 1000, `<c.plussub>${vtt.text}</c.plussub>`);
           cue.size = 100;
           return cue;
         })
@@ -74,6 +75,7 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
     filter<MessageEventFromPopup<string>, RemoveSubtitleMessageEvent>((e): e is RemoveSubtitleMessageEvent => e.data.plusSubActionFromPopup === 'REMOVE_SUBTITLE'),
     map<RemoveSubtitleMessageEvent, HTMLVideoElement | null>((messageEvent) => getElementFrom(messageEvent.data.video.id)),
     filter<HTMLVideoElement | null, HTMLVideoElement>((value): value is HTMLVideoElement => value !== null),
+    tap((el) => (el.dataset.plusSubState = 'removed')),
     map((el): TextTrack | null => [...el.textTracks].find((track) => track.label === '+Sub' && track.mode !== 'disabled') ?? null),
     filter((track): track is TextTrack => track !== null)
   );

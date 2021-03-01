@@ -36,10 +36,10 @@ export default defineComponent({
   },
   setup() {
     const appearanceStore = useInjectStore('appearanceStore');
-    const backgroundColor = ref(appearanceStore.state.style.value['backgroundColor'] ?? '#ffffff');
+    const backgroundColor = ref(appearanceStore.state.style.value['backgroundColor'] ?? '#000000');
 
     // todo debounce
-    const color = ref(appearanceStore.state.style.value['color'] ?? '#000000');
+    const color = ref(appearanceStore.state.style.value['color'] ?? '#ffffff');
 
     const fontSize = ref(appearanceStore.state.style.value['fontSize'] ?? 16);
 
