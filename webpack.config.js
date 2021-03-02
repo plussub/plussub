@@ -3,6 +3,7 @@
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack')
 
 module.exports = (env, argv) => {
   const browser = (argv.browser ? argv.browser.toLowerCase() : 'unknown').trim();
@@ -103,6 +104,9 @@ module.exports = (env, argv) => {
           { from: 'popup/font.css', to: 'font.css' },
           { from: 'contentScript/contentScript.css', to: 'contentScript.css' }
         ]
+      }),
+      new webpack.DefinePlugin({
+        __VUE_PROD_DEVTOOLS__: 'false'
       })
     ]
   };
