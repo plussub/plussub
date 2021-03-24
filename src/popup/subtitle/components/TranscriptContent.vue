@@ -49,9 +49,11 @@ export default defineComponent({
       currentPos.value = pos;
 
       if (props.follow && transcriptContentContainer.value && !transcriptContentContainer.value.matches(':hover')) {
-        const topPos = Math.max(currentPos.value + 2, 0);
-        const topElement = transcriptContentContainer.value.querySelector<HTMLElement>(`:nth-child(${topPos + 1})`);
-        topElement?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        transcriptContentContainer.value.querySelector<HTMLElement>(`:nth-child(${currentPos.value + 1})`)?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'start'
+        });
       }
     });
 
