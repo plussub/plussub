@@ -6,14 +6,15 @@ const CopyPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack')
 
 module.exports = (env, argv) => {
-  const browser = (argv.browser ? argv.browser.toLowerCase() : 'unknown').trim();
+  const browser = (env.browser ? env.browser.toLowerCase() : 'unknown').trim();
   if (browser !== 'chrome' && browser !== 'firefox') {
     throw new Error(`unknown browser: ${browser}`);
   }
+  const mode = (env.mode ? env.mode : 'development').trim();
 
   return {
     devtool: false,
-    mode: argv.mode ? argv.mode : 'development',
+    mode,
     entry: { popup: './popup/index.ts', background: './background/index.ts', contentScript: './contentScript/index.ts' },
     context: path.resolve(__dirname, 'src'),
     output: {
@@ -90,7 +91,10 @@ module.exports = (env, argv) => {
         {
           test: /\.mjs$/,
           include: /node_modules/,
-          type: 'javascript/auto'
+          type: 'javascript/auto',
+          resolve: {
+            fullySpecified: false
+          }
         }
       ]
     },
