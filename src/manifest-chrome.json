@@ -14,20 +14,6 @@
       "19": "res/icons/browseraction.png"
     }
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "all_frames": true,
-      "css": [
-        "contentScript.css"
-      ],
-      "js": [
-        "contentScript.js"
-      ]
-    }
-  ],
   "background": {
     "service_worker": "background.js"
   },
@@ -35,7 +21,11 @@
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
+  "host_permissions": [
+    "https://*/"
+  ],
   "permissions": [
+    "webNavigation",
     "scripting",
     "storage",
     "activeTab"

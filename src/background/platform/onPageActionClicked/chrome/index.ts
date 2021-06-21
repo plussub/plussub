@@ -1,33 +1,38 @@
+const getAllFrames = (tabId): Promise<chrome.webNavigation.GetAllFrameResultDetails[]> =>
+  new Promise((resolve, reject) =>
+    chrome.webNavigation.getAllFrames({ tabId }, (details) =>
+      details ? resolve(details) : reject('detail was null')));
+
+const injectInAllFrames = async ({ tab }: { tab: TabWithId }) => {
+
+  const frames = await getAllFrames(tab.id);
+  const frameIds = frames.map((frame) => frame.frameId);
+  const target = { tabId: tab.id, frameIds: frameIds };
+
+
+  await chrome.scripting.insertCSS({ files: ['./contentScript.css'], target });
+  await chrome.scripting.executeScript({ files: ['./contentScript.js'], target });
+};
+
+const injectInRootFrame = async ({ tab }: { tab: TabWithId }) => {
+  const target = { allFrames: false, tabId: tab.id };
+  await chrome.scripting.insertCSS({ files: ['./font.css'], target });
+  await chrome.scripting.executeScript({ files: ['./popup.js'], target });
+};
+
+interface TabWithId extends chrome.tabs.Tab {
+  id: number
+}
+
+const isTabWithId = (tab: chrome.tabs.Tab): tab is TabWithId => tab.id !== undefined;
+
 // use browser action because page action doesn't seem to work on incognito mode
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// use browser action because page action doesn't seem to work on incognito mode
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 chrome.action.onClicked.addListener(async (tab) => {
   console.warn(tab);
-  if (!tab.id) {
+  if (!isTabWithId(tab)) {
     console.warn('missing tab id');
     return;
   }
-  try {
-    await chrome.scripting.insertCSS({ files: ['./font.css'], target: { allFrames: false, tabId: tab.id } });
-    console.warn('insert done');
-  } catch (e) {
-    console.warn('insert css failed', e);
-  }
-  try {
-    // chrome.tabs.executeScript({ file: './contentScript.js', allFrames: true });
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    await chrome.scripting.executeScript({
-      files: ['./popup.js'],
-      target: {
-        allFrames: false,
-        tabId: tab.id
-      }
-    });
-  } catch (e) {
-    console.warn('insert script failed', e);
-  }
+  await injectInAllFrames({ tab });
+  await injectInRootFrame({ tab });
 });
