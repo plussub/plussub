@@ -1,6 +1,6 @@
 {
   "name": "plussub",
-  "version": "5.0.6",
+  "version": "5.1.0",
   "description": "Chrome extension which adds subtitle to html5 videos",
   "author": "Stefan Breitenstein",
   "scripts": {
