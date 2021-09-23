@@ -3,4 +3,5 @@
 export const getAll = <T>(): Promise<T | null> => browser.storage.sync.get(null) as Promis
 export const get = <T>(keys: string[]): Promise<any | null> => browser.storage.sync.get(keys) as Promise<T>;
 export const set = <T>(value: T): Promise<void> => browser.storage.sync.set(JSON.parse(JSON.stringify(value)));
+export const remove = (keys: string[]): Promise<void> => browser.storage.sync.remove(keys);
 export const clear = (): Promise<void> => browser.storage.sync.clear();

@@ -43,10 +43,6 @@ export default defineComponent({
       type: String as PropType<string>,
       required: true
     },
-    apiVersion: {
-      type: String as PropType<'dev' | 'stable'>,
-      required: true
-    },
     style: {
       type: Object as PropType<Record<string, string>>,
       required: true
@@ -55,7 +51,7 @@ export default defineComponent({
   setup(props) {
     const appStore = initAppStore();
     provide('appStore', appStore);
-    const apiStore = initApiStore({ version: props.apiVersion });
+    const apiStore = initApiStore();
     provide('apiStore', apiStore);
     const navigationStore = initNavigationStore({ use: { apiStore } });
     provide('navigationStore', navigationStore);

@@ -1,5 +1,5 @@
 import { computed, ComputedRef, ref, UnwrapRef } from 'vue';
-import { set as storageSet } from 'storage';
+import { remove as storageRemove } from 'storage';
 
 export interface ApiState {
   version: 'stable' | 'dev';
@@ -12,15 +12,16 @@ export interface ApiStore {
   };
 }
 
-export const init = ({ version }: Pick<UnwrapRef<ApiState>, 'version'>): ApiStore => {
-  const state = ref<ApiState>({ version });
+export const init = (): ApiStore => {
+  const state = ref<ApiState>({ version: 'dev' });
+  void storageRemove(['api']);
 
   return {
     state: computed(() => state.value),
     actions: {
-      setVersion: ({ version }: Pick<ApiState, 'version'>): void => {
-        state.value.version = version;
-        storageSet({ api: version });
+      setVersion: (): void => {
+        // state.value.version = version;
+        // storageSet({ api: version });
       }
     }
   };
