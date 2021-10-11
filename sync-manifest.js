@@ -1,18 +1,18 @@
-const fs = require('fs').promises;
+import { promises } from "fs";
 const toJson = (r) => JSON.parse(r);
 
 (async () => {
-    const [package, manifestChrome, manifestFirefox] = await Promise.all([
-        fs.readFile("package.json", "utf-8").then(toJson),
-        fs.readFile("src/manifest-chrome.json", "utf-8").then(toJson),
-        fs.readFile("src/manifest-firefox.json", "utf-8").then(toJson)
+    const [packagez, manifestChrome, manifestFirefox] = await Promise.all([
+        promises.readFile("package.json", "utf-8").then(toJson),
+        promises.readFile("src/manifest-chrome.json", "utf-8").then(toJson),
+        promises.readFile("src/manifest-firefox.json", "utf-8").then(toJson)
     ]);
-    await fs.writeFile("src/manifest-chrome.json", JSON.stringify({
+    await promises.writeFile("src/manifest-chrome.json", JSON.stringify({
         ...manifestChrome,
-        version: package.version
+        version: packagez.version
     }, null, 2));
-    await fs.writeFile("src/manifest-firefox.json", JSON.stringify({
+    await promises.writeFile("src/manifest-firefox.json", JSON.stringify({
         ...manifestFirefox,
-        version: package.version
+        version: packagez.version
     }, null, 2));
 })();
