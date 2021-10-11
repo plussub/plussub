@@ -1,9 +1,17 @@
 // webpack.config.js
 /* eslint @typescript-eslint/no-var-requires: "off" */
 import {resolve} from 'path';
+import {readFileSync} from 'fs';
 import { VueLoaderPlugin } from 'vue-loader';
 import CopyPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
+
+const setObject = (object, key, value) => ({
+  ...object,
+  [key]: value,
+});
+
+const toPrettyJson = (obj) => JSON.stringify(obj, null, 2);
 
 export default (env) => {
   const browser = (env.browser ? env.browser.toLowerCase() : 'unknown').trim();
@@ -103,7 +111,16 @@ export default (env) => {
       new VueLoaderPlugin(),
       new CopyPlugin({
         patterns: [
-          { from: `manifest-${browser}.json`, to: 'manifest.json' },
+          {
+            from: `manifest-${browser}.json`,
+            to: 'manifest.json',
+            transform: (manifest) =>
+              toPrettyJson(
+                setObject(JSON.parse(manifest.toString()),
+                  'version',
+                  JSON.parse(readFileSync(resolve('package.json'))).version)
+              )
+          },
           { from: 'res', to: 'res' },
           { from: 'popup/font.css', to: 'font.css' },
           { from: 'contentScript/contentScript.css', to: 'contentScript.css' }
