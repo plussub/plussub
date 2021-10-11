@@ -23,7 +23,7 @@
     "build:firefox": "webpack --env browser=firefox --env mode=production",
     "build:all": "npm run build:chrome && npm run build:firefox",
     "test": "jest --no-cache",
-    "postinstall": "rm -r node_modules/apollo-language-server/node_modules/graphql"
+    "postinstall": "rm -r node_modules/apollo-language-server/node_modules/graphql || true"
   },
   "dependencies": {
     "@apollo/client": "^3.4.16",
