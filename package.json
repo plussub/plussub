@@ -23,10 +23,11 @@
     "build:firefox": "webpack --env browser=firefox --env mode=production",
     "build:all": "npm run build:chrome && npm run build:firefox",
     "test": "jest --no-cache",
+    "postinstall": "rm -r node_modules/apollo-language-server/node_modules/graphql",
     "version": "node sync-manifest.js && git add src/manifest-chrome.json && git add src/manifest-firefox.json"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.0-beta.4",
+    "@apollo/client": "^3.4.16",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@plussub/srt-vtt-parser": "^1.0.6",
@@ -50,6 +51,7 @@
     "@types/chart.js": "^2.9.29",
     "@types/chrome": "^0.0.159",
     "@types/firefox-webext-browser": "^82.0.0",
+    "@types/graphql": "^14.5.0",
     "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
@@ -61,7 +63,6 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^7.2.0",
     "file-loader": "^6.2.0",
-    "graphql-tag": "^2.11.0",
     "html-loader": "^2.1.2",
     "jest": "^27.0.4",
     "postcss": "^8.2.0",
