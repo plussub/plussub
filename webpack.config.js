@@ -126,11 +126,6 @@ export default (env) => {
           { from: 'contentScript/contentScript.css', to: 'contentScript.css' }
         ]
       }),
-      new CopyPlugin({
-        patterns: [
-          { from: `../dist-${browser}/contentScript.js`, to: '../dist-foundation/contentScript.js' }
-        ]
-      }),
       new webpack.DefinePlugin({
         __VUE_PROD_DEVTOOLS__: 'false'
       })
