@@ -5,9 +5,9 @@
   "author": "Stefan Breitenstein",
   "type": "module",
   "exports": {
-    "dist-chrome": "chrome",
-    "dist-firefox": "firefox",
-    "src": "src"
+    "./dist-chrome": "chrome",
+    "./dist-firefox": "firefox",
+    "./src/*": "src/*"
   },
   "files": [
     "dist-chrome",
