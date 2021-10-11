@@ -7,12 +7,12 @@
   "exports": {
     "dist-chrome": "chrome",
     "dist-firefox": "firefox",
-    "dist-foundation": "foundation"
+    "src": "src"
   },
   "files": [
     "dist-chrome",
     "dist-firefox",
-    "dist-foundation"
+    "src"
   ],
   "scripts": {
     "eslint": "eslint --ext .ts --ignore-path .gitignore .",
