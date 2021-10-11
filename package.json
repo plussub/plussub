@@ -1,15 +1,27 @@
 {
-  "name": "plussub",
+  "name": "@plussub/extension",
   "version": "5.2.0",
-  "description": "Chrome extension which adds subtitle to html5 videos",
+  "description": "Browser extension which adds subtitle to html5 videos",
   "author": "Stefan Breitenstein",
+  "type": "module",
+  "exports": {
+    "dist-chrome": "chrome",
+    "dist-firefox": "firefox",
+    "dist-foundation": "foundation"
+  },
+  "files": [
+    "dist-chrome",
+    "dist-firefox",
+    "dist-foundation"
+  ],
   "scripts": {
     "eslint": "eslint . --ext .ts",
     "gen": "apollo client:codegen --endpoint=https://gqldev.plus-sub.com/ --passthroughCustomScalars --target=typescript __gen_gql --includes=./**/*.gql",
     "start:chrome": "webpack --env browser=chrome --watch",
     "build:chrome": "webpack --env browser=chrome --env mode=production",
     "start:firefox": "webpack --env browser=firefox --watch",
-    "build:firefox": "export NODE_ENV=production && webpack --env browser=firefox --env mode=production",
+    "build:firefox": "webpack --env browser=firefox --env mode=production",
+    "build:all": "npm run build:chrome && npm run build:firefox",
     "test": "jest --no-cache",
     "version": "node sync-manifest.js && git add src/manifest-chrome.json && git add src/manifest-firefox.json"
   },
@@ -36,23 +48,22 @@
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@tailwindcss/forms": "^0.3.3",
     "@types/chart.js": "^2.9.29",
-    "@types/chrome": "^0.0.145",
+    "@types/chrome": "^0.0.159",
     "@types/firefox-webext-browser": "^82.0.0",
-    "@types/jest": "^26.0.16",
+    "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "@vue/compiler-sfc": "^3.0.6",
     "autoprefixer": "^10.1.0",
     "copy-webpack-plugin": "^9.0.0",
-    "css-loader": "^5.0.1",
-    "eslint": "^7.14.0",
+    "css-loader": "^6.4.0",
+    "eslint": "^8.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^7.2.0",
     "file-loader": "^6.2.0",
     "graphql-tag": "^2.11.0",
     "html-loader": "^2.1.2",
     "jest": "^27.0.4",
-    "jest-marbles": "^2.5.1",
     "postcss": "^8.2.0",
     "postcss-loader": "^6.1.0",
     "prettier": "^2.2.1",
@@ -71,5 +82,8 @@
     "trailingComma": "none",
     "printWidth": 200,
     "singleQuote": true
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

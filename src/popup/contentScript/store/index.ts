@@ -23,6 +23,9 @@ export interface MessageEventFromContentScript<T extends string> extends Message
 }
 
 export const init = (): ContentScriptStore => {
+  if(!window.top){
+    throw new Error('no window.top');
+  }
   const messageObservable = fromEvent<MessageEvent>(window.top, 'message').pipe(
     filter<MessageEvent, MessageEventFromContentScript<string>>((e): e is MessageEventFromContentScript<string> => e.data.plusSubActionFromContentScript),
     share()

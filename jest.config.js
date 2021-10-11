@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   // testRunner: 'jest-circus/runner',  // Disabled because of memory leaks https://github.com/facebook/jest/issues/7274
   moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
   transform: {

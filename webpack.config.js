@@ -1,11 +1,11 @@
 // webpack.config.js
 /* eslint @typescript-eslint/no-var-requires: "off" */
-const path = require('path');
-const { VueLoaderPlugin } = require('vue-loader');
-const CopyPlugin = require('copy-webpack-plugin');
-const webpack = require('webpack')
+import {resolve} from 'path';
+import { VueLoaderPlugin } from 'vue-loader';
+import CopyPlugin from 'copy-webpack-plugin';
+import webpack from 'webpack';
 
-module.exports = (env, argv) => {
+export default (env) => {
   const browser = (env.browser ? env.browser.toLowerCase() : 'unknown').trim();
   if (browser !== 'chrome' && browser !== 'firefox') {
     throw new Error(`unknown browser: ${browser}`);
@@ -16,24 +16,24 @@ module.exports = (env, argv) => {
     devtool: false,
     mode,
     entry: { popup: './popup/index.ts', background: './background/index.ts', contentScript: './contentScript/index.ts' },
-    context: path.resolve(__dirname, 'src'),
+    context: resolve('src'),
     output: {
       filename: '[name].js',
-      path: path.resolve(__dirname, `dist-${browser}`)
+      path: resolve(`dist-${browser}`)
     },
     resolve: {
       extensions: ['.ts', '.js', '.vue', '.json', '.mjs'],
       alias: {
-        '@': path.resolve(__dirname, 'src/popup'),
+        '@': resolve('src/popup'),
         // It seems the problem has been solve. https://github.com/vuejs/vue-cli/pull/5788
         // this isn't technically needed, since the default `vue` entry for bundlers
         // is a simple `export * from '@vue/runtime-dom`. However having this
         // extra re-export somehow causes webpack to always invalidate the module
         // on the first HMR update and causes the page to reload.
         // vue: '@vue/runtime-dom',
-        storage: path.resolve(__dirname, `src/popup/platform/storage/${browser}/index.ts`),
-        monkeyPatchApollo: path.resolve(__dirname, `src/popup/platform/monkeyPatchApollo/${browser}/index.ts`),
-        onPageActionClicked: path.resolve(__dirname, `src/background/platform/onPageActionClicked/${browser}/index.ts`)
+        storage: resolve(`src/popup/platform/storage/${browser}/index.ts`),
+        monkeyPatchApollo: resolve(`src/popup/platform/monkeyPatchApollo/${browser}/index.ts`),
+        onPageActionClicked: resolve(`src/background/platform/onPageActionClicked/${browser}/index.ts`)
       }
     },
     module: {
@@ -107,6 +107,11 @@ module.exports = (env, argv) => {
           { from: 'res', to: 'res' },
           { from: 'popup/font.css', to: 'font.css' },
           { from: 'contentScript/contentScript.css', to: 'contentScript.css' }
+        ]
+      }),
+      new CopyPlugin({
+        patterns: [
+          { from: `../dist-${browser}/contentScript.js`, to: '../dist-foundation/contentScript.js' }
         ]
       }),
       new webpack.DefinePlugin({
