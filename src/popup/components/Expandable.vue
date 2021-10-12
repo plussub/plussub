@@ -5,8 +5,8 @@
         <slot name="title" />
       </div>
       <a class="menu-dropdown-chevron">
-        <fa v-if="show" icon="chevron-up" class="h-icon text-primary-700"/>
-        <fa v-else icon="chevron-down" class="h-icon"/>
+        <FontAwesomeIcon v-if="show" icon="chevron-up" class="h-icon text-primary-700"/>
+        <FontAwesomeIcon v-else icon="chevron-down" class="h-icon"/>
       </a>
     </div>
     <transition name="slide">
@@ -19,8 +19,10 @@
 
 <script lang="ts">
 import {defineComponent, PropType, Ref, ref} from 'vue';
+import FontAwesomeIcon from './FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
+  components: { FontAwesomeIcon },
   props: {
     open: {
       type: Boolean as PropType<boolean>,

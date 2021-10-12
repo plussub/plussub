@@ -1,9 +1,12 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <a class="self-center pr-4" @click="toSettings()">
-        <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
-      </a>
+      <Toolbar>
+        <a class="self-center pr-4" @click="toSettings()">
+          <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
+        </a>
+      </Toolbar>
+
     </template>
     <template #content>
       <div class="flex flex-wrap h-full home-content--container" :class="{ 'bg-surface-100': current === 'search-card' || current === 'file-card' }">
@@ -46,9 +49,11 @@ import Settings from '@/subtitle/components/Settings.vue';
 import { useInjectStore } from '@/useInjectStore';
 import SearchResultInfo from "@/search/components/SearchResultInfo.vue";
 import Mention from "@/home/components/Mention.vue";
+import Toolbar from '@/Toolbar/Toolbar.vue';
 
 export default defineComponent({
   components: {
+    Toolbar,
     SearchResultInfo,
     PageLayout,
     ResultFromSearch,

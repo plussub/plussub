@@ -1,9 +1,11 @@
 <template>
-  <PageLayout :content-transition-name="contentTransitionName" :has-back="videoCount > 1" :back-fn="backFn">
+  <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <a v-if="videoCount === 1" class="self-center pr-4" @click="toSettings()">
-        <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
-      </a>
+      <Toolbar :has-back="videoCount > 1" :back-fn="backFn">
+        <a v-if="videoCount === 1" class="self-center pr-4" @click="toSettings()">
+          <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
+        </a>
+      </Toolbar>
     </template>
     <template #content>
       <div class="w-full h-full grid relative justify-center search-content--container">
@@ -51,9 +53,11 @@ import { asyncScheduler, from, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, tap, throttleTime } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
 import { useInjectStore } from '@/useInjectStore';
+import Toolbar from '@/Toolbar/Toolbar.vue';
 
 export default defineComponent({
   components: {
+    Toolbar,
     InputField,
     LoadingBar,
     FilePick,

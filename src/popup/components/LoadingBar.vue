@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { default as Divider } from '@/components/Divider.vue';
+import { default as Divider } from './Divider.vue';
 
 export default defineComponent({
   components: {

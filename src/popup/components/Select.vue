@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue';
-import { default as InputField } from '@/components/InputField.vue';
+import InputField from './InputField.vue';
 
 export default defineComponent({
   components: {

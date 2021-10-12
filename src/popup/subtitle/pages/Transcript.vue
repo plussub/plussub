@@ -1,9 +1,11 @@
 <template>
-  <PageLayout :content-transition-name="contentTransitionName" has-back>
+  <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <a class="self-center pr-4" :title="infoTooltip">
-        <fa icon="question-circle" class="h-icon hover:text-on-primary-hover-500"></fa>
-      </a>
+      <Toolbar has-back>
+        <a class="self-center pr-4" :title="infoTooltip">
+          <fa icon="question-circle" class="h-icon hover:text-on-primary-hover-500"></fa>
+        </a>
+      </Toolbar>
     </template>
     <template #content>
       <div class="w-full h-full grid relative justify-center transcript-content--container">
@@ -27,9 +29,11 @@ import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import TranscriptContent from '@/subtitle/components/TranscriptContent.vue';
 import { useInjectStore } from '@/useInjectStore';
+import Toolbar from '@/Toolbar/Toolbar.vue';
 
 export default defineComponent({
   components: {
+    Toolbar,
     PageLayout,
     LoadingBar,
     TranscriptContent

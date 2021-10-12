@@ -1,5 +1,8 @@
 <template>
-  <PageLayout :content-transition-name="contentTransitionName" has-back :back-fn="backFn">
+  <PageLayout :content-transition-name="contentTransitionName">
+    <template #toolbar>
+      <Toolbar has-back :back-fn="backFn"/>
+    </template>
     <template #content>
       <div class="w-full h-full grid relative justify-center subtitle-selection-content--container">
         <div style="grid-area: filter-bar" class="pt-3 pb-2 bg-primary-50">
@@ -35,6 +38,7 @@ import { ISO639 } from '@/search/store';
 import Divider from '@/components/Divider.vue';
 import LanguageSelect from '@/search/components/LanguageSelect.vue';
 import SubtitleEntry from './SubtitleSearchEntry.vue';
+import Toolbar from '@/Toolbar/Toolbar.vue';
 
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
@@ -52,7 +56,8 @@ export default defineComponent({
     LoadingBar,
     Divider,
     SubtitleEntry,
-    PageLayout
+    PageLayout,
+    Toolbar
   },
   props: {
     searchQuery: {

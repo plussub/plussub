@@ -1,5 +1,8 @@
 <template>
-  <PageLayout :content-transition-name="contentTransitionName" has-back :back-fn="backFn">
+  <PageLayout :content-transition-name="contentTransitionName">
+    <template #toolbar>
+      <Toolbar has-back :back-fn="backFn"></Toolbar>
+    </template>
     <template #content>
       <div class="pt-2 px-2">
         <div class="font-header font-medium text-xl">User data</div>
@@ -30,9 +33,11 @@ import { clear as storageClear } from 'storage';
 
 import PageLayout from '@/components/PageLayout.vue';
 import { useInjectStore } from '@/useInjectStore';
+import Toolbar from '@/Toolbar/Toolbar.vue';
 
 export default defineComponent({
   components: {
+    Toolbar,
     PageLayout
   },
   props: {

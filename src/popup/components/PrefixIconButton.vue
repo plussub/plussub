@@ -1,7 +1,7 @@
 <template>
   <div>
     <a class="flex text-primary-500 hover:text-primary-700">
-      <fa
+      <FontAwesomeIcon
         :icon="icon"
         :type="iconType"
         class="self-center"
@@ -16,8 +16,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
+import FontAwesomeIcon from './FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
+  components: { FontAwesomeIcon },
   props: {
     label: {
       type: String as PropType<string>,
