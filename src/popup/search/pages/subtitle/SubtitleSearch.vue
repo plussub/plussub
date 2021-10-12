@@ -43,7 +43,7 @@ import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { from, Subject } from 'rxjs';
 import { LegacySubtitleSearchVariables } from '@/search/pages/subtitle/searchQuery/__gen_gql/LegacySubtitleSearch';
 import { useUnmountObservable } from '@/composables';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {

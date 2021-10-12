@@ -29,7 +29,7 @@ import { computed, defineComponent, PropType } from 'vue';
 import { clear as storageClear } from 'storage';
 
 import PageLayout from '@/components/PageLayout.vue';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {

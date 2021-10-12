@@ -26,7 +26,7 @@ import Duration from 'luxon/src/duration.js';
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import TranscriptContent from '@/subtitle/components/TranscriptContent.vue';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {

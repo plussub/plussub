@@ -49,7 +49,7 @@ import { ISO639 } from '@/search/store';
 import { from, Subject } from 'rxjs';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {

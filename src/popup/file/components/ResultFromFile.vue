@@ -26,7 +26,7 @@
 import { computed, defineComponent, onUnmounted } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 import SuffixIconButton from '@/components/SuffixIconButton.vue';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {

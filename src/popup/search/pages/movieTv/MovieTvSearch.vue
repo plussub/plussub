@@ -50,7 +50,7 @@ import InputField from '@/components/InputField.vue';
 import { asyncScheduler, from, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, tap, throttleTime } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {

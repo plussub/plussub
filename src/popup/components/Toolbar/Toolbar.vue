@@ -26,7 +26,7 @@ import Logo from './Logo.vue';
 
 import { close } from './close';
 import logo from '@/res/plussub128.png';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {

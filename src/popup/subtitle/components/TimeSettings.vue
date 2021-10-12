@@ -25,7 +25,7 @@ import Excerpt from './Excerpt.vue';
 import NumberInputField from '@/components/NumberInputField.vue';
 import Duration from 'luxon/src/duration';
 import RangeInputField from '@/components/RangeInputField.vue';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {

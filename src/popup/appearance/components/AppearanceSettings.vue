@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
 import RangeInputField from '@/components/RangeInputField.vue';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 import NumberInputField from '@/components/NumberInputField.vue';
 
 export default defineComponent({

@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 import TranscriptContent from '@/subtitle/components/TranscriptContent.vue';
 
 export default defineComponent({

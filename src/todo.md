@@ -1,0 +1,1 @@
+move injectStoreComposable because it can not used standalone

@@ -33,7 +33,7 @@ import { Video, VideoStore } from '@/video/store';
 
 import Divider from '@/components/Divider.vue';
 import { NavigationStore } from '@/navigation/store';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { useInjectStore } from '@/useInjectStore';
 
 export default defineComponent({
   components: {
