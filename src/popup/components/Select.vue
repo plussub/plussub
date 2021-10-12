@@ -8,12 +8,12 @@
       </a>
       <span v-if="show">
         <a @click="toggleShow">
-          <fa icon="chevron-up" class="h-icon text-primary-700" />
+          <FontAwesomeIcon icon="chevron-up" class="h-icon text-primary-700" />
         </a>
       </span>
       <span v-else>
         <a @click="toggleShow">
-          <fa icon="chevron-down" class="h-icon" />
+          <FontAwesomeIcon icon="chevron-down" class="h-icon" />
         </a>
       </span>
     </div>
@@ -44,9 +44,11 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue';
 import InputField from './InputField.vue';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
   components: {
+    FontAwesomeIcon,
     InputField
   },
   props: {

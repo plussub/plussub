@@ -3,7 +3,7 @@
     <div style="grid-area: poster">
       <img v-if="item.poster_path" :src="item.poster_path" class="h-full w-full object-cover" style="max-height: var(--image-height)" />
       <div v-else class="flex justify-center align-center h-full">
-        <fa icon="question" class="h-full"></fa>
+        <FontAwesomeIcon icon="question" class="h-full"></FontAwesomeIcon>
       </div>
     </div>
     <div style="grid-area: title">
@@ -25,8 +25,10 @@ import { VideoSearch_videoSearch_entries } from './searchQuery';
 import { capitalizeFirst } from '@/util/string';
 
 import { default as posterFallback } from '@/res/posterFallback.png';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
+  components: { FontAwesomeIcon },
   props: {
     item: {
       type: Object as PropType<VideoSearch_videoSearch_entries>,

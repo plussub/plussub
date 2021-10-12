@@ -3,7 +3,7 @@
     <template #toolbar>
       <Toolbar has-back>
         <a class="self-center pr-4" :title="infoTooltip">
-          <fa icon="question-circle" class="h-icon hover:text-on-primary-hover-500"></fa>
+          <FontAwesomeIcon icon="question-circle" class="h-icon hover:text-on-primary-hover-500"></FontAwesomeIcon>
         </a>
       </Toolbar>
     </template>
@@ -30,9 +30,11 @@ import LoadingBar from '@/components/LoadingBar.vue';
 import TranscriptContent from '@/subtitle/components/TranscriptContent.vue';
 import { useInjectStore } from '@/useInjectStore';
 import Toolbar from '@/Toolbar/Toolbar.vue';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
   components: {
+    FontAwesomeIcon,
     Toolbar,
     PageLayout,
     LoadingBar,
