@@ -44,7 +44,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue';
 import InputField from './InputField.vue';
-import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
+import FontAwesomeIcon from './FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
   components: {
