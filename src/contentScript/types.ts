@@ -1,6 +1,6 @@
-export interface MessageEventFromPopup<T extends string> extends MessageEvent<{ plusSubActionFromPopup: T }> {
+export interface ContentScriptInputMessageEvent<T extends string> extends MessageEvent<{ plusSubContentScriptInput: T }> {
   data: {
-    plusSubActionFromPopup: T,
+    plusSubContentScriptInput: T,
     [k: string]: unknown;
   }
 }

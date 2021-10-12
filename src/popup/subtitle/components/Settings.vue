@@ -44,6 +44,7 @@ import TimeSettings from '@/subtitle/components/TimeSettings.vue';
 import { useInjectStore } from '@/useInjectStore';
 import TranscriptPanel from "@/subtitle/components/TranscriptPanel.vue";
 import AppearanceSettings from "@/appearance/components/AppearanceSettings.vue";
+import { computed } from '@vue/reactivity';
 
 export default defineComponent({
   components: {
@@ -55,10 +56,7 @@ export default defineComponent({
   },
   setup() {
     const videoStore = useInjectStore('videoStore');
-    const currentTime = ref<string>(Duration.fromMillis(0).toFormat('hh:mm:ss'));
-    videoStore.actions.useTimeUpdate(({ time }): void => {
-      currentTime.value = Duration.fromMillis(time * 1000).toFormat('hh:mm:ss');
-    });
+    const currentTime = computed(() => Duration.fromMillis(videoStore.getters.current.value?.lastTimestamp).toFormat('hh:mm:ss'));
     return {
       selectedArea: ref('time'),
       currentTime,

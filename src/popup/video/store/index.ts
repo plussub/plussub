@@ -1,13 +1,14 @@
-import { computed, ComputedRef, onUnmounted, Ref, ref, watch } from 'vue';
+import { computed, ComputedRef, onUnmounted, ref } from 'vue';
 import { SubtitleEntry } from '@/subtitle/store';
-import { ContentScriptStore, MessageEventFromContentScript } from '@/contentScript/store';
-import {filter, first, mergeMap, share, shareReplay, takeUntil, tap} from 'rxjs/operators';
-import {combineLatest, from, merge, Subject} from 'rxjs';
-import { nanoid } from 'nanoid';
+import { ContentScriptStore } from '@/contentScript/store';
+import { AppearanceStore } from '@/appearance/store';
+import { mergeMap, takeUntil, tap } from 'rxjs/operators';
+import { merge, Subject, interval } from 'rxjs';
 
 interface InitPayload {
   use: {
     contentScriptStore: ContentScriptStore;
+    appearanceStore: AppearanceStore;
   };
 }
 
@@ -15,24 +16,16 @@ export interface Video {
   id: string;
   hasSubtitle: boolean;
   origin: string;
-}
-
-type CurrentSelectedVideoState = Video | null;
-
-declare global {
-  interface Window {
-    plusSub_currentSelectedVideo: Ref<CurrentSelectedVideoState>;
-  }
+  lastTimestamp: string;
+  status: "none" | "selected" | "injected"
 }
 
 export interface VideoStore {
   actions: {
-    setCurrent: (payload: { video: Pick<Video, 'id'> }) => void;
-    removeCurrent: () => void;
+    setCurrent: (payload: { video: Pick<Video, 'id'> }) => Promise<unknown>;
+    removeCurrent: () => Promise<unknown>;
     addVtt: (payload: { subtitles: SubtitleEntry[]; subtitleId: string; language: string }) => void;
-    removeVtt: () => void;
     setTime: (payload: { time: number }) => void;
-    useTimeUpdate: (fn: (payload: { time: number }) => void) => void;
     highlight: (payload: { video: Pick<Video, 'id'> | null }) => void;
     removeHighlight: () => void;
   };
@@ -44,80 +37,44 @@ export interface VideoStore {
 }
 
 export const init = ({ use }: InitPayload): VideoStore => {
-  window.plusSub_currentSelectedVideo = window.plusSub_currentSelectedVideo ? ref(window.plusSub_currentSelectedVideo.value) : ref<CurrentSelectedVideoState>(null);
-
   const videos = ref<Record<string, Video>>({});
-
-  type FindVideosResultMessageEvent = MessageEventFromContentScript<'FIND_VIDEOS_RESULT'> & { data: { videos: Record<string, { id: string; hasSubtitle: boolean; origin: string }>; origin: string } };
-
-  const findVideoResultObservable = use.contentScriptStore.state.messageObservable.pipe(
-    filter<MessageEventFromContentScript<string>, FindVideosResultMessageEvent>((e): e is FindVideosResultMessageEvent => e.data.plusSubActionFromContentScript === 'FIND_VIDEOS_RESULT'),
-    tap((e) => {
-      videos.value = {
-        ...Object.fromEntries(Object.entries(videos.value).filter(([, { origin }]) => origin !== e.data.origin)),
-        ...e.data.videos
-      };
-
-      const currentSelected = window.plusSub_currentSelectedVideo.value;
-      if (currentSelected && currentSelected.origin === e.data.origin) {
-        const currentFromContentScript = e.data.videos[currentSelected.id];
-        if (!currentFromContentScript || (currentSelected.hasSubtitle && !currentFromContentScript.hasSubtitle)) {
-          console.warn('currentSelected removed');
-          window.plusSub_currentSelectedVideo.value = null;
-        }
-      }
-    })
-  );
-
-  const timeSubject = new Subject<number>();
-  type TimeUpdateMessageEvent = MessageEventFromContentScript<'TIME_UPDATE'> & { data: { time: number } };
-  const timeUpdateObservable = use.contentScriptStore.state.messageObservable.pipe(
-    filter<MessageEventFromContentScript<string>, TimeUpdateMessageEvent>((e): e is TimeUpdateMessageEvent => e.data.plusSubActionFromContentScript === 'TIME_UPDATE'),
-    tap((e) => timeSubject.next(e.data.time))
-  );
-
-  const iFrameConnectionObservable = use.contentScriptStore.state.connectionObservable.pipe(
-    mergeMap((e) => from(Object.values(e).map(e => e.origin))),
-    tap((origin) => use.contentScriptStore.actions.sendCommand(origin, { plusSubActionFromPopup: 'FIND_VIDEOS' }))
+  const videoUpdateIntervalObservable = interval(300).pipe(
+    mergeMap(() =>
+      use.contentScriptStore.actions.sendCommandWithResponse(
+        { plusSubContentScriptInput: 'FIND_VIDEOS_REQUEST' },
+        (responses) => responses.reduce((acc, cur) => ({ ...acc, ...cur.data.videos }), {})
+      )
+    ),
+    tap(videoValues => {
+      videos.value = videoValues
+    }),
   );
 
   const unmountSubject = new Subject<undefined>();
-  merge(findVideoResultObservable, timeUpdateObservable, iFrameConnectionObservable).pipe(takeUntil(unmountSubject)).subscribe();
+  merge(videoUpdateIntervalObservable, unmountSubject).pipe(takeUntil(unmountSubject)).subscribe();
   onUnmounted(() => unmountSubject.next(undefined));
 
-  const removeVtt = ({ id, origin }: Pick<Video, 'id' | 'origin'>) => {
-    use.contentScriptStore.actions.sendCommand(origin, {
-      plusSubActionFromPopup: 'REMOVE_SUBTITLE',
-      video: {
-        id
-      }
-    });
-  };
-
-  watch(
-    () => window.plusSub_currentSelectedVideo.value,
-    (current, prev) => {
-      if (current === null && prev !== null) {
-        removeVtt(prev);
-      }
-    }
-  );
+  const tick = async () => new Promise(resolve => setTimeout(() => resolve(undefined)));
 
   return {
     actions: {
-      setCurrent: ({ video: { id } }: { video: Pick<Video, 'id'> }) => {
-        window.plusSub_currentSelectedVideo.value = videos.value[id] ?? null;
+      setCurrent: async ({ video: { id } }: { video: Pick<Video, 'id'> }) => {
+        use.contentScriptStore.actions.sendCommand({ plusSubContentScriptInput: 'SELECT_VIDEO', id });
+        return tick();
       },
-      removeCurrent: () => {
-        window.plusSub_currentSelectedVideo.value = null;
+      removeCurrent: async () => {
+        use.contentScriptStore.actions.sendCommand({ plusSubContentScriptInput: 'DESELECT_VIDEO' });
+        return tick();
       },
-      addVtt: ({ subtitles, subtitleId, language }: { subtitles: SubtitleEntry[]; subtitleId: string; language: string }): void => {
-        const video = window.plusSub_currentSelectedVideo.value;
+      addVtt: async ({ subtitles, subtitleId, language }: { subtitles: SubtitleEntry[]; subtitleId: string; language: string }): Promise<unknown> => {
+        const video = Object.values(videos.value).find((v) => v.status === 'selected' || v.status === 'injected');
         if (!video) {
-          return;
+          return tick();
         }
-        use.contentScriptStore.actions.sendCommand(video.origin, {
-          plusSubActionFromPopup: 'ADD_SUBTITLE',
+        await use.appearanceStore.actions.applyStyle(null);
+
+        use.contentScriptStore.actions.sendCommand({
+          plusSubContentScriptInput: 'ADD_SUBTITLE',
           video: {
             id: video.id
           },
@@ -127,66 +84,18 @@ export const init = ({ use }: InitPayload): VideoStore => {
             language
           }
         });
-      },
-      removeVtt: (): void => {
-        const video = window.plusSub_currentSelectedVideo.value;
-        if (!video) {
-          return;
-        }
-        removeVtt(video);
+        return tick();
       },
       setTime: ({ time }: { time: number }): void => {
-        const video = window.plusSub_currentSelectedVideo.value;
+        const video = Object.values(videos.value).find((v) => v.status === 'selected' || v.status === 'injected');
         if (!video) {
           console.warn('setTime: current video not found');
           return;
         }
-        use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
-          plusSubActionFromPopup: 'SET_TIME',
+        use.contentScriptStore.actions.sendCommand({
+          plusSubContentScriptInput: 'SET_TIME',
           id: video.id,
           time
-        });
-      },
-
-      useTimeUpdate: (fn: (payload: { time: number }) => void) => {
-        const video = window.plusSub_currentSelectedVideo.value;
-        if (!video) {
-          console.warn('useTimeUpdate: current video not found');
-          return;
-        }
-        const origin = video.origin;
-        const videoId = video.id;
-        const subscriptionId = nanoid(12);
-        const unmountSubject = new Subject<undefined>();
-
-        // workaround race condition if popup will be initialized
-        setTimeout(() => {
-          use.contentScriptStore.actions.sendCommand(origin, {
-            plusSubActionFromPopup: 'SUBSCRIBE_TO_TIME_UPDATE',
-            video: {
-              id: videoId
-            },
-            subscription: {
-              id: subscriptionId
-            }
-          });
-        }, 200);
-
-        timeSubject
-          .pipe(
-            tap((time) => fn({ time })),
-            takeUntil(unmountSubject)
-          )
-          .subscribe();
-
-        onUnmounted(() => {
-          unmountSubject.next(undefined);
-          use.contentScriptStore.actions.sendCommand(origin, {
-            plusSubActionFromPopup: 'UNSUBSCRIBE_TO_TIME_UPDATE',
-            subscription: {
-              id: subscriptionId
-            }
-          });
         });
       },
       highlight: ({ video }: { video: Pick<Video, 'id'> | null }): void => {
@@ -194,20 +103,16 @@ export const init = ({ use }: InitPayload): VideoStore => {
           console.warn('highlight: video not found');
           return;
         }
-        use.contentScriptStore.actions.sendCommand(videos.value[video.id].origin, {
-          plusSubActionFromPopup: 'HIGHLIGHT_VIDEO',
+        use.contentScriptStore.actions.sendCommand({
+          plusSubContentScriptInput: 'HIGHLIGHT_VIDEO',
           id: video.id
         });
       },
-      removeHighlight: () => {
-        new Set(Object.values(videos.value).map(({ origin }) => origin)).forEach((origin) => {
-          use.contentScriptStore.actions.sendCommand(origin, { plusSubActionFromPopup: 'REMOVE_HIGHLIGHT_FROM_VIDEO' });
-        });
-      }
+      removeHighlight: () => use.contentScriptStore.actions.sendCommand({ plusSubContentScriptInput: 'REMOVE_HIGHLIGHT_FROM_VIDEO' })
     },
     getters: {
-      current: computed(() => window.plusSub_currentSelectedVideo.value),
-      list: computed(() => Object.values(videos.value)),
+      current: computed(() => Object.values(videos.value).find((v) => v.status === 'selected' || v.status === 'injected') ?? null),
+      list: computed(() => Object.values(videos.value).sort((a, b) => a.id.localeCompare(b.id))),
       count: computed(() => Object.keys(videos.value).length)
     }
   };

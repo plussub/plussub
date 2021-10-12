@@ -101,9 +101,13 @@ export default defineComponent({
         return;
       }
 
-      navigationStore.actions.toHome({
-        contentTransitionName: 'content-navigate-select-to-home'
-      });
+      // workaround for contentscript communication
+      setTimeout(() => {
+        navigationStore.actions.toHome({
+          contentTransitionName: 'content-navigate-select-to-home'
+        });
+      },100);
+
     };
     const onError = (): void => showFileErrorMsg('Some error happened when parsing the subtitle');
 

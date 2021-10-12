@@ -31,18 +31,13 @@ export default defineComponent({
   setup(props) {
     const subtitleStore = useInjectStore('subtitleStore');
     const videoStore = useInjectStore('videoStore');
-
-    const currentTime = ref<number>(0);
-
-    videoStore.actions.useTimeUpdate(({ time }): void => {
-      currentTime.value = time;
-    });
+    const currentTime = computed(() => parseInt(videoStore.getters.current.value?.lastTimestamp ?? '0', 10));
 
     const currentPos = ref(-1);
     const transcriptContentContainer = ref<HTMLElement | null>(null);
 
     watch(currentTime, (currentTime) => {
-      const pos = binarySearch(Math.ceil(currentTime * 1000), subtitleStore.state.value.withOffsetParsed);
+      const pos = binarySearch(currentTime, subtitleStore.state.value.withOffsetParsed);
 
       if (pos === -1) return;
 

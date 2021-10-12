@@ -46,11 +46,11 @@ export default defineComponent({
 
     return {
       appState: appStore.state,
-      remove: () => {
+      remove: async () => {
+        await videoStore.actions.removeCurrent();
         appStore.actions.reset();
         fileStore.actions.reset();
         subtitleStore.actions.reset();
-        videoStore.actions.removeCurrent();
       },
       highlightCurrentVideo: () => videoStore.actions.highlight({ video: videoStore.getters.current.value }),
       removeHighlightFromVideo: videoStore.actions.removeHighlight,

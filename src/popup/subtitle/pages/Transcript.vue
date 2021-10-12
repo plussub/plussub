@@ -49,14 +49,8 @@ export default defineComponent({
   },
   setup() {
     const videoStore = useInjectStore('videoStore');
-    const currentTime = ref<number>(0);
-
-    videoStore.actions.useTimeUpdate(({ time }): void => {
-      currentTime.value = time;
-    });
-
     return {
-      currentTimePretty: computed(() => Duration.fromMillis(currentTime.value * 1000).toFormat('mm:ss')),
+      currentTimePretty:  computed(() => Duration.fromMillis(parseInt(videoStore.getters.current.value?.lastTimestamp ?? '0' , 10)).toFormat('mm:ss')),
       infoTooltip: computed(() => [`left click - jump to time point`, `shift + left click - copy text to clipboard`].join('\n'))
     };
   }

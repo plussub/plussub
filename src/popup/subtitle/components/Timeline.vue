@@ -18,6 +18,7 @@ export default defineComponent({
     const canvas = ref<HTMLCanvasElement | null>(null);
     const chart = ref<null | Chart>(null);
     const currentPos = ref(0);
+    const currentTime = computed(() => parseInt(videoStore.getters.current.value?.lastTimestamp ?? '0', 10));
     const parsedPartial = computed(() => subtitleStore.state.value.withOffsetParsed.filter((e, idx) => idx >= currentPos.value && idx < currentPos.value + 3));
 
     watch(
@@ -58,11 +59,13 @@ export default defineComponent({
 
     const videoTimePoint = { x: 0, y: 0 };
     const videoTimePointLine = { x: 0, y: 12 };
-    videoStore.actions.useTimeUpdate(({ time }): void => {
-      videoTimePoint.x = time * 1000;
-      videoTimePointLine.x = time * 1000;
+
+    // todo:
+    watch(currentTime, (currentTime) => {
+      videoTimePoint.x = currentTime;
+      videoTimePointLine.x = currentTime;
       chart.value?.update();
-      const pos = findNext(Math.ceil(time * 1000), subtitleStore.state.value.withOffsetParsed);
+      const pos = findNext(currentTime, subtitleStore.state.value.withOffsetParsed);
       if (pos !== -1) {
         currentPos.value = pos;
       }

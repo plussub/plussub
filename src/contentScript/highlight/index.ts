@@ -1,17 +1,17 @@
 import { filter, map, tap } from 'rxjs/operators';
 import { postMessage } from '../postMessage';
 import { Observable, merge, partition } from 'rxjs';
-import { MessageEventFromPopup } from '../types';
+import { ContentScriptInputMessageEvent } from '../types';
 import { isElementNotInViewport } from './isElementNotInViewport';
 
 interface Payload {
-  messageObservable: Observable<MessageEventFromPopup<string>>;
-  getElementFrom: (id: string) => HTMLVideoElement | null;
+  inputObservable: Observable<ContentScriptInputMessageEvent<string>>;
+  getVideoElementFrom: (id: string) => HTMLVideoElement | null;
 }
 
-type HighlightVideoMessageEvent = MessageEventFromPopup<'HIGHLIGHT_VIDEO'> & { data: { id: string } };
+type HighlightVideoMessageEvent = ContentScriptInputMessageEvent<'HIGHLIGHT_VIDEO'> & { data: { id: string } };
 
-export const init = ({ messageObservable, getElementFrom }: Payload): Observable<{ el: HTMLVideoElement; messageEvent: HighlightVideoMessageEvent } | MessageEventFromPopup<'REMOVE_HIGHLIGHT_FROM_VIDEO'>> => {
+export const init = ({ inputObservable, getVideoElementFrom }: Payload): Observable<{ el: HTMLVideoElement; messageEvent: HighlightVideoMessageEvent } | ContentScriptInputMessageEvent<'REMOVE_HIGHLIGHT_FROM_VIDEO'>> => {
   const overlayHighlight = document.createElement('div');
   overlayHighlight.id = 'plusSub-overlay-highlight';
   overlayHighlight.style.position = 'absolute';
@@ -23,10 +23,10 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
   overlayHighlight.style.left = 'var(--plusSub-video-highlight-left, 0px)';
   document.body.prepend(overlayHighlight);
 
-  const highlightVideoObservable = messageObservable.pipe(
-    filter<MessageEventFromPopup<string>, HighlightVideoMessageEvent>((e): e is HighlightVideoMessageEvent => e.data.plusSubActionFromPopup === 'HIGHLIGHT_VIDEO'),
+  const highlightVideoObservable = inputObservable.pipe(
+    filter((e): e is HighlightVideoMessageEvent => e.data.plusSubContentScriptInput === 'HIGHLIGHT_VIDEO'),
     map<HighlightVideoMessageEvent, { el: HTMLVideoElement | null; messageEvent: HighlightVideoMessageEvent }>((messageEvent) => ({
-      el: getElementFrom(messageEvent.data.id),
+      el: getVideoElementFrom(messageEvent.data.id),
       messageEvent
     })),
     filter<{ el: HTMLVideoElement | null; messageEvent: HighlightVideoMessageEvent }, { el: HTMLVideoElement; messageEvent: HighlightVideoMessageEvent }>(
@@ -38,11 +38,11 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
   const scrollIntoViewObservable = notInViewportObservable.pipe(
     tap(({ el }) => {
       el.scrollIntoView({ block: 'center' });
-      postMessage({ plusSubActionFromContentScript: 'ADJUST_POPUP' });
+      postMessage({ plusSubContentScriptOutput: 'ADJUST_POPUP' });
     })
   )
 
-  const highlightObservable = merge(scrollIntoViewObservable, inViewportObservable).pipe(
+  const highlightInputObservable = merge(scrollIntoViewObservable, inViewportObservable).pipe(
     tap(({ el }) => {
       const { top, left, height, width } = el.getBoundingClientRect();
       document.documentElement.style.setProperty('--plusSub-video-highlight-width', `${width}px`);
@@ -52,9 +52,9 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
     })
   );
 
-  const removeHighlightObservable = messageObservable.pipe(
-    filter<MessageEventFromPopup<string>, MessageEventFromPopup<'REMOVE_HIGHLIGHT_FROM_VIDEO'>>(
-      (e): e is MessageEventFromPopup<'REMOVE_HIGHLIGHT_FROM_VIDEO'> => e.data.plusSubActionFromPopup === 'REMOVE_HIGHLIGHT_FROM_VIDEO'
+  const removeHighlightInputObservable = inputObservable.pipe(
+    filter(
+      (e): e is ContentScriptInputMessageEvent<'REMOVE_HIGHLIGHT_FROM_VIDEO'> => e.data.plusSubContentScriptInput === 'REMOVE_HIGHLIGHT_FROM_VIDEO'
     ),
     tap(() => {
       document.documentElement.style.setProperty('--plusSub-video-highlight-width', '0px');
@@ -62,5 +62,5 @@ export const init = ({ messageObservable, getElementFrom }: Payload): Observable
     })
   );
 
-  return merge(highlightObservable, removeHighlightObservable);
+  return merge(highlightInputObservable, removeHighlightInputObservable);
 };

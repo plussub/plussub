@@ -1,33 +1,37 @@
-import { combineLatest, fromEvent, merge, Observable, Subject } from 'rxjs';
-import { filter, map, scan, share, take, takeUntil, tap } from 'rxjs/operators';
+import { combineLatest, debounceTime, fromEvent, merge, mergeMap, Observable, Subject } from 'rxjs';
+import { filter, map, scan, share, take, takeUntil, tap, bufferCount } from 'rxjs/operators';
 import { onUnmounted } from 'vue';
 import { nanoid } from 'nanoid';
 
-export interface ContentScriptStore {
-  state: {
-    connectionObservable: Observable<Record<string, { source: Window; origin: string }>>;
-    messageObservable: Observable<MessageEventFromContentScript<string>>;
-  };
-  actions: {
-    requestAllContentScriptsToRegister: () => void;
-    sendCommand: (origin: string, payload: Record<string, unknown>) => void;
-    sendCommandAll: (payload: Record<string, unknown>) => void;
-  };
-}
-
-export interface MessageEventFromContentScript<T extends string> extends MessageEvent<{ plusSubActionFromContentScript: T }> {
+export interface ContentScriptOutputMessageEvent<T extends string> extends MessageEvent<{ plusSubContentScriptOutput: T, id: string }> {
   data: {
-    plusSubActionFromContentScript: T;
+    plusSubContentScriptOutput: T;
+    id: string;
     [k: string]: unknown;
   };
 }
+
+export interface ContentScriptStore {
+  actions: {
+    requestAllContentScriptsToRegister: () => void;
+    sendCommand: (payload: Record<string, unknown>) => void;
+    sendCommandWithResponse: (payload: Record<string, unknown>, mergeFn: (x: any[]) => any) => Observable<any>;
+  };
+}
+
+
+const setObject = (object, key, value) => ({
+  ...object,
+  [key]: value,
+});
+
 
 export const init = (): ContentScriptStore => {
   if(!window.top){
     throw new Error('no window.top');
   }
-  const messageObservable = fromEvent<MessageEvent>(window.top, 'message').pipe(
-    filter<MessageEvent, MessageEventFromContentScript<string>>((e): e is MessageEventFromContentScript<string> => e.data.plusSubActionFromContentScript),
+  const inputObservable = fromEvent<MessageEvent>(window.top, 'message').pipe(
+    filter<MessageEvent, ContentScriptOutputMessageEvent<string>>((e): e is ContentScriptOutputMessageEvent<string> => e.data.plusSubContentScriptOutput),
     share()
   );
 
@@ -35,7 +39,8 @@ export const init = (): ContentScriptStore => {
     | {
         action: 'ADD';
         origin: string;
-        source: Window;
+        source: any;
+        id: string;
       }
     | {
         action: 'REMOVE';
@@ -44,91 +49,101 @@ export const init = (): ContentScriptStore => {
 
   const connectionSubject = new Subject<ConnectionEvent>();
   const connectionObservable = connectionSubject.pipe(
-    scan<ConnectionEvent, Record<string, { source: Window; origin: string }>>(
-      (acc, command) =>
-        command.action === 'ADD'
-          ? {
-              ...acc,
-              [command.origin]: {
-                source: command.source,
-                origin: command.origin
-              }
-            }
-          : {
-              ...Object.fromEntries(Object.entries(acc).filter(([origin]) => origin !== command.origin))
-            },
-      {}
+    scan<ConnectionEvent, Record<string, { source: Window; origin: string; id: string }>>((acc, command) => {
+      if (command.action === 'ADD') {
+        return setObject(acc, command.id, {
+          source: command.source,
+          origin: command.origin,
+          id: command.id
+        });
+      }
+      return { ...Object.fromEntries(Object.entries(acc).filter(([origin]) => origin !== command.origin)) };
+    }, {})
+  );
+
+  const contentScriptLoadedObservable = inputObservable.pipe(
+    filter((e): e is ContentScriptOutputMessageEvent<'CONTENT_SCRIPT_LOADED'> => e.data.plusSubContentScriptOutput === 'CONTENT_SCRIPT_LOADED'),
+    tap(({ origin, source, data: { id } }) => connectionSubject.next({ action: 'ADD', origin, source, id }))
+  );
+
+
+  const sendAllSubject = new Subject<{ payload: Record<string, unknown>}>();
+  const sendAllObservable = combineLatest([sendAllSubject, connectionObservable]).pipe(
+    debounceTime(0),
+    tap(([{ payload }, connections]) =>
+      Object.values(connections).forEach(({ source }) =>
+        source.postMessage(
+          {
+            ...payload,
+            requestId: nanoid(5)
+          },
+          '*'
+        )
+      )
     )
   );
 
-  const registerMeRequestFromIFrameFromContentScript = messageObservable.pipe(
-    filter<MessageEventFromContentScript<string>, MessageEventFromContentScript<'REGISTER_ME_REQUEST_FROM_IFRAME'>>(
-      (e): e is MessageEventFromContentScript<'REGISTER_ME_REQUEST_FROM_IFRAME'> => e.data.plusSubActionFromContentScript === 'REGISTER_ME_REQUEST_FROM_IFRAME'
-    ),
-    map(({ origin, source }) => ({
-      origin,
-      source: source as Window
-    })),
-    tap(({ origin, source }) => source.postMessage({ plusSubActionFromPopup: 'REGISTER_ACK' }, '*')),
-    tap(({ origin, source }) => connectionSubject.next({ action: 'ADD', origin, source }))
-  );
+  const sendWithResponseSubject = new Subject<{ payload: Record<string, unknown>, mergeFn: (x: any[]) => any, responseSubject: Subject<any>}>();
+  const sendWithResponseObservable = combineLatest([sendWithResponseSubject, connectionObservable]).pipe(
+    debounceTime(0),
+    tap(([{ payload, mergeFn,  responseSubject }, connections]) => {
+      const con = Object.values(connections);
+      const requestIds = con.map(() => nanoid(5));
+      const requestIdsSet = new Set(requestIds);
+      inputObservable
+        .pipe(
+          filter((e) => requestIdsSet.has(e.data.requestId as string)),
+          take(con.length),
+          bufferCount(con.length, con.length),
+          map((e) => mergeFn(e)),
+          tap((e) => responseSubject.next(e))
+        )
+        .subscribe();
 
-  //
-  const sendSubject = new Subject<{ origin: string; payload: Record<string, unknown> }>();
-  const sendObservable = combineLatest([sendSubject, connectionObservable]).pipe(
-    tap(([{ origin, payload }, connections]) => {
-      if (connections[origin]) {
-        connections[origin].source.postMessage(payload, '*');
-      } else {
-        console.warn('connection not found, race condition ?');
-        console.warn(connections);
-      }
+      con.forEach(({ source }, idx) => source.postMessage({ ...payload, requestId: requestIds[idx] }, '*'));
     })
-  );
-
-  const sendAllSubject = new Subject<{ payload: Record<string, unknown> }>();
-  const sendAllObservable = combineLatest([sendAllSubject, connectionObservable]).pipe(
-    tap(([{ payload }, connections]) => Object.values(connections).forEach(({ source }) => source.postMessage(payload, '*')))
   );
 
   const unmountSubject = new Subject<undefined>();
 
-  const connectionCleanUpObservable = combineLatest([connectionObservable, unmountSubject]).pipe(
-    tap(([connections]) => Object.values(connections).forEach(({ source }) => source.postMessage({ plusSubActionFromPopup: 'UNMOUNT' }, '*'))),
-    take(1)
-  );
-
-  merge(messageObservable, registerMeRequestFromIFrameFromContentScript, sendObservable, connectionObservable, connectionCleanUpObservable, sendAllObservable)
-    .pipe(takeUntil(connectionCleanUpObservable))
-    .subscribe();
+  merge(
+    inputObservable,
+    contentScriptLoadedObservable,
+    connectionObservable,
+    sendAllObservable,
+    sendWithResponseObservable,
+    unmountSubject
+  ).pipe(takeUntil(unmountSubject)).subscribe()
 
   onUnmounted(() => unmountSubject.next(undefined));
 
   return {
-    state: {
-      messageObservable,
-      connectionObservable: connectionObservable
-    },
     actions: {
       requestAllContentScriptsToRegister: () => {
-        [...document.querySelectorAll('iframe'), { contentWindow: window }].map((w) =>
-          w.contentWindow?.postMessage(
-            {
-              plusSubActionFromPopup: 'REQUEST_FOR_REGISTER',
-              id: nanoid(12)
-            },
-            '*'
-          )
-        );
+        [...document.querySelectorAll('iframe'), { contentWindow: window }]
+          .map(({ contentWindow }) => ({
+            contentWindow: contentWindow as Window,
+            requestId: nanoid(5)
+          }))
+          .filter((e) => e.contentWindow)
+          .forEach(({ contentWindow, requestId }) => {
+            inputObservable
+              .pipe(
+                filter((e): e is ContentScriptOutputMessageEvent<'PING_RESPONSE'> => e.data.plusSubContentScriptOutput === 'PING_RESPONSE' && e.data.requestId === requestId),
+                take(1),
+                tap(({ origin, source, data: { id } }) => connectionSubject.next({ action: 'ADD', origin, source, id }))
+              )
+              .subscribe();
+            contentWindow!.postMessage({ plusSubContentScriptInput: 'PING_REQUEST', requestId }, '*');
+          });
       },
 
-      sendCommand: (origin: string, payload: Record<string, unknown>) =>
-        sendSubject.next({
-          origin,
-          payload
-        }),
-
-      sendCommandAll: (payload: Record<string, unknown>) => sendAllSubject.next({payload})
+      sendCommand: (payload: Record<string, unknown>) => sendAllSubject.next({ payload }),
+      sendCommandWithResponse: (payload: Record<string, unknown>, mergeFn: (x: any[]) => any): Observable<any> => {
+        const responseSubject = new Subject();
+        sendWithResponseSubject.next({ payload, mergeFn, responseSubject });
+        return responseSubject.asObservable();
+      }
     }
   };
 };

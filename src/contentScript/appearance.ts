@@ -1,20 +1,20 @@
 import { Observable } from 'rxjs';
-import { MessageEventFromPopup } from './types';
+import { ContentScriptInputMessageEvent } from './types';
 import { filter, mergeMap, tap } from 'rxjs/operators';
 
 interface Payload {
-  messageObservable: Observable<MessageEventFromPopup<string>>;
+  inputObservable: Observable<ContentScriptInputMessageEvent<string>>;
 }
 
 interface ApplyStylePayload {
   style: Record<string, string>
 }
 
-type ApplyStyleMessageEvent = MessageEventFromPopup<'APPLY_STYLE'> & { data: ApplyStylePayload };
+type ApplyStyleMessageEvent = ContentScriptInputMessageEvent<'APPLY_STYLE'> & { data: ApplyStylePayload };
 
-export const init = ({ messageObservable }: Payload): Observable<[cssProperty: string, value: string]> => {
-  return messageObservable.pipe(
-    filter<MessageEventFromPopup<string>, ApplyStyleMessageEvent>((e): e is ApplyStyleMessageEvent => e.data.plusSubActionFromPopup === 'APPLY_STYLE'),
+export const init = ({ inputObservable }: Payload): Observable<[cssProperty: string, value: string]> => {
+  return inputObservable.pipe(
+    filter((e): e is ApplyStyleMessageEvent => e.data.plusSubContentScriptInput === 'APPLY_STYLE'),
     mergeMap((e) => Object.entries(e.data.style)),
     tap(([cssProperty, value]) => document.documentElement.style.setProperty(cssProperty, value))
   );

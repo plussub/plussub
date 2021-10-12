@@ -147,8 +147,8 @@ export default defineComponent({
           contentTransitionName: 'content-navigate-deeper'
         });
       },
-      backFn: (): void => {
-        videoStore.actions.removeCurrent();
+      backFn: async (): Promise<void> => {
+        await videoStore.actions.removeCurrent();
         navigationStore.actions.toHome();
       }
     };

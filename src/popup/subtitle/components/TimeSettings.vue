@@ -36,12 +36,7 @@ export default defineComponent({
   },
   setup() {
     const subtitleStore = useInjectStore('subtitleStore');
-    const videoStore = useInjectStore('videoStore');
 
-    const currentTime = ref<string>(Duration.fromMillis(0).toFormat('hh:mm:ss'));
-    videoStore.actions.useTimeUpdate(({ time }): void => {
-      currentTime.value = Duration.fromMillis(time * 1000).toFormat('hh:mm:ss');
-    });
     const offsetTime = computed({
       get: () => subtitleStore.state.value.offsetTime,
       set: (val) => {
@@ -53,7 +48,6 @@ export default defineComponent({
       }
     });
     return {
-      currentTime,
       offsetTime,
       reset: () => (offsetTime.value = 0),
       previewSelection: ref('excerpt')

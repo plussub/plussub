@@ -6,7 +6,7 @@
     line-height: var(--plusSub-cue-line-height);
 }
 
-video[data-plus-sub-state="injected"]::cue {
+video[data-plus-sub-status="injected"]::cue {
     color: var(--plusSub-cue-color, #ffffff);
     /*background-color: var(--plusSub-cue-background-color);*/
     font-size: var(--plusSub-cue-font-size);
