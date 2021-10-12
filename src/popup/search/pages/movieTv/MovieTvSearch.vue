@@ -3,7 +3,7 @@
     <template #toolbar>
       <Toolbar :has-back="videoCount > 1" :back-fn="backFn">
         <a v-if="videoCount === 1" class="self-center pr-4" @click="toSettings()">
-          <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
+          <FontAwesomeIcon icon="cog" class="h-icon hover:text-on-primary-hover-500"></FontAwesomeIcon>
         </a>
       </Toolbar>
     </template>
@@ -54,9 +54,11 @@ import { map, switchMap, takeUntil, tap, throttleTime } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
 import { useInjectStore } from '@/useInjectStore';
 import Toolbar from '@/Toolbar/Toolbar.vue';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
   components: {
+    FontAwesomeIcon,
     Toolbar,
     InputField,
     LoadingBar,

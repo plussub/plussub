@@ -40,7 +40,7 @@ import { searchQuery, SubtitleSearchForMoviesVariables } from './searchQuery';
 import { download } from '@/search/download';
 
 import SubtitleSearchEntry from '@/search/components/SubtitleSearchEntry.vue';
-import LanguageSelect from '@/search/components/LanguageSelect.vue';
+import LanguageSelect from '@/components/LanguageSelect/LanguageSelect.vue';
 import Toolbar from '@/Toolbar/Toolbar.vue';
 
 import Divider from '@/components/Divider.vue';

@@ -3,7 +3,7 @@
     <div v-for="(item,idx) in excerpt" :key="idx">
       <div class="mt-4 text-xs font-medium flex items-center">
         <span class="mr-2">{{ formatTime(item.from) }}</span>
-        <fa icon="arrow-right" class="mr-2 h-icon-sm inline-block" />
+        <FontAwesomeIcon icon="arrow-right" class="mr-2 h-icon-sm inline-block" />
         <span>{{ formatTime(item.to) }}</span>
       </div>
       <div class="text-xs text-sub-text-on-surface-50">
@@ -19,8 +19,10 @@ import { computed } from '@vue/reactivity';
 import Duration from 'luxon/src/duration';
 import { findNext } from './findNext';
 import { useInjectStore } from '@/useInjectStore';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
+  components: { FontAwesomeIcon },
   setup() {
     const subtitleStore = useInjectStore('subtitleStore');
     const videoStore = useInjectStore('videoStore');

@@ -3,7 +3,7 @@
     <template #toolbar>
       <Toolbar>
         <a class="self-center pr-4" @click="toSettings()">
-          <fa icon="cog" class="h-icon hover:text-on-primary-hover-500"></fa>
+          <FontAwesomeIcon icon="cog" class="h-icon hover:text-on-primary-hover-500"></FontAwesomeIcon>
         </a>
       </Toolbar>
 
@@ -50,9 +50,11 @@ import { useInjectStore } from '@/useInjectStore';
 import SearchResultInfo from "@/search/components/SearchResultInfo.vue";
 import Mention from "@/home/components/Mention.vue";
 import Toolbar from '@/Toolbar/Toolbar.vue';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
   components: {
+    FontAwesomeIcon,
     Toolbar,
     SearchResultInfo,
     PageLayout,

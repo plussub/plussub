@@ -11,12 +11,12 @@
       @drop.prevent="drop"
     >
       <p class="mt-6 self-center">
-        <fa icon="upload" class="text-primary-700 h-icon-lg" />
+        <FontAwesomeIcon icon="upload" class="text-primary-700 h-icon-lg" />
       </p>
       <input ref="inputRef" type="file" title="click or drop file here" accept=".vtt,.srt,.ass,.ssa" class="w-full h-full cursor-pointer absolute z-10 opacity-0" @change="fileSelected" />
       <div v-show="fileErrorMsg" class="absolute top-0 inset-x-0 p-2 flex place-content-center text-center z-30 bg-error text-on-error shadow">
         <div class="self-center rounded-full p-0.5 bg-error-icon mr-2">
-          <fa icon="times" class="h-icon-sm w-icon-sm text-white" />
+          <FontAwesomeIcon icon="times" class="h-icon-sm w-icon-sm text-white" />
         </div>
         <span class="self-center">{{ fileErrorMsg }}</span>
       </div>
@@ -38,8 +38,10 @@ import { getVideoName } from '@/util/name';
 import { OnLoadPayload, readFile } from './readFile';
 import { getFormatFromFilename } from '@/subtitle/util';
 import { useInjectStore } from '@/useInjectStore';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
+  components: { FontAwesomeIcon },
   props: {
     query: {
       type: String as PropType<string>,

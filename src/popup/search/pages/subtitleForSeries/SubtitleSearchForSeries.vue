@@ -42,7 +42,7 @@ import { ISO639 } from '@/search/store';
 import { download } from '@/search/download';
 
 import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpairedFilterButton.vue';
-import LanguageSelect from '@/search/components/LanguageSelect.vue';
+import LanguageSelect from '@/components/LanguageSelect/LanguageSelect.vue';
 import SeasonSelect from './SeasonSelect.vue';
 import EpisodeSelect from './EpisodeSelect.vue';
 

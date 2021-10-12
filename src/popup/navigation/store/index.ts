@@ -1,6 +1,5 @@
 import {computed, ComputedRef, ref} from 'vue';
 import MovieTvSearch from "@/search/pages/movieTv/MovieTvSearch.vue";
-import SubtitleSearch from "@/search/pages/subtitle/SubtitleSearch.vue";
 import SubtitleSearchForMovies from "@/search/pages/subtitleForMovies/SubtitleSearchForMovies.vue";
 import SubtitleSearchForSeries from "@/search/pages/subtitleForSeries/SubtitleSearchForSeries.vue";
 import Transcript from "@/subtitle/pages/Transcript.vue";
@@ -65,11 +64,9 @@ export const init = ({use}: InitPayload): NavigationStore => {
   const component = computed(() => {
     if (state.value.name === 'MOVIE-TV-SEARCH') {
       return MovieTvSearch;
-    } else if ((state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' || state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES') && use.apiStore.state.value.version === 'stable') {
-      return SubtitleSearch;
-    } else if (state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES' && use.apiStore.state.value.version === 'dev') {
+    } else if (state.value.name === 'SUBTITLE-SEARCH-FOR-MOVIES') {
       return SubtitleSearchForMovies;
-    } else if (state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES' && use.apiStore.state.value.version === 'dev') {
+    } else if (state.value.name === 'SUBTITLE-SEARCH-FOR-SERIES') {
       return SubtitleSearchForSeries;
     } else if (state.value.name === 'TRANSCRIPT') {
       return Transcript;

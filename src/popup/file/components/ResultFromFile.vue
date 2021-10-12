@@ -2,7 +2,7 @@
   <div class="relative bg-surface-50 grid w-full rounded-lg shadow-lg border border-primary-700 result-from-file--card">
     <div class="absolute flex font-medium top-2.5 right-2.5">
       <div class="text-xs flex align-center text-primary-color-700">
-        <fa icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="remove" />
+        <FontAwesomeIcon icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="remove" />
       </div>
     </div>
     <div class="flex mt-2 px-2 gap-2" style="grid-area: header">
@@ -25,11 +25,13 @@
 <script lang="ts">
 import { computed, defineComponent, onUnmounted } from 'vue';
 import { capitalizeFirst } from '@/util/string';
-import SuffixIconButton from '@/components/SuffixIconButton.vue';
 import { useInjectStore } from '@/useInjectStore';
+import SuffixIconButton from '@/components/SuffixIconButton.vue';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
   components: {
+    FontAwesomeIcon,
     SuffixIconButton
   },
   setup() {

@@ -1,7 +1,7 @@
 <template>
   <div ref="draggableAreaRef" class="grid shadow home-toolbar--container--content cursor-grab active:cursor-grabbing bg-primary-500 text-on-primary-500">
     <a v-if="hasBack" style="grid-area: logo" @click="backFn ? backFn() : toHome()">
-      <fa icon="chevron-left" class="h-full py-2 pl-1 hover:text-on-primary-hover-500" />
+      <FontAwesomeIcon icon="chevron-left" class="h-full py-2 pl-1 hover:text-on-primary-hover-500" />
     </a>
     <div v-else>
       <logo style="grid-area: logo" class="h-full w-full" />
@@ -13,7 +13,7 @@
 
     <div style="grid-area: close" class="flex items-center mr-3">
       <a @click="close">
-        <fa icon="times" class="h-icon hover:text-on-primary-hover-500" />
+        <FontAwesomeIcon icon="times" class="h-icon hover:text-on-primary-hover-500" />
       </a>
     </div>
   </div>
@@ -27,9 +27,11 @@ import Logo from './Logo.vue';
 import { close } from './close';
 import logo from '@/res/plussub128.png';
 import { useInjectStore } from '@/useInjectStore';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
   components: {
+    FontAwesomeIcon,
     Logo
   },
   props: {

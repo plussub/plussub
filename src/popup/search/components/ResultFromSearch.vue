@@ -3,7 +3,7 @@
     <div style="grid-row: 1/2; grid-column: 1/2" class="z-10 px-2 grid w-full h-full text-white result-from-search--card--hero--text">
       <div class="absolute flex font-medium top-2.5 right-2.5">
         <div class="text-xs flex align-center text-primary-color-700">
-          <fa icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="remove" />
+          <FontAwesomeIcon icon="times" class="h-icon-sm hover:cursor-pointer hover:text-destructive-icon" @click="remove" />
         </div>
       </div>
       <div style="grid-area: title" class="flex gap-2">
@@ -17,14 +17,14 @@
         <div style="grid-column: 1 / 2" class="px-2">
           <a :href="tmdbLink" target="_blank" class="inline-flex gap-1 w-full text-primary-500 hover:text-primary-700 hover:underline">
             <span class="flex-grow">TMDb</span>
-            <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
+            <FontAwesomeIcon icon="external-link-alt" class="self-center h-icon-sm pb-1" />
           </a>
         </div>
         <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.tmdb.vote_average }} / 10</div>
         <div style="grid-column: 1 / 2" class="px-2">
           <a :href="searchState.openSubtitle.websiteLink" target="_blank" class="inline-flex gap-1 w-full text-primary-500 hover:text-primary-700 hover:underline">
             <span class="flex-grow">Subtitle</span>
-            <fa icon="external-link-alt" class="self-center h-icon-sm pb-1" />
+            <FontAwesomeIcon icon="external-link-alt" class="self-center h-icon-sm pb-1" />
           </a>
         </div>
         <div style="grid-column: 2 / 3" class="font-thin">{{ searchState.openSubtitle.rating }} / 10</div>
@@ -59,9 +59,11 @@ import { capitalizeFirst } from '@/util/string';
 import LoadingBar from '@/components/LoadingBar.vue';
 import SuffixIconButton from '@/components/SuffixIconButton.vue';
 import { useInjectStore } from '@/useInjectStore';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
   components: {
+    FontAwesomeIcon,
     LoadingBar,
     SuffixIconButton
   },

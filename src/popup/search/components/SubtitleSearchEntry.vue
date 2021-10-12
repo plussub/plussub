@@ -7,7 +7,7 @@
       <div style="grid-column: 1 / 2;" class="font-medium">Rating</div>
       <div style="grid-column: 2 / 3" >{{ item.attributes.ratings }}</div>
       <div v-if="item.attributes.hearing_impaired" style="grid-column: 3 / 4;" class="font-medium" title="Hearing impaired">
-        <fa icon="deaf" class="h-icon-sm" />
+        <FontAwesomeIcon icon="deaf" class="h-icon-sm" />
       </div>
     </div>
   </div>
@@ -16,8 +16,10 @@
 <script lang="ts">
 import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
 import { defineComponent, PropType } from 'vue';
+import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
+  components: { FontAwesomeIcon },
   props: {
     item: {
       type: Object as PropType<SubtitleSearchFragmentResult_data>,

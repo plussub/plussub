@@ -19,7 +19,6 @@ import { init as initAppearanceStore } from '@/appearance/store';
 
 import Home from '@/home/pages/Home.vue';
 import MovieTvSearch from '@/search/pages/movieTv/MovieTvSearch.vue';
-import SubtitleSearch from '@/search/pages/subtitle/SubtitleSearch.vue';
 import SubtitleSearchForMovies from '@/search/pages/subtitleForMovies/SubtitleSearchForMovies.vue';
 import SubtitleSearchForSeries from '@/search/pages/subtitleForSeries/SubtitleSearchForSeries.vue';
 import Transcript from '@/subtitle/pages/Transcript.vue';
@@ -32,7 +31,6 @@ export default defineComponent({
   components: {
     Home,
     MovieTvSearch,
-    SubtitleSearch,
     SubtitleSearchForMovies,
     SubtitleSearchForSeries,
     Transcript,

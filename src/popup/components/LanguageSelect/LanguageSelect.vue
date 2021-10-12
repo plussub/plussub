@@ -19,10 +19,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue';
-import { default as Select } from '@/components/Select.vue';
-import { capitalizeFirst } from '@/util/string';
-import languageList from '@/res/iso639List.json';
+import { computed, defineComponent, PropType } from 'vue';
+import { default as Select } from '../Select.vue';
+import languageList from './iso639List.json';
+
+const capitalizeFirst = (str: string | undefined): string => (str ? `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}` : '');
 
 export default defineComponent({
   components: {
@@ -37,12 +38,16 @@ export default defineComponent({
       type: Boolean as PropType<boolean>,
       required: false,
       default: false
+    },
+    filterList: {
+      type: Array as PropType<string[]>,
+      default: () => []
     }
   },
   emits: ['update:selected', 'update:show'],
   setup(props) {
     return {
-      languageList,
+      languageList: languageList.filter(({ iso639_2 }) => props.filterList.length > 0 ? props.filterList.includes(iso639_2) : true),
       filter: (query: string) => {
         const lowerCaseQuery = query.toLowerCase();
         return languageList.filter(({ iso639Name, iso639_2 }) => iso639Name.toLowerCase().startsWith(query) || iso639_2.toLowerCase().startsWith(lowerCaseQuery));
