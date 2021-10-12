@@ -46,16 +46,6 @@ export const init = ({ use, initStyle }: InitPayload): AppearanceStore => {
         const backgroundColor = window.plussub_currentStyle.backgroundColor ? { '--plusSub-cue-background-color': window.plussub_currentStyle.backgroundColor } : {};
         const fontSize = window.plussub_currentStyle.fontSize ? { '--plusSub-cue-font-size': `${window.plussub_currentStyle.fontSize}px` } : {};
 
-
-        console.warn({
-          plusSubContentScriptInput: 'APPLY_STYLE',
-          style: {
-            ...color,
-            ...backgroundColor,
-            ...fontSize
-          }
-        });
-
         use.contentScriptStore.actions.sendCommand({
           plusSubContentScriptInput: 'APPLY_STYLE',
           style: {
