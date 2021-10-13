@@ -93,7 +93,6 @@ export const init = ({ inputObservable }: Payload): Observable<any> => {
   const deselectVideoInputObservable = inputObservable.pipe(
     filter((e) => e.data.plusSubContentScriptInput === 'DESELECT_VIDEO'),
     tap(() => {
-      //todo remove +Sub subtitle
       [...document.querySelectorAll('video')].forEach((el) => {
         el.dataset.plusSubStatus = 'none';
         const track = [...el.textTracks].find((track) => track.label === '+Sub' && track.mode !== "disabled");

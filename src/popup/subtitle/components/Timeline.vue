@@ -60,7 +60,6 @@ export default defineComponent({
     const videoTimePoint = { x: 0, y: 0 };
     const videoTimePointLine = { x: 0, y: 12 };
 
-    // todo:
     watch(currentTime, (currentTime) => {
       videoTimePoint.x = currentTime;
       videoTimePointLine.x = currentTime;

@@ -26,7 +26,6 @@ declare global {
   }
 }
 
-// todo load init style here
 export const init = ({ use, initStyle }: InitPayload): AppearanceStore => {
   window.plussub_currentStyle = initStyle;
   const tick = async () => new Promise(resolve => setTimeout(() => resolve(undefined)));
