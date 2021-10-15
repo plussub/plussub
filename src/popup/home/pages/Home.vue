@@ -30,7 +30,7 @@
           </template>
         </ResultFromFile>
 
-        <PageVideos v-else-if="current === 'page-videos'" class="w-full" />
+        <PageVideos v-else-if="current === 'page-videos'" class="w-full" :select-fn='toSearch'/>
         <Mention/>
       </div>
     </template>
@@ -79,6 +79,7 @@ export default defineComponent({
     return {
       appState: appStore.state,
       toSettings: navigationStore.actions.toSettings,
+      toSearch: navigationStore.actions.toMovieTvSearch,
       current: computed(() => {
         if (appStore.state.value.state !== 'NONE' && appStore.state.value.src === 'SEARCH') {
           return 'search-card';
@@ -90,7 +91,7 @@ export default defineComponent({
           return 'page-videos';
         }
         return 'unknown';
-      })
+      }),
     };
   }
 });

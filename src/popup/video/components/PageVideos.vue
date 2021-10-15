@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted } from 'vue';
+import { defineComponent, onUnmounted, PropType } from 'vue';
 import Duration from 'luxon/src/duration';
 import { Video } from '@/video/store';
 
@@ -39,9 +39,13 @@ export default defineComponent({
   components: {
     Divider
   },
-  setup() {
+  selectFn: {
+    type: Function as PropType<() => unknown | undefined>,
+    required: false,
+    default: undefined
+  },
+  setup(props) {
     const videoStore = useInjectStore('videoStore');
-    const navigationStore = useInjectStore('navigationStore');
 
     onUnmounted(() => videoStore.actions.removeHighlight());
 
@@ -51,7 +55,7 @@ export default defineComponent({
       videoList: videoStore.getters.list,
       selectVideo: async (video: Video) => {
         await videoStore.actions.setCurrent({ video });
-        navigationStore.actions.toMovieTvSearch();
+        props.selectFn(video);
       },
       formatTime: (ms) => Duration.fromMillis(ms).toFormat('hh:mm:ss')
     };
