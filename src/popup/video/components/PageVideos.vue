@@ -57,7 +57,7 @@ export default defineComponent({
       videoList: videoStore.getters.list,
       selectVideo: async (video: Video) => {
         await videoStore.actions.setCurrent({ video });
-        props.selectFn(video);
+        props?.selectFn(video);
       },
       formatTime: (ms) => Duration.fromMillis(ms).toFormat('hh:mm:ss')
     };
