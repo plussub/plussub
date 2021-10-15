@@ -41,7 +41,7 @@ export default defineComponent({
   },
   props: {
     selectFn: {
-      type: Function as PropType<(video: Video) => unknown | undefined>,
+      type: Function as PropType<(payload: {video: Video}) => unknown | undefined>,
       required: false,
       default: () => undefined
     }
@@ -57,7 +57,9 @@ export default defineComponent({
       videoList: videoStore.getters.list,
       selectVideo: async (video: Video) => {
         await videoStore.actions.setCurrent({ video });
-        props?.selectFn(video);
+        if(props?.selectFn){
+          props.selectFn({video});
+        }
       },
       formatTime: (ms) => Duration.fromMillis(ms).toFormat('hh:mm:ss')
     };
