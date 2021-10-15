@@ -24,7 +24,7 @@
         <p class="m-2">Click or drop file to this area to upload</p>
         <p class="m-2 text-sub-text-on-surface-50 text-sm">
           Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable.(Video
-          <span :class="{ 'text-primary-700': getVideoName() !== '1', 'hover:underline': getVideoName() !== '1' }" @click="changeQuery">{{ getVideoName() }}</span>
+          <span :class="{ 'text-primary-700': videoName !== '1', 'hover:underline': videoName !== '1' }" @click="changeQuery">{{ videoName }}</span>
           is {{ videoCount === 1 ? 'auto' : '' }} selected)
         </p>
       </div>
@@ -34,7 +34,6 @@
 
 <script lang="ts">
 import { defineComponent, onUnmounted, PropType, ref } from 'vue';
-import { getVideoName } from '@/util/name';
 import { OnLoadPayload, readFile } from './readFile';
 import { getFormatFromFilename } from '@/subtitle/util';
 import { useInjectStore } from '@/composables/useInjectStore';
@@ -117,10 +116,10 @@ export default defineComponent({
       fileErrorMsg,
       dragenter,
       dragleave,
-      getVideoName,
       highlightCurrentVideo: () => videoStore.actions.highlight({ video: videoStore.getters.current.value }),
       removeHighlightFromVideo: videoStore.actions.removeHighlight,
       videoCount: videoStore.getters.count,
+      videoName: videoStore.getters.videoName,
 
       drop: (event: DragEvent): void => {
         let droppedFiles = event.dataTransfer?.files;

@@ -11,9 +11,9 @@
       <div class="w-full h-full grid relative justify-center search-content--container">
         <div style="grid-area: search-bar" class="pt-3 pb-2 bg-primary-50">
           <InputField v-model="internalQuery" class="px-2" placeholder-icon="search" placeholder="Search movie or series" />
-          <div v-show="getVideoName() !== ''" class="px-5 mt-2 leading-normal text-sm">
+          <div v-show="videoName !== ''" class="px-5 mt-2 leading-normal text-sm">
             <div class="italic">Search Suggestion</div>
-            <a class="relative text-primary-700 hover:underline italic" @click="changeQueryToSuggested">{{ getVideoName() }}</a>
+            <a class="relative text-primary-700 hover:underline italic" @click="changeQueryToSuggested">{{ videoName }}</a>
           </div>
         </div>
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
@@ -41,7 +41,6 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, watch } from 'vue';
 import { searchQuery, VideoSearch_videoSearch_entries } from './searchQuery';
-import { getVideoName } from '@/util/name';
 
 import FilePick from '@/file/components/FilePick.vue';
 import PageLayout from '@/components/PageLayout.vue';
@@ -127,9 +126,9 @@ export default defineComponent({
       entries,
 
       videoCount: videoStore.getters.count,
-      getVideoName,
+      videoName: videoStore.getters.videoName,
       toSettings: navigationStore.actions.toSettings,
-      changeQueryToSuggested: () => (internalQuery.value = getVideoName()),
+      changeQueryToSuggested: () => (internalQuery.value = videoStore.getters.videoName.value),
       select: (tmdb: VideoSearch_videoSearch_entries): void => {
         searchStore.actions.setTmdbInSelection({
           tmdb_id: tmdb.tmdb_id,
