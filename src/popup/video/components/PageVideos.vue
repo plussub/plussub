@@ -39,10 +39,12 @@ export default defineComponent({
   components: {
     Divider
   },
-  selectFn: {
-    type: Function as PropType<() => unknown | undefined>,
-    required: false,
-    default: undefined
+  props: {
+    selectFn: {
+      type: Function as PropType<(video: Video) => unknown | undefined>,
+      required: false,
+      default: () => undefined
+    }
   },
   setup(props) {
     const videoStore = useInjectStore('videoStore');
