@@ -1,14 +1,13 @@
 import { computed, ComputedRef, onUnmounted, ref } from 'vue';
 import { SubtitleEntry } from '@/subtitle/store';
-import { ContentScriptStore } from '@/contentScript/store';
-import { AppearanceStore } from '@/appearance/store';
+import { Store } from '@/storeTypes';
 import { mergeMap, takeUntil, tap } from 'rxjs/operators';
 import { merge, Subject, interval } from 'rxjs';
 
 interface InitPayload {
   use: {
-    contentScriptStore: ContentScriptStore;
-    appearanceStore: AppearanceStore;
+    contentScriptStore: Store<'contentScriptStore'>;
+    appearanceStore: Store<'appearanceStore'>;
   };
 }
 

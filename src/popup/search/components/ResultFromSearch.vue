@@ -58,7 +58,7 @@ import { computed, defineComponent, onUnmounted } from 'vue';
 import { capitalizeFirst } from '@/util/string';
 import LoadingBar from '@/components/LoadingBar.vue';
 import SuffixIconButton from '@/components/SuffixIconButton.vue';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({

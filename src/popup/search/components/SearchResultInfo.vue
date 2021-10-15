@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   setup() {

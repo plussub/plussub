@@ -41,7 +41,7 @@ import Duration from 'luxon/src/duration';
 import PrefixIconButton from '@/components/PrefixIconButton.vue';
 import Divider from '@/components/Divider.vue';
 import TimeSettings from '@/subtitle/components/TimeSettings.vue';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 import TranscriptPanel from "@/subtitle/components/TranscriptPanel.vue";
 import AppearanceSettings from "@/appearance/components/AppearanceSettings.vue";
 import { computed } from '@vue/reactivity';

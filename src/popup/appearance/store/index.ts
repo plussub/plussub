@@ -1,10 +1,10 @@
-import { ContentScriptStore } from '@/contentScript/store';
 import { set as storageSet } from 'storage';
 import { computed, ComputedRef } from 'vue';
+import { Store } from 'storeTypes';
 
 interface InitPayload {
   use: {
-    contentScriptStore: ContentScriptStore;
+    contentScriptStore: Store<'contentScriptStore'>;
   };
   initStyle: Record<'color' | 'backgroundColor', string>;
 }

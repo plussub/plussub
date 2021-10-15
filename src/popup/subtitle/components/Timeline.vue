@@ -8,7 +8,7 @@ import { Chart, ChartPoint } from 'chart.js';
 import { computed } from '@vue/reactivity';
 import Duration from 'luxon/src/duration.js';
 import { findNext } from './findNext';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   setup() {

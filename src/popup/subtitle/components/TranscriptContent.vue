@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import {computed, defineComponent, PropType, ref, watch} from 'vue';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 import { binarySearch } from './binarySearch';
 import Duration from "luxon/src/duration";
 

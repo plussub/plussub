@@ -37,7 +37,7 @@ import { defineComponent, onUnmounted, PropType, ref } from 'vue';
 import { getVideoName } from '@/util/name';
 import { OnLoadPayload, readFile } from './readFile';
 import { getFormatFromFilename } from '@/subtitle/util';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({

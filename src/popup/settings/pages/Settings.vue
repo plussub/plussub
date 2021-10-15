@@ -32,7 +32,7 @@ import { computed, defineComponent, PropType } from 'vue';
 import { clear as storageClear } from 'storage';
 
 import PageLayout from '@/components/PageLayout.vue';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 import Toolbar from '@/Toolbar/Toolbar.vue';
 
 export default defineComponent({

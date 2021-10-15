@@ -1,4 +1,3 @@
-import { inject } from 'vue';
 import { AppStore } from '@/app/store';
 import { SearchStore } from '@/search/store';
 import { SubtitleStore } from '@/subtitle/store';
@@ -8,9 +7,10 @@ import { FileStore } from '@/file/store';
 import { TrackStore } from '@/track/store';
 import { ApiStore } from '@/api/store';
 import { AppearanceStore } from '@/appearance/store';
+import { ContentScriptStore } from '@/contentScript/store';
 
-type StoreKey = 'appStore' | 'searchStore' | 'subtitleStore' | 'videoStore' | 'navigationStore' | 'fileStore' | 'trackStore' | 'apiStore' | 'appearanceStore';
-type ReturnType<T extends StoreKey> = T extends 'appStore'
+export type StoreKey = 'appStore' | 'searchStore' | 'subtitleStore' | 'videoStore' | 'navigationStore' | 'fileStore' | 'trackStore' | 'apiStore' | 'appearanceStore' | 'contentScriptStore';
+export type Store<T extends StoreKey> = T extends 'appStore'
   ? AppStore
   : T extends 'searchStore'
   ? SearchStore
@@ -28,12 +28,6 @@ type ReturnType<T extends StoreKey> = T extends 'appStore'
   ? ApiStore
   : T extends 'appearanceStore'
   ? AppearanceStore
+  : T extends 'contentScriptStore'
+  ? ContentScriptStore
   : unknown;
-
-export const useInjectStore = <T extends StoreKey>(storeKey: T): ReturnType<T> => {
-  const store = inject<ReturnType<T>>(storeKey);
-  if (!store) {
-    throw new Error(`inject failed: ${storeKey}`);
-  }
-  return store;
-};

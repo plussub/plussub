@@ -33,7 +33,7 @@ import Duration from 'luxon/src/duration';
 import { Video } from '@/video/store';
 
 import Divider from '@/components/Divider.vue';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {

@@ -46,7 +46,7 @@ import ResultFromFile from '@/file/components/ResultFromFile.vue';
 import FileInfo from '@/file/components/FileInfo.vue';
 import PageVideos from '@/video/components/PageVideos.vue';
 import Settings from '@/subtitle/components/Settings.vue';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 import SearchResultInfo from "@/search/components/SearchResultInfo.vue";
 import Mention from "@/home/components/Mention.vue";
 import Toolbar from '@/Toolbar/Toolbar.vue';

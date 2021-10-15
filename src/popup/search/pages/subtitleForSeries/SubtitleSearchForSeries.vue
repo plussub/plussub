@@ -56,7 +56,7 @@ import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSe
 import { from, Subject } from 'rxjs';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 
 export default defineComponent({
   components: {

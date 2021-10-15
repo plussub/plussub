@@ -33,6 +33,8 @@ export default (env) => {
       extensions: ['.ts', '.js', '.vue', '.json', '.mjs'],
       alias: {
         '@': resolve('src/popup'),
+        // spin-off specifics
+        storeTypes: resolve(`src/popup/storeTypes/index.ts`),
         // It seems the problem has been solve. https://github.com/vuejs/vue-cli/pull/5788
         // this isn't technically needed, since the default `vue` entry for bundlers
         // is a simple `export * from '@vue/runtime-dom`. However having this

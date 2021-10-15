@@ -18,7 +18,7 @@ import { defineComponent, ref, watch } from 'vue';
 import { computed } from '@vue/reactivity';
 import Duration from 'luxon/src/duration';
 import { findNext } from './findNext';
-import { useInjectStore } from '@/useInjectStore';
+import { useInjectStore } from '@/composables/useInjectStore';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
