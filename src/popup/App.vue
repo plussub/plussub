@@ -51,7 +51,7 @@ export default defineComponent({
     provide('appStore', appStore);
     const apiStore = initApiStore();
     provide('apiStore', apiStore);
-    const navigationStore = initNavigationStore({ use: { apiStore } });
+    const navigationStore = initNavigationStore();
     provide('navigationStore', navigationStore);
     const subtitleStore = initSubtitleStore({ use: { appStore } });
     provide('subtitleStore', subtitleStore);

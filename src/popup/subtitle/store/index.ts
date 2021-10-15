@@ -1,8 +1,8 @@
 import {computed, ComputedRef, ref} from "vue";
 import {Ref} from "@vue/reactivity";
-import {AppStore} from "@/app/store";
 import {parse as srtVttParse} from "@plussub/srt-vtt-parser";
 import {parse as assSsaParse } from './ass-ssa-parser';
+import { Store } from 'storeTypes';
 
 export interface SubtitleEntry {
   from: number;
@@ -44,7 +44,7 @@ declare global {
 
 interface InitPayload {
   use: {
-    appStore: AppStore
+    appStore: Store<'appStore'>
   }
 }
 

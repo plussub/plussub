@@ -59,7 +59,7 @@ interface InitPayload {
 }
 
 
-export const init = ({use}: InitPayload): NavigationStore => {
+export const init = (): NavigationStore => {
 
   const component = computed(() => {
     if (state.value.name === 'MOVIE-TV-SEARCH') {
