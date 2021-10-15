@@ -11,7 +11,7 @@
         {{ item.title }}
       </div>
       <div class="text-xs font-medium mt-2 pl-2">
-        {{ prettyMediaType }}
+        {{ capitalize(item.media_type) }}
         {{ item.release_date ? '/ ' + item.release_date.substr(0, 4) : '' }}
       </div>
       <div class="text-xs mt-1 pl-2">tmdb {{ item.vote_average }}</div>
@@ -20,9 +20,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { VideoSearch_videoSearch_entries } from './searchQuery';
-import { capitalizeFirst } from '@/util/string';
+import { useStringFn } from '@/composables';
 
 import { default as posterFallback } from '@/res/posterFallback.png';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
@@ -37,10 +37,12 @@ export default defineComponent({
   },
   emits: ['select'],
   setup(props, { emit }) {
+    const {capitalize} = useStringFn();
+
     return {
       posterFallback,
       select: (selected) => emit('select', selected),
-      prettyMediaType: computed(() => capitalizeFirst(props.item.media_type))
+      capitalize
     };
   }
 });

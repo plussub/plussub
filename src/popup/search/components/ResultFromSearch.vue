@@ -55,11 +55,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, onUnmounted } from 'vue';
-import { capitalizeFirst } from '@/util/string';
 import LoadingBar from '@/components/LoadingBar.vue';
 import SuffixIconButton from '@/components/SuffixIconButton.vue';
 import { useInjectStore } from '@/composables/useInjectStore';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
+import { useStringFn } from '@/composables';
 
 export default defineComponent({
   components: {
@@ -73,8 +73,9 @@ export default defineComponent({
     const searchStore = useInjectStore('searchStore');
     const subtitleStore = useInjectStore('subtitleStore');
     const videoStore = useInjectStore('videoStore');
+    const {capitalize} = useStringFn();
 
-    const mediaType = computed(() => capitalizeFirst(searchStore.state.value?.tmdb?.media_type));
+    const mediaType = computed(() => capitalize(searchStore.state.value?.tmdb?.media_type));
     const releaseDate = computed(() => searchStore.state.value.tmdb?.release_date.substr(0, 4) ?? null);
 
     onUnmounted(() => {

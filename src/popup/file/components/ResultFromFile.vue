@@ -23,8 +23,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onUnmounted } from 'vue';
-import { capitalizeFirst } from '@/util/string';
+import { defineComponent, onUnmounted } from 'vue';
 import { useInjectStore } from '@/composables/useInjectStore';
 import SuffixIconButton from '@/components/SuffixIconButton.vue';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
@@ -54,7 +53,6 @@ export default defineComponent({
       },
       highlightCurrentVideo: () => videoStore.actions.highlight({ video: videoStore.getters.current.value }),
       removeHighlightFromVideo: videoStore.actions.removeHighlight,
-      infoTooltip: computed(() => [`filename - ${fileStore.state.value.filename}`, `state - ${capitalizeFirst(appStore.state.value.state)}`].join('\n'))
     };
   }
 });
