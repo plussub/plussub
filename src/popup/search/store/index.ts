@@ -1,5 +1,5 @@
 import { computed, ComputedRef, Ref, ref } from 'vue';
-import { set as storageSet } from 'storage';
+import { get as storageGet, set as storageSet } from 'storage';
 import languageList from '@/res/iso639List.json';
 
 export interface TmdbState {
@@ -40,6 +40,7 @@ export interface SearchStore {
   };
   getters: {
     getPreferredLanguageAsIso639: ComputedRef<ISO639>;
+    initialized: ComputedRef<boolean>;
   };
 }
 
@@ -49,15 +50,24 @@ declare global {
   }
 }
 
-export const init = ({ preferredLanguage }: { preferredLanguage: string }): SearchStore => {
+export const init = (): SearchStore => {
   window.plusSub_search = window.plusSub_search
     ? ref({ ...window.plusSub_search.value })
     : ref<SearchState>({
         inSelectionTmdb: null,
         tmdb: null,
         openSubtitle: null,
-        preferredLanguage
+        preferredLanguage: 'en'
       });
+  const initialized = ref(false);
+
+  storageGet(['preferredLanguage']).then(async ({preferredLanguage}) => {
+    if(preferredLanguage){
+      window.plusSub_search.value.preferredLanguage = preferredLanguage;
+    }
+    initialized.value = true;
+  });
+
 
   return {
     state: computed(() => window.plusSub_search.value),
@@ -103,7 +113,8 @@ export const init = ({ preferredLanguage }: { preferredLanguage: string }): Sear
             iso639_2: 'en',
             iso639Name: 'English'
           }
-      )
+      ),
+      initialized: computed(() => initialized.value)
     }
   };
 };

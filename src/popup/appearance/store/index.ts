@@ -1,12 +1,11 @@
-import { set as storageSet } from 'storage';
-import { computed, ComputedRef } from 'vue';
+import { get as storageGet, set as storageSet } from 'storage';
+import { computed, ComputedRef, ref } from 'vue';
 import { Store } from 'storeTypes';
 
 interface InitPayload {
   use: {
     contentScriptStore: Store<'contentScriptStore'>;
   };
-  initStyle: Record<'color' | 'backgroundColor', string>;
 }
 
 export interface AppearanceStore {
@@ -15,6 +14,9 @@ export interface AppearanceStore {
   };
   state: {
     style: ComputedRef<Record<'color' | 'backgroundColor', string>>;
+  };
+  getters: {
+    initialized: ComputedRef<boolean>;
   };
 }
 
@@ -26,8 +28,17 @@ declare global {
   }
 }
 
-export const init = ({ use, initStyle }: InitPayload): AppearanceStore => {
-  window.plussub_currentStyle = initStyle;
+export const init = ({ use }: InitPayload): AppearanceStore => {
+  window.plussub_currentStyle = {};
+  const initialized = ref(false);
+
+  storageGet(['style']).then(async ({style}) => {
+    if(style){
+      window.plussub_currentStyle = style;
+    }
+    initialized.value = true;
+  });
+
   const tick = async () => new Promise(resolve => setTimeout(() => resolve(undefined)));
 
   return {
@@ -58,6 +69,9 @@ export const init = ({ use, initStyle }: InitPayload): AppearanceStore => {
     },
     state: {
       style: computed(() => window.plussub_currentStyle)
+    },
+    getters: {
+      initialized: computed(() => initialized.value)
     }
   };
 };

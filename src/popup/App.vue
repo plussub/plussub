@@ -1,11 +1,12 @@
 <template>
   <div class="h-auto overflow-hidden grid app--container">
-    <component :is="navigationState.component" v-bind="navigationState.params" />
+    <component v-if='initialized' :is="navigationState.component" v-bind="navigationState.params" />
+    <Loading v-else/>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, PropType, provide, watch } from 'vue';
+import { computed, defineComponent, onUnmounted, PropType, provide, watch } from 'vue';
 import { init as initAppStore } from '@/app/store';
 import { init as initContentScriptStore } from '@/contentScript/store';
 import { init as initVideoStore } from '@/video/store';
@@ -13,56 +14,44 @@ import { init as initFileStore } from '@/file/store';
 import { init as initSubtitleStore } from '@/subtitle/store';
 import { init as initSearchStore } from '@/search/store';
 import { init as initNavigationStore } from '@/navigation/store';
-import { init as initApiStore } from '@/api/store';
 import { init as initTrackStore } from '@/track/store';
 import { init as initAppearanceStore } from '@/appearance/store';
 
 import Home from '@/home/pages/Home.vue';
+import Loading from '@/loading/pages/Loading.vue';
 import MovieTvSearch from '@/search/pages/movieTv/MovieTvSearch.vue';
 import SubtitleSearchForMovies from '@/search/pages/subtitleForMovies/SubtitleSearchForMovies.vue';
 import SubtitleSearchForSeries from '@/search/pages/subtitleForSeries/SubtitleSearchForSeries.vue';
 import Transcript from '@/subtitle/pages/Transcript.vue';
 import Settings from '@/settings/pages/Settings.vue';
 import '@/styles.css';
-import { filter, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 export default defineComponent({
   components: {
     Home,
+    Loading,
     MovieTvSearch,
     SubtitleSearchForMovies,
     SubtitleSearchForSeries,
     Transcript,
     Settings
   },
-  props: {
-    preferredLanguage: {
-      type: String as PropType<string>,
-      required: true
-    },
-    style: {
-      type: Object as PropType<Record<string, string>>,
-      required: true
-    }
-  },
-  setup(props) {
+  setup() {
     const appStore = initAppStore();
     provide('appStore', appStore);
-    const apiStore = initApiStore();
-    provide('apiStore', apiStore);
     const navigationStore = initNavigationStore();
     provide('navigationStore', navigationStore);
     const subtitleStore = initSubtitleStore({ use: { appStore } });
     provide('subtitleStore', subtitleStore);
     const contentScriptStore = initContentScriptStore();
-    const appearanceStore = initAppearanceStore({ use: { contentScriptStore }, initStyle: props.style });
+    const appearanceStore = initAppearanceStore({ use: { contentScriptStore }});
     provide('appearanceStore', appearanceStore);
     const videoStore = initVideoStore({ use: { contentScriptStore, appearanceStore} });
     provide('videoStore', videoStore);
     const fileStore = initFileStore();
     provide('fileStore', fileStore);
-    const searchStore = initSearchStore({ preferredLanguage: props.preferredLanguage });
+    const searchStore = initSearchStore();
     provide('searchStore', searchStore);
     const trackStore = initTrackStore();
     provide('trackStore', trackStore);
@@ -103,9 +92,14 @@ export default defineComponent({
 
     onUnmounted(() => unmountSubject.next(undefined));
 
+    const initialized = computed(() => searchStore.getters.initialized.value && appearanceStore.getters.initialized.value);
+
     watch(
-      [videoStore.getters.count, appStore.state, videoStore.getters.list, videoStore.getters.current],
-      ([videoCount, appState, videoList], [prevVideoCount, prevAppState, prevVideoList]) => {
+      [initialized, videoStore.getters.count, appStore.state, videoStore.getters.list, videoStore.getters.current],
+      ([initialized, videoCount, appState, videoList], [prevInitialized, prevVideoCount, prevAppState, prevVideoList]) => {
+        if(!initialized){
+          return;
+        }
         // navigate if only 1 video exists
         if (videoCount === 1 && videoList[0] && navigationStore.state.value.name === 'HOME' && appState.state === 'NONE') {
           videoStore.actions.setCurrent({ video: videoList[0] }).then(() => navigationStore.actions.toMovieTvSearch())
@@ -127,6 +121,7 @@ export default defineComponent({
     );
 
     return {
+      initialized,
       navigationState: navigationStore.state
     };
   }

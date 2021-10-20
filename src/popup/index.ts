@@ -1,7 +1,6 @@
 import { createApp, App } from 'vue';
 import appComponent from './App.vue';
 import "@/components/FontAwesomeIcon/fontAwesome";
-import {get as storageGet} from 'storage';
 
 let app: App;
 
@@ -9,8 +8,7 @@ export const init = async (): Promise<void> => {
   if (document.getElementById('plusSubShadow')) {
     document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`)
   } else {
-    const {preferredLanguage, api, style} = await storageGet(['preferredLanguage', 'api', 'style']);
-    app = createApp(appComponent, {preferredLanguage: preferredLanguage ?? 'en', apiVersion: api ?? 'stable', style: style ?? {}});
+    app = createApp(appComponent);
     document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`);
 
     const appShadowDiv = document.createElement('div');
