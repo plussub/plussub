@@ -5,7 +5,6 @@ import SubtitleSearchForSeries from "@/search/pages/subtitleForSeries/SubtitleSe
 import Transcript from "@/subtitle/pages/Transcript.vue";
 import Settings from "@/settings/pages/Settings.vue";
 import Home from "@/home/pages/Home.vue";
-import {ApiStore} from "@/api/store";
 
 export type NavigationState = {
   name: 'HOME' | 'SETTINGS' | 'MOVIE-TV-SEARCH' | 'SUBTITLE-SEARCH-FOR-MOVIES' | 'SUBTITLE-SEARCH-FOR-SERIES' | 'TRANSCRIPT';
@@ -51,13 +50,6 @@ export interface NavigationStore {
     toTranscript: (params?: ToTranscriptPayload) => void;
   };
 }
-
-interface InitPayload {
-  use: {
-    apiStore: ApiStore
-  }
-}
-
 
 export const init = (): NavigationStore => {
 
