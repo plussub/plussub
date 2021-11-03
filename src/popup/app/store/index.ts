@@ -1,4 +1,4 @@
-import {computed, ComputedRef, Ref, ref, UnwrapRef} from 'vue';
+import {computed, ComputedRef, Ref, ref} from 'vue';
 
 export type AppState = {
   state: 'NONE' | 'SELECTED' | 'DOWNLOADING' | 'PARSING' | 'ERROR' | 'DONE';

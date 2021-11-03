@@ -20,7 +20,7 @@ type AddSubtitleMessageEvent = ContentScriptInputMessageEvent<'ADD_SUBTITLE'> & 
   };
 };
 
-export const init = ({ inputObservable, getVideoElementFrom }: Payload): Observable<any> => {
+export const init = ({ inputObservable, getVideoElementFrom }: Payload): Observable<unknown> => {
   return inputObservable.pipe(
     filter((e): e is AddSubtitleMessageEvent => e.data.plusSubContentScriptInput === 'ADD_SUBTITLE'),
     map<AddSubtitleMessageEvent, { el: HTMLVideoElement | null; messageEvent: AddSubtitleMessageEvent }>((messageEvent) => ({

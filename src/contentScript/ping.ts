@@ -14,7 +14,7 @@ interface ContentScriptInputPingMessageEvent extends ContentScriptInputMessageEv
   }
 }
 
-export const init = ({ inputObservable }: Payload): Observable<any> => {
+export const init = ({ inputObservable }: Payload): Observable<unknown> => {
   return inputObservable.pipe(
     filter((e): e is ContentScriptInputPingMessageEvent => e.data.plusSubContentScriptInput === 'PING_REQUEST'),
     tap(({ origin, data: { requestId } }) =>

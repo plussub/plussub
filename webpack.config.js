@@ -33,14 +33,7 @@ export default (env) => {
       extensions: ['.ts', '.js', '.vue', '.json', '.mjs'],
       alias: {
         '@': resolve('src/popup'),
-        // spin-off specifics
         storeTypes: resolve(`src/popup/storeTypes/index.ts`),
-        // It seems the problem has been solve. https://github.com/vuejs/vue-cli/pull/5788
-        // this isn't technically needed, since the default `vue` entry for bundlers
-        // is a simple `export * from '@vue/runtime-dom`. However having this
-        // extra re-export somehow causes webpack to always invalidate the module
-        // on the first HMR update and causes the page to reload.
-        // vue: '@vue/runtime-dom',
         storage: resolve(`src/popup/platform/storage/${browser}/index.ts`),
         monkeyPatchApollo: resolve(`src/popup/platform/monkeyPatchApollo/${browser}/index.ts`),
         onPageActionClicked: resolve(`src/background/platform/onPageActionClicked/${browser}/index.ts`)

@@ -10,7 +10,7 @@ interface Payload {
 }
 const hasSubtitle = (el: HTMLVideoElement) => [...el.textTracks].find((track) => track.label === '+Sub' && track.mode !== 'disabled') !== undefined;
 
-export const init = ({ inputObservable }: Payload): Observable<any> => {
+export const init = ({ inputObservable }: Payload): Observable<unknown> => {
   const currentQuerySelectorObservable = from([...document.querySelectorAll('video')]);
   const videoElementMutationObservable = createVideoElementMutationObservable().pipe(share());
   const addedWithMutationObservable = videoElementMutationObservable.pipe(

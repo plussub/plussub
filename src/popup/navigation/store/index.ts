@@ -8,8 +8,8 @@ import Home from "@/home/pages/Home.vue";
 
 export type NavigationState = {
   name: 'HOME' | 'SETTINGS' | 'MOVIE-TV-SEARCH' | 'SUBTITLE-SEARCH-FOR-MOVIES' | 'SUBTITLE-SEARCH-FOR-SERIES' | 'TRANSCRIPT';
-  params: any;
-  component: any;
+  params: unknown;
+  component: unknown;
 };
 
 export interface ToHomePayload {

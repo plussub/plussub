@@ -1,4 +1,4 @@
-import { combineLatest, debounceTime, fromEvent, merge, mergeMap, Observable, Subject } from 'rxjs';
+import { combineLatest, debounceTime, fromEvent, merge, Observable, Subject } from 'rxjs';
 import { filter, map, scan, share, take, takeUntil, tap, bufferCount } from 'rxjs/operators';
 import { onUnmounted } from 'vue';
 import { nanoid } from 'nanoid';
@@ -15,6 +15,7 @@ export interface ContentScriptStore {
   actions: {
     requestAllContentScriptsToRegister: () => void;
     sendCommand: (payload: Record<string, unknown>) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendCommandWithResponse: (payload: Record<string, unknown>, mergeFn: (x: any[]) => any) => Observable<any>;
   };
 }
@@ -39,7 +40,7 @@ export const init = (): ContentScriptStore => {
     | {
         action: 'ADD';
         origin: string;
-        source: any;
+        source: Window;
         id: string;
       }
     | {
@@ -63,7 +64,7 @@ export const init = (): ContentScriptStore => {
 
   const contentScriptLoadedObservable = inputObservable.pipe(
     filter((e): e is ContentScriptOutputMessageEvent<'CONTENT_SCRIPT_LOADED'> => e.data.plusSubContentScriptOutput === 'CONTENT_SCRIPT_LOADED'),
-    tap(({ origin, source, data: { id } }) => connectionSubject.next({ action: 'ADD', origin, source, id }))
+    tap(({ origin, source, data: { id } }) => connectionSubject.next({ action: 'ADD', origin, source: source as Window, id }))
   );
 
 
@@ -83,6 +84,7 @@ export const init = (): ContentScriptStore => {
     )
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sendWithResponseSubject = new Subject<{ payload: Record<string, unknown>, mergeFn: (x: any[]) => any, responseSubject: Subject<any>}>();
   const sendWithResponseObservable = combineLatest([sendWithResponseSubject, connectionObservable]).pipe(
     debounceTime(0),
@@ -131,14 +133,15 @@ export const init = (): ContentScriptStore => {
               .pipe(
                 filter((e): e is ContentScriptOutputMessageEvent<'PING_RESPONSE'> => e.data.plusSubContentScriptOutput === 'PING_RESPONSE' && e.data.requestId === requestId),
                 take(1),
-                tap(({ origin, source, data: { id } }) => connectionSubject.next({ action: 'ADD', origin, source, id }))
+                tap(({ origin, source, data: { id } }) => connectionSubject.next({ action: 'ADD', origin, source: source as Window, id }))
               )
               .subscribe();
-            contentWindow!.postMessage({ plusSubContentScriptInput: 'PING_REQUEST', requestId }, '*');
+            contentWindow.postMessage({ plusSubContentScriptInput: 'PING_REQUEST', requestId }, '*');
           });
       },
 
       sendCommand: (payload: Record<string, unknown>) => sendAllSubject.next({ payload }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sendCommandWithResponse: (payload: Record<string, unknown>, mergeFn: (x: any[]) => any): Observable<any> => {
         const responseSubject = new Subject();
         sendWithResponseSubject.next({ payload, mergeFn, responseSubject });
