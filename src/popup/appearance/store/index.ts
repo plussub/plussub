@@ -1,6 +1,9 @@
 import { get as storageGet, set as storageSet } from 'storage';
 import { computed, ComputedRef, ref } from 'vue';
 import { Store } from 'storeTypes';
+import { fromEvent, interval, Subject, tap } from 'rxjs';
+import { scan, debounce } from 'rxjs/operators';
+
 
 interface InitPayload {
   use: {
@@ -10,65 +13,76 @@ interface InitPayload {
 
 export interface AppearanceStore {
   actions: {
-    applyStyle: (payload: ApplyStylePayload | null) => Promise<unknown> ;
+    setStyle: (payload: SetStylePayload) => Promise<unknown>
+    applyStyle: () => Promise<unknown> ;
   };
   state: {
-    style: ComputedRef<Record<'color' | 'backgroundColor', string>>;
+    style: ComputedRef<Record<'color' | 'backgroundColor', string> | Record<string, never>>;
   };
   getters: {
     initialized: ComputedRef<boolean>;
   };
 }
 
-type ApplyStylePayload = Record<'color' | 'backgroundColor' | 'fontSize', string>;
+type Css = 'cssColor' | 'cssBackgroundColor' | 'cssFontSize';
+type Cue = 'cueLine' | 'cueSnapToLines';
 
-declare global {
-  interface Window {
-    plussub_currentStyle: Record<string, string>;
-  }
-}
+type SetStylePayload = Record<Css & Cue, string>;
+
 
 export const init = ({ use }: InitPayload): AppearanceStore => {
-  window.plussub_currentStyle = {};
+  const currentStyle = ref({})
   const initialized = ref(false);
 
   storageGet(['style']).then(async ({style}) => {
     if(style){
-      window.plussub_currentStyle = style;
+      currentStyle.value = style;
     }
     initialized.value = true;
   });
 
   const tick = async () => new Promise(resolve => setTimeout(() => resolve(undefined)));
 
+  const subject = new Subject();
+  const result = subject.pipe(
+    debounce(() => interval(200)),
+    tap(() => storageSet({ style: currentStyle.value }))
+  );
+  result.subscribe();
+
   return {
     actions: {
-      applyStyle: async (payload: ApplyStylePayload | null): Promise<unknown> => {
-        window.plussub_currentStyle = {
-          ...window.plussub_currentStyle,
-          ...(payload ?? {})
-        };
-        if(payload !== null){
-          storageSet({ style: payload });
-        }
+      setStyle: async (payload: SetStylePayload): Promise<unknown> => {
+        currentStyle.value = { ...currentStyle.value, ...payload };
+        subject.next(currentStyle.value);
+        return tick();
+      },
+      applyStyle: async () => {
+        const toCssPayload = (style: Record<Css, string> | Record<string, never>) => ({
+          ...(style.cssColor ? { '--plusSub-cue-color': style.cssColor } : {}),
+          ...(style.cssBackgroundColor ? { '--plusSub-cue-background-color': style.cssBackgroundColor } : {}),
+          ...(style.cssFontSize ? { '--plusSub-cue-font-size': style.cssFontSize } : {})
+        });
 
-        const color = window.plussub_currentStyle.color ? { '--plusSub-cue-color': window.plussub_currentStyle.color } : {};
-        const backgroundColor = window.plussub_currentStyle.backgroundColor ? { '--plusSub-cue-background-color': window.plussub_currentStyle.backgroundColor } : {};
-        const fontSize = window.plussub_currentStyle.fontSize ? { '--plusSub-cue-font-size': `${window.plussub_currentStyle.fontSize}px` } : {};
+        const toCuePayload = (style: Record<Cue, string> | Record<string, never>) => ({
+          ...(style.cueLine ? { line: style.cueLine } : {}),
+          ...(style.cueSnapToLines !== undefined ? { snapToLines: style.cueSnapToLines } : {})
+        });
 
         use.contentScriptStore.actions.sendCommand({
           plusSubContentScriptInput: 'APPLY_STYLE',
-          style: {
-            ...color,
-            ...backgroundColor,
-            ...fontSize
+          css: {
+            ...toCssPayload(currentStyle.value)
+          },
+          cue: {
+            ...toCuePayload(currentStyle.value)
           }
         });
         return tick();
       }
     },
     state: {
-      style: computed(() => window.plussub_currentStyle)
+      style: computed(() => currentStyle.value)
     },
     getters: {
       initialized: computed(() => initialized.value)

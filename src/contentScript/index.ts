@@ -15,6 +15,7 @@ declare global {
     contentScript: {
       id: string
     };
+    plusSub_cue: Record<string, unknown>;
   }
 }
 
@@ -25,6 +26,8 @@ declare global {
   window.contentScript = {
     id: nanoid(5)
   };
+  window.plusSub_cue =  window.plusSub_cue || {};
+
 
   const inputObservable = fromEvent<MessageEvent>(window.self, 'message').pipe(
     filter<MessageEvent, ContentScriptInputMessageEvent<string>>((e): e is ContentScriptInputMessageEvent<string> => typeof e.data.plusSubContentScriptInput === 'string'),

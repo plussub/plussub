@@ -1,60 +1,63 @@
 <template>
-  <div style="grid-template-columns: auto 1fr 1fr; grid-column-gap: 0.5rem; grid-row-gap: 1rem" class="grid w-full leading-relaxed">
-    <div class="self-center font-medium text-sm">Text color</div>
+  <div style="grid-template-columns: auto auto 8px auto auto; grid-column-gap: 14px; grid-row-gap: 24px" class="grid w-full leading-relaxed">
+    <div class="self-center font-medium text-sm">Text</div>
     <input v-model="color" type="color" class="self-center justify-self-center" />
-    <div>
-      <span class="text-xs">Transparency</span>
-      <RangeInputField step="1" min="0" max="255" class="mt-2 pb-2" />
-    </div>
 
-    <!--    <div class="self-end font-medium">Bg color</div>-->
-    <!--    <input v-model="backgroundColor" type="color" class="self-end justify-self-center">-->
-    <!--    <div>-->
-    <!--      <span class="text-xs">Transparency</span>-->
-    <!--      <RangeInputField step="1" min="0" max="255" class="mt-2 pb-2"/>-->
-    <!--    </div>-->
+    <div class="self-center font-medium text-sm" style='grid-column: -2'>Background</div>
+    <input v-model="backgroundColor" type="color" class="self-end justify-self-center" style='grid-column: -1' />
 
-    <div class="font-medium text-sm self-center">Font size</div>
-    <div class="flex pr-2" style="width: 120px">
-      <NumberInputField v-model="fontSize" class="pr-2" />
-      <div>px</div>
-    </div>
-    <RangeInputField v-model="fontSize" min="1" max="70" step="1"></RangeInputField>
+    <div class="font-medium text-sm self-center" style='grid-column: 1/3'>Transparency <span class='text-xs font-light'>({{backgroundColorTransparency}})</span></div>
+    <RangeInputField  style='grid-column: 3/end' v-model="backgroundColorTransparency" step="1" min="0" max="255" class="mt-2 pb-2" />
+
+    <div class="font-medium text-sm self-center" style='grid-column: 1/3'>Position <span class='text-xs font-light'>({{line}}%)</span></div>
+    <RangeInputField style='grid-column: 3/end' v-model="line" step="1" min="1" max="100" class="mt-2 pb-2" />
+
+    <div class="font-medium text-sm self-center" style='grid-column: 1/3'>Font size <span class='text-xs font-light'>({{fontSize}}px)</span></div>
+    <RangeInputField style='grid-column: 3/end' v-model="fontSize" min="1" max="70" step="1"></RangeInputField>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 import RangeInputField from '@/components/RangeInputField.vue';
 import { useInjectStore } from '@/composables/useInjectStore';
-import NumberInputField from '@/components/NumberInputField.vue';
 
 export default defineComponent({
   components: {
-    NumberInputField,
     RangeInputField
   },
   setup() {
     const appearanceStore = useInjectStore('appearanceStore');
-    const backgroundColor = ref(appearanceStore.state.style.value['backgroundColor'] ?? '#000000');
 
-    // todo debounce
-    const color = ref(appearanceStore.state.style.value['color'] ?? '#ffffff');
+    const calcColor = (color, fb) => (color ? color.slice(0, 7) : fb);
+    const calcTransparency = (color, fb) => parseInt(color && color.length > 7 ? color.slice(-2) : fb, 16).toString();
 
-    const fontSize = ref(appearanceStore.state.style.value['fontSize'] ?? 16);
+    const backgroundColor = ref(calcColor(appearanceStore.state.style.value['cssBackgroundColor'], '#000000'));
+    const backgroundColorTransparency = ref(calcTransparency(appearanceStore.state.style.value['cssBackgroundColor'], '00'));
+    const backgroundColorWithTransparency = computed(() => backgroundColor.value + parseInt(backgroundColorTransparency.value, 10).toString(16));
 
-    watch([backgroundColor, color, fontSize], ([backgroundColor, color, fontSize]) => {
-      appearanceStore.actions.applyStyle({
-        color,
-        backgroundColor,
-        fontSize
+    const color = ref(calcColor(appearanceStore.state.style.value['cssColor'], '#ffffff'));
+    const fontSize = ref(appearanceStore.state.style.value['cssFontSize'] ?? 16);
+
+    const line = ref(appearanceStore.state.style.value['cueLine'] ?? "80")
+
+    watch([color, backgroundColorWithTransparency, fontSize, line], ([cssColor, cssBackgroundColor, cssFontSize, cueLine]) => {
+      appearanceStore.actions.setStyle({
+        cssColor,
+        cssBackgroundColor,
+        cssFontSize,
+        cueLine: parseInt(cueLine, 10),
+        cueSnapToLines: false
       });
+      appearanceStore.actions.applyStyle();
     });
 
     return {
       backgroundColor,
+      backgroundColorTransparency,
       color,
-      fontSize
+      fontSize,
+      line
     };
   }
 });

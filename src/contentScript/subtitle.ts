@@ -2,6 +2,12 @@ import { filter, map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ContentScriptInputMessageEvent } from './types';
 
+declare global {
+  interface Window {
+    plusSub_cue: Record<string, unknown>;
+  }
+}
+
 export interface Payload {
   inputObservable: Observable<ContentScriptInputMessageEvent<string>>;
   getVideoElementFrom: (id: string) => HTMLVideoElement | null;
@@ -44,6 +50,7 @@ export const init = ({ inputObservable, getVideoElementFrom }: Payload): Observa
         entries: messageEvent.data.subtitle.entries.map((vtt) => {
           const cue = new VTTCue(vtt.from / 1000, vtt.to / 1000, `<c.plussub>${vtt.text}</c.plussub>`);
           cue.size = 100;
+          Object.assign(cue, window.plusSub_cue);
           return cue;
         })
       };

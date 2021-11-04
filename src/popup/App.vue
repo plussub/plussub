@@ -85,7 +85,7 @@ export default defineComponent({
           console.warn('subtitleId is null');
           return;
         }
-        appearanceStore.actions.applyStyle(null);
+        appearanceStore.actions.applyStyle();
         videoStore.actions.addVtt({ subtitles, subtitleId, language: subtitleStore.state.value.language ?? 'en' });
       }
     );

@@ -11,7 +11,7 @@ import { useUnmountObservable } from '../composables';
 export default defineComponent({
   props: {
     modelValue: {
-      type: Number as PropType<number>,
+      type: [String, Number],
       required: true
     }
   },
@@ -27,7 +27,7 @@ export default defineComponent({
         )
         .subscribe();
     return {
-      setValue: (event) =>  subject.next(event.target.value)
+      setValue: (event) => subject.next(event.target.value)
     };
   }
 });

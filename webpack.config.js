@@ -118,7 +118,8 @@ export default (env) => {
           },
           { from: 'res', to: 'res' },
           { from: 'popup/font.css', to: 'font.css' },
-          { from: 'contentScript/contentScript.css', to: 'contentScript.css' }
+          { from: 'contentScript/contentScript.css', to: 'contentScript.css' },
+          { from: 'cssContentScript/index.js', to: 'cssContentScript.js' }
         ]
       }),
       new webpack.DefinePlugin({

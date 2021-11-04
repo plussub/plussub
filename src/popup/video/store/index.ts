@@ -71,7 +71,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
         if (!video) {
           return tick();
         }
-        await use.appearanceStore.actions.applyStyle(null);
+        await use.appearanceStore.actions.applyStyle();
 
         use.contentScriptStore.actions.sendCommand({
           plusSubContentScriptInput: 'ADD_SUBTITLE',
