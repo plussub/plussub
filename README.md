@@ -8,8 +8,8 @@ is an extension which adds subtitle to HTML <video> tags via file or subtitle se
 
 ### [Chrome Web Store](https://chrome.google.com/webstore/detail/%20sub/lpobdmdfgjokempajoobgfdnhjbjlnpm)
 
-![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/lpobdmdfgjokempajoobgfdnhjbjlnpm?label=chrome%20webstore%20rating&style=plastic)
-![Chrome Web Store](https://img.shields.io/chrome-web-store/users/lpobdmdfgjokempajoobgfdnhjbjlnpm?label=chrome%20users)
+![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/lpobdmdfgjokempajoobgfdnhjbjlnpm)
+![Chrome Web Store](https://img.shields.io/chrome-web-store/users/lpobdmdfgjokempajoobgfdnhjbjlnpm)
 
 
 
@@ -42,14 +42,3 @@ npm run start:firefox
 2) Click "This Firefox"
 3) Load Temporary Add-on...
 4) Select plussub-root-folder/dist-firefox
-
-## Run tests
-```
-npm run test
-```
-
-### chrome webstore 
-
-```
-https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/chromewebstore&client_id=52192900965-tc6m9a3r0mrc66l406lht14gvt4kc5ji.apps.googleusercontent.com&redirect_uri=urn:ietf:wg:oauth:2.0:oob
-```
