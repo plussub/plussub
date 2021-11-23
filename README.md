@@ -2,7 +2,7 @@
 ![build(chrome)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(chrome)/badge.svg)
 ![build(firefox)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(firefox)/badge.svg)
 
-is an extension which adds subtitle to HTML `<video>` tags via file or subtitle search powered by [tmbd](https://www.themoviedb.org/) & [opensubtitles](https://opensubtitles.org).
+> is an extension which adds subtitle to HTML `<video>` tags via file or subtitle search powered by [tmbd](https://www.themoviedb.org/) & [opensubtitles](https://opensubtitles.org).
 
 
 
