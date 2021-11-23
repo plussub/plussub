@@ -11,6 +11,9 @@ is an extension which adds subtitle to HTML <video> tags via file or subtitle se
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/lpobdmdfgjokempajoobgfdnhjbjlnpm)
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/users/lpobdmdfgjokempajoobgfdnhjbjlnpm)
 
+### [Firefox Add-On](https://addons.mozilla.org/en-US/firefox/addon/plussub/)
+![Mozilla Add-on](https://img.shields.io/amo/stars/plussub)
+![Mozilla Add-on](https://img.shields.io/amo/users/plussub)
 
 
 ### Install local build in Chrome
