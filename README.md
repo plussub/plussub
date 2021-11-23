@@ -2,6 +2,10 @@
 ![build(chrome)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(chrome)/badge.svg)
 ![build(firefox)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(firefox)/badge.svg)
 
+![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/lpobdmdfgjokempajoobgfdnhjbjlnpm?label=chrome%20webstore%20rating&style=plastic)
+![Chrome Web Store](https://img.shields.io/chrome-web-store/users/lpobdmdfgjokempajoobgfdnhjbjlnpm?label=chrome%20users)
+
+
 is an extension which adds subtitle to HTML <video> tags via file or subtitle search powered by tmbd & opensubtitles.org.
 
 ### Install local build in Chrome
