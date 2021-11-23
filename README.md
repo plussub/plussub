@@ -1,3 +1,7 @@
+<p align="center">
+   <img width="260" height="250" src="https://github.com/plussub/plussub/blob/master/src/res/icons/plussub.png?raw=true">
+</p>
+
 # +Sub Browser Extension
 ![build(chrome)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(chrome)/badge.svg)
 ![build(firefox)](https://github.com/plussub/plussub/workflows/build%20and%20deploy(firefox)/badge.svg)
