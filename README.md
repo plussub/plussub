@@ -1,4 +1,3 @@
-
 <p align="center">
    <img width="calc(50%-130px)" height="250" src="https://via.placeholder.com/15/5bc0de/000000?text=+">
    <img width="260" height="250" src="https://github.com/plussub/plussub/blob/master/src/res/icons/plussub.png?raw=true">
