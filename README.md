@@ -29,10 +29,10 @@ npm run gen
 npm run start:chrome
 ```
 
-1) Type in Chrome address bar: chrome://extensions/
+1) Type in Chrome address bar: `chrome://extensions/`
 2) Activate developer mode
 3) Load unpacked extension...
-4) Select plussub-root-folder/dist-chrome
+4) Select `plussub-root-folder/dist-chrome`
 
 ### Install local build in Firefox
 ```
@@ -44,7 +44,7 @@ npm run gen
 npm run start:firefox
 ```
 
-1) Type in Firefox address bar: about:debugging
+1) Type in Firefox address bar: `about:debugging`
 2) Click "This Firefox"
 3) Load Temporary Add-on...
-4) Select plussub-root-folder/dist-firefox
+4) Select `plussub-root-folder/dist-firefox`
