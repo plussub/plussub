@@ -1,8 +1,8 @@
-<p align="center">
+<div align="center">
    <img width="33%" height="125" src="https://via.placeholder.com/15/5bc0de/000000?text=+">
    <img width="130" height="125" src="https://github.com/plussub/plussub/blob/master/src/res/icons/plussub.png?raw=true">
    <img width="33%" height="125" src="https://via.placeholder.com/15/5bc0de/000000?text=+">
-</p>
+</div>
 
 
 # +Sub Browser Extension
