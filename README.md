@@ -10,7 +10,6 @@
 > is an browser extension which adds subtitle to HTML `<video>` tags via file or subtitle search powered by [tmbd](https://www.themoviedb.org/) & [opensubtitles](https://opensubtitles.org).
 
 
-
 ### [Chrome Web Store](https://chrome.google.com/webstore/detail/%20sub/lpobdmdfgjokempajoobgfdnhjbjlnpm)
 
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/lpobdmdfgjokempajoobgfdnhjbjlnpm?color=%235bc0de)
@@ -19,6 +18,7 @@
 ### [Firefox Add-On](https://addons.mozilla.org/en-US/firefox/addon/plussub/)
 ![Mozilla Add-on](https://img.shields.io/amo/stars/plussub?color=%235bc0de)
 ![Mozilla Add-on](https://img.shields.io/amo/users/plussub?color=%235bc0de)
+
 
 ### Install local build in Chrome
 ```
@@ -49,3 +49,9 @@ npm run start:firefox
 2) Click "This Firefox"
 3) Load Temporary Add-on...
 4) Select `plussub-root-folder/dist-firefox`
+
+
+### [Discord](https://discord.gg/sEEeu5r9Nb)
+
+![Discord](https://img.shields.io/discord/761820390254706709?color=%235bc0de)
+
