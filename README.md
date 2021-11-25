@@ -51,7 +51,11 @@ npm run start:firefox
 4) Select `plussub-root-folder/dist-firefox`
 
 
-### [Discord](https://discord.gg/sEEeu5r9Nb)
+### Test pages
+[simple test page](https://plussub-test-page.netlify.app/)
 
+[test page with iframes](https://plussub-test-iframe.netlify.app/)
+
+### [Discord](https://discord.gg/sEEeu5r9Nb) 
 ![Discord](https://img.shields.io/discord/761820390254706709?color=%235bc0de)
 
