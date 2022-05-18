@@ -7,6 +7,10 @@ on:
     tags:
       - "v*"
 
+env: 
+  CHROME_APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
+  FIREFOX_WEB_EXT_ID: "{83078104-a00b-45e2-8749-7a10af244653}"
+
 jobs:
   build:
     strategy:
@@ -60,7 +64,7 @@ jobs:
           -T plussub.zip
           -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID
         env:
-          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
+          APP_ID: ${{ env.CHROME_APP_ID }}
           ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
       - run: >
           curl -s
@@ -70,7 +74,7 @@ jobs:
           -X POST
           -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID/publish
         env:
-          APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
+          APP_ID: ${{ env.CHROME_APP_ID }}
           ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
 
 
@@ -89,4 +93,5 @@ jobs:
         env:
           WEB_EXT_API_KEY: ${{ secrets.FIREFOX_JWT_ISSUER }}
           WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
-          WEB_EXT_ID: "{83078104-a00b-45e2-8749-7a10af244653}"
+          WEB_EXT_ID: ${{ env.FIREFOX_WEB_EXT_ID }}
+
