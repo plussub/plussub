@@ -25,7 +25,7 @@ import { useDraggableArea } from '@/composables';
 import Logo from './Logo.vue';
 
 import { close } from './close';
-import logo from '@/res/plussub128.png';
+import logo from '@/res/logo128.png';
 import { useInjectStore } from '@/composables/useInjectStore';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 

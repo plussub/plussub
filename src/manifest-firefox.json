@@ -5,13 +5,13 @@
   "description": "Load subtitle to a HTML5 video.",
   "author": "Stefan Breitenstein",
   "icons": {
-    "16": "res/icons/plussub16.png",
-    "48": "res/icons/plussub48.png",
-    "128": "res/icons/plussub128.png"
+    "16": "res/icons/logo16.png",
+    "48": "res/icons/logo48.png",
+    "128": "res/icons/logo128.png"
   },
   "browser_action": {
     "default_icon": {
-      "19": "res/icons/browseraction2.png"
+      "16": "res/icons/logo16.png"
     }
   },
   "background": {
