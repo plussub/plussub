@@ -41,7 +41,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
   const videoUpdateIntervalObservable = interval(300).pipe(
     mergeMap(() =>
       use.contentScriptStore.actions.sendCommandWithResponse(
-        { plusSubContentScriptInput: 'FIND_VIDEOS_REQUEST' },
+        { contentScriptInput: 'FIND_VIDEOS_REQUEST' },
         (responses) => responses.reduce((acc, cur) => ({ ...acc, ...cur.data.videos }), {})
       )
     ),
@@ -59,11 +59,11 @@ export const init = ({ use }: InitPayload): VideoStore => {
   return {
     actions: {
       setCurrent: async ({ video: { id } }: { video: Pick<Video, 'id'> }) => {
-        use.contentScriptStore.actions.sendCommand({ plusSubContentScriptInput: 'SELECT_VIDEO', id });
+        use.contentScriptStore.actions.sendCommand({ contentScriptInput: 'SELECT_VIDEO', id });
         return tick();
       },
       removeCurrent: async () => {
-        use.contentScriptStore.actions.sendCommand({ plusSubContentScriptInput: 'DESELECT_VIDEO' });
+        use.contentScriptStore.actions.sendCommand({ contentScriptInput: 'DESELECT_VIDEO' });
         return tick();
       },
       addVtt: async ({ subtitles, subtitleId, language }: { subtitles: SubtitleEntry[]; subtitleId: string; language: string }): Promise<unknown> => {
@@ -74,7 +74,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
         await use.appearanceStore.actions.applyStyle();
 
         use.contentScriptStore.actions.sendCommand({
-          plusSubContentScriptInput: 'ADD_SUBTITLE',
+          contentScriptInput: 'ADD_SUBTITLE',
           video: {
             id: video.id
           },
@@ -93,7 +93,7 @@ export const init = ({ use }: InitPayload): VideoStore => {
           return;
         }
         use.contentScriptStore.actions.sendCommand({
-          plusSubContentScriptInput: 'SET_TIME',
+          contentScriptInput: 'SET_TIME',
           id: video.id,
           time
         });
@@ -104,11 +104,11 @@ export const init = ({ use }: InitPayload): VideoStore => {
           return;
         }
         use.contentScriptStore.actions.sendCommand({
-          plusSubContentScriptInput: 'HIGHLIGHT_VIDEO',
+          contentScriptInput: 'HIGHLIGHT_VIDEO',
           id: video.id
         });
       },
-      removeHighlight: () => use.contentScriptStore.actions.sendCommand({ plusSubContentScriptInput: 'REMOVE_HIGHLIGHT_FROM_VIDEO' })
+      removeHighlight: () => use.contentScriptStore.actions.sendCommand({ contentScriptInput: 'REMOVE_HIGHLIGHT_FROM_VIDEO' })
     },
     getters: {
       current: computed(() => Object.values(videos.value).find((v) => v.status === 'selected' || v.status === 'injected') ?? null),

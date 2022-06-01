@@ -7,7 +7,11 @@ import { init as initHighlight } from './highlight';
 import { init as initSubtitle } from './subtitle';
 import { init as initTime } from './time';
 import { init as initAppearance } from './appearance';
-import { ContentScriptInputMessageEvent } from './types';
+import {
+  GenericContentScriptInputMessageEvent,
+  isGenericContentScriptInputMessageEvent,
+  EXTENSION_ORIGIN
+} from './types';
 import { nanoid } from 'nanoid';
 
 declare global {
@@ -15,7 +19,7 @@ declare global {
     contentScript: {
       id: string
     };
-    plusSub_cue: Record<string, unknown>;
+    cue: Record<string, unknown>;
   }
 }
 
@@ -26,15 +30,15 @@ declare global {
   window.contentScript = {
     id: nanoid(5)
   };
-  window.plusSub_cue =  window.plusSub_cue || {};
+  window.cue =  window.cue || {};
 
 
   const inputObservable = fromEvent<MessageEvent>(window.self, 'message').pipe(
-    filter<MessageEvent, ContentScriptInputMessageEvent<string>>((e): e is ContentScriptInputMessageEvent<string> => typeof e.data.plusSubContentScriptInput === 'string'),
+    filter<MessageEvent, GenericContentScriptInputMessageEvent>(isGenericContentScriptInputMessageEvent),
     // tap((e) => console.warn(e.data)),
     share()
   );
-  const getVideoElementFrom = (id: string) => document.querySelector<HTMLVideoElement>(`video[data-plus-sub-id="${id}"]`);
+  const getVideoElementFrom = (id: string) => document.querySelector<HTMLVideoElement>(`video[data-${EXTENSION_ORIGIN}-id="${id}"]`);
 
   merge(
     initPing({ inputObservable }),
@@ -44,5 +48,5 @@ declare global {
     initTime({ inputObservable, getVideoElementFrom }),
     initAppearance({ inputObservable })
   ).subscribe();
-  postMessage({ plusSubContentScriptOutput: 'CONTENT_SCRIPT_LOADED' });
+  postMessage({ contentScriptOutput: 'CONTENT_SCRIPT_LOADED' });
 })();

@@ -1,8 +1,9 @@
 import { get as storageGet, set as storageSet } from 'storage';
 import { computed, ComputedRef, ref } from 'vue';
 import { Store } from 'storeTypes';
-import { fromEvent, interval, Subject, tap } from 'rxjs';
-import { scan, debounce } from 'rxjs/operators';
+import { interval, Subject, tap } from 'rxjs';
+import { debounce } from 'rxjs/operators';
+import { EXTENSION_ORIGIN } from '@/types';
 
 
 interface InitPayload {
@@ -59,9 +60,9 @@ export const init = ({ use }: InitPayload): AppearanceStore => {
       },
       applyStyle: async () => {
         const toCssPayload = (style: Record<Css, string> | Record<string, never>) => ({
-          ...(style.cssColor ? { '--plusSub-cue-color': style.cssColor } : {}),
-          ...(style.cssBackgroundColor ? { '--plusSub-cue-background-color': style.cssBackgroundColor } : {}),
-          ...(style.cssFontSize ? { '--plusSub-cue-font-size': style.cssFontSize } : {})
+          ...(style.cssColor ? { [`--${EXTENSION_ORIGIN}-cue-color`]: style.cssColor } : {}),
+          ...(style.cssBackgroundColor ? { [`--${EXTENSION_ORIGIN}-cue-background-color`] : style.cssBackgroundColor } : {}),
+          ...(style.cssFontSize ? { [`--${EXTENSION_ORIGIN}-cue-font-size`] : style.cssFontSize } : {})
         });
 
         const toCuePayload = (style: Record<Cue, string> | Record<string, never>) => ({
@@ -70,7 +71,7 @@ export const init = ({ use }: InitPayload): AppearanceStore => {
         });
 
         use.contentScriptStore.actions.sendCommand({
-          plusSubContentScriptInput: 'APPLY_STYLE',
+          contentScriptInput: 'APPLY_STYLE',
           css: {
             ...toCssPayload(currentStyle.value)
           },

@@ -1,7 +1,8 @@
 import { onUnmounted, onMounted, Ref } from 'vue';
+import { EXTENSION_ORIGIN } from '@/types';
 
 const getShadowDiv = (): HTMLElement => {
-  const shadowDiv = document.getElementById('plusSubShadow');
+  const shadowDiv = document.getElementById(`${EXTENSION_ORIGIN}Shadow`);
   if (!shadowDiv) {
     throw new Error('ShadowDiv not found');
   }

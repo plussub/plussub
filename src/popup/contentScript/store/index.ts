@@ -2,21 +2,29 @@ import { combineLatest, debounceTime, fromEvent, merge, Observable, Subject } fr
 import { filter, map, scan, share, take, takeUntil, tap, bufferCount } from 'rxjs/operators';
 import { onUnmounted } from 'vue';
 import { nanoid } from 'nanoid';
+import { EXTENSION_ORIGIN } from '@/types';
 
-export interface ContentScriptOutputMessageEvent<T extends string> extends MessageEvent<{ plusSubContentScriptOutput: T, id: string }> {
-  data: {
-    plusSubContentScriptOutput: T;
-    id: string;
-    [k: string]: unknown;
-  };
+export const isGenericContentScriptOutputMessageEvent = <T extends string, P extends Record<string, unknown> > (m: MessageEvent): m is ContentScriptOutputMessageEvent<T, P> => {
+  return m.data.extensionOrigin === EXTENSION_ORIGIN && typeof m.data.contentScriptOutput === 'string' && typeof m.data.id === 'string';
 }
+
+export interface ContentScriptOutputMessageEvent<T extends string, P extends Record<string, unknown>> extends MessageEvent<{ contentScriptOutput: T, id: string } & P> {
+  data: {
+    extensionOrigin: typeof EXTENSION_ORIGIN,
+    contentScriptOutput: T;
+    id: string;
+  } & P;
+}
+
+export type GenericContentScriptOutputMessageEvent = ContentScriptOutputMessageEvent<string, Record<string, unknown>>;
+
 
 export interface ContentScriptStore {
   actions: {
     requestAllContentScriptsToRegister: () => void;
-    sendCommand: (payload: Record<string, unknown>) => void;
+    sendCommand: (payload: {contentScriptInput: string} & Record<string, unknown>) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sendCommandWithResponse: (payload: Record<string, unknown>, mergeFn: (x: any[]) => any) => Observable<any>;
+    sendCommandWithResponse: (payload: {contentScriptInput: string} & Record<string, unknown>, mergeFn: (x: any[]) => any) => Observable<any>;
   };
 }
 
@@ -32,7 +40,7 @@ export const init = (): ContentScriptStore => {
     throw new Error('no window.top');
   }
   const inputObservable = fromEvent<MessageEvent>(window.top, 'message').pipe(
-    filter<MessageEvent, ContentScriptOutputMessageEvent<string>>((e): e is ContentScriptOutputMessageEvent<string> => e.data.plusSubContentScriptOutput),
+    filter<MessageEvent, GenericContentScriptOutputMessageEvent>(isGenericContentScriptOutputMessageEvent),
     share()
   );
 
@@ -63,7 +71,7 @@ export const init = (): ContentScriptStore => {
   );
 
   const contentScriptLoadedObservable = inputObservable.pipe(
-    filter((e): e is ContentScriptOutputMessageEvent<'CONTENT_SCRIPT_LOADED'> => e.data.plusSubContentScriptOutput === 'CONTENT_SCRIPT_LOADED'),
+    filter((e): e is ContentScriptOutputMessageEvent<'CONTENT_SCRIPT_LOADED', Record<string, unknown>> => e.data.contentScriptOutput === 'CONTENT_SCRIPT_LOADED'),
     tap(({ origin, source, data: { id } }) => connectionSubject.next({ action: 'ADD', origin, source: source as Window, id }))
   );
 
@@ -76,7 +84,8 @@ export const init = (): ContentScriptStore => {
         source.postMessage(
           {
             ...payload,
-            requestId: nanoid(5)
+            requestId: nanoid(5),
+            extensionOrigin: EXTENSION_ORIGIN
           },
           '*'
         )
@@ -102,7 +111,7 @@ export const init = (): ContentScriptStore => {
         )
         .subscribe();
 
-      con.forEach(({ source }, idx) => source.postMessage({ ...payload, requestId: requestIds[idx] }, '*'));
+      con.forEach(({ source }, idx) => source.postMessage({ ...payload, requestId: requestIds[idx], extensionOrigin: EXTENSION_ORIGIN }, '*'));
     })
   );
 
@@ -131,12 +140,12 @@ export const init = (): ContentScriptStore => {
           .forEach(({ contentWindow, requestId }) => {
             inputObservable
               .pipe(
-                filter((e): e is ContentScriptOutputMessageEvent<'PING_RESPONSE'> => e.data.plusSubContentScriptOutput === 'PING_RESPONSE' && e.data.requestId === requestId),
+                filter((e): e is ContentScriptOutputMessageEvent<'PING_RESPONSE', { requestId: string }> => e.data.contentScriptOutput === 'PING_RESPONSE' && e.data.requestId === requestId),
                 take(1),
                 tap(({ origin, source, data: { id } }) => connectionSubject.next({ action: 'ADD', origin, source: source as Window, id }))
               )
               .subscribe();
-            contentWindow.postMessage({ plusSubContentScriptInput: 'PING_REQUEST', requestId }, '*');
+            contentWindow.postMessage({ contentScriptInput: 'PING_REQUEST', requestId, extensionOrigin: EXTENSION_ORIGIN }, '*');
           });
       },
 

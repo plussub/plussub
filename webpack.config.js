@@ -13,6 +13,8 @@ const setObject = (object, key, value) => ({
 
 const toPrettyJson = (obj) => JSON.stringify(obj, null, 2);
 
+const EXTENSION_ORIGIN = "plussub";
+
 export default (env) => {
   const browser = (env.browser ? env.browser.toLowerCase() : 'unknown').trim();
   if (browser !== 'chrome' && browser !== 'firefox') {
@@ -50,7 +52,7 @@ export default (env) => {
           use: [
             {
               loader: 'style-loader',
-              options: { injectType: 'singletonStyleTag', attributes: { id: 'plussub-style' } }
+              options: { injectType: 'singletonStyleTag', attributes: { id: `${EXTENSION_ORIGIN}-style` } }
             },
             'css-loader',
             'postcss-loader'

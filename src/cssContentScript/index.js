@@ -7,17 +7,17 @@
   style.id = 'plussub-cue-style';
 
   style.innerHTML = `
-  video[data-plus-sub-status="injected"]::cue{
-    color: var(--plusSub-cue-color);
-    background-color: var(--plusSub-cue-background-color);
-    font-size: calc(var(--plusSub-cue-font-size)*1px);
-    font-weight: var(--plusSub-cue-font-weight);
-    line-height: var(--plusSub-cue-line-height);
+  video[data-plussub-status="injected"]::cue{
+    color: var(--plussub-cue-color);
+    background-color: var(--plussub-cue-background-color);
+    font-size: calc(var(--plussub-cue-font-size)*1px);
+    font-weight: var(--plussub-cue-font-weight);
+    line-height: var(--plussub-cue-line-height);
 
-    background-color: var(--plusSub-cue-background-color);
-    background-image: linear-gradient(var(--plusSub-cue-background-color), var(--plusSub-cue-background-color));
-    border-color: var(--plusSub-cue-background-color);
-    text-decoration-color: var(--plusSub-cue-background-color);
+    background-color: var(--plussub-cue-background-color);
+    background-image: linear-gradient(var(--plussub-cue-background-color), var(--plussub-cue-background-color));
+    border-color: var(--plussub-cue-background-color);
+    text-decoration-color: var(--plussub-cue-background-color);
   }
 `;
     document.head.append(style);

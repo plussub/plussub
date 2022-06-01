@@ -1,42 +1,47 @@
 import { Observable, merge } from 'rxjs';
-import { ContentScriptInputMessageEvent } from './types';
+import {
+  ContentScriptInputMessageEvent,
+  EXTENSION_LABEL,
+  EXTENSION_ORIGIN,
+  GenericContentScriptInputMessageEvent
+} from './types';
 import { filter, mergeMap, tap } from 'rxjs/operators';
 
 declare global {
   interface Window {
-    plusSub_cue: Record<string, unknown>;
+    cue: Record<string, unknown>;
   }
 }
 
 interface Payload {
-  inputObservable: Observable<ContentScriptInputMessageEvent<string>>;
+  inputObservable: Observable<GenericContentScriptInputMessageEvent>;
 }
 
-interface ApplyStylePayload {
+type ApplyStylePayload = {
   css: Record<string, string>;
   cue: Record<string, string>;
 }
 
-type ApplyStyleMessageEvent = ContentScriptInputMessageEvent<'APPLY_STYLE'> & { data: ApplyStylePayload };
+type ApplyStyleMessageEvent = ContentScriptInputMessageEvent<'APPLY_STYLE', ApplyStylePayload>;
 
 export const init = ({ inputObservable }: Payload): Observable<[cssProperty: string, value: string]> => {
   const cssStyle = inputObservable.pipe(
-    filter((e): e is ApplyStyleMessageEvent => e.data.plusSubContentScriptInput === 'APPLY_STYLE'),
+    filter((e): e is ApplyStyleMessageEvent => e.data.contentScriptInput === 'APPLY_STYLE'),
     mergeMap((e) => Object.entries(e.data.css)),
     tap(([property, value]) => document.documentElement.style.setProperty(property, value))
   );
 
 
   const cueStyle = inputObservable.pipe(
-    filter((e): e is ApplyStyleMessageEvent => e.data.plusSubContentScriptInput === 'APPLY_STYLE'),
+    filter((e): e is ApplyStyleMessageEvent => e.data.contentScriptInput === 'APPLY_STYLE'),
     mergeMap((e) => Object.entries(e.data.cue)),
     tap(([property, value]) => {
-      window.plusSub_cue[property] = value;
+      window.cue[property] = value;
 
-      const video = document.querySelector<HTMLVideoElement>('video[data-plus-sub-status="injected"]');
+      const video = document.querySelector<HTMLVideoElement>(`video[data-${EXTENSION_ORIGIN}-status="injected"]`);
       if(video) {
         [...video.textTracks]
-          .filter((track) => track.label === '+Sub')
+          .filter((track) => track.label === EXTENSION_LABEL)
           .map((track) => (track.cues ? [...track.cues] : []))
           .forEach((cues) => cues.forEach((c) => (c[property] = value)));
       }

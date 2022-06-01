@@ -1,56 +1,59 @@
 import { filter, map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ContentScriptInputMessageEvent } from './types';
+import {
+  ContentScriptInputMessageEvent,
+  EXTENSION_LABEL,
+  EXTENSION_ORIGIN,
+  GenericContentScriptInputMessageEvent
+} from './types';
 
 declare global {
   interface Window {
-    plusSub_cue: Record<string, unknown>;
+    cue: Record<string, unknown>;
   }
 }
 
 export interface Payload {
-  inputObservable: Observable<ContentScriptInputMessageEvent<string>>;
+  inputObservable: Observable<GenericContentScriptInputMessageEvent>;
   getVideoElementFrom: (id: string) => HTMLVideoElement | null;
 }
 
-type AddSubtitleMessageEvent = ContentScriptInputMessageEvent<'ADD_SUBTITLE'> & {
-  data: {
-    video: {
-      id: string;
-    };
-    subtitle: {
-      id;
-      entries: { from: number; to: number; text: string }[];
-      language: string;
-    };
+type AddSubtitleMessageEvent = ContentScriptInputMessageEvent<'ADD_SUBTITLE', {
+  video: {
+    id: string;
   };
-};
+  subtitle: {
+    id;
+    entries: { from: number; to: number; text: string }[];
+    language: string;
+  };
+}>;
 
 export const init = ({ inputObservable, getVideoElementFrom }: Payload): Observable<unknown> => {
   return inputObservable.pipe(
-    filter((e): e is AddSubtitleMessageEvent => e.data.plusSubContentScriptInput === 'ADD_SUBTITLE'),
+    filter((e): e is AddSubtitleMessageEvent => e.data.contentScriptInput === 'ADD_SUBTITLE'),
     map<AddSubtitleMessageEvent, { el: HTMLVideoElement | null; messageEvent: AddSubtitleMessageEvent }>((messageEvent) => ({
       el: getVideoElementFrom(messageEvent.data.video.id),
       messageEvent
     })),
     filter((value): value is { el: HTMLVideoElement; messageEvent: AddSubtitleMessageEvent } => value.el !== null),
     map<{ el: HTMLVideoElement; messageEvent: AddSubtitleMessageEvent }, { track: TextTrack; entries: VTTCue[] }>(({ el, messageEvent }) => {
-      el.dataset.plusSubStatus = 'injected';
+      el.dataset[`${EXTENSION_ORIGIN}Status`] = 'injected';
 
       const track = [...el.textTracks].find((track) =>
-          track.label === '+Sub' &&
+          track.label === EXTENSION_LABEL &&
           track.mode !== 'disabled' &&
-          track['isPlusSub'])
-        ?? el.addTextTrack('subtitles', `+Sub`, messageEvent.data.subtitle.language);
+          track['isFromExtension'])
+        ?? el.addTextTrack('subtitles', EXTENSION_LABEL, messageEvent.data.subtitle.language);
 
-      track['isPlusSub'] = true;
+      track['isFromExtension'] = true;
 
       return {
         track,
         entries: messageEvent.data.subtitle.entries.map((vtt) => {
-          const cue = new VTTCue(vtt.from / 1000, vtt.to / 1000, `<c.plussub>${vtt.text}</c.plussub>`);
+          const cue = new VTTCue(vtt.from / 1000, vtt.to / 1000, `<c.${EXTENSION_ORIGIN}>${vtt.text}</c.${EXTENSION_ORIGIN}>`);
           cue.size = 100;
-          Object.assign(cue, window.plusSub_cue);
+          Object.assign(cue, window.cue);
           return cue;
         })
       };
