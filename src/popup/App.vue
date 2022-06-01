@@ -58,12 +58,6 @@ export default defineComponent({
 
     const unmountSubject = new Subject<undefined>();
     contentScriptStore.actions.requestAllContentScriptsToRegister();
-    // todo:
-    // contentScriptStore.state.messageObservable.pipe(
-    //   filter((e) => e.data.plusSubActionFromContentScript === 'ADJUST_POPUP'),
-    //   tap(() => document.documentElement.style.setProperty('--plusSub-shadow-top', `${window.scrollY + 30}px`)),
-    //   takeUntil(unmountSubject)
-    // );
 
     watch(
       () => videoStore.getters.current.value,

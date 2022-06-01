@@ -46,13 +46,13 @@ export interface SearchStore {
 
 declare global {
   interface Window {
-    plusSub_search: Ref<SearchState>;
+    extension_search: Ref<SearchState>;
   }
 }
 
 export const init = (): SearchStore => {
-  window.plusSub_search = window.plusSub_search
-    ? ref({ ...window.plusSub_search.value })
+  window.extension_search = window.extension_search
+    ? ref({ ...window.extension_search.value })
     : ref<SearchState>({
         inSelectionTmdb: null,
         tmdb: null,
@@ -63,53 +63,53 @@ export const init = (): SearchStore => {
 
   storageGet(['preferredLanguage']).then(async ({preferredLanguage}) => {
     if(preferredLanguage){
-      window.plusSub_search.value.preferredLanguage = preferredLanguage;
+      window.extension_search.value.preferredLanguage = preferredLanguage;
     }
     initialized.value = true;
   });
 
 
   return {
-    state: computed(() => window.plusSub_search.value),
+    state: computed(() => window.extension_search.value),
     actions: {
       reset: () => {
-        window.plusSub_search.value = {
+        window.extension_search.value = {
           inSelectionTmdb: null,
           tmdb: null,
           openSubtitle: null,
-          preferredLanguage: window.plusSub_search.value.preferredLanguage
+          preferredLanguage: window.extension_search.value.preferredLanguage
         };
       },
       selectOpenSubtitle: (payload: OpensubtitlesState): void => {
-        window.plusSub_search.value = {
+        window.extension_search.value = {
           inSelectionTmdb: null,
-          tmdb: window.plusSub_search.value.inSelectionTmdb ?? null,
+          tmdb: window.extension_search.value.inSelectionTmdb ?? null,
           openSubtitle: payload,
-          preferredLanguage: window.plusSub_search.value.preferredLanguage
+          preferredLanguage: window.extension_search.value.preferredLanguage
         };
       },
       setPreferredLanguage: ({ preferredLanguage }: Pick<SearchState, 'preferredLanguage'>): void => {
-        window.plusSub_search.value = {
-          inSelectionTmdb: window.plusSub_search.value.inSelectionTmdb,
-          tmdb: window.plusSub_search.value.tmdb,
-          openSubtitle: window.plusSub_search.value.openSubtitle,
+        window.extension_search.value = {
+          inSelectionTmdb: window.extension_search.value.inSelectionTmdb,
+          tmdb: window.extension_search.value.tmdb,
+          openSubtitle: window.extension_search.value.openSubtitle,
           preferredLanguage
         };
         storageSet({ preferredLanguage });
       },
       setTmdbInSelection: (payload: TmdbState): void => {
-        window.plusSub_search.value = {
+        window.extension_search.value = {
           inSelectionTmdb: payload,
           tmdb: null,
           openSubtitle: null,
-          preferredLanguage: window.plusSub_search.value.preferredLanguage
+          preferredLanguage: window.extension_search.value.preferredLanguage
         };
       }
     },
     getters: {
       getPreferredLanguageAsIso639: computed(
         () =>
-          languageList.find((e) => e.iso639_2 === window.plusSub_search.value.preferredLanguage) ?? {
+          languageList.find((e) => e.iso639_2 === window.extension_search.value.preferredLanguage) ?? {
             iso639_2: 'en',
             iso639Name: 'English'
           }

@@ -38,7 +38,7 @@ export interface SubtitleStore {
 
 declare global {
   interface Window {
-    plusSub_subtitle: Ref<SubtitleState>;
+    extension_subtitle: Ref<SubtitleState>;
   }
 }
 
@@ -49,8 +49,8 @@ interface InitPayload {
 }
 
 export const init = ({use}: InitPayload): SubtitleStore => {
-  window.plusSub_subtitle = window.plusSub_subtitle
-    ? ref({ ...window.plusSub_subtitle.value })
+  window.extension_subtitle = window.extension_subtitle
+    ? ref({ ...window.extension_subtitle.value })
     : ref<SubtitleState>({
       id: null,
       raw: null,
@@ -62,10 +62,10 @@ export const init = ({use}: InitPayload): SubtitleStore => {
     });
 
   return {
-    state: computed(() => window.plusSub_subtitle.value),
+    state: computed(() => window.extension_subtitle.value),
     actions: {
       reset: (): void => {
-        window.plusSub_subtitle.value = {
+        window.extension_subtitle.value = {
           id: null,
           raw: null,
           format: null,
@@ -76,7 +76,7 @@ export const init = ({use}: InitPayload): SubtitleStore => {
         };
       },
       setRaw: ({ raw, format, id, language }: SetRawPayload) : void => {
-        window.plusSub_subtitle.value = {
+        window.extension_subtitle.value = {
           id,
           raw,
           format,
@@ -87,14 +87,14 @@ export const init = ({use}: InitPayload): SubtitleStore => {
         }
       },
       setOffsetTime: ({ offsetTime }: Pick<SubtitleState, 'offsetTime'>): void => {
-        window.plusSub_subtitle.value = {
-          id: window.plusSub_subtitle.value.id,
-          raw: window.plusSub_subtitle.value.raw,
-          language: window.plusSub_subtitle.value.language,
-          parsed: window.plusSub_subtitle.value.parsed,
-          format:  window.plusSub_subtitle.value.format,
+        window.extension_subtitle.value = {
+          id: window.extension_subtitle.value.id,
+          raw: window.extension_subtitle.value.raw,
+          language: window.extension_subtitle.value.language,
+          parsed: window.extension_subtitle.value.parsed,
+          format:  window.extension_subtitle.value.format,
           offsetTime,
-          withOffsetParsed: window.plusSub_subtitle.value.parsed.map((e) => ({
+          withOffsetParsed: window.extension_subtitle.value.parsed.map((e) => ({
             ...e,
             from: e.from + offsetTime,
             to: e.to + offsetTime
@@ -103,24 +103,24 @@ export const init = ({use}: InitPayload): SubtitleStore => {
       },
       parse: (): void => {
         use.appStore.actions.setState({ state: 'PARSING' });
-        const {raw, format, id} = window.plusSub_subtitle.value;
+        const {raw, format, id} = window.extension_subtitle.value;
         if (!raw || !format || !id) {
           use.appStore.actions.setState({ state: 'ERROR' });
           throw new Error('raw format or id does not exists');
         }
         try {
           const parsed = (format === '.srt' || format === '.vtt') ? srtVttParse(raw).entries : assSsaParse(raw);
-          window.plusSub_subtitle.value = {
+          window.extension_subtitle.value = {
             id,
             raw,
             parsed,
             format,
-            language: window.plusSub_subtitle.value.language,
-            offsetTime: window.plusSub_subtitle.value.offsetTime,
+            language: window.extension_subtitle.value.language,
+            offsetTime: window.extension_subtitle.value.offsetTime,
             withOffsetParsed: parsed.map((e: SubtitleEntry) => ({
               ...e,
-              from: e.from + window.plusSub_subtitle.value.offsetTime,
-              to: e.to + window.plusSub_subtitle.value.offsetTime
+              from: e.from + window.extension_subtitle.value.offsetTime,
+              to: e.to + window.extension_subtitle.value.offsetTime
             }))
           };
           use.appStore.actions.setState({ state: 'DONE' });

@@ -14,23 +14,23 @@ export interface FileStore {
 
 declare global {
   interface Window {
-    plusSub_file: Ref<FileState>;
+    extension_file: Ref<FileState>;
   }
 }
 
 export const init = (): FileStore => {
-  window.plusSub_file = window.plusSub_file
-    ? ref({ ...window.plusSub_file.value })
+  window.extension_file = window.extension_file
+    ? ref({ ...window.extension_file.value })
     : ref<FileState>({
         filename: ''
       });
 
   return {
-    state: computed(() => window.plusSub_file.value),
+    state: computed(() => window.extension_file.value),
     actions: {
-      setFilename: ({ filename }: Pick<FileState, 'filename'>) => (window.plusSub_file.value.filename = filename),
+      setFilename: ({ filename }: Pick<FileState, 'filename'>) => (window.extension_file.value.filename = filename),
       reset: () => {
-        window.plusSub_file.value = {
+        window.extension_file.value = {
           filename: ''
         };
       }

@@ -16,26 +16,26 @@ export interface AppStore {
 
 declare global {
   interface Window {
-    plusSub_app: Ref<AppState>;
+    extension_app: Ref<AppState>;
   }
 }
 
 export const init = (): AppStore => {
-  window.plusSub_app = window.plusSub_app
-    ? ref({ ...window.plusSub_app.value })
+  window.extension_app = window.extension_app
+    ? ref({ ...window.extension_app.value })
     : ref<AppState>({
         src: 'NONE',
         state: 'NONE'
       });
 
   return {
-    state: computed(() => window.plusSub_app.value),
+    state: computed(() => window.extension_app.value),
     actions: {
-      setState: ({ state }: Pick<AppState, 'state'>) => (window.plusSub_app.value.state = state),
-      setSrc: ({ src }: Pick<AppState, 'src'>) => (window.plusSub_app.value.src = src),
+      setState: ({ state }: Pick<AppState, 'state'>) => (window.extension_app.value.state = state),
+      setSrc: ({ src }: Pick<AppState, 'src'>) => (window.extension_app.value.src = src),
       reset: () => {
-        window.plusSub_app.value.state = "NONE";
-        window.plusSub_app.value.src = "NONE";
+        window.extension_app.value.state = "NONE";
+        window.extension_app.value.src = "NONE";
       }
     }
   };
