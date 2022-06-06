@@ -11,16 +11,18 @@ const setObject = (object, key, value) => ({
   [key]: value,
 });
 
+const whenSetObject = (predicate, object, key, value) => (predicate() ? setObject(object, key, value) : { ...object });
+
 const toPrettyJson = (obj) => JSON.stringify(obj, null, 2);
 
-const EXTENSION_ORIGIN = "plussub";
+const FIREFOX_EXTENSION_KEY = '{83078104-a00b-45e2-8749-7a10af244653}'
 
 export default (env) => {
   const browser = (env.browser ? env.browser.toLowerCase() : 'unknown').trim();
   if (browser !== 'chrome' && browser !== 'firefox') {
     throw new Error(`unknown browser: ${browser}`);
   }
-  const mode = (env.mode ? env.mode : 'development').trim();
+  const mode = (env.mode ?? 'development').trim();
 
   return {
     devtool: false,
@@ -111,12 +113,20 @@ export default (env) => {
           {
             from: `manifest-${browser}.json`,
             to: 'manifest.json',
-            transform: (manifest) =>
-              toPrettyJson(
-                setObject(JSON.parse(manifest.toString()),
-                  'version',
-                  JSON.parse(readFileSync(resolve('package.json'))).version)
-              )
+            transform: (manifest) => {
+              const withVersion = setObject(JSON.parse(manifest.toString()),
+                'version',
+                JSON.parse(readFileSync(resolve('package.json'))).version)
+
+              const mayWithExtensionId  = whenSetObject(() => browser === 'firefox' && mode !== "production" , withVersion , 'browser_specific_settings', {
+                gecko: {
+                  id: FIREFOX_EXTENSION_KEY,
+                  "strict_min_version": "42.0"
+                }
+              });
+
+              return toPrettyJson(mayWithExtensionId);
+            }
           },
           { from: 'res', to: 'res' },
           { from: 'popup/font.css', to: 'font.css' },
