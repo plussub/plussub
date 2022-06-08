@@ -14,7 +14,7 @@
 
     <div class="font-medium text-sm self-center" style='grid-column: 1/6'>
       <div>Prevent the subtitle to get covered from controls. </div>
-      <div class='text-xs'>It is the only way, to show overlapping subtitles</div>
+      <SnapToLinesHint/>
     </div>
     <input v-model="snapToLines" type="checkbox" style='grid-column: 6/end' class="text-primary-700 focus:ring-0 focus:ring-offset-0 text-sm self-center" />
 
@@ -27,9 +27,11 @@
 import { computed, defineComponent, ref, watch } from 'vue';
 import RangeInputField from '@/components/RangeInputField.vue';
 import { useInjectStore } from '@/composables/useInjectStore';
+import SnapToLinesHint from 'SnapToLinesHint.vue';
 
 export default defineComponent({
   components: {
+    SnapToLinesHint,
     RangeInputField
   },
   setup() {

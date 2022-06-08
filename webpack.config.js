@@ -41,6 +41,7 @@ export default (env) => {
         '@': resolve('src/popup'),
         storeTypes: resolve(`src/popup/storeTypes/index.ts`),
         storage: resolve(`src/popup/platform/storage/${browser}/index.ts`),
+        "SnapToLinesHint.vue": resolve(`src/popup/appearance/components/platform/${browser}/SnapToLinesHint.vue`),
         monkeyPatchApollo: resolve(`src/popup/platform/monkeyPatchApollo/${browser}/index.ts`),
         onPageActionClicked: resolve(`src/background/platform/onPageActionClicked/${browser}/index.ts`)
       }
