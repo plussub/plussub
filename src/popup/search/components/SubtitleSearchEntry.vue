@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
+import { SubtitleSearchResultData } from '@/search/__gen_gql';
 import { defineComponent, PropType } from 'vue';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
@@ -22,7 +22,7 @@ export default defineComponent({
   components: { FontAwesomeIcon },
   props: {
     item: {
-      type: Object as PropType<SubtitleSearchFragmentResult_data>,
+      type: Object as PropType<SubtitleSearchResultData>,
       required: true
     }
   },

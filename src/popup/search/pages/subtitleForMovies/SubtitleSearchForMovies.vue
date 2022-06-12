@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
-import { searchQuery, SubtitleSearchForMoviesVariables } from './searchQuery';
+import { searchQuery, SubtitleSearchForMoviesQueryVariables } from './searchQuery';
 import { download } from '@/search/download';
 
 import SubtitleSearchEntry from '@/search/components/SubtitleSearchEntry.vue';
@@ -47,7 +47,7 @@ import Divider from '@/components/Divider.vue';
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
-import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
+import { SubtitleSearchResultData } from '@/search/__gen_gql';
 import OnlyHearingImpairedFilterButton from '@/search/components/OnlyHearingImpairedFilterButton.vue';
 import { ISO639 } from '@/search/store';
 import { from, Subject } from 'rxjs';
@@ -99,17 +99,19 @@ export default defineComponent({
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
-    const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
+    const entries = ref<SubtitleSearchResultData[]>([]);
 
     const loading = ref(true);
 
-    const searchQuerySubject = new Subject<SubtitleSearchForMoviesVariables>();
+    const searchQuerySubject = new Subject<SubtitleSearchForMoviesQueryVariables>();
     searchQuerySubject
       .pipe(
         tap(() => (loading.value = true)),
         switchMap((variables) => from(searchQuery(variables))),
         tap((result) => {
           loading.value = false;
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
           entries.value = result.subtitleSearch.data;
         }),
         takeUntil(unmountObservable)
@@ -148,7 +150,7 @@ export default defineComponent({
           return onlyHearingImpaired.value ? intermediate && attributes.hearing_impaired : intermediate;
         })
       ),
-      select: (openSubtitle: SubtitleSearchFragmentResult_data) => {
+      select: (openSubtitle: SubtitleSearchResultData) => {
         appStore.actions.setState({ state: 'SELECTED' });
         appStore.actions.setSrc({ src: 'SEARCH' });
         searchStore.actions.setPreferredLanguage({ preferredLanguage: language.value.iso639_2 });
@@ -164,7 +166,7 @@ export default defineComponent({
             subtitleStore.actions.setRaw({
               raw,
               format,
-              id: openSubtitle.attributes.files[0].file_name,
+              id: openSubtitle.attributes.files[0].file_name!,
               language: language.value.iso639_2
             });
             subtitleStore.actions.parse();

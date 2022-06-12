@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
-import { searchQuery, SubtitleSearchForSeries_seasons_seasons, SubtitleSearchForSeriesVariables } from './searchQuery';
+import { searchQuery, Seasons, SubtitleSearchForSeriesQueryVariables, SubtitleSearchResultData } from './searchQuery';
 import { ISO639 } from '@/search/store';
 import { download } from '@/search/download';
 
@@ -52,7 +52,7 @@ import Divider from '@/components/Divider.vue';
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
-import { SubtitleSearchFragmentResult_data } from '@/search/__gen_gql/SubtitleSearchFragmentResult';
+import { SubtitleSearchFragmentResultFragment } from '@/search/__gen_gql';
 import { from, Subject } from 'rxjs';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
@@ -103,7 +103,7 @@ export default defineComponent({
     const language = ref<ISO639>(searchStore.getters.getPreferredLanguageAsIso639.value);
     const showLanguageSelection = ref(false);
 
-    const seasons = ref<SubtitleSearchForSeries_seasons_seasons[]>([]);
+    const seasons = ref<Omit<Seasons, "id">[]>([]);
 
     const season = ref(1);
     const showSeasonSelection = ref(false);
@@ -123,17 +123,19 @@ export default defineComponent({
     watch(showSeasonSelection, (show) => setSetShowSelection(show, { language: false, season: show, episode: false }));
     watch(showEpisodeSelection, (show) => setSetShowSelection(show, { language: false, season: false, episode: show }));
 
-    const entries = ref<SubtitleSearchFragmentResult_data[]>([]);
+    const entries = ref<SubtitleSearchResultData[]>([]);
 
     const loading = ref(true);
 
-    const searchQuerySubject = new Subject<SubtitleSearchForSeriesVariables>();
+    const searchQuerySubject = new Subject<SubtitleSearchForSeriesQueryVariables>();
     searchQuerySubject
       .pipe(
         tap(() => (loading.value = true)),
         switchMap((variables) => from(searchQuery(variables))),
         tap((result) => {
           loading.value = false;
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
           entries.value = result.subtitleSearch.data;
           seasons.value = result.seasons.seasons;
         }),
@@ -183,7 +185,7 @@ export default defineComponent({
           return onlyHearingImpaired.value ? intermediate && attributes.hearing_impaired : intermediate;
         })
       ),
-      select: (openSubtitle: SubtitleSearchFragmentResult_data) => {
+      select: (openSubtitle: SubtitleSearchResultData) => {
         appStore.actions.setState({ state: 'SELECTED' });
         appStore.actions.setSrc({ src: 'SEARCH' });
         searchStore.actions.setPreferredLanguage({ preferredLanguage: language.value.iso639_2 });
@@ -199,7 +201,7 @@ export default defineComponent({
             subtitleStore.actions.setRaw({
               raw,
               format,
-              id: openSubtitle.attributes.files[0].file_name,
+              id: openSubtitle.attributes.files[0].file_name!,
               language: language.value.iso639_2
             });
             subtitleStore.actions.parse();

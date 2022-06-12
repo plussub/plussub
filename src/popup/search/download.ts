@@ -1,8 +1,8 @@
 import { getFormatFromFilename } from '@/subtitle/util';
 import { SubtitleFormat } from '@/subtitle/store';
-import { SubtitleSearchFragmentResult_data } from './__gen_gql/SubtitleSearchFragmentResult';
+import { SubtitleSearchResultData } from './__gen_gql';
 
-export const download = async (entry: SubtitleSearchFragmentResult_data): Promise<{ raw: string; format: SubtitleFormat }> => {
+export const download = async (entry: SubtitleSearchResultData): Promise<{ raw: string; format: SubtitleFormat }> => {
   const formatArgument = getFormatFromFilename(entry.attributes.files[0].file_name ?? '') ? {} : { sub_format: 'webvtt' };
 
   const { file_name, link } = await fetch('https://api.opensubtitles.com/api/v1/download', {

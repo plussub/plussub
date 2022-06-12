@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, watch } from 'vue';
-import { searchQuery, VideoSearch_videoSearch_entries } from './searchQuery';
+import { searchQuery, VideoSearchResultEntry } from './searchQuery';
 
 import FilePick from '@/file/components/FilePick.vue';
 import PageLayout from '@/components/PageLayout.vue';
@@ -87,7 +87,7 @@ export default defineComponent({
 
     const internalQuery = ref(props.query ?? '');
     const loading = ref(true);
-    const entries = ref<VideoSearch_videoSearch_entries[]>([]);
+    const entries = ref<VideoSearchResultEntry[]>([]);
 
     const searchQuerySubject = new Subject<string>();
     searchQuerySubject
@@ -129,11 +129,11 @@ export default defineComponent({
       videoName: videoStore.getters.videoName,
       toSettings: navigationStore.actions.toSettings,
       changeQueryToSuggested: () => (internalQuery.value = videoStore.getters.videoName.value),
-      select: (tmdb: VideoSearch_videoSearch_entries): void => {
+      select: (tmdb: VideoSearchResultEntry): void => {
         searchStore.actions.setTmdbInSelection({
           tmdb_id: tmdb.tmdb_id,
           media_type: tmdb.media_type,
-          poster_path: tmdb.poster_path,
+          poster_path: tmdb.poster_path!,
           release_date: tmdb.release_date ?? '',
           title: tmdb.title,
           vote_average: tmdb.vote_average ?? 0

@@ -1,11 +1,11 @@
 import query from './query.gql';
-import { SubtitleSearchForSeries, SubtitleSearchForSeriesVariables } from './__gen_gql/SubtitleSearchForSeries';
+import { SubtitleSearchForSeriesQuery, SubtitleSearchForSeriesQueryVariables } from './__gen_gql';
 import { client } from '@/apolloClient';
 
-export * from './__gen_gql/SubtitleSearchForSeries'
+export * from './__gen_gql'
 
-export const searchQuery = async (variables: SubtitleSearchForSeriesVariables): Promise<SubtitleSearchForSeries> => {
+export const searchQuery = async (variables: SubtitleSearchForSeriesQueryVariables): Promise<SubtitleSearchForSeriesQuery> => {
   return client
-    .query<SubtitleSearchForSeries, SubtitleSearchForSeriesVariables>({ query, variables })
+    .query<SubtitleSearchForSeriesQuery, SubtitleSearchForSeriesQueryVariables>({ query, variables })
     .then((r) => r.data);
 };

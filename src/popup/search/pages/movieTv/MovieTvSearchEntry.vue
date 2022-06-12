@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { VideoSearch_videoSearch_entries } from './searchQuery';
+import { VideoSearchResultEntry } from './searchQuery';
 import { useStringFn } from '@/composables';
 
 import { default as posterFallback } from '@/res/posterFallback.png';
@@ -31,7 +31,7 @@ export default defineComponent({
   components: { FontAwesomeIcon },
   props: {
     item: {
-      type: Object as PropType<VideoSearch_videoSearch_entries>,
+      type: Object as PropType<VideoSearchResultEntry>,
       required: true
     }
   },

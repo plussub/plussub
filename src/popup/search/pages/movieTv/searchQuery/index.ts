@@ -1,12 +1,12 @@
 import query from './query.gql';
-import { VideoSearch, VideoSearchVariables } from './__gen_gql/VideoSearch';
+import { VideoSearchQuery, VideoSearchQueryVariables } from './__gen_gql';
 import { client } from '@/apolloClient';
 
-export * from './__gen_gql/VideoSearch';
+export * from './__gen_gql';
 
-export const searchQuery = async (variables: VideoSearchVariables): Promise<VideoSearch & {query: string}> => {
+export const searchQuery = async (variables: VideoSearchQueryVariables): Promise<VideoSearchQuery & {query: string}> => {
   return client
-    .query<VideoSearch, VideoSearchVariables>({ query, variables })
+    .query<VideoSearchQuery, VideoSearchQueryVariables>({ query, variables })
     .then((r) => {
       return {
         query: variables.query,
