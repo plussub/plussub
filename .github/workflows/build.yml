@@ -93,3 +93,48 @@ jobs:
           WEB_EXT_API_KEY: ${{ secrets.FIREFOX_JWT_ISSUER }}
           WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
           WEB_EXT_ID: ${{ env.FIREFOX_WEB_EXT_ID }}
+
+      - run: >
+          curl 
+          https://github.com/${{ github.repository }}/zipball/${GITHUB_REF#refs/heads/}/ 
+          -L 
+          -o extension_src.zip
+          -v
+
+      - run: |
+          echo "::set-output name=current::$(date +%s)"
+          echo "::set-output name=later::$(date -d '5 minutes' +%s)"
+        id: time
+
+      - name: JWT Generator
+        id: firefoxJWT0
+        uses: morzzz007/github-actions-jwt-generator@1.0.1
+        with:
+          secret: ${{ secrets.FIREFOX_JWT_SECRET }}
+          payload: '{"iss":"${{ secrets.FIREFOX_JWT_ISSUER }}", "jti": "${{ steps.time.outputs.current }}", "iat": ${{ steps.time.outputs.current }}, "exp": ${{ steps.time.outputs.later }} }'
+
+      - run: >
+          curl 
+          -H "Authorization: JWT ${{ steps.firefoxJWT0.outputs.token }}"
+          https://addons.mozilla.org/api/v5/addons/addon/%7B${{ env.FIREFOX_WEB_EXT_ID }}%7D/versions?filter=all_with_unlisted
+          -L 
+          -o response.json
+          -v
+
+      - run: echo "::set-output name=latest::$(cat response.json | jq .results[0].id)"
+        id: version
+
+      - name: JWT Generator
+        id: firefoxJWT1
+        uses: morzzz007/github-actions-jwt-generator@1.0.1
+        with:
+          secret: ${{ secrets.FIREFOX_JWT_SECRET }}
+          payload: '{"iss":"${{ secrets.FIREFOX_JWT_ISSUER }}", "jti": "${{ steps.time.outputs.current }}", "iat": ${{ steps.time.outputs.current }}, "exp": ${{ steps.time.outputs.later }} }'
+
+      - run: >
+          curl
+          -H "Authorization: JWT ${{ steps.firefoxJWT1.outputs.token }}"
+          -X PATCH https://addons.mozilla.org/api/v5/addons/addon/%7B${{ env.FIREFOX_WEB_EXT_ID }}%7D/versions/${{ steps.version.outputs.latest }}/
+          -F "source=@extension_src.zip"
+          -L
+          -v
