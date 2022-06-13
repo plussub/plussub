@@ -25,6 +25,8 @@ jobs:
       - run: npm ci
       - run: npm run gen
       - run: npm test
+      - run: npm run tscheck
+      - run: npm run eslint
       - run: npm run build:${{ matrix.target }}
       - uses: actions/upload-artifact@v2
         with:

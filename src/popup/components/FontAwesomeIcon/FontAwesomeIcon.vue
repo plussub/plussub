@@ -22,7 +22,11 @@ export default defineComponent({
       default: 'fas',
       required: false
     },
-    class: String
+    class: {
+      type: String,
+      default: '',
+      required: false
+    }
   },
 
   setup(props) {

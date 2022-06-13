@@ -8,6 +8,14 @@ import { nanoid } from 'nanoid';
 interface Payload {
   inputObservable: Observable<GenericContentScriptInputMessageEvent>;
 }
+
+const datasetExtensionId = `${EXTENSION_ORIGIN}Id` as const;
+type HTMLVideoElementWithDataExtensionId =  HTMLVideoElement & {
+  dataset: {
+    [datasetExtensionId]: string
+  }
+}
+
 const hasSubtitle = (el: HTMLVideoElement) => [...el.textTracks].find((track) => track.label === EXTENSION_LABEL && track.mode !== 'disabled') !== undefined;
 
 export const init = ({ inputObservable }: Payload): Observable<unknown> => {
@@ -25,7 +33,7 @@ export const init = ({ inputObservable }: Payload): Observable<unknown> => {
 
   const addedVideoObservable = merge(currentQuerySelectorObservable, addedWithMutationObservable, loadedmetadataObservable).pipe(
     tap((el) => {
-      el.dataset[`${EXTENSION_ORIGIN}Id`] = !el.dataset[`${EXTENSION_ORIGIN}Id`] || !hasSubtitle(el) ? nanoid(12) : el.dataset[`${EXTENSION_ORIGIN}Id`];
+      el.dataset[datasetExtensionId] = el.dataset[datasetExtensionId] && hasSubtitle(el) ? el.dataset[datasetExtensionId] : nanoid(12);
       el.dataset[`${EXTENSION_ORIGIN}Status`] = "none";
     }),
     tap((el) =>
@@ -34,7 +42,7 @@ export const init = ({ inputObservable }: Payload): Observable<unknown> => {
         origin: window.location.origin,
         state: "add",
         video: {
-          id: el.dataset[`${EXTENSION_ORIGIN}Id`]
+          id: el.dataset[datasetExtensionId]
         }
       })
     )
@@ -47,7 +55,7 @@ export const init = ({ inputObservable }: Payload): Observable<unknown> => {
         origin: window.location.origin,
         state: "removed",
         video: {
-          id: el.dataset[`${EXTENSION_ORIGIN}Id`]
+          id: el.dataset[datasetExtensionId]
         }
       })
     })
@@ -59,10 +67,10 @@ export const init = ({ inputObservable }: Payload): Observable<unknown> => {
       origin: window.location.origin,
       requestId: e.data.requestId,
       videos: Object.fromEntries<{ id: string; hasSubtitle: boolean; origin: string }>(
-        [...document.querySelectorAll<HTMLVideoElement>(`video[data-${EXTENSION_ORIGIN}-id]`)].map((el) => [
-          el.dataset[`${EXTENSION_ORIGIN}Id`]!,
+        [...document.querySelectorAll<HTMLVideoElementWithDataExtensionId>(`video[data-${EXTENSION_ORIGIN}-id]`)].map((el) => [
+          el.dataset[datasetExtensionId],
           {
-            id: el.dataset[`${EXTENSION_ORIGIN}Id`]!,
+            id: el.dataset[datasetExtensionId],
             hasSubtitle: hasSubtitle(el),
             origin: window.location.origin,
             lastTimestamp: Math.floor(el.currentTime * 1000),
@@ -84,7 +92,7 @@ export const init = ({ inputObservable }: Payload): Observable<unknown> => {
     filter((e) => e.data.contentScriptInput === 'SELECT_VIDEO'),
     tap((e) =>
       [...document.querySelectorAll('video')].forEach((el) => {
-        el.dataset[`${EXTENSION_ORIGIN}Status`] = el.dataset[`${EXTENSION_ORIGIN}Id`] === e.data.id ? 'selected' : 'none';
+        el.dataset[`${EXTENSION_ORIGIN}Status`] = el.dataset[datasetExtensionId] === e.data.id ? 'selected' : 'none';
       })
     )
   );

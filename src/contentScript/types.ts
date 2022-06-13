@@ -1,5 +1,5 @@
-export const EXTENSION_ORIGIN = "plussub";
-export const EXTENSION_LABEL = "+Sub";
+export const EXTENSION_ORIGIN = "plussub" as const;
+export const EXTENSION_LABEL = "+Sub" as const;
 
 export const isGenericContentScriptInputMessageEvent = <T extends string, P extends Record<string, unknown> > (m: MessageEvent): m is ContentScriptInputMessageEvent<T, P> => {
   return m.data.extensionOrigin === EXTENSION_ORIGIN && typeof m.data.contentScriptInput === 'string';

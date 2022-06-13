@@ -133,7 +133,7 @@ export default defineComponent({
         searchStore.actions.setTmdbInSelection({
           tmdb_id: tmdb.tmdb_id,
           media_type: tmdb.media_type,
-          poster_path: tmdb.poster_path!,
+          poster_path: tmdb.poster_path ?? null,
           release_date: tmdb.release_date ?? '',
           title: tmdb.title,
           vote_average: tmdb.vote_average ?? 0

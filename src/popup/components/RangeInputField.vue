@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { asyncScheduler, Subject } from 'rxjs';
 import { takeUntil, tap, throttleTime } from 'rxjs/operators';
 import { useUnmountObservable } from '../composables';

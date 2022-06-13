@@ -1,5 +1,4 @@
-import {computed, ComputedRef, ref} from "vue";
-import {Ref} from "@vue/reactivity";
+import {computed, ComputedRef, ref, Ref} from "vue";
 import {parse as srtVttParse} from "@plussub/srt-vtt-parser";
 import {parse as assSsaParse } from './ass-ssa-parser';
 import { Store } from 'storeTypes';

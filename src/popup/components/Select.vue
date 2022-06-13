@@ -53,7 +53,7 @@ export default defineComponent({
   },
   props: {
     selected: {
-      type: [String, Number, Object] as PropType<any>,
+      type: [String, Number, Object] as PropType<unknown>,
       required: true,
       default: ''
     },
@@ -63,7 +63,7 @@ export default defineComponent({
       default: ''
     },
     filterFn: {
-      type: Function as PropType<(query: string) => any[]>,
+      type: Function as PropType<(query: string) => unknown[]>,
       required: true
     },
     show: {
@@ -71,7 +71,7 @@ export default defineComponent({
       required: true
     },
     options: {
-      type: Array as PropType<any[]>,
+      type: Array as PropType<unknown[]>,
       required: true
     }
   },

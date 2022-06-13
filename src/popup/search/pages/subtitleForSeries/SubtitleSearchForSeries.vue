@@ -36,6 +36,8 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable vue/prop-name-casing -- Because props are binded with the api response*/
+
 import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import { searchQuery, Seasons, SubtitleSearchForSeriesQueryVariables, SubtitleSearchResultData } from './searchQuery';
 import { ISO639 } from '@/search/store';
@@ -52,7 +54,6 @@ import Divider from '@/components/Divider.vue';
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import InputField from '@/components/InputField.vue';
-import { SubtitleSearchFragmentResultFragment } from '@/search/__gen_gql';
 import { from, Subject } from 'rxjs';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { useUnmountObservable } from '@/composables';
@@ -201,7 +202,7 @@ export default defineComponent({
             subtitleStore.actions.setRaw({
               raw,
               format,
-              id: openSubtitle.attributes.files[0].file_name!,
+              id: openSubtitle.attributes.files[0].file_name ?? "-",
               language: language.value.iso639_2
             });
             subtitleStore.actions.parse();

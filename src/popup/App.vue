@@ -1,12 +1,12 @@
 <template>
   <div class="h-auto overflow-hidden grid app--container">
-    <component v-if='initialized' :is="navigationState.component" v-bind="navigationState.params" />
+    <component :is="navigationState.component" v-if='initialized' v-bind="navigationState.params" />
     <Loading v-else/>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onUnmounted, PropType, provide, watch } from 'vue';
+import { computed, defineComponent, onUnmounted, provide, watch } from 'vue';
 import { init as initAppStore } from '@/app/store';
 import { init as initContentScriptStore } from '@/contentScript/store';
 import { init as initVideoStore } from '@/video/store';
@@ -90,7 +90,7 @@ export default defineComponent({
 
     watch(
       [initialized, videoStore.getters.count, appStore.state, videoStore.getters.list, videoStore.getters.current],
-      ([initialized, videoCount, appState, videoList], [prevInitialized, prevVideoCount, prevAppState, prevVideoList]) => {
+      ([initialized, videoCount, appState, videoList], [_prevInitialized, prevVideoCount, _prevAppState, _prevVideoList]) => {
         if(!initialized){
           return;
         }
