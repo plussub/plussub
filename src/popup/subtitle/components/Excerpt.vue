@@ -14,9 +14,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import { computed } from '@vue/reactivity';
-import Duration from 'luxon/src/duration';
+import { defineComponent, ref, watch, computed } from 'vue';
+import { Duration } from 'luxon';
 import { findNext } from './findNext';
 import { useInjectStore } from '@/composables/useInjectStore';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';

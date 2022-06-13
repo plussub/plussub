@@ -36,15 +36,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import Duration from 'luxon/src/duration';
+import { defineComponent, ref, computed } from 'vue';
+import { Duration } from 'luxon';
 import PrefixIconButton from '@/components/PrefixIconButton.vue';
 import Divider from '@/components/Divider.vue';
 import TimeSettings from '@/subtitle/components/TimeSettings.vue';
 import { useInjectStore } from '@/composables/useInjectStore';
 import TranscriptPanel from "@/subtitle/components/TranscriptPanel.vue";
 import AppearanceSettings from "@/appearance/components/AppearanceSettings.vue";
-import { computed } from '@vue/reactivity';
 
 export default defineComponent({
   components: {
@@ -56,10 +55,9 @@ export default defineComponent({
   },
   setup() {
     const videoStore = useInjectStore('videoStore');
-    const currentTime = computed(() => Duration.fromMillis(videoStore.getters.current.value?.lastTimestamp).toFormat('hh:mm:ss'));
     return {
       selectedArea: ref('time'),
-      currentTime,
+      currentTime: computed(() => Duration.fromMillis(parseInt(videoStore.getters.current.value?.lastTimestamp ?? '0', 10)).toFormat('hh:mm:ss')),
       previewSelection: ref('excerpt')
     };
   }

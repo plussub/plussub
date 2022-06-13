@@ -1,11 +1,6 @@
-const getAllFrames = (tabId): Promise<chrome.webNavigation.GetAllFrameResultDetails[]> =>
-  new Promise((resolve, reject) =>
-    chrome.webNavigation.getAllFrames({ tabId }, (details) =>
-      details ? resolve(details) : reject('detail was null')));
-
 const injectInAllFrames = async ({ tab }: { tab: TabWithId }) => {
 
-  const frames = await getAllFrames(tab.id);
+  const frames = await chrome.webNavigation.getAllFrames( {tabId: tab.id}) ?? [];
   const frameIds = frames.map((frame) => frame.frameId);
   const target = { tabId: tab.id, frameIds: frameIds };
 

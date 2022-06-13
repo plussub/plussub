@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue';
-import Duration from 'luxon/src/duration.js';
+import { computed, defineComponent, PropType } from 'vue';
+import { Duration } from 'luxon';
 
 import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';

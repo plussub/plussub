@@ -3,10 +3,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { defineComponent, onMounted, ref, watch, computed } from 'vue';
 import { Chart, ChartPoint } from 'chart.js';
-import { computed } from '@vue/reactivity';
-import Duration from 'luxon/src/duration.js';
+import { Duration } from 'luxon';
 import { findNext } from './findNext';
 import { useInjectStore } from '@/composables/useInjectStore';
 
@@ -110,7 +109,7 @@ export default defineComponent({
                   return '??';
                 }
                 const { x: time } = (datasets?.[datasetIndex]?.data?.[index] as ChartPoint) ?? { x: 0 };
-                return Duration.fromMillis(time).toFormat('hh:mm:ss.SSS');
+                return Duration.fromMillis(time as number).toFormat('hh:mm:ss.SSS');
               },
               label: ({ datasetIndex }, { datasets }) => (datasetIndex ? datasets?.[datasetIndex]?.label ?? '' : '')
             }
@@ -125,7 +124,7 @@ export default defineComponent({
                   // suggestedMax: 10,
                   beginAtZero: false,
                   // maxTicksLimit: 50,
-                  callback: (value) => Duration.fromMillis(value).toFormat('hh:mm:ss.SSS')
+                  callback: (value) => Duration.fromMillis(value as number).toFormat('hh:mm:ss.SSS')
                 }
               }
             ],
