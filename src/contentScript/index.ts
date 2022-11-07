@@ -35,7 +35,6 @@ declare global {
 
   const inputObservable = fromEvent<MessageEvent>(window.self, 'message').pipe(
     filter<MessageEvent, GenericContentScriptInputMessageEvent>(isGenericContentScriptInputMessageEvent),
-    // tap((e) => console.warn(e.data)),
     share()
   );
   const getVideoElementFrom = (id: string) => document.querySelector<HTMLVideoElement>(`video[data-${EXTENSION_ORIGIN}-id="${id}"]`);

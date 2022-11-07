@@ -1,0 +1,8 @@
+query ListContentLanguages {
+    listContentLanguages {
+        data {
+            language_code
+            language_name
+        }
+    }
+}

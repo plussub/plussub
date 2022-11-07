@@ -14,13 +14,16 @@ type HighlightVideoMessageEvent = ContentScriptInputMessageEvent<'HIGHLIGHT_VIDE
 export const init = ({ inputObservable, getVideoElementFrom }: Payload): Observable<{ el: HTMLVideoElement; messageEvent: HighlightVideoMessageEvent } | ContentScriptInputMessageEvent<'REMOVE_HIGHLIGHT_FROM_VIDEO', Record<string, unknown>>> => {
   const overlayHighlight = document.createElement('div');
   overlayHighlight.id = `${EXTENSION_ORIGIN}-overlay-highlight`;
-  overlayHighlight.style.position = 'absolute';
-  overlayHighlight.style.zIndex = '9999';
-  overlayHighlight.style.backgroundColor = 'rgba(40, 58, 90, 0.8)';
-  overlayHighlight.style.width = `var(--${EXTENSION_ORIGIN}-video-highlight-width, 0px)`;
-  overlayHighlight.style.height = `var(--${EXTENSION_ORIGIN}-video-highlight-height, 0px)`;
-  overlayHighlight.style.top = `var(--${EXTENSION_ORIGIN}-video-highlight-top, 0px)`;
-  overlayHighlight.style.left = `var(--${EXTENSION_ORIGIN}-video-highlight-left, 0px)`;
+  Object.assign(overlayHighlight.style, {
+    position: "absolute",
+    zIndex: "9999",
+    top: `var(--${EXTENSION_ORIGIN}-video-highlight-top, 0px)`,
+    left: `var(--${EXTENSION_ORIGIN}-video-highlight-left, 0px)`,
+    width: `var(--${EXTENSION_ORIGIN}-video-highlight-width, 0px)`,
+    height: `var(--${EXTENSION_ORIGIN}-video-highlight-height, 0px)`,
+    backgroundColor: "rgba(40, 58, 90, 0.8)",
+    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)"
+  });
   document.body.prepend(overlayHighlight);
 
   const highlightVideoObservable = inputObservable.pipe(
@@ -53,9 +56,7 @@ export const init = ({ inputObservable, getVideoElementFrom }: Payload): Observa
   );
 
   const removeHighlightInputObservable = inputObservable.pipe(
-    filter(
-      (e): e is ContentScriptInputMessageEvent<'REMOVE_HIGHLIGHT_FROM_VIDEO', Record<string, unknown>> => e.data.contentScriptInput === 'REMOVE_HIGHLIGHT_FROM_VIDEO'
-    ),
+    filter((e): e is ContentScriptInputMessageEvent<'REMOVE_HIGHLIGHT_FROM_VIDEO', Record<string, unknown>> => e.data.contentScriptInput === 'REMOVE_HIGHLIGHT_FROM_VIDEO'),
     tap(() => {
       document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-video-highlight-width`, '0px');
       document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-video-highlight-height`, '0px');

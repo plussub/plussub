@@ -15,7 +15,7 @@
 import { defineComponent } from 'vue';
 import PageLayout from '@/components/PageLayout.vue';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
-import Toolbar from '@/Toolbar/Toolbar.vue';
+import Toolbar from '@/toolbar/Toolbar.vue';
 
 export default defineComponent({
   components: {

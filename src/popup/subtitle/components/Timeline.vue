@@ -1,50 +1,55 @@
 <template>
-  <canvas ref="canvas"></canvas>
+  <canvas ref='canvas'></canvas>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, ref, watch, computed } from 'vue';
+<script lang='ts'>
+import { defineComponent, onMounted, ref, watch, PropType, computed } from 'vue';
 import { Chart, ChartPoint } from 'chart.js';
 import { Duration } from 'luxon';
-import { findNext } from './findNext';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { SubtitleEntry } from '@/subtitle/store';
 
 export default defineComponent({
-  setup() {
-    const subtitleStore = useInjectStore('subtitleStore');
-    const videoStore = useInjectStore('videoStore');
-
+  props: {
+    excerpt: {
+      type: Array as PropType<SubtitleEntry[]>,
+      default: () => []
+    },
+    currentTime: {
+      type: Number,
+      default: 0
+    }
+  },
+  setup(props) {
     const canvas = ref<HTMLCanvasElement | null>(null);
     const chart = ref<null | Chart>(null);
-    const currentPos = ref(0);
-    const currentTime = computed(() => parseInt(videoStore.getters.current.value?.lastTimestamp ?? '0', 10));
-    const parsedPartial = computed(() => subtitleStore.state.value.withOffsetParsed.filter((e, idx) => idx >= currentPos.value && idx < currentPos.value + 3));
 
     watch(
-      [parsedPartial, chart],
-      () => {
-        if (!parsedPartial.value || !chart.value?.data?.datasets) {
+      [computed(() => props.excerpt), chart],
+      ([excerpt,chart]) => {
+        if (!chart || !chart.data?.datasets) {
           return;
         }
-        chart.value.data.datasets = [chart.value.data.datasets[0], chart.value.data.datasets[1], ...getSubtitleDataset()];
-        if (chart.value.options?.scales?.xAxes?.[0].ticks) {
-          chart.value.options.scales.xAxes[0].ticks.suggestedMin = parsedPartial.value[0].from;
-          chart.value.options.scales.xAxes[0].ticks.suggestedMax = parsedPartial.value[parsedPartial.value.length - 1].to;
-        }
-
-        if (chart.value?.options?.animation?.duration) {
-          chart.value.options.animation.duration = 0;
-        }
-        chart.value.update();
-        if (chart.value?.options?.animation?.duration === 0) {
-          chart.value.options.animation.duration = 1000;
+        chart.data.datasets = [chart.data.datasets[0], chart.data.datasets[1], ...getSubtitleDataset()];
+        if (chart.options?.scales?.xAxes?.[0].ticks) {
+          let triggerUpdate = false;
+          if (chart.options.scales.xAxes[0].ticks.suggestedMin !== excerpt[0].from) {
+            chart.options.scales.xAxes[0].ticks.suggestedMin = excerpt[0].from;
+            triggerUpdate = true;
+          }
+          if (chart.options.scales.xAxes[0].ticks.suggestedMax !== excerpt.at(-1)?.to) {
+            chart.options.scales.xAxes[0].ticks.suggestedMax = excerpt.at(-1)?.to;
+            triggerUpdate = true;
+          }
+          if (triggerUpdate) {
+            chart.update();
+          }
         }
       },
       { immediate: true }
     );
 
     const getSubtitleDataset = () =>
-      parsedPartial.value.map((e, i) => ({
+      props.excerpt.map((e, i) => ({
         label: e.text,
         data: [
           { x: e.from, y: i % 2 === 0 ? 10 : 5 },
@@ -58,15 +63,9 @@ export default defineComponent({
 
     const videoTimePoint = { x: 0, y: 0 };
     const videoTimePointLine = { x: 0, y: 12 };
-
-    watch(currentTime, (currentTime) => {
+    watch(computed(() => props.currentTime), (currentTime) => {
       videoTimePoint.x = currentTime;
       videoTimePointLine.x = currentTime;
-      chart.value?.update();
-      const pos = findNext(currentTime, subtitleStore.state.value.withOffsetParsed);
-      if (pos !== -1) {
-        currentPos.value = pos;
-      }
     });
 
     onMounted(() => {
@@ -96,7 +95,7 @@ export default defineComponent({
         },
         options: {
           animation: {
-            duration: 1000
+            duration: 0
           },
           legend: {
             display: false

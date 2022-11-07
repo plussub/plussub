@@ -1,6 +1,19 @@
-schema: https://gqldev.plus-sub.com/
+schema: https://gqlos.plus-sub.com/
 documents: ./src/**/*.gql
 generates:
+
+  ./src/popup/download/store/__gen_gql/index.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+    documents: ./src/popup/search/subtitleSearchFragment.gql
+
+  ./src/popup/language/store/listContentLanguagesQuery/__gen_gql/index.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+    documents: ./src/popup/language/store/listContentLanguagesQuery/query.gql
+
   ./src/popup/search/pages/movieTv/searchQuery/__gen_gql/index.ts:
     plugins:
       - typescript

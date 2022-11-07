@@ -4,19 +4,19 @@
       <div>Page Videos</div>
     </div>
     <div style="grid-area: content">
-      <div v-if="videoList.length">
+      <div v-if="videos.length">
         <div
-          v-for="(video, index) in videoList"
+          v-for="(video, index) in videos"
           :key="index"
           style="grid-template-columns: 8px 1fr auto"
           class="grid hover:cursor-pointer video-item hover:bg-primary-700 hover:text-on-primary-700"
-          @mouseenter="highlightVideo({ video: video })"
-          @mouseleave="removeHighlightFromVideo"
-          @click="selectVideo(video)"
+          @mouseenter="$emit('video-enter', {video})"
+          @mouseleave="$emit('video-leave', {video})"
+          @click="$emit('select',video)"
         >
           <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
           <div class="flex flex-col gap-1 h-11 my-2 justify-center" style="grid-column: 2 / 3">
-            <div>Video {{ index + 1 }} ({{formatTime(video.lastTimestamp)}})</div>
+            <div>Video {{ index + 1 }} ({{ formatTime(video.lastTimestamp, 'hh:mm:ss') }})</div>
             <div v-if="false" class="text-xs">({{ video.origin }} - {{ video.id }})</div>
           </div>
           <Divider style="grid-column: 1/3" class="border-surface-200" />
@@ -30,38 +30,26 @@
 <script lang="ts">
 import { defineComponent, onUnmounted, PropType } from 'vue';
 import { Duration } from 'luxon';
-import { Video } from '@/video/store';
 
 import Divider from '@/components/Divider.vue';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { Video } from '@/video/store';
 
 export default defineComponent({
   components: {
     Divider
   },
   props: {
-    selectFn: {
-      type: Function as PropType<(payload: {video: Video}) => unknown | undefined>,
-      required: false,
-      default: () => undefined
-    }
+    videos: {
+      type: Array as PropType<Video[]>,
+      default: () => []
+    },
   },
-  setup(props) {
-    const videoStore = useInjectStore('videoStore');
-
-    onUnmounted(() => videoStore.actions.removeHighlight());
+  emits: ['select', 'unmount', 'video-leave', 'video-enter'],
+  setup(props, {emit}) {
+    onUnmounted(() => emit("unmount"));
 
     return {
-      highlightVideo: videoStore.actions.highlight,
-      removeHighlightFromVideo: videoStore.actions.removeHighlight,
-      videoList: videoStore.getters.list,
-      selectVideo: async (video: Video) => {
-        await videoStore.actions.setCurrent({ video });
-        if(props?.selectFn){
-          props.selectFn({video});
-        }
-      },
-      formatTime: (ms) => Duration.fromMillis(ms).toFormat('hh:mm:ss')
+      formatTime: (ms, fmt) => Duration.fromMillis(ms).toFormat(fmt)
     };
   }
 });

@@ -1,7 +1,9 @@
-import {computed, ComputedRef, ref, Ref} from "vue";
-import {parse as srtVttParse} from "@plussub/srt-vtt-parser";
-import {parse as assSsaParse } from './ass-ssa-parser';
-import { Store } from 'storeTypes';
+import { parse as srtVttParse } from '@plussub/srt-vtt-parser';
+import { parse as assSsaParse } from './ass-ssa-parser';
+import { useStore as useAppStore } from '@/app/store';
+import { defineStore } from 'pinia';
+import { windowStorage } from '@/windowStorage';
+import { ref } from 'vue';
 
 export interface SubtitleEntry {
   from: number;
@@ -11,123 +13,83 @@ export interface SubtitleEntry {
 
 export type SubtitleFormat = '.srt' | '.vtt' | '.ass' | '.ssa';
 
-export interface SubtitleState {
-  id: string | null;
-  raw: string | null;
-  language: string | null;
-  parsed: SubtitleEntry[];
-  withOffsetParsed: SubtitleEntry[];
-  offsetTime: number;
-  format: SubtitleFormat | null;
-}
-
-
-export type SetRawPayload = Pick<SubtitleState, 'raw' | 'id' | 'language'> & {format: NonNullable<SubtitleState['format']>};
-
-export interface SubtitleStore {
-  state: ComputedRef<SubtitleState>;
-  actions: {
-    reset: () => void;
-    setRaw: (payload: SetRawPayload) => void;
-    setOffsetTime: (payload: Pick<SubtitleState, 'offsetTime'>) => void;
-    parse: () => void;
-  };
-}
-
-
-declare global {
-  interface Window {
-    extension_subtitle: Ref<SubtitleState>;
-  }
-}
-
-interface InitPayload {
-  use: {
-    appStore: Store<'appStore'>
-  }
-}
-
-export const init = ({use}: InitPayload): SubtitleStore => {
-  window.extension_subtitle = window.extension_subtitle
-    ? ref({ ...window.extension_subtitle.value })
-    : ref<SubtitleState>({
-      id: null,
-      raw: null,
-      language: null,
-      parsed: [],
-      format: null,
-      withOffsetParsed: [],
-      offsetTime: 0
-    });
+export const useStore = defineStore('subtitle', () => {
+  const id = ref<string | null>(null);
+  const raw = ref<string | null>(null);
+  const language = ref<string | null>(null);
+  const parsed = ref<SubtitleEntry[]>([]);
+  const format = ref<SubtitleFormat | null>(null);
+  const withOffsetParsed = ref<SubtitleEntry[]>([]);
+  const offsetTime = ref(0);
 
   return {
-    state: computed(() => window.extension_subtitle.value),
-    actions: {
-      reset: (): void => {
-        window.extension_subtitle.value = {
-          id: null,
-          raw: null,
-          format: null,
-          language: null,
-          parsed: [],
-          withOffsetParsed: [],
-          offsetTime: 0
-        };
-      },
-      setRaw: ({ raw, format, id, language }: SetRawPayload) : void => {
-        window.extension_subtitle.value = {
-          id,
-          raw,
-          format,
-          language,
-          parsed: [],
-          withOffsetParsed: [],
-          offsetTime: 0,
-        }
-      },
-      setOffsetTime: ({ offsetTime }: Pick<SubtitleState, 'offsetTime'>): void => {
-        window.extension_subtitle.value = {
-          id: window.extension_subtitle.value.id,
-          raw: window.extension_subtitle.value.raw,
-          language: window.extension_subtitle.value.language,
-          parsed: window.extension_subtitle.value.parsed,
-          format:  window.extension_subtitle.value.format,
-          offsetTime,
-          withOffsetParsed: window.extension_subtitle.value.parsed.map((e) => ({
-            ...e,
-            from: e.from + offsetTime,
-            to: e.to + offsetTime
-          })),
-        };
-      },
-      parse: (): void => {
-        use.appStore.actions.setState({ state: 'PARSING' });
-        const {raw, format, id} = window.extension_subtitle.value;
-        if (!raw || !format || !id) {
-          use.appStore.actions.setState({ state: 'ERROR' });
-          throw new Error('raw format or id does not exists');
-        }
-        try {
-          const parsed = (format === '.srt' || format === '.vtt') ? srtVttParse(raw).entries : assSsaParse(raw);
-          window.extension_subtitle.value = {
-            id,
-            raw,
-            parsed,
-            format,
-            language: window.extension_subtitle.value.language,
-            offsetTime: window.extension_subtitle.value.offsetTime,
-            withOffsetParsed: parsed.map((e: SubtitleEntry) => ({
-              ...e,
-              from: e.from + window.extension_subtitle.value.offsetTime,
-              to: e.to + window.extension_subtitle.value.offsetTime
-            }))
-          };
-          use.appStore.actions.setState({ state: 'DONE' });
-        } catch(e) {
-          use.appStore.actions.setState({ state: 'ERROR' });
-          throw new Error('parse error');
-        }
+    id,
+    raw,
+    language,
+    parsed,
+    format,
+    withOffsetParsed,
+    offsetTime,
+    reset() {
+      id.value = null;
+      raw.value = null;
+      language.value = null;
+      parsed.value = [];
+      format.value = null;
+      withOffsetParsed.value = [];
+      offsetTime.value = 0;
+    },
+    setRaw({
+             raw: newRaw,
+             format: newFormat,
+             id: newId,
+             language: newLanguage
+           }: { raw: string, format: SubtitleFormat, id: string, language: string | null }) {
+      id.value = newId;
+      raw.value = newRaw;
+      language.value = newLanguage;
+      format.value = newFormat;
+
+      // this.$reset() and then set property results into a broken persistent state, so do it manually
+      parsed.value = [];
+      withOffsetParsed.value = [];
+      offsetTime.value = 0;
+    },
+    setOffsetTime({ offsetTime: newOffsetTime }: { offsetTime: number }) {
+      const validOffsetTime = Number.isNaN(newOffsetTime) ? 0 : newOffsetTime;
+      offsetTime.value = validOffsetTime;
+      withOffsetParsed.value = parsed.value.map((e) => ({
+        ...e,
+        from: e.from + validOffsetTime,
+        to: e.to + validOffsetTime
+      }));
+    },
+    parse() {
+      const appStore = useAppStore();
+
+      appStore.$patch({ state: 'PARSING' });
+
+      if (!raw.value || !format.value || !id.value) {
+        appStore.$patch({ state: 'ERROR' });
+        throw new Error('raw format or id does not exists');
+      }
+      try {
+        parsed.value = (format.value === '.srt' || format.value === '.vtt') ? srtVttParse(raw.value).entries : assSsaParse(raw.value);
+        withOffsetParsed.value = parsed.value.map((e) => ({
+          ...e,
+          from: e.from + this.offsetTime,
+          to: e.to + this.offsetTime
+        }));
+        appStore.$patch({ state: 'DONE' });
+      } catch (e) {
+        appStore.$patch({ state: 'ERROR' });
+        throw new Error('parse error');
       }
     }
+  };
+}, {
+  persist: {
+    key: 'subtitle',
+    storage: windowStorage
   }
-};
+});

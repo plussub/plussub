@@ -4,8 +4,8 @@
       ref="containerRef"
       style="width: calc(100% - 30px)"
       class="h-full relative flex flex-col text-center justify-evenly self-center justify-self-center box-border border-dashed border-2 border-primary-700 hover:bg-surface-100"
-      @mouseenter="highlightCurrentVideo"
-      @mouseleave="removeHighlightFromVideo"
+      @mouseenter="$emit('dropzone-enter')"
+      @mouseleave="$emit('dropzone-leave')"
       @dragenter.prevent="dragenter"
       @dragleave="dragleave"
       @drop.prevent="drop"
@@ -23,9 +23,7 @@
       <div class="m-2">
         <p class="m-2">Click or drop file to this area to upload</p>
         <p class="m-2 text-sub-text-on-surface-50 text-sm">
-          Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable.(Video
-          <span :class="{ 'text-primary-700': videoName !== '1', 'hover:underline': videoName !== '1' }" @click="changeQuery">{{ videoName }}</span>
-          is {{ videoCount === 1 ? 'auto' : '' }} selected)
+<!--          Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable. (Video is {{ videoStore.count === 1 ? 'auto' : '' }} selected)-->
         </p>
       </div>
     </div>
@@ -34,9 +32,7 @@
 
 <script lang="ts">
 import { defineComponent, onUnmounted, PropType, ref } from 'vue';
-import { OnLoadPayload, readFile } from './readFile';
-import { getFormatFromFilename } from '@/subtitle/util';
-import { useInjectStore } from '@/composables/useInjectStore';
+import { readFile } from './readFile';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
@@ -48,14 +44,8 @@ export default defineComponent({
       default: ''
     }
   },
-  setup() {
-    const appStore = useInjectStore('appStore');
-    const fileStore = useInjectStore('fileStore');
-    const subtitleStore = useInjectStore('subtitleStore');
-    const navigationStore = useInjectStore('navigationStore');
-    const videoStore = useInjectStore('videoStore');
-    const trackStore = useInjectStore('trackStore');
-
+  emits: ['dropzone-enter', 'dropzone-leave', 'load', 'unmount'],
+  setup(_props, {emit}) {
     const inputRef = ref<{ files: { name: string } | Blob[] } | null>(null);
 
     const containerRef = ref();
@@ -63,7 +53,7 @@ export default defineComponent({
     const dragenter = (): void => containerRef.value.classList.add('bg-surface-200');
     const dragleave = (): void => containerRef.value.classList.remove('bg-surface-200');
 
-    onUnmounted(() => videoStore.actions.removeHighlight());
+    onUnmounted(() => emit("unmount"));
 
     const showFileErrorMsg = (msg: string) => {
       fileErrorMsg.value = msg;
@@ -73,42 +63,18 @@ export default defineComponent({
       dragleave();
     };
 
-    const onLoad = ({ fileName, result }: OnLoadPayload): void => {
-      fileStore.actions.setFilename({ filename: fileName });
-      appStore.actions.setState({ state: 'SELECTED' });
-      appStore.actions.setSrc({ src: 'FILE' });
-      const format = getFormatFromFilename(fileName);
-      if (!format) {
-        showFileErrorMsg('Unknown file format');
-        appStore.actions.reset();
-        fileStore.actions.reset();
-        subtitleStore.actions.reset();
-        videoStore.actions.removeCurrent();
+    const handleFile = async (file: File) => {
+      const filename = file.name;
+      if (!filename.match(/\.(srt|vtt|ass|ssa)$/)) {
+        showFileErrorMsg('Only .srt, .ass, .ssa and .vtt file is acceptable');
         return;
       }
-      subtitleStore.actions.setRaw({ raw: result, format, id: fileName, language: null });
-
       try {
-        subtitleStore.actions.parse();
-        trackStore.actions.track({ source: 'file', language: '' });
-      } catch (e) {
-        showFileErrorMsg('Parse error, not a valid subtitle file');
-        appStore.actions.reset();
-        fileStore.actions.reset();
-        subtitleStore.actions.reset();
-        videoStore.actions.removeCurrent();
-        return;
+        emit("load", await readFile(file))
+      } catch(e) {
+        showFileErrorMsg('Some error happened when parsing the subtitle')
       }
-
-      // workaround for contentscript communication
-      setTimeout(() => {
-        navigationStore.actions.toHome({
-          contentTransitionName: 'content-navigate-select-to-home'
-        });
-      },100);
-
     };
-    const onError = (): void => showFileErrorMsg('Some error happened when parsing the subtitle');
 
     return {
       inputRef,
@@ -116,13 +82,9 @@ export default defineComponent({
       fileErrorMsg,
       dragenter,
       dragleave,
-      highlightCurrentVideo: () => videoStore.actions.highlight({ video: videoStore.getters.current.value }),
-      removeHighlightFromVideo: videoStore.actions.removeHighlight,
-      videoCount: videoStore.getters.count,
-      videoName: videoStore.getters.videoName,
 
-      drop: (event: DragEvent): void => {
-        let droppedFiles = event.dataTransfer?.files;
+      drop: async (event: DragEvent): Promise<void> => {
+        const droppedFiles = event.dataTransfer?.files;
         if (!droppedFiles) {
           showFileErrorMsg('Drop to upload file error');
           return;
@@ -131,21 +93,15 @@ export default defineComponent({
           showFileErrorMsg('Only a single file is supported');
           return;
         }
-        const file = droppedFiles[0];
-        const filename = file.name;
-        if (!filename.match(/\.(srt|vtt|ass|ssa)$/)) {
-          showFileErrorMsg('Only .srt, .ass, .ssa and .vtt file is acceptable');
-          return;
-        }
-        readFile({ file, onLoad, onError });
+        await handleFile(droppedFiles[0]);
+
       },
       fileSelected: async (): Promise<void> => {
         if (!inputRef.value?.files) {
           showFileErrorMsg('Click to upload file error');
           return;
         }
-        const file = inputRef.value.files[0];
-        readFile({ file, onLoad, onError });
+        await handleFile(inputRef.value.files[0]);
       }
     };
   }

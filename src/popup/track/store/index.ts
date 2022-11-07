@@ -1,16 +1,10 @@
 import {trackMutation, Payload} from "./trackMutation";
+import { defineStore } from 'pinia';
 
-
-export interface TrackStore {
-  actions: {
-    track: (payload: Payload) => Promise<unknown> ;
-  };
-}
-
-export const init = (): TrackStore => {
-  return {
-    actions: {
-      track: (payload: Payload): Promise<unknown> => trackMutation(payload)
+export const useStore = defineStore('track', () => {
+  return{
+    async track (payload: Payload){
+      return trackMutation(payload)
     }
-  };
-};
+  }
+});

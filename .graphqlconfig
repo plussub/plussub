@@ -4,7 +4,7 @@
   "extensions": {
     "endpoints": {
       "Default GraphQL Endpoint": {
-        "url": "http://gqldev.plus-sub.com/",
+        "url": "https://gqlos.plus-sub.com/",
         "headers": {
           "user-agent": "JS GraphQL"
         },

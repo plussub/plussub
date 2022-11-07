@@ -23,7 +23,6 @@ const isTabWithId = (tab: chrome.tabs.Tab): tab is TabWithId => tab.id !== undef
 
 // use browser action because page action doesn't seem to work on incognito mode
 chrome.action.onClicked.addListener(async (tab) => {
-  console.warn(tab);
   if (!isTabWithId(tab)) {
     console.warn('missing tab id');
     return;

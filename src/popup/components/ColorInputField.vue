@@ -6,7 +6,7 @@
 import { defineComponent, PropType } from 'vue';
 import { asyncScheduler, Subject } from 'rxjs';
 import { takeUntil, tap, throttleTime } from 'rxjs/operators';
-import { useUnmountObservable } from '../composables';
+import { useUnmountObservable } from '@/composables';
 
 export default defineComponent({
   props: {

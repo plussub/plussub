@@ -1,9 +1,9 @@
 <template>
   <div class="relative w-full">
     <div class="flex rounded border px-2 pt-2 pb-1" :class="{ 'border-primary-500': show, ring: show, 'ring-primary-700': show, 'ring-opacity-50': show }" style="background-color: white">
-      <a class="flex-grow" :class="{ 'text-primary-700': show, 'font-medium': show }" @click="toggleShow">
-        <slot name="currentSelected">
-          <span> Current selected: {{ selected }}</span>
+      <a class="flex-grow" @click="toggleShow">
+        <slot name="currentSelected" :show="show">
+          <span :class="{ 'text-primary-700': show, 'font-medium': show }"> Current selected: {{ selected }}</span>
         </slot>
       </a>
       <span v-if="show">
@@ -31,7 +31,12 @@
             class="overflow-y-auto overflow-x-hidden bg-surface-50 text-on-surface-50 z-10 shadow-lg border-l border-r border-b rounded-b border-primary-700"
             style="grid-area: content"
           >
-            <div v-for="(option, idx) in filteredOptions" :key="idx" class="w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer font-lg p-2" @click="select(option)">
+            <div
+              v-for="(option, idx) in options"
+              :key="idx" class="w-full hover:bg-primary-700 hover:text-on-primary-700 hover:cursor-pointer font-lg p-2"
+              @click="select(option)"
+              @mouseenter="$emit('hovered', option)"
+              @mouseleave="$emit('hovered', null)">
               <slot :item="option"><span>{{ option }}</span></slot>
             </div>
           </div>
@@ -42,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import InputField from './InputField.vue';
 import FontAwesomeIcon from './FontAwesomeIcon/FontAwesomeIcon.vue';
 
@@ -64,7 +69,8 @@ export default defineComponent({
     },
     filterFn: {
       type: Function as PropType<(query: string) => unknown[]>,
-      required: true
+      required: false,
+      default: () => true
     },
     show: {
       type: Boolean as PropType<boolean>,
@@ -75,7 +81,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['update:selected', 'update:show'],
+  emits: ['update:selected', 'update:show', 'hovered', 'filter'],
   setup(props, { emit }) {
     const query = ref('');
     const input = ref<HTMLElement | null>(null);
@@ -89,6 +95,8 @@ export default defineComponent({
       }
     });
 
+    watch(query, (query) => emit("filter", query));
+
     return {
       query,
       input,
@@ -96,8 +104,6 @@ export default defineComponent({
       toggleShow: (): void => {
         emit('update:show', !showInternal.value);
       },
-
-      filteredOptions: computed(() => (query.value === '' ? props.options : props.filterFn(query.value))),
       select: (option): void => {
         showInternal.value = false;
         emit('update:selected', option);

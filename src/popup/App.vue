@@ -1,31 +1,30 @@
 <template>
   <div class="h-auto overflow-hidden grid app--container">
-    <component :is="navigationState.component" v-if='initialized' v-bind="navigationState.params" />
+    <component :is="navigationStore.component" v-if='initializeStore.initialized' v-bind="navigationStore.params" />
     <Loading v-else/>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onUnmounted, provide, watch } from 'vue';
-import { init as initAppStore } from '@/app/store';
-import { init as initContentScriptStore } from '@/contentScript/store';
-import { init as initVideoStore } from '@/video/store';
-import { init as initFileStore } from '@/file/store';
-import { init as initSubtitleStore } from '@/subtitle/store';
-import { init as initSearchStore } from '@/search/store';
-import { init as initNavigationStore } from '@/navigation/store';
-import { init as initTrackStore } from '@/track/store';
-import { init as initAppearanceStore } from '@/appearance/store';
+import { computed, defineComponent, onUnmounted, PropType, watch } from 'vue';
+import { useStore as useAppStore } from '@/app/store';
+import { useStore as useCloseStore } from '@/close/store';
+import { useStore as useVideoStore } from '@/video/store';
+import { useStore as useFileStore } from '@/file/store';
+import { useStore as useSubtitleStore } from '@/subtitle/store';
+import { useStore as useSearchStore } from '@/search/store';
+import { useStore as useNavigationStore } from '@/navigation/store';
+import { useStore as useInitializeStore } from '@/initialize/store';
+import { useStore as useAppearanceStore } from '@/appearance/store';
 
 import Home from '@/home/pages/Home.vue';
 import Loading from '@/loading/pages/Loading.vue';
 import MovieTvSearch from '@/search/pages/movieTv/MovieTvSearch.vue';
 import SubtitleSearchForMovies from '@/search/pages/subtitleForMovies/SubtitleSearchForMovies.vue';
 import SubtitleSearchForSeries from '@/search/pages/subtitleForSeries/SubtitleSearchForSeries.vue';
-import Transcript from '@/subtitle/pages/Transcript.vue';
+import Transcript from '@/transcript/pages/Transcript.vue';
 import Settings from '@/settings/pages/Settings.vue';
 import '@/styles.css';
-import { Subject } from 'rxjs';
 
 export default defineComponent({
   components: {
@@ -37,77 +36,77 @@ export default defineComponent({
     Transcript,
     Settings
   },
-  setup() {
-    const appStore = initAppStore();
-    provide('appStore', appStore);
-    const navigationStore = initNavigationStore();
-    provide('navigationStore', navigationStore);
-    const subtitleStore = initSubtitleStore({ use: { appStore } });
-    provide('subtitleStore', subtitleStore);
-    const contentScriptStore = initContentScriptStore();
-    const appearanceStore = initAppearanceStore({ use: { contentScriptStore }});
-    provide('appearanceStore', appearanceStore);
-    const videoStore = initVideoStore({ use: { contentScriptStore, appearanceStore} });
-    provide('videoStore', videoStore);
-    const fileStore = initFileStore();
-    provide('fileStore', fileStore);
-    const searchStore = initSearchStore();
-    provide('searchStore', searchStore);
-    const trackStore = initTrackStore();
-    provide('trackStore', trackStore);
+  props: {
+    unmount: {
+      type: Function as PropType<() => unknown | undefined>,
+      required: true,
+    }
+  },
+  setup(props) {
+    const closeStore = useCloseStore();
+    closeStore.$patch({unmountFn: props.unmount});
+    const appStore = useAppStore();
 
-    const unmountSubject = new Subject<undefined>();
-    contentScriptStore.actions.requestAllContentScriptsToRegister();
+
+    const navigationStore = useNavigationStore();
+    const subtitleStore = useSubtitleStore();
+    const appearanceStore = useAppearanceStore();
+    const videoStore = useVideoStore();
+    const fileStore = useFileStore();
+
+    const initializeStore = useInitializeStore()
+    initializeStore.initialize();
+
+    const searchStore = useSearchStore();
+
 
     watch(
-      () => videoStore.getters.current.value,
+      () => videoStore.current,
       (video) => {
         if (video === null) {
-          appStore.actions.reset();
-          subtitleStore.actions.reset();
-          searchStore.actions.reset();
-          fileStore.actions.reset();
+          appStore.reset();
+          subtitleStore.reset();
+          searchStore.reset();
+          fileStore.reset();
         }
       }
     );
 
     watch(
-      () => subtitleStore.state.value.withOffsetParsed,
+      () => subtitleStore.withOffsetParsed,
       (subtitles) => {
-        const subtitleId = subtitleStore.state.value.id;
+        const subtitleId = subtitleStore.id;
         if (!subtitleId) {
           console.warn('subtitleId is null');
           return;
         }
-        appearanceStore.actions.applyStyle();
-        videoStore.actions.addVtt({ subtitles, subtitleId, language: subtitleStore.state.value.language ?? 'en' });
+        appearanceStore.applyStyle();
+        videoStore.addVtt({ subtitles, subtitleId, language: subtitleStore.language ?? 'en' });
       }
     );
 
-    onUnmounted(() => unmountSubject.next(undefined));
-
-    const initialized = computed(() => searchStore.getters.initialized.value && appearanceStore.getters.initialized.value);
+    onUnmounted(() => initializeStore.unmount());
 
     watch(
-      [initialized, videoStore.getters.count, appStore.state, videoStore.getters.list, videoStore.getters.current],
-      ([initialized, videoCount, appState, videoList], [_prevInitialized, prevVideoCount, _prevAppState, _prevVideoList]) => {
-        if(!initialized){
+      [initializeStore, computed(() => videoStore.count), appStore,  computed(() =>videoStore.list),  computed(() =>videoStore.current)],
+      ([initializeStore, videoCount, appState, videoList], [_prevInitializeStore, prevVideoCount, _prevAppState, _prevVideoList]) => {
+        if(!initializeStore.initialized){
           return;
         }
         // navigate if only 1 video exists
-        if (videoCount === 1 && videoList[0] && navigationStore.state.value.name === 'HOME' && appState.state === 'NONE') {
-          videoStore.actions.setCurrent({ video: videoList[0] }).then(() => navigationStore.actions.toMovieTvSearch())
+        if (videoCount === 1 && videoList[0] && navigationStore.name === 'HOME' && appState.state === 'NONE') {
+          videoStore.setCurrent({ video: videoList[0] }).then(() => navigationStore.to("MOVIE-TV-SEARCH", {contentTransitionName: 'content-navigate-deeper'}))
           return;
         }
 
         // navigate to selection if additional videos appear
-        if (videoCount > 1 && prevVideoCount === 1 && navigationStore.state.value.name === 'MOVIE-TV-SEARCH' && appState.state === 'NONE') {
-          videoStore.actions.removeCurrent().then(() => navigationStore.actions.toHome());
+        if (videoCount > 1 && prevVideoCount === 1 && navigationStore.name === 'MOVIE-TV-SEARCH' && appState.state === 'NONE') {
+          videoStore.removeCurrent().then(() => navigationStore.to("HOME", {contentTransitionName: "content-navigate-shallow" }));
           return;
         }
 
-        if (videoCount === 0 && navigationStore.state.value.name !== 'HOME') {
-          navigationStore.actions.toHome();
+        if (videoCount === 0 && navigationStore.name !== 'HOME') {
+          navigationStore.to("HOME", {contentTransitionName: "content-navigate-shallow" });
           return;
         }
       },
@@ -115,8 +114,8 @@ export default defineComponent({
     );
 
     return {
-      initialized,
-      navigationState: navigationStore.state
+      navigationStore,
+      initializeStore
     };
   }
 });
