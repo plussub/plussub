@@ -32,6 +32,7 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
 
     document.removeEventListener('mouseUp', closeDragElement);
     document.removeEventListener('mousemove', elementDragMouse);
+    document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-box-shadow`, "0 4px 8px 0 rgba(0, 0, 0, 0.2)");
   };
   const elementDragMouse = (e: MouseEvent) => {
     e.preventDefault();
@@ -56,6 +57,7 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
     };
     appShadowDiv.style.top = `${appShadowDiv.offsetTop - position.y.current}px`;
     appShadowDiv.style.left = `${appShadowDiv.offsetLeft - position.x.current}px`;
+    document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-box-shadow`, "0px 12px 8px 4px rgba(0, 0, 0, 0.2)");
   };
 
   const dragTouch = (e: TouchEvent) => {

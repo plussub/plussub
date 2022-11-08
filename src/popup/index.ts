@@ -15,6 +15,7 @@ export const init = async (): Promise<void> => {
     pinia.use(piniaPluginPersistedstate)
     app.use(pinia);
     document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-shadow-top`, `${window.scrollY + 30}px`);
+    document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-box-shadow`, "0 4px 8px 0 rgba(0, 0, 0, 0.2)");
 
     const appShadowDiv = document.createElement('div');
     appShadowDiv.id = `${EXTENSION_ORIGIN}Shadow`;
@@ -24,7 +25,7 @@ export const init = async (): Promise<void> => {
       top: `var(--${EXTENSION_ORIGIN}-shadow-top)`,
       right: "16px",
       width: "400px",
-      boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)"
+      boxShadow: `var(--${EXTENSION_ORIGIN}-box-shadow)`
     });
 
     const shadow = appShadowDiv.attachShadow({ mode: 'open' });

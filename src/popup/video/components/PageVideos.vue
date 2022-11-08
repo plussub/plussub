@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="flex relative pl-4 py-2 bg-primary-50 shadow-md font-medium text-xl">
+    <div class="flex relative pl-4 py-4 bg-primary-50 shadow-md font-medium text-xl">
       <div>Page Videos</div>
     </div>
     <div>

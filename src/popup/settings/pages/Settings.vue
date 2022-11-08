@@ -5,7 +5,7 @@
     </template>
     <template #content>
       <div class="w-full">
-        <div class="flex relative pl-4 py-2 bg-primary-50 shadow-md font-medium text-xl">
+        <div class="flex relative pl-4 py-4 bg-primary-50 shadow-md font-medium text-xl">
           <div>User data</div>
         </div>
         <div style="grid-template-columns: auto 1fr; grid-column-gap: 16px" class="grid w-full leading-relaxed px-4 pt-4">
