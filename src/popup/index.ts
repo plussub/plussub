@@ -4,28 +4,35 @@ import "@/components/FontAwesomeIcon/fontAwesome";
 import { EXTENSION_ORIGIN } from '@/types';
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import {
+  extensionPopUpBoxShadowAsCssVar, extensionPopUpLeftAsCssVar, extensionPopUpTopAsCssVar,
+  getExtensionPopUpDiv, getExtensionPopUpId,
+  toDefaultExtensionPopUpBoxShadow, toExtensionPopUpInitTop
+} from '@/extensionPopUpShadowDiv';
 
 
 export const init = async (): Promise<void> => {
-  if (document.getElementById(`${EXTENSION_ORIGIN}Shadow`)) {
-    document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-shadow-top`, `${window.scrollY + 30}px`)
+  if (getExtensionPopUpDiv()) {
+    toExtensionPopUpInitTop();
+    toDefaultExtensionPopUpBoxShadow();
   } else {
     const app = createApp(appComponent, {unmount: () => app.unmount()});
     const pinia = createPinia()
     pinia.use(piniaPluginPersistedstate)
     app.use(pinia);
-    document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-shadow-top`, `${window.scrollY + 30}px`);
-    document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-box-shadow`, "0 4px 8px 0 rgba(0, 0, 0, 0.2)");
+    toExtensionPopUpInitTop();
+    toDefaultExtensionPopUpBoxShadow();
 
     const appShadowDiv = document.createElement('div');
-    appShadowDiv.id = `${EXTENSION_ORIGIN}Shadow`;
+    appShadowDiv.id = getExtensionPopUpId();
     Object.assign(appShadowDiv.style, {
       position: "absolute",
       zIndex: "10000",
-      top: `var(--${EXTENSION_ORIGIN}-shadow-top)`,
+      top: extensionPopUpTopAsCssVar(),
+      left: extensionPopUpLeftAsCssVar(),
       right: "16px",
       width: "400px",
-      boxShadow: `var(--${EXTENSION_ORIGIN}-box-shadow)`
+      boxShadow: extensionPopUpBoxShadowAsCssVar()
     });
 
     const shadow = appShadowDiv.attachShadow({ mode: 'open' });

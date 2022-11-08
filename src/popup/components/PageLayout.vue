@@ -6,7 +6,7 @@
   </div>
 
   <transition :name="contentTransitionName" appear>
-    <div class="w-full max-w-full overflow-y-auto bg-surface-50 text-on-surface-50 font-sans">
+    <div class="w-full max-w-full overflow-y-auto relative bg-surface-50 text-on-surface-50 font-sans content-pane">
       <slot name="content" />
     </div>
   </transition>
