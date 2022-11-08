@@ -1,9 +1,9 @@
 <template>
-  <div class="grid py-2 h-fit videos--card">
-    <div class="h-px text-2xl font-header font-medium" style="grid-area: header">
+  <div class="w-full">
+    <div class="flex relative pl-4 py-2 bg-primary-50 shadow-md font-medium text-xl">
       <div>Page Videos</div>
     </div>
-    <div style="grid-area: content">
+    <div>
       <div v-if="videos.length">
         <div
           v-for="(video, index) in videos"
@@ -22,7 +22,7 @@
           <Divider style="grid-column: 1/3" class="border-surface-200" />
         </div>
       </div>
-      <div v-else class="px-8">No videos found in current tab.</div>
+      <div v-else class="px-8 pt-4">No videos found in current tab.</div>
     </div>
   </div>
 </template>
@@ -54,15 +54,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.videos--card {
-  grid-template-areas:
-    '. header .'
-    '. . .'
-    'content content content'
-    '. . .';
-  grid-template-rows: 50px 4px auto 8px;
-  grid-template-columns: 16px auto 16px;
-}
-</style>

@@ -6,33 +6,31 @@
           <FontAwesomeIcon icon='cog' class='h-icon hover:text-on-primary-hover-500'></FontAwesomeIcon>
         </a>
       </Toolbar>
-
     </template>
+
     <template #content>
-      <div
-        class='flex flex-wrap h-full home-content--container'
-        :class="{ 'bg-surface-100': current === 'search-card' || current === 'file-card' }">
-        <ResultFromSearch
-          v-if="current === 'search-card'"
-          :loading="store.loading"
-          :error="store.error"
-          :title="store.tmbdResult?.title"
-          :open-subtitles-rating="store.openSubtitleResult?.rating"
-          :open-subtitles-link="store.openSubtitleResult?.websiteLink"
-          :tmdb-votes="store.tmbdResult?.vote_average.toString()"
-          :tmdb-link="store.tmdbLink"
-          :poster-path="store.tmbdResult?.poster_path"
-          class='m-2'
-          @remove='store.removeResult'>
+      <div class='flex flex-wrap h-full bg-surface-50 home-content--container'>
+          <div class="w-full" v-if="current === 'file-card' || current === 'search-card'">
+            <HeroImageFromSearch
+              v-if="current === 'search-card'"
+              :loading="store.loading"
+              :error="store.error"
+              :title="store.tmbdResult?.title"
+              :open-subtitles-rating="store.openSubtitleResult?.rating"
+              :open-subtitles-link="store.openSubtitleResult?.websiteLink"
+              :tmdb-votes="store.tmbdResult?.vote_average.toString()"
+              :tmdb-link="store.tmdbLink"
+              :poster-path="store.tmbdResult?.poster_path"
+              >
 
-          <template #hero-sub-header>
-            {{
-              `${capitalize(store.tmbdResult?.media_type)} ${store.releaseYear ? `/ ${store.releaseYear}` : ''}`
-            }}
-          </template>
+              <template #hero-sub-header>
+                {{
+                  `${capitalize(store.tmbdResult?.media_type)} ${store.releaseYear ? `/ ${store.releaseYear}` : ''}`
+                }}
+              </template>
 
-          <template #settings>
-            <Settings>
+            </HeroImageFromSearch>
+            <Settings class="w-full">
               <template #time-settings-tab-header="{select, selected }">
                 <TimeSettingsTabHeader :selected='selected' @click="select">
                   <template #label>
@@ -40,7 +38,7 @@
                   </template>
                 </TimeSettingsTabHeader>
               </template>
-              <template #time-settings-tab>
+              <template #time-settings-tab class=''>
                 <TimeSettingsTab/>
               </template>
 
@@ -59,75 +57,40 @@
               </template>
 
               <template #info-tab-header="{select, selected }">
-                <SearchResultInfoTabHeader :selected='selected' @click="select" />
+                <FileInfoTabHeader v-if="current === 'file-card'" :selected='selected' @click="select"/>
+                <SearchResultInfoTabHeader v-else :selected='selected' @click="select"/>
               </template>
               <template #info-tab>
+                <FileInfoTab v-if="current === 'file-card'" :filename="store.filenameResult" />
                 <SearchResultInfoTab
+                  v-else
                   :format="store.openSubtitleResult?.format"
                   :language="store.openSubtitleResult?.languageName"
                 />
               </template>
+
             </Settings>
-          </template>
 
-          <template #actions>
-            <SuffixIconButton
-              label='Highlight video'
-              icon='crosshairs'
-              @mouseenter='store.highlightCurrentVideo'
-              @mouseleave='store.removeHighlightFromVideo'
-            />
-          </template>
-        </ResultFromSearch>
 
-        <ResultFromFile v-else-if="current === 'file-card'" class='m-2' @remove='store.removeResult'>
-
-          <template #settings>
-            <Settings>
-              <template #time-settings-tab-header="{select, selected }">
-                <TimeSettingsTabHeader :selected='selected' @click="select">
-                  <template #label>
-                    <span>{{ store.currentTimeAs('hh:mm:ss') }}</span>
-                  </template>
-                </TimeSettingsTabHeader>
-              </template>
-              <template #time-settings-tab>
-                <TimeSettingsTab/>
-              </template>
-
-              <template #appearance-settings-tab-header="{select, selected }">
-                <AppearanceSettingsTabHeader :selected='selected' @click="select"/>
-              </template>
-              <template #appearance-settings-tab>
-                <AppearanceSettingsTab/>
-              </template>
-
-              <template #transcript-tab-header="{select, selected }">
-                <TranscriptTabHeader :selected='selected' @click="select" />
-              </template>
-              <template #transcript-tab>
-                <TranscriptTab/>
-              </template>
-
-              <template #info-tab-header="{select, selected }">
-                <FileInfoTabHeader :selected='selected' @click="select" />
-              </template>
-              <template #info-tab>
-                <FileInfoTab :filename="store.filenameResult"/>
-              </template>
-            </Settings>
-          </template>
-
-          <template #actions>
-            <SuffixIconButton
-              label='Highlight video'
-              icon='crosshairs'
-              @mouseenter='store.highlightCurrentVideo'
-              @mouseleave='store.removeHighlightFromVideo'
-            />
-          </template>
-        </ResultFromFile>
-
+            <div class='flex flex-wrap mx-9 mt-8 gap-4 flex-col'>
+              <div class='flex flex-row-reverse'>
+                <SuffixIconButton
+                  label='Highlight video'
+                  icon='crosshairs'
+                  @mouseenter='store.highlightCurrentVideo'
+                  @mouseleave='store.removeHighlightFromVideo'
+                />
+              </div>
+              <div class='flex flex-row-reverse'>
+                <SuffixIconButton
+                  label='Remove Subtitle'
+                  icon='eject'
+                  @click='store.removeResult'
+                  class='flex flex-row-reverse'
+                />
+              </div>
+            </div>
+          </div>
         <PageVideos
           v-else-if="current === 'page-videos'"
           class='w-full'
@@ -137,7 +100,7 @@
           @video-leave='store.removeHighlightFromVideo'
           @unmount='store.removeHighlightFromVideo'
         />
-        <Mention />
+        <Mention class='mt-8'/>
       </div>
     </template>
   </PageLayout>
@@ -147,8 +110,7 @@
 import { computed, defineComponent, PropType } from 'vue';
 
 import PageLayout from '@/components/PageLayout.vue';
-import ResultFromSearch from '@/search/components/ResultFromSearch.vue';
-import ResultFromFile from '@/file/components/ResultFromFile.vue';
+import HeroImageFromSearch from '@/search/components/HeroImageFromSearch.vue';
 import FileInfoTabHeader from '@/file/tab/FileInfoTabHeader.vue';
 import FileInfoTab from '@/file/tab/FileInfoTab.vue';
 import PageVideos from '@/video/components/PageVideos.vue';
@@ -173,6 +135,7 @@ import { Video } from '@/video/store';
 
 export default defineComponent({
   components: {
+    HeroImageFromSearch,
     TranscriptTabHeader,
     TranscriptTab,
     AppearanceSettingsTabHeader,
@@ -182,8 +145,6 @@ export default defineComponent({
     FontAwesomeIcon,
     Toolbar,
     PageLayout,
-    ResultFromSearch,
-    ResultFromFile,
     PageVideos,
     Settings,
     SearchResultInfoTabHeader,

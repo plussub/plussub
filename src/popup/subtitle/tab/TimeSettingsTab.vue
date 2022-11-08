@@ -1,11 +1,11 @@
 <template>
   <div class='grid offset-time--container'>
-    <div class='flex w-full flex-wrap mx-2 focus-within:text-primary-700' style='grid-area: input'>
+    <div class='flex w-full flex-wrap focus-within:text-primary-700' style='grid-area: input'>
       <div class='text-xs font-medium w-full' style='grid-area: input-label'>Offset time (in ms)</div>
       <RangeInputField v-model='offsetTime' step='100' min='-3000' max='3000' class='mr-6 w-1/3 flex-grow' />
       <NumberInputField v-model='offsetTime' step='100' class='pr-2 w-1/2' />
     </div>
-    <div class='font-medium text-xs mx-2 flex' style='grid-area: preview-label'>
+    <div class='font-medium text-xs flex' style='grid-area: preview-label'>
       <span class='flex-grow'>Preview (next 3 subtitles)</span>
       <label for='excerpt' class='pr-1'>Excerpt</label>
       <input

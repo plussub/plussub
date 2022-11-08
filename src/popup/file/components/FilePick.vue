@@ -3,7 +3,7 @@
     <div
       ref="containerRef"
       style="width: calc(100% - 30px)"
-      class="h-full relative flex flex-col text-center justify-evenly self-center justify-self-center box-border border-dashed border-2 border-primary-700 hover:bg-surface-100"
+      class="h-full relative flex flex-col text-center justify-evenly self-center justify-self-center box-border border-dashed border-2 border-primary-500 hover:bg-surface-200 hover:border-primary-700 text-primary-500 hover:text-primary-700"
       @mouseenter="$emit('dropzone-enter')"
       @mouseleave="$emit('dropzone-leave')"
       @dragenter.prevent="dragenter"
@@ -11,7 +11,7 @@
       @drop.prevent="drop"
     >
       <p class="mt-6 self-center">
-        <FontAwesomeIcon icon="upload" class="text-primary-700 h-icon-lg" />
+        <FontAwesomeIcon icon="upload" class="h-icon-lg" />
       </p>
       <input ref="inputRef" type="file" title="click or drop file here" accept=".vtt,.srt,.ass,.ssa" class="w-full h-full cursor-pointer absolute z-10 opacity-0" @change="fileSelected" />
       <div v-show="fileErrorMsg" class="absolute top-0 inset-x-0 p-2 flex place-content-center text-center z-30 bg-error text-on-error shadow">
@@ -20,7 +20,7 @@
         </div>
         <span class="self-center">{{ fileErrorMsg }}</span>
       </div>
-      <div class="m-2">
+      <div class="m-2 text-on-surface-50">
         <p class="m-2">Click or drop file to this area to upload</p>
         <p class="m-2 text-sub-text-on-surface-50 text-sm">
 <!--          Support for a single file upload. Only .srt, .ass, .ssa and .vtt file is acceptable. (Video is {{ videoStore.count === 1 ? 'auto' : '' }} selected)-->

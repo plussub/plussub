@@ -1,5 +1,5 @@
 <template>
-  <div class="px-2 overflow-y-auto">
+  <div class="overflow-y-auto">
     <div v-for="(item,idx) in excerpt" :key="idx">
       <div class="mt-4 text-xs font-medium flex items-center">
         <slot name="from" :from="item.from"></slot>
