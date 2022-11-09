@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <a class="flex text-primary-500 hover:text-primary-700">
+  <div class='text-primary-500 hover:text-primary-700'>
+    <a class="flex">
       <FontAwesomeIcon
         :icon="icon"
         :type="iconType"

@@ -47,7 +47,6 @@
             <span class='pl-1'>for the icons</span>
           </div>
         </div>
-        <Mention class='mt-8' />
       </div>
     </template>
   </PageLayout>

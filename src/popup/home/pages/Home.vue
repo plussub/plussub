@@ -31,7 +31,7 @@
               }}
             </template>
           </HeroImageFromSearch>
-          <Settings class='w-full'>
+          <Settings class='w-full' >
             <template #time-settings-tab-header='{select, selected }'>
               <TimeSettingsTabHeader :selected='selected' @click='select'>
                 <template #label>
@@ -39,8 +39,8 @@
                 </template>
               </TimeSettingsTabHeader>
             </template>
-            <template #time-settings-tab class=''>
-              <TimeSettingsTab />
+            <template #time-settings-tab>
+              <TimeSettingsTab class='bg-surface-100'/>
             </template>
 
             <template #appearance-settings-tab-header='{select, selected }'>
