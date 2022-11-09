@@ -7,7 +7,7 @@
       <logo style="grid-area: logo" class="h-full w-full hover:text-on-primary-hover-500 hover:cursor-pointer" @click="redirectHomePage" />
     </div>
 
-    <div style="grid-area: buttons" class="flex justify-end font-header font-medium text-xl mr-3">
+    <div style="grid-area: buttons" class="flex justify-end font-header font-medium text-xl">
       <slot />
     </div>
 

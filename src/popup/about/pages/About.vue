@@ -6,17 +6,17 @@
     <template #content>
       <div class="w-full">
         <div class="flex relative pl-4 py-4 bg-primary-50 shadow-md font-medium text-xl">
-          <div>General Settings</div>
+          <div>About</div>
         </div>
         <div style="grid-template-columns: auto 1fr; grid-column-gap: 16px" class="grid w-full leading-relaxed px-4 pt-4">
-          <div style="grid-column: 1 / 2" class="font-medium">Preferred language</div>
-          <div style="grid-column: 2 / 3">{{ languageStore.preferredContentLanguage.language_name }}({{ languageStore.preferredContentLanguage.language_code }})</div>
+          <div style="grid-column: 1 / 2" class="font-medium">Whats new</div>
+          <div style="grid-column: 2 / 3">nothing</div>
         </div>
-        <div class="flex w-full justify-end px-4">
-          <a class="text-primary-500 hover:text-primary-700" @click="clearUserData">
-            <span class="pr-1"> Reset </span>
-          </a>
+        <div style="grid-template-columns: auto 1fr; grid-column-gap: 16px" class="grid w-full leading-relaxed px-4 pt-4">
+          <div style="grid-column: 1 / 2" class="font-medium">Powered by</div>
+          <div style="grid-column: 2 / 3">nothing</div>
         </div>
+        <Mention class='mt-8'/>
       </div>
     </template>
   </PageLayout>
@@ -24,18 +24,18 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { clear as storageClear } from 'storage';
 
 import PageLayout from '@/components/PageLayout.vue';
 import Toolbar from '@/toolbar/Toolbar.vue';
 import { useStore as useNavigationStore } from '@/navigation/store';
-import { useStore as useLanguageStore } from '@/language/store';
 import { useStore as useVideoStore } from '@/video/store';
+import Mention from '@/home/components/Mention.vue';
 
 export default defineComponent({
   components: {
     Toolbar,
-    PageLayout
+    PageLayout,
+    Mention
   },
   props: {
     contentTransitionName: {
@@ -45,16 +45,10 @@ export default defineComponent({
     }
   },
   setup() {
-    const languageStore = useLanguageStore();
     const navigationStore = useNavigationStore();
     const videoStore = useVideoStore();
 
     return {
-      languageStore,
-      clearUserData: async () => {
-        await storageClear();
-        await languageStore.resetPreferredContentLanguageToDefault();
-      },
       backFn: () => (videoStore.count === 1 ?
         navigationStore.to("MOVIE-TV-SEARCH", {contentTransitionName: 'content-navigate-shallow'}) :
         navigationStore.to("HOME", {contentTransitionName: 'content-navigate-shallow'}))

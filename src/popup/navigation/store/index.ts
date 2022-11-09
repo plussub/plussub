@@ -3,6 +3,7 @@ import SubtitleSearchForMovies from '@/search/pages/subtitleForMovies/SubtitleSe
 import SubtitleSearchForSeries from '@/search/pages/subtitleForSeries/SubtitleSearchForSeries.vue';
 import Transcript from '@/transcript/pages/Transcript.vue';
 import Settings from '@/settings/pages/Settings.vue';
+import About from '@/about/pages/About.vue';
 import Home from '@/home/pages/Home.vue';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
@@ -12,6 +13,10 @@ export interface ToHomePayload {
 }
 
 export interface ToSettingsPayload {
+  contentTransitionName: 'content-navigate-deeper';
+}
+
+export interface ToAboutPayload {
   contentTransitionName: 'content-navigate-deeper';
 }
 
@@ -37,6 +42,7 @@ export interface ToTranscriptPayload {
 type ViewNames =
   'HOME'
   | 'SETTINGS'
+  | 'ABOUT'
   | 'MOVIE-TV-SEARCH'
   | 'SUBTITLE-SEARCH-FOR-MOVIES'
   | 'SUBTITLE-SEARCH-FOR-SERIES'
@@ -50,6 +56,7 @@ export const useStore = defineStore('navigation', () => {
   const params = ref<ToHomePayload | ToSettingsPayload | ToMovieTvSearchPayload | Record<string, string>>({});
   function to(newName: 'HOME', newParams: ToHomePayload): void
   function to(newName: 'SETTINGS', newParams: ToSettingsPayload): void
+  function to(newName: 'ABOUT', newParams: ToAboutPayload): void
   function to(newName: 'MOVIE-TV-SEARCH', newParams: ToMovieTvSearchPayload): void
   function to(newName: 'SUBTITLE-SEARCH-FOR-MOVIES', newParams: ToSubtitleSearchForMoviesPayload): void
   function to(newName: 'SUBTITLE-SEARCH-FOR-SERIES', newParams: ToSubtitleSearchForSeriesPayload): void
@@ -73,6 +80,8 @@ export const useStore = defineStore('navigation', () => {
         return Transcript;
       } else if (name.value === 'SETTINGS') {
         return Settings;
+      } else if (name.value === 'ABOUT') {
+        return About;
       } else {
         return Home;
       }

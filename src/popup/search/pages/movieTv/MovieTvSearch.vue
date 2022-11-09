@@ -5,6 +5,9 @@
         <a v-if='store.onlySingleVideo' class='self-center pr-4' @click='toSettings()'>
           <FontAwesomeIcon icon='cog' class='h-icon hover:text-on-primary-hover-500'></FontAwesomeIcon>
         </a>
+        <a v-if='store.onlySingleVideo' class='self-center pr-4' @click='toAbout()'>
+          <FontAwesomeIcon icon='question-circle' class='h-icon hover:text-on-primary-hover-500'></FontAwesomeIcon>
+        </a>
       </Toolbar>
     </template>
     <template #content>
@@ -116,6 +119,7 @@ export default defineComponent({
         setTimeout(() => navigationStore.to('HOME', { contentTransitionName: 'content-navigate-select-to-home' }), 100);
       },
       toSettings: () => navigationStore.to('SETTINGS', { contentTransitionName: 'content-navigate-deeper' }),
+      toAbout: () => navigationStore.to('ABOUT', { contentTransitionName: 'content-navigate-deeper' }),
       changeQueryToSuggested: () => (internalQuery.value = store.videoName),
       select: (entry: VideoSearchResultEntry): void => {
         store.selectEntry(entry);

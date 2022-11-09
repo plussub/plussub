@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <a class="flex text-primary-500 hover:text-primary-700">
+  <div class='text-primary-500 hover:text-primary-700'>
+    <a class="flex">
       <span class="pr-1 align-center">
         <slot name="label">{{ label }} </slot>
       </span>
