@@ -46,7 +46,11 @@ export const useDraggableArea = ({ draggableAreaRef }: Payload): void => {
 
     document.removeEventListener('mouseUp', closeDragElement);
     document.removeEventListener('mousemove', elementDragMouse);
-    appShadowDiv.shadowRoot?.querySelector(".content-pane")?.removeChild(dragOverlayDiv);
+    try{
+      appShadowDiv.shadowRoot?.querySelector(".content-pane")?.removeChild(dragOverlayDiv);
+    }catch{
+
+    }
     toDefaultExtensionPopUpBoxShadow();
   };
   const elementDragMouse = (e: MouseEvent) => {
