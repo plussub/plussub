@@ -14,45 +14,48 @@
       <div class='grid' style='grid-template-columns: auto 1fr auto'>
         <h1 class='mb-2 text-2xl font-bold tracking-tight' style='grid-column: 1'>Preview (next 3 subtitles)</h1>
         <FontAwesomeIcon
-          icon="ellipsis-v"
-          type="fas"
-          class="h-icon hover:text-primary-700 hover:cursor-pointer"
+          icon='ellipsis-v'
+          type='fas'
+          class='h-icon hover:text-primary-700 hover:cursor-pointer'
           :class='{"text-primary-700": toggleMenu, "text-primary-500": !toggleMenu}'
           style='grid-column: 3'
-          @click="toggleMenu = !toggleMenu"
+          @click='toggleMenu = !toggleMenu'
         />
       </div>
 
 
-
       <div class='relative'>
-        <div v-show='toggleMenu' class="z-10 w-44 right-0 text-base list-none bg-surface-100 rounded divide-y divide-gray-100 shadow absolute">
-          <ul class="py-1">
+        <div
+          v-show='toggleMenu'
+          class='z-10 w-44 right-0 text-base list-none bg-surface-100 rounded divide-y divide-gray-100 shadow absolute'>
+          <ul class='py-1'>
             <li>
-              <a href="#"
-                 class="grid py-2 px-4 text-sm hover:bg-primary-700 hover:text-on-primary-700 gap-2"
-                 @click='selectExcerpt'
-                 style='grid-template-columns: auto 1fr'
+              <a
+                href='#'
+                class='grid py-2 px-4 text-sm hover:bg-primary-700 hover:text-on-primary-700 gap-2'
+                style='grid-template-columns: auto 1fr'
+                @click='selectExcerpt'
               >
                 <FontAwesomeIcon
-                  icon="check"
-                  type="fas"
-                  class="h-icon-sm self-center"
+                  icon='check'
+                  type='fas'
+                  class='h-icon-sm self-center'
                   :class='{"invisible": previewSelection !== "excerpt"}'
                 />
                 <span>Excerpt</span>
               </a>
             </li>
             <li>
-              <a href="#"
-                 class="grid py-2 px-4 text-sm hover:bg-primary-700 hover:text-on-primary-700 gap-2"
-                 @click='selectDiagram'
-                 style='grid-template-columns: auto 1fr'
+              <a
+                href='#'
+                class='grid py-2 px-4 text-sm hover:bg-primary-700 hover:text-on-primary-700 gap-2'
+                style='grid-template-columns: auto 1fr'
+                @click='selectDiagram'
               >
                 <FontAwesomeIcon
-                  icon="check"
-                  type="fas"
-                  class="h-icon-sm self-center"
+                  icon='check'
+                  type='fas'
+                  class='h-icon-sm self-center'
                   :class='{"invisible": previewSelection !== "diagram"}'
                 />
                 <span>Diagram</span>
@@ -63,23 +66,23 @@
       </div>
 
       <Excerpt
-          v-if="previewSelection === 'excerpt'"
-          style='grid-area: preview; height: 150px; width: calc(100% - 12px)'
-          :excerpt='store.excerpt'>
-          <template #from='{from}'>
-            <span class="mr-2">{{ store.formatTime(from) }}</span>
-          </template>
-          <template #to='{to}'>
-            <span>{{ store.formatTime(to) }}</span>
-          </template>
-        </Excerpt>
+        v-if="previewSelection === 'excerpt'"
+        style='grid-area: preview; height: 150px; width: calc(100% - 12px)'
+        :excerpt='store.excerpt'>
+        <template #from='{from}'>
+          <span class='mr-2'>{{ store.formatTime(from) }}</span>
+        </template>
+        <template #to='{to}'>
+          <span>{{ store.formatTime(to) }}</span>
+        </template>
+      </Excerpt>
 
-        <Timeline
-          v-else
-          :excerpt="store.excerpt"
-          :current-time="store.currentTime"
-          class='mt-4'
-          style='grid-area: preview; height: 80px; width: calc(100% - 12px)'/>
+      <Timeline
+        v-else
+        :excerpt='store.excerpt'
+        :current-time='store.currentTime'
+        class='mt-4'
+        style='grid-area: preview; height: 80px; width: calc(100% - 12px)' />
     </div>
   </div>
 </template>
@@ -124,11 +127,11 @@ export default defineComponent({
       previewSelection,
       selectExcerpt: () => {
         toggleMenu.value = false;
-        previewSelection.value = "excerpt";
+        previewSelection.value = 'excerpt';
       },
       selectDiagram: () => {
         toggleMenu.value = false;
-        previewSelection.value = "diagram";
+        previewSelection.value = 'diagram';
       }
     };
   }

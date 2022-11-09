@@ -28,8 +28,9 @@
     </div>
 
 
-    <div class='px-4 py-4'
-         :class='{"bg-surface-50": (selectedArea === "appearance-settings" || selectedArea === "transcript") , "bg-surface-100": (selectedArea === "time-settings" || selectedArea === "info")}' style='min-height: 280px;'>
+    <div
+      class='px-4 py-4'
+      :class='{"bg-surface-50": (selectedArea === "appearance-settings" || selectedArea === "transcript") , "bg-surface-100": (selectedArea === "time-settings" || selectedArea === "info")}' style='min-height: 280px;'>
       <slot v-if="selectedArea === 'time-settings'" name='time-settings-tab'></slot>
       <slot v-if="selectedArea === 'appearance-settings'" name='appearance-settings-tab'></slot>
       <slot v-if="selectedArea === 'transcript'" name='transcript-tab'></slot>

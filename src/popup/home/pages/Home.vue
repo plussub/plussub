@@ -13,7 +13,7 @@
 
     <template #content>
       <div class='flex flex-wrap h-full bg-surface-50 home-content--container'>
-        <div class='w-full' v-if="current === 'file-card' || current === 'search-card'">
+        <div v-if="current === 'file-card' || current === 'search-card'" class='w-full'>
           <HeroImageFromSearch
             v-if="current === 'search-card'"
             :loading='store.loading'
@@ -31,7 +31,7 @@
               }}
             </template>
           </HeroImageFromSearch>
-          <Settings class='w-full' >
+          <Settings class='w-full'>
             <template #time-settings-tab-header='{select, selected }'>
               <TimeSettingsTabHeader :selected='selected' @click='select'>
                 <template #label>
@@ -40,7 +40,7 @@
               </TimeSettingsTabHeader>
             </template>
             <template #time-settings-tab>
-              <TimeSettingsTab class='bg-surface-100'/>
+              <TimeSettingsTab class='bg-surface-100' />
             </template>
 
             <template #appearance-settings-tab-header='{select, selected }'>
@@ -62,10 +62,11 @@
               <SearchResultInfoTabHeader v-else :selected='selected' @click='select' />
             </template>
             <template #info-tab>
-              <FileInfoTab v-if="current === 'file-card'"
-                           :filename='store.filenameResult'
-                           :count-subtitle-lines='store.countSubtitleLines'
-                           :max-subtitle-duration='store.maxSubtitleDuration("hh:mm:ss")'
+              <FileInfoTab
+                v-if="current === 'file-card'"
+                :filename='store.filenameResult'
+                :count-subtitle-lines='store.countSubtitleLines'
+                :max-subtitle-duration='store.maxSubtitleDuration("hh:mm:ss")'
               />
               <SearchResultInfoTab
                 v-else
@@ -86,17 +87,17 @@
               <SuffixIconButton
                 label='Highlight video'
                 icon='crosshairs'
+                class='mr-2'
                 @mouseenter='store.highlightCurrentVideo'
                 @mouseleave='store.removeHighlightFromVideo'
-                class='mr-2'
               />
             </div>
             <div class='flex flex-row-reverse'>
               <SuffixIconButton
                 label='Remove Subtitle'
                 icon='eject'
-                @click='store.removeResult'
                 class='flex flex-row-reverse rounded-full px-2 py-2 border-solid border-2 border-primary-500 hover:border-primary-700 hover:bg-surface-200 hover:cursor-pointer'
+                @click='store.removeResult'
               />
             </div>
           </div>
