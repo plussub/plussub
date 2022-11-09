@@ -62,11 +62,17 @@
               <SearchResultInfoTabHeader v-else :selected='selected' @click='select' />
             </template>
             <template #info-tab>
-              <FileInfoTab v-if="current === 'file-card'" :filename='store.filenameResult' />
+              <FileInfoTab v-if="current === 'file-card'"
+                           :filename='store.filenameResult'
+                           :count-subtitle-lines='store.countSubtitleLines'
+                           :max-subtitle-duration='store.maxSubtitleDuration("hh:mm:ss")'
+              />
               <SearchResultInfoTab
                 v-else
                 :format='store.openSubtitleResult?.format'
                 :language='store.openSubtitleResult?.languageName'
+                :count-subtitle-lines='store.countSubtitleLines'
+                :max-subtitle-duration='store.maxSubtitleDuration("hh:mm:ss")'
               />
             </template>
 

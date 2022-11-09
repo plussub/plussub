@@ -1,6 +1,6 @@
 <template>
   <PrefixIconButton
-    icon="question-circle"
+    icon="chart-bar"
     icon-size="large"
     class="py-3"
     :class="{ 'border-b-2': selected, 'text-primary-700': selected }"

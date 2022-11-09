@@ -5,6 +5,7 @@ import { useStore as useSubtitleStore } from '@/subtitle/store';
 import { useStore as useSearchStore } from '@/search/store';
 import { useStore as useAppStore } from '@/app/store';
 import { computed } from 'vue';
+import { Duration } from 'luxon';
 
 export const useStore = defineStore('homeStore', () => {
   return {
@@ -41,6 +42,10 @@ export const useStore = defineStore('homeStore', () => {
       return (fmt) => useVideoStore().currentTimeAs(fmt).value
     }),
     filenameResult: computed(() => useFileStore().filename),
+    countSubtitleLines: computed(() => useSubtitleStore().parsed.length),
+    maxSubtitleDuration: computed(() => {
+      return (fmt) => Duration.fromMillis(useSubtitleStore().parsed.at(-1)?.to ?? -1).toFormat(fmt);
+    }),
     videoList: computed(() => useVideoStore().list)
   };
 });

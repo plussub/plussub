@@ -17,6 +17,10 @@
             <span class='leading-normal'>Font outline for better contrast</span> <br>
             <span class='leading-normal'>Each customizing can be enabled or disabled </span>
           </p>
+          <p class='pl-2 mb-3 font-normal leading-loose'>
+            <span class='font-bold'>Subtitle infos</span> <br>
+            <span class='leading-normal'>How many subtitle lines contains the selected subtitle</span> <br>
+          </p>
         </div>
 
         <div class='p-6 m-2 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
