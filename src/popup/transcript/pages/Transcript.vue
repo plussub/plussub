@@ -1,16 +1,21 @@
 <template>
   <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
-      <Toolbar has-back>
-        <a class="self-center pr-4" :title="[`left click - jump to time point`, `shift + left click - copy text to clipboard`].join('\n')">
-          <FontAwesomeIcon icon="question-circle" class="h-icon hover:text-on-primary-hover-500"></FontAwesomeIcon>
-        </a>
-      </Toolbar>
+      <Toolbar has-back></Toolbar>
     </template>
     <template #content>
       <div class="w-full h-full grid relative justify-center transcript-content--container">
-        <div style="grid-area: bar" class="pt-3 pb-2 bg-primary-50 flex justify-end">
-          <span class="px-4 font-medium">{{ videoStore.currentTimeAs("mm:ss").value }}</span>
+        <div style="grid-area: bar; grid-template-columns: 1fr auto;" class="pt-3 pb-2 bg-primary-50 grid gap-4">
+          <div class='leading-normal pl-4 text-sm italic'>
+            <div>Control hint</div>
+            <div class='pl-2 leading-relaxed'>
+              <div>left click - jump to time point </div>
+              <div>shift + left click - copy text to clipboard</div>
+            </div>
+          </div>
+          <div class='self-end'>
+            <span class="px-4 font-medium">{{ videoStore.currentTimeAs("mm:ss").value }}</span>
+          </div>
         </div>
         <div style="grid-area: loading" class="flex items-end flex-wrap bg-primary-50 shadow-md">
           <LoadingBar class="w-full" />
