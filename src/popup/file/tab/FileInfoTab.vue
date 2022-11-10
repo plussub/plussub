@@ -26,8 +26,8 @@ export default defineComponent({
       default: ""
     },
     countSubtitleLines: {
-      type: String,
-      default: ""
+      type: Number,
+      default: 0
     },
     maxSubtitleDuration: {
       type: String,
