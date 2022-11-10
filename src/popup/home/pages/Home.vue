@@ -33,7 +33,12 @@
           </HeroImageFromSearch>
           <Settings class='w-full'>
             <template #time-settings-tab-header='{select, selected }'>
-              <TimeSettingsTabHeader :selected='selected' @click='select'>
+              <TimeSettingsTabHeader
+                :selected='selected'
+                @click='select'
+                @mouseenter='store.highlightCurrentVideo'
+                @mouseleave='store.removeHighlightFromVideo'
+              >
                 <template #label>
                   <span>{{ store.currentTimeAs('hh:mm:ss') }}</span>
                 </template>
@@ -83,15 +88,6 @@
           <Divider class='w-full border-surface-200'></Divider>
 
           <div class='flex flex-wrap mx-9 my-6 gap-6 flex-col'>
-            <div class='flex flex-row-reverse'>
-              <SuffixIconButton
-                label='Highlight video'
-                icon='crosshairs'
-                class='mr-2'
-                @mouseenter='store.highlightCurrentVideo'
-                @mouseleave='store.removeHighlightFromVideo'
-              />
-            </div>
             <div class='flex flex-row-reverse'>
               <SuffixIconButton
                 label='Remove Subtitle'
