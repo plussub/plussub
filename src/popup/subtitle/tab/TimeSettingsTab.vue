@@ -13,57 +13,21 @@
     <div class='mt-4 p-4 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
       <div class='grid' style='grid-template-columns: auto 1fr auto'>
         <h1 class='mb-2 text-2xl font-bold tracking-tight' style='grid-column: 1'>Preview (next 3 subtitles)</h1>
-        <FontAwesomeIcon
-          icon='ellipsis-v'
-          type='fas'
-          class='h-icon hover:text-primary-700 hover:cursor-pointer'
-          :class='{"text-primary-700": toggleMenu, "text-primary-500": !toggleMenu}'
-          style='grid-column: 3'
-          @click='toggleMenu = !toggleMenu'
-        />
+        <ToggleMenuButton v-model='toggleMenu' style='grid-column: 3'/>
       </div>
 
-
-      <div class='relative'>
-        <div
-          v-show='toggleMenu'
-          class='z-10 w-44 right-0 text-base list-none bg-surface-100 rounded divide-y divide-gray-100 shadow absolute'>
-          <ul class='py-1'>
-            <li>
-              <a
-                href='#'
-                class='grid py-2 px-4 text-sm hover:bg-primary-700 hover:text-on-primary-700 gap-2'
-                style='grid-template-columns: auto 1fr'
-                @click='selectExcerpt'
-              >
-                <FontAwesomeIcon
-                  icon='check'
-                  type='fas'
-                  class='h-icon-sm self-center'
-                  :class='{"invisible": previewSelection !== "excerpt"}'
-                />
-                <span>Excerpt</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href='#'
-                class='grid py-2 px-4 text-sm hover:bg-primary-700 hover:text-on-primary-700 gap-2'
-                style='grid-template-columns: auto 1fr'
-                @click='selectDiagram'
-              >
-                <FontAwesomeIcon
-                  icon='check'
-                  type='fas'
-                  class='h-icon-sm self-center'
-                  :class='{"invisible": previewSelection !== "diagram"}'
-                />
-                <span>Diagram</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <ToggleMenu v-show='toggleMenu'>
+        <li>
+          <ToggleMenuSelectEntry :modelValue='previewSelection === "excerpt"' @update:modelValue='selectExcerpt'>
+            <span>Excerpt</span>
+          </ToggleMenuSelectEntry>
+        </li>
+        <li>
+          <ToggleMenuSelectEntry :modelValue='previewSelection === "diagram"' @update:modelValue='selectDiagram'>
+            <span>Diagram</span>
+          </ToggleMenuSelectEntry>
+        </li>
+      </ToggleMenu>
 
       <Excerpt
         v-if="previewSelection === 'excerpt'"
@@ -94,16 +58,20 @@ import Timeline from '@/subtitle/components/Timeline.vue';
 import Excerpt from '@/subtitle/components/Excerpt.vue';
 import NumberInputField from '@/components/NumberInputField.vue';
 import RangeInputField from '@/components/RangeInputField.vue';
-import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 import { useStore } from './timeSettingsTabStore';
+import ToggleMenuButton from '@/components/ToggleMenuButton.vue';
+import ToggleMenu from '@/components/ToggleMenu.vue';
+import ToggleMenuSelectEntry from '@/components/ToggleMenuSelectEntry.vue';
 
 export default defineComponent({
   components: {
+    ToggleMenuSelectEntry,
+    ToggleMenu,
+    ToggleMenuButton,
     RangeInputField,
     Excerpt,
     Timeline,
-    NumberInputField,
-    FontAwesomeIcon
+    NumberInputField
   },
   setup() {
     const store = useStore();
@@ -117,8 +85,8 @@ export default defineComponent({
         store.setOffsetTime({ offsetTime: parseInt(val.toString(), 10) });
       }
     });
-    const toggleMenu = ref(false);
     const previewSelection = ref('excerpt');
+    const toggleMenu = ref(false);
 
     return {
       store,
@@ -128,6 +96,7 @@ export default defineComponent({
       previewSelection,
       selectExcerpt: () => {
         toggleMenu.value = false;
+        console.warn(toggleMenu.value);
         previewSelection.value = 'excerpt';
       },
       selectDiagram: () => {
