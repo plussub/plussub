@@ -3,7 +3,7 @@
 
     <div class='p-4 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
       <h1 class='mb-2 text-2xl font-bold tracking-tight'>Delay for subtitles</h1>
-      <div class='flex mt-4 w-full flex-wrap focus-within:text-primary-700'>
+      <div class='flex pl-4 mt-4 w-full flex-wrap focus-within:text-primary-700'>
         <div class='text-xs font-medium w-full' style='grid-area: input-label'>Offset time (in ms)</div>
         <RangeInputField v-model='offsetTime' step='100' min='-3000' max='3000' class='mr-6 w-1/3 flex-grow' />
         <NumberInputField v-model='offsetTime' step='100' class='pr-2 w-1/2' />
@@ -68,6 +68,7 @@
       <Excerpt
         v-if="previewSelection === 'excerpt'"
         style='grid-area: preview; height: 150px; width: calc(100% - 12px)'
+        class='pl-4'
         :excerpt='store.excerpt'>
         <template #from='{from}'>
           <span class='mr-2'>{{ store.formatTime(from) }}</span>
