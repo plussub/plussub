@@ -1,25 +1,42 @@
 <template>
-  <div style="grid-template-columns: auto auto 8px auto auto; grid-column-gap: 14px; grid-row-gap: 24px" class="grid w-full leading-relaxed">
-    <div class="self-center font-medium text-sm">Text</div>
-    <input v-model="color" type="color" class="self-center justify-self-center" />
+  <div style="grid-template-columns: auto auto 1fr; grid-column-gap: 24px; grid-row-gap: 24px" class="grid w-fullleading-relaxed">
+    <ToggleButton v-model='enableColor'/>
+    <div class="self-center font-medium text-sm" >Text color</div>
+    <input v-model="color" type="color" class="self-center justify-self-center w-full"/>
 
-    <div class="self-center font-medium text-sm" style='grid-column: -2'>Background</div>
-    <input v-model="backgroundColor" type="color" class="self-end justify-self-center" style='grid-column: -1' />
+    <ToggleButton v-model='enableColor' style='grid-column-start: 1'/>
+    <div class="self-center font-medium text-sm">Background color</div>
+    <input v-model="backgroundColor" type="color" class="self-end justify-self-center w-full" />
 
-    <div class="font-medium text-sm self-center" style='grid-column: 1/3'>Transparency <span class='text-xs font-light'>({{backgroundColorTransparency}})</span></div>
-    <RangeInputField  v-model="backgroundColorTransparency" style='grid-column: 3/end' step="1" min="0" max="255" class="mt-2 pb-2" />
+    <ToggleButton v-model='enableColor'/>
+    <div style='grid-column: 2/-1'>
+      <div class="font-medium text-sm self-center">Transparency <span class='text-xs font-light'>({{backgroundColorTransparency}})</span></div>
+      <RangeInputField  v-model="backgroundColorTransparency" step="1" min="0" max="255" class='w-full my-2' />
+    </div>
 
-    <div class="font-medium text-sm self-center" style='grid-column: 1/3'>Position <span class='text-xs font-light'>({{line}}%)</span></div>
-    <RangeInputField v-model="line" style='grid-column: 3/end' step="1" min="1" max="100" class="mt-2 pb-2" />
+    <ToggleButton v-model='enableColor'/>
+    <div style='grid-column: 2/-1'>
+      <div class="font-medium text-sm self-center">Position <span class='text-xs font-light'>({{line}}%)</span></div>
+      <RangeInputField v-model="line" step="1" min="1" max="100" class='w-full my-2'/>
+    </div>
 
-    <div class="font-medium text-sm self-center" style='grid-column: 1/6'>
+    <ToggleButton v-model='snapToLines'/>
+    <div class="font-medium text-sm self-center" style='grid-column: 2/-1'>
       <div>Prevent the subtitle to get covered from controls. </div>
       <SnapToLinesHint/>
     </div>
-    <input v-model="snapToLines" type="checkbox" style='grid-column: 6/end' class="text-primary-700 focus:ring-0 focus:ring-offset-0 text-sm self-center" />
 
-    <div class="font-medium text-sm self-center" style='grid-column: 1/3'>Font size <span class='text-xs font-light'>({{fontSize}}px)</span></div>
-    <RangeInputField v-model="fontSize" style='grid-column: 3/end' min="1" max="70" step="1"></RangeInputField>
+    <ToggleButton v-model='enableColor'/>
+    <div style='grid-column: 2/-1'>
+      <div class="font-medium text-sm self-center">Font size <span class='text-xs font-light'>({{fontSize}}px)</span></div>
+      <RangeInputField v-model="fontSize" min="1" max="70" step="1" class='w-full my-2'></RangeInputField>
+    </div>
+
+    <ToggleButton v-model='enableColor'/>
+    <div class="font-medium text-sm self-center" style='grid-column: 2/-1'>
+      <div>Outline font </div>
+      <div class='font-normal italic text-xs'>For a better contrast on bright screens</div>
+    </div>
   </div>
 </template>
 
@@ -28,9 +45,11 @@ import { computed, defineComponent, ref, watch } from 'vue';
 import RangeInputField from '@/components/RangeInputField.vue';
 import SnapToLinesHint from 'SnapToLinesHint.vue';
 import { useStore as useAppearanceStore } from '@/appearance/store';
+import ToggleButton from '@/components/ToggleButton.vue';
 
 export default defineComponent({
   components: {
+    ToggleButton,
     SnapToLinesHint,
     RangeInputField
   },
@@ -62,6 +81,7 @@ export default defineComponent({
     });
 
     return {
+      enableColor: ref(true),
       backgroundColor,
       backgroundColorTransparency,
       color,
