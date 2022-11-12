@@ -4,7 +4,7 @@
       <!-- toggle -->
       <div class="relative">
         <!-- input $emit('update:modelValue', $event.target.value)-->
-        <input ref="checkbox" :checked="modelValue" type="checkbox" @input="input" class="sr-only" />
+        <input ref="checkbox" class="sr-only" :checked="modelValue" type="checkbox" @input="input" />
         <!-- line -->
         <div class="w-10 h-4 bg-surface-300 rounded-full shadow-inner"></div>
         <!-- dot -->

@@ -43,12 +43,11 @@ import PageLayout from '@/components/PageLayout.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import TranscriptContent from '@/transcript/components/TranscriptContent.vue';
 import Toolbar from '@/toolbar/Toolbar.vue';
-import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 import { useStore as useVideoStore } from '@/video/store';
 import { useStore as useTranscriptStore } from '@/transcript/store';
+
 export default defineComponent({
   components: {
-    FontAwesomeIcon,
     Toolbar,
     PageLayout,
     LoadingBar,

@@ -7,15 +7,16 @@
           icon-type='fas'
           icon='window-maximize'
           icon-size='large'
+          style='grid-column: 3'
           @click='toTranscript'
-          style='grid-column: 3'>
+         >
         </PrefixIconButton>
         <ToggleMenuButton v-model='toggleMenu' style='grid-column: 4' />
 
       </div>
       <ToggleMenu v-show='toggleMenu'>
         <li>
-          <ToggleMenuSelectEntry v-model='follow' @update:modelValue='toggleMenu = false'>
+          <ToggleMenuSelectEntry v-model='follow' @update:model-value='toggleMenu = false'>
             <span>Follow</span>
           </ToggleMenuSelectEntry>
         </li>
@@ -48,7 +49,6 @@ import { defineComponent, ref } from 'vue';
 import TranscriptContent from '@/transcript/components/TranscriptContent.vue';
 import { useStore as useNavigationStore } from '@/navigation/store';
 import { useStore as useTranscriptStore } from '@/transcript/store';
-import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 import ToggleMenuButton from '@/components/ToggleMenuButton.vue';
 import ToggleMenu from '@/components/ToggleMenu.vue';
 import ToggleMenuSelectEntry from '@/components/ToggleMenuSelectEntry.vue';
@@ -60,7 +60,6 @@ export default defineComponent({
     ToggleMenuSelectEntry,
     ToggleMenu,
     TranscriptContent,
-    FontAwesomeIcon,
     ToggleMenuButton
   },
   setup() {

@@ -21,13 +21,13 @@ import { defineComponent } from 'vue';
 import FontAwesomeIcon from './FontAwesomeIcon/FontAwesomeIcon.vue';
 
 export default defineComponent({
+  components: { FontAwesomeIcon },
   props: {
     modelValue: {
       type: [Boolean],
       required: true
     },
   },
-  emits: ['update:modelValue'],
-  components: { FontAwesomeIcon },
+  emits: ['update:modelValue']
 });
 </script>

@@ -18,12 +18,12 @@
 
       <ToggleMenu v-show='toggleMenu'>
         <li>
-          <ToggleMenuSelectEntry :modelValue='previewSelection === "excerpt"' @update:modelValue='selectExcerpt'>
+          <ToggleMenuSelectEntry :model-value='previewSelection === "excerpt"' @update:model-value='selectExcerpt'>
             <span>Excerpt</span>
           </ToggleMenuSelectEntry>
         </li>
         <li>
-          <ToggleMenuSelectEntry :modelValue='previewSelection === "diagram"' @update:modelValue='selectDiagram'>
+          <ToggleMenuSelectEntry :model-value='previewSelection === "diagram"' @update:model-value='selectDiagram'>
             <span>Diagram</span>
           </ToggleMenuSelectEntry>
         </li>
@@ -96,7 +96,6 @@ export default defineComponent({
       previewSelection,
       selectExcerpt: () => {
         toggleMenu.value = false;
-        console.warn(toggleMenu.value);
         previewSelection.value = 'excerpt';
       },
       selectDiagram: () => {

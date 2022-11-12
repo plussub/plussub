@@ -29,7 +29,7 @@ type ApplyStyleMessageEvent = ContentScriptInputMessageEvent<'APPLY_STYLE', Appl
 
 const cssPayloadToCssVarName = (property: string) => `--${EXTENSION_ORIGIN}-cue-${property.split(/(?=[A-Z])/).map(s => s.toLowerCase()).join('-')}`
 
-export const init = ({ inputObservable }: Payload): Observable<any> => {
+export const init = ({ inputObservable }: Payload): Observable<unknown> => {
   const cssStyle = inputObservable.pipe(
     filter((e): e is ApplyStyleMessageEvent => e.data.contentScriptInput === 'APPLY_STYLE'),
     mergeMap((e) => Object.entries(e.data.css)),
