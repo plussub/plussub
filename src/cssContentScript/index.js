@@ -11,6 +11,7 @@
   video[data-${EXTENSION_ORIGIN}-status="injected"]::cue{
     color: var(--${EXTENSION_ORIGIN}-cue-color);
     background-color: var(--${EXTENSION_ORIGIN}-cue-background-color);
+    text-shadow: var(--${EXTENSION_ORIGIN}-cue-text-shadow);
     font-size: calc(var(--${EXTENSION_ORIGIN}-cue-font-size)*1px);
     font-weight: var(--${EXTENSION_ORIGIN}-cue-font-weight);
     line-height: var(--${EXTENSION_ORIGIN}-cue-line-height);
