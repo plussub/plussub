@@ -18,6 +18,8 @@ export const useStore = defineStore('file', () => {
             return '.ssa';
           case /\.(vtt)$/.test(filename):
             return '.vtt';
+          case /\.(webvtt)$/.test(filename):
+            return '.vtt';
           case /\.(srt)$/.test(filename):
             return '.srt';
           default:
