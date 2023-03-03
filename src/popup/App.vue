@@ -124,14 +124,40 @@ export default defineComponent({
 <style>
 :host {
   all: initial;
+
+  --plussub-position: absolute;
+  --plussub-max-width: 400px;
+  --plussub-width: 400px;
+  --plussub-min-width: 400px;
+  --plussub-max-height: 280px;
+  --plussub-min-height: 400px;
+  --content-min-height: 280px;
 }
+
+@media (max-width:600px)  {
+  :host {
+    --plussub-position: fixed;
+    --plussub-max-width: 100vw;
+    --plussub-width: 100vw;
+    --plussub-min-width: 100vw;
+    --plussub-min-height: 250px;
+    --plussub-shadow-bottom: 0px;
+    --plussub-shadow-top: unset;
+    --plussub-shadow-left: 0px;
+    --content-min-height: unset;
+
+  }
+}
+
+
 </style>
 <style scoped>
 .app--container {
-  max-width: 400px;
-  width: 400px;
+  max-width: var(--plussub-max-width);
+  min-width: var(--plussub-min-width);
+  width: var(--plussub-width);
   max-height: 1200px;
-  min-height: 400px;
+  min-height: var(--plussub-min-height);
   grid-template-rows: auto 1fr;
   grid-template-columns: 100%;
 }

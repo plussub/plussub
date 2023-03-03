@@ -125,7 +125,7 @@ export default defineComponent({
 
 <style scoped>
 .subtitle-selection-content--container {
-  min-height: 300px;
+  min-height: var(--content-min-height);
   max-height: 500px;
   grid-template-areas:
     'filter-bar'

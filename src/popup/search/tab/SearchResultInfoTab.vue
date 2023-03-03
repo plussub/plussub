@@ -1,5 +1,5 @@
 <template>
-  <div class='p-6 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
+  <div class='p-6 max-w-full bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
     <h1 class='mb-2 text-2xl font-bold tracking-tight'>Subtitle statistics</h1>
     <div class='pl-2 mb-3 font-normal leading-relaxed'>
       <div class='font-bold'>Format </div>

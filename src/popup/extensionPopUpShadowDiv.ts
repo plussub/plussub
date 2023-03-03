@@ -5,6 +5,7 @@ export const getExtensionPopUpDiv = () => document.getElementById(`${EXTENSION_O
 
 export const toExtensionPopUpInitTop = () => document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-shadow-top`, `${window.scrollY + 30}px`);
 export const extensionPopUpTopAsCssVar = () => `var(--${EXTENSION_ORIGIN}-shadow-top)`
+export const extensionPopUpBottomAsCssVar = () => `var(--${EXTENSION_ORIGIN}-shadow-bottom, unset)`
 
 export const toExtensionPopUpInitLeft = () => document.documentElement.style.setProperty(`--${EXTENSION_ORIGIN}-shadow-left`, `0px`);
 export const extensionPopUpLeftAsCssVar = () => `var(--${EXTENSION_ORIGIN}-shadow-left)`

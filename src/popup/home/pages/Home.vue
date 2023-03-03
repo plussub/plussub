@@ -1,118 +1,103 @@
 <template>
-  <PageLayout :content-transition-name='contentTransitionName'>
+  <PageLayout :content-transition-name="contentTransitionName">
     <template #toolbar>
       <Toolbar>
-        <a class='self-center pr-4' @click='toSettings()'>
-          <FontAwesomeIcon icon='cog' class='h-icon hover:text-on-primary-hover-500'></FontAwesomeIcon>
+        <a class="self-center pr-4" @click="toSettings()">
+          <FontAwesomeIcon icon="cog" class="h-icon hover:text-on-primary-hover-500"></FontAwesomeIcon>
         </a>
-        <a class='self-center pr-4' @click='toAbout()'>
-          <FontAwesomeIcon icon='question-circle' class='h-icon hover:text-on-primary-hover-500'></FontAwesomeIcon>
+        <a class="self-center pr-4" @click="toAbout()">
+          <FontAwesomeIcon icon="question-circle" class="h-icon hover:text-on-primary-hover-500"></FontAwesomeIcon>
         </a>
       </Toolbar>
     </template>
 
     <template #content>
-      <div class='flex flex-wrap h-full bg-surface-50 home-content--container'>
-        <div v-if="current === 'file-card' || current === 'search-card'" class='w-full'>
+      <div class="flex flex-wrap h-full bg-surface-50 home-content--container">
+        <div v-if="current === 'file-card' || current === 'search-card'" class="w-full">
           <HeroImageFromSearch
             v-if="current === 'search-card'"
-            :loading='store.loading'
-            :error='store.error'
-            :title='store.tmbdResult?.title'
-            :open-subtitles-rating='store.openSubtitleResult?.rating'
-            :open-subtitles-link='store.openSubtitleResult?.websiteLink'
-            :tmdb-votes='store.tmbdResult?.vote_average.toString()'
-            :tmdb-link='store.tmdbLink'
-            :poster-path='store.tmbdResult?.poster_path'
+            :loading="store.loading"
+            :error="store.error"
+            :title="store.tmbdResult?.title"
+            :open-subtitles-rating="store.openSubtitleResult?.rating"
+            :open-subtitles-link="store.openSubtitleResult?.websiteLink"
+            :tmdb-votes="store.tmbdResult?.vote_average.toString()"
+            :tmdb-link="store.tmdbLink"
+            :poster-path="store.tmbdResult?.poster_path"
           >
             <template #hero-sub-header>
-              {{
-                `${capitalize(store.tmbdResult?.media_type)} ${store.releaseYear ? `/ ${store.releaseYear}` : ''}`
-              }}
+              {{ `${capitalize(store.tmbdResult?.media_type)} ${store.releaseYear ? `/ ${store.releaseYear}` : ''}` }}
             </template>
           </HeroImageFromSearch>
-          <Settings class='w-full'>
-            <template #time-settings-tab-header='{select, selected }'>
-              <TimeSettingsTabHeader
-                :selected='selected'
-                @click='select'
-                @mouseenter='store.highlightCurrentVideo'
-                @mouseleave='store.removeHighlightFromVideo'
-              >
+          <Settings class="w-full">
+            <template #time-settings-tab-header="{ select, selected }">
+              <TimeSettingsTabHeader :selected="selected" @click="select" @mouseenter="store.highlightCurrentVideo" @mouseleave="store.removeHighlightFromVideo">
                 <template #label>
                   <span>{{ store.currentTimeAs('hh:mm:ss') }}</span>
                 </template>
               </TimeSettingsTabHeader>
             </template>
             <template #time-settings-tab>
-              <TimeSettingsTab class='bg-surface-100' />
+              <TimeSettingsTab class="bg-surface-100" />
             </template>
 
-            <template #appearance-settings-tab-header='{select, selected }'>
-              <AppearanceSettingsTabHeader :selected='selected' @click='select' />
+            <template #appearance-settings-tab-header="{ select, selected }">
+              <AppearanceSettingsTabHeader :selected="selected" @click="select" />
             </template>
             <template #appearance-settings-tab>
               <AppearanceSettingsTab />
             </template>
 
-            <template #transcript-tab-header='{select, selected }'>
-              <TranscriptTabHeader :selected='selected' @click='select' />
+            <template #transcript-tab-header="{ select, selected }">
+              <TranscriptTabHeader :selected="selected" @click="select" />
             </template>
             <template #transcript-tab>
               <TranscriptTab />
             </template>
 
-            <template #info-tab-header='{select, selected }'>
-              <FileInfoTabHeader v-if="current === 'file-card'" :selected='selected' @click='select' />
-              <SearchResultInfoTabHeader v-else :selected='selected' @click='select' />
+            <template #remove-subtitle-tab-header="{ select, selected }">
+              <RemoveSubtitleTabHeader :selected="selected" @click="select" />
+            </template>
+            <template #remove-subtitle-tab>
+              <RemoveSubtitleTab />
+            </template>
+
+            <template #info-tab-header="{ select, selected }">
+              <FileInfoTabHeader v-if="current === 'file-card'" :selected="selected" @click="select" />
+              <SearchResultInfoTabHeader v-else :selected="selected" @click="select" />
             </template>
             <template #info-tab>
               <FileInfoTab
                 v-if="current === 'file-card'"
-                :filename='store.filenameResult'
-                :count-subtitle-lines='store.countSubtitleLines'
-                :max-subtitle-duration='store.maxSubtitleDuration("hh:mm:ss")'
+                :filename="store.filenameResult"
+                :count-subtitle-lines="store.countSubtitleLines"
+                :max-subtitle-duration="store.maxSubtitleDuration('hh:mm:ss')"
               />
               <SearchResultInfoTab
                 v-else
-                :format='store.openSubtitleResult?.format'
-                :language='store.openSubtitleResult?.languageName'
-                :count-subtitle-lines='store.countSubtitleLines'
-                :max-subtitle-duration='store.maxSubtitleDuration("hh:mm:ss")'
+                :format="store.openSubtitleResult?.format"
+                :language="store.openSubtitleResult?.languageName"
+                :count-subtitle-lines="store.countSubtitleLines"
+                :max-subtitle-duration="store.maxSubtitleDuration('hh:mm:ss')"
               />
             </template>
-
           </Settings>
-
-
-          <Divider class='w-full border-surface-200'></Divider>
-
-          <div class='flex flex-wrap mx-9 my-6 gap-6 flex-col'>
-            <div class='flex flex-row-reverse'>
-              <SuffixIconButton
-                label='Remove Subtitle'
-                icon='eject'
-                class='flex flex-row-reverse rounded-full px-2 py-2 border-solid border-2 border-primary-500 hover:border-primary-700 hover:bg-surface-200 hover:cursor-pointer'
-                @click='store.removeResult'
-              />
-            </div>
-          </div>
         </div>
         <PageVideos
           v-else-if="current === 'page-videos'"
-          class='w-full'
-          :videos='store.videoList'
-          @select='selectVideo'
-          @video-enter='store.highlightVideo'
-          @video-leave='store.removeHighlightFromVideo'
-          @unmount='store.removeHighlightFromVideo'
+          class="w-full"
+          :videos="store.videoList"
+          @select="selectVideo"
+          @video-enter="store.highlightVideo"
+          @video-leave="store.removeHighlightFromVideo"
+          @unmount="store.removeHighlightFromVideo"
         />
       </div>
     </template>
   </PageLayout>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { computed, defineComponent, PropType } from 'vue';
 
 import PageLayout from '@/components/PageLayout.vue';
@@ -138,9 +123,13 @@ import TranscriptTabHeader from '@/transcript/tab/TranscriptTabHeader.vue';
 import TranscriptTab from '@/transcript/tab/TranscriptTab.vue';
 import { Video } from '@/video/store';
 import Divider from '@/components/Divider.vue';
+import RemoveSubtitleTabHeader from '@/subtitle/tab/RemoveSubtitleTabHeader.vue';
+import RemoveSubtitleTab from '@/subtitle/tab/RemoveSubtitleTab.vue';
 
 export default defineComponent({
   components: {
+    RemoveSubtitleTabHeader,
+    RemoveSubtitleTab,
     HeroImageFromSearch,
     TranscriptTabHeader,
     TranscriptTab,
@@ -202,7 +191,7 @@ export default defineComponent({
 
 <style scoped>
 .home-content--container {
-  min-height: 300px;
+  min-height: var(--content-min-height);
   max-height: 720px;
 }
 
@@ -219,5 +208,18 @@ export default defineComponent({
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 1fr;
   row-gap: 16px;
+}
+</style>
+
+<style>
+
+:host {
+  --action-bar-display: block;
+}
+
+@media (max-width: 600px) {
+  :host {
+    --action-bar-display: none;
+  }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class='p-4 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
+    <div class='p-4 max-w-full bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
       <h1 class='mb-2 text-2xl font-bold tracking-tight'>Delay for subtitles</h1>
       <div class='flex pl-4 mt-4 w-full flex-wrap focus-within:text-primary-700'>
         <div class='text-xs font-medium w-full' style='grid-area: input-label'>Offset time (in ms)</div>
@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div class='mt-4 p-4 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
+    <div class='mt-4 p-4 max-w-full bg-surface-50 rounded-lg border border-gray-200 shadow-md' style='display: var(--time-setting-preview-display)'>
       <div class='grid' style='grid-template-columns: auto 1fr auto'>
         <h1 class='mb-2 text-2xl font-bold tracking-tight' style='grid-column: 1'>Preview (next 3 subtitles)</h1>
         <ToggleMenuButton v-model='toggleMenu' style='grid-column: 3'/>
@@ -55,6 +55,7 @@
 <script lang='ts'>
 import { defineComponent, ref, computed } from 'vue';
 import Timeline from '@/subtitle/components/Timeline.vue';
+import SuffixIconButton from '@/components/SuffixIconButton.vue';
 import Excerpt from '@/subtitle/components/Excerpt.vue';
 import NumberInputField from '@/components/NumberInputField.vue';
 import RangeInputField from '@/components/RangeInputField.vue';
@@ -106,3 +107,15 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+  :host{
+    --time-setting-preview-display: block;
+  }
+  @media (max-width:600px)  {
+    :host {
+      --time-setting-preview-display: none;
+    }
+  }
+
+</style>

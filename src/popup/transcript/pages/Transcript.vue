@@ -7,8 +7,8 @@
       <div class="w-full h-full grid relative justify-center transcript-content--container">
         <div style="grid-area: bar; grid-template-columns: 1fr auto;" class="pt-3 pb-2 bg-primary-50 grid gap-4">
           <div class='leading-normal pl-4 text-sm italic'>
-            <div>Control hint</div>
-            <div class='pl-2 leading-relaxed'>
+            <div style='display: var(--transcript-control-hint)'>Control hint</div>
+            <div style='display: var(--transcript-control-hint)' class='pl-2 leading-relaxed'>
               <div>left click - jump to time point </div>
               <div>shift + left click - copy text to clipboard</div>
             </div>
@@ -74,7 +74,7 @@ export default defineComponent({
 
 <style scoped>
 .transcript-content--container {
-  min-height: 300px;
+  min-height: var(--content-min-height);
   max-height: 500px;
   grid-template-areas:
     'bar'
@@ -83,4 +83,16 @@ export default defineComponent({
   grid-template-rows: auto 8px 1fr;
   grid-template-columns: 1fr;
 }
+</style>
+
+<style>
+:host{
+  --transcript-control-hint: block;
+}
+@media (max-width:600px)  {
+  :host {
+    --transcript-control-hint: none;
+  }
+}
+
 </style>

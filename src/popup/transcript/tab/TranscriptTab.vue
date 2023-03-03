@@ -1,19 +1,14 @@
 <template>
   <div>
-    <div class='p-6 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
-      <div class='grid gap-4' style='grid-template-columns: auto 1fr auto auto'>
-        <h1 class='mb-2 text-2xl font-bold tracking-tight'>Transcript</h1>
-        <PrefixIconButton
-          icon-type='fas'
-          icon='window-maximize'
-          icon-size='large'
-          style='grid-column: 3'
-          @click='toTranscript'
-         >
-        </PrefixIconButton>
-        <ToggleMenuButton v-model='toggleMenu' style='grid-column: 4' />
-
+    <div class='flex' style='display: var(--transcript-control-hint)'>
+      <div class='leading-normal mt-2 pl-4 text-sm italic flex-grow'>
+        <div>Control hint</div>
+        <div class='pl-2 leading-relaxed'>
+          <div>left click - jump to time point</div>
+          <div>shift + left click - copy text to clipboard</div>
+        </div>
       </div>
+      <ToggleMenuButton class='pr-2 pt-2' v-model='toggleMenu' />
       <ToggleMenu v-show='toggleMenu'>
         <li>
           <ToggleMenuSelectEntry v-model='follow' @update:model-value='toggleMenu = false'>
@@ -21,18 +16,13 @@
           </ToggleMenuSelectEntry>
         </li>
       </ToggleMenu>
-      <div class='leading-normal mt-2 pl-4 text-sm italic'>
-        <div>Control hint</div>
-        <div class='pl-2 leading-relaxed'>
-          <div>left click - jump to time point</div>
-          <div>shift + left click - copy text to clipboard</div>
-        </div>
-      </div>
-      <TranscriptContent
+    </div>
+    <Divider class="w-full bottom-0 border-surface-200" style='display: var(--transcript-control-hint)'></Divider>
+    <TranscriptContent
         :entries='transcriptStore.entries'
         :follow='follow'
         :position='transcriptStore.currentSubtitlePos'
-        class='border rounded max-h-52 mt-4'
+        style='max-height: var(--transcript-content-max-height)'
         @copy='transcriptStore.copy'
         @jump='transcriptStore.jump'>
         <template #line='{entry}'>
@@ -40,7 +30,6 @@
           <span class='text-left'>{{ entry.text }}</span>
         </template>
       </TranscriptContent>
-    </div>
   </div>
 </template>
 
@@ -52,15 +41,15 @@ import { useStore as useTranscriptStore } from '@/transcript/store';
 import ToggleMenuButton from '@/components/ToggleMenuButton.vue';
 import ToggleMenu from '@/components/ToggleMenu.vue';
 import ToggleMenuSelectEntry from '@/components/ToggleMenuSelectEntry.vue';
-import PrefixIconButton from '@/components/PrefixIconButton.vue';
+import Divider from '@/components/Divider.vue';
 
 export default defineComponent({
   components: {
-    PrefixIconButton,
     ToggleMenuSelectEntry,
     ToggleMenu,
     TranscriptContent,
-    ToggleMenuButton
+    ToggleMenuButton,
+    Divider
   },
   setup() {
     const navigationStore = useNavigationStore();
@@ -75,3 +64,17 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+:host{
+  --transcript-control-hint: block;
+  --transcript-content-max-height: 250px
+}
+@media (max-width:600px)  {
+  :host {
+    --transcript-control-hint: none;
+    --transcript-content-max-height: 140px
+  }
+}
+
+</style>

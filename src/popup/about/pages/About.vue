@@ -9,8 +9,13 @@
           <div>About</div>
         </div>
 
-        <div class='p-6 m-2 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
+        <div class='p-6 m-2 max-w-full bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
           <h1 class='mb-2 text-2xl font-bold tracking-tight'>Whats New</h1>
+          <h2 class='mb-2 text-lg text-primary-700'>6.4.x</h2>
+          <p class='pl-2 mb-3 font-normal leading-loose'>
+            <span class='font-bold'>Improve UI for mobile</span> <br>
+            <span class='leading-normal'>When you use the kiwi browser oder firefox mobile, the ui is now more mobile friendly. </span> <br>
+          </p>
           <h2 class='mb-2 text-lg text-primary-700'>6.3.x</h2>
           <p class='pl-2 mb-3 font-normal leading-loose'>
             <span class='font-bold'>Subtitle customizing</span> <br>
@@ -23,7 +28,7 @@
           </p>
         </div>
 
-        <div class='p-6 m-2 max-w-sm bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
+        <div class='p-6 m-2 max-w-full bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
           <h1 class='mb-2 text-2xl font-bold tracking-tight'>This extension is powered by</h1>
           <div class='ml-2 leading-loose'>
             <a

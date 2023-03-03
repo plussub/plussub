@@ -5,6 +5,7 @@ import { EXTENSION_ORIGIN } from '@/types';
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import {
+  extensionPopUpBottomAsCssVar,
   extensionPopUpBoxShadowAsCssVar, extensionPopUpLeftAsCssVar, extensionPopUpTopAsCssVar,
   getExtensionPopUpDiv, getExtensionPopUpId,
   toDefaultExtensionPopUpBoxShadow, toExtensionPopUpInitTop
@@ -26,10 +27,11 @@ export const init = async (): Promise<void> => {
     const appShadowDiv = document.createElement('div');
     appShadowDiv.id = getExtensionPopUpId();
     Object.assign(appShadowDiv.style, {
-      position: "absolute",
+      position: "var(--plussub-position)",
       zIndex: "10000",
       top: extensionPopUpTopAsCssVar(),
       left: extensionPopUpLeftAsCssVar(),
+      bottom:extensionPopUpBottomAsCssVar(),
       right: "16px",
       width: "400px",
       boxShadow: extensionPopUpBoxShadowAsCssVar()
