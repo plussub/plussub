@@ -112,7 +112,6 @@ import Toolbar from '@/toolbar/Toolbar.vue';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 import { useStore as useAppStore } from '@/app/store';
 import { useStore as useNavigationStore } from '@/navigation/store';
-import SuffixIconButton from '@/components/SuffixIconButton.vue';
 import { useStore } from './homeStore';
 import { useStringFn } from '@/composables';
 import TimeSettingsTabHeader from '@/subtitle/tab/TimeSettingsTabHeader.vue';
@@ -122,7 +121,6 @@ import AppearanceSettingsTab from '@/appearance/tab/AppearanceSettingsTab.vue';
 import TranscriptTabHeader from '@/transcript/tab/TranscriptTabHeader.vue';
 import TranscriptTab from '@/transcript/tab/TranscriptTab.vue';
 import { Video } from '@/video/store';
-import Divider from '@/components/Divider.vue';
 import RemoveSubtitleTabHeader from '@/subtitle/tab/RemoveSubtitleTabHeader.vue';
 import RemoveSubtitleTab from '@/subtitle/tab/RemoveSubtitleTab.vue';
 
@@ -145,9 +143,7 @@ export default defineComponent({
     SearchResultInfoTabHeader,
     SearchResultInfoTab,
     FileInfoTabHeader,
-    FileInfoTab,
-    SuffixIconButton,
-    Divider
+    FileInfoTab
   },
   props: {
     contentTransitionName: {
