@@ -9,7 +9,7 @@
         </div>
       </div>
       <div>
-        <ToggleMenuButton class='pr-2 pt-2' v-model='toggleMenu' />
+        <ToggleMenuButton v-model='toggleMenu' class='pr-2 pt-2' />
         <ToggleMenu v-show='toggleMenu'>
           <li>
             <ToggleMenuSelectEntry v-model='follow' @update:model-value='toggleMenu = false'>

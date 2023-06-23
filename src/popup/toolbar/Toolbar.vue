@@ -28,11 +28,9 @@ import logo from '@/res/logo128.png';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 import { useStore as useNavigationStore } from '@/navigation/store';
 import { useStore as useCloseStore } from '@/close/store';
-import Coffee from '@/toolbar/Coffee.vue';
 
 export default defineComponent({
   components: {
-    Coffee,
     FontAwesomeIcon,
     Logo
   },

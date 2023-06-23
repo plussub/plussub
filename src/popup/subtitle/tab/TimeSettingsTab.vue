@@ -55,7 +55,6 @@
 <script lang='ts'>
 import { defineComponent, ref, computed } from 'vue';
 import Timeline from '@/subtitle/components/Timeline.vue';
-import SuffixIconButton from '@/components/SuffixIconButton.vue';
 import Excerpt from '@/subtitle/components/Excerpt.vue';
 import NumberInputField from '@/components/NumberInputField.vue';
 import RangeInputField from '@/components/RangeInputField.vue';
