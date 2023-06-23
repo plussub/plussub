@@ -14,10 +14,8 @@
     </div>
 
     <div
-      class="overflow-x-auto"
+      class="overflow-x-auto bg-surface-50"
       :class="{
-        'bg-surface-50': selectedArea === 'appearance-settings',
-        'bg-surface-100': selectedArea === 'time-settings' || selectedArea === 'transcript' || selectedArea === 'info',
         'px-4': selectedArea !== 'transcript',
         'py-4': selectedArea !== 'transcript'
       }"

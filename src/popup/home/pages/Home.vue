@@ -41,7 +41,7 @@
               </TimeSettingsTabHeader>
             </template>
             <template #time-settings-tab>
-              <TimeSettingsTab class="bg-surface-100" />
+              <TimeSettingsTab />
             </template>
 
             <template #appearance-settings-tab-header="{ select, selected }">

@@ -4,31 +4,36 @@
       <Toolbar has-back :back-fn='backFn'></Toolbar>
     </template>
     <template #content>
-      <div class='w-full bg-surface-100'>
+      <div class='w-full bg-surface-50'>
         <div class='flex relative pl-4 py-4 bg-primary-50 shadow-md font-medium text-xl'>
           <div>About</div>
         </div>
 
-        <div class='p-6 m-2 max-w-full bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
-          <h1 class='mb-2 text-2xl font-bold tracking-tight'>Whats New</h1>
-          <h2 class='mb-2 text-lg text-primary-700'>6.4.x</h2>
-          <p class='pl-2 mb-3 font-normal leading-loose'>
+        <div class='p-2 m-2 max-w-full max-h-64 overflow-y-scroll'>
+          <h1 class='mb-3 text-2xl font-bold tracking-tight'>Whats New</h1>
+          <h2 class='pl-2 mb-2 text-lg text-primary-700'>6.5.x</h2>
+          <p class='pl-4 mb-3 font-normal leading-loose'>
+            <span class='font-bold'>Preview videos in video selection</span> <br>
+          </p>
+          <h2 class='pl-2 mb-2 text-lg text-primary-700'>6.4.x</h2>
+          <p class='pl-4 mb-3 font-normal leading-loose'>
             <span class='font-bold'>Improve UI for mobile</span> <br>
             <span class='leading-normal'>When you use the kiwi browser oder firefox mobile, the ui is now more mobile friendly. </span> <br>
           </p>
-          <h2 class='mb-2 text-lg text-primary-700'>6.3.x</h2>
-          <p class='pl-2 mb-3 font-normal leading-loose'>
+          <h2 class='pl-2 mb-2 text-lg text-primary-700'>6.3.x</h2>
+          <p class='pl-4 mb-3 font-normal leading-loose'>
             <span class='font-bold'>Subtitle customizing</span> <br>
             <span class='leading-normal'>Font outline for better contrast</span> <br>
             <span class='leading-normal'>Each customizing can be enabled or disabled </span>
           </p>
-          <p class='pl-2 mb-3 font-normal leading-loose'>
+          <p class='pl-4 mb-3 font-normal leading-loose'>
             <span class='font-bold'>Subtitle infos</span> <br>
             <span class='leading-normal'>How many subtitle lines contains the selected subtitle</span> <br>
           </p>
         </div>
 
-        <div class='p-6 m-2 max-w-full bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
+
+        <div class='p-6 mx-2 mt-8 mb-2 max-w-full bg-surface-50 rounded-lg border border-gray-200 shadow-md'>
           <h1 class='mb-2 text-2xl font-bold tracking-tight'>This extension is powered by</h1>
           <div class='ml-2 leading-loose'>
             <a

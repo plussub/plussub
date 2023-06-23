@@ -1,5 +1,5 @@
 <template>
-  <div style="grid-template-columns: auto auto 1fr; grid-column-gap: 24px; grid-row-gap: 24px" class="grid w-fullleading-relaxed">
+  <div style="grid-template-columns: auto auto 1fr; grid-column-gap: 24px; grid-row-gap: 24px" class="grid w-full leading-relaxed">
     <ToggleButton v-model='enableColor'/>
     <div class="self-center font-medium text-sm" >Text color</div>
     <input v-model="color" type="color" class="self-center justify-self-center w-full"/>
