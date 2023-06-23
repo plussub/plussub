@@ -8,6 +8,9 @@
         <a class="self-center pr-4" @click="toAbout()">
           <FontAwesomeIcon icon="question-circle" class="h-icon hover:text-on-primary-hover-500"></FontAwesomeIcon>
         </a>
+        <a class="self-center pr-4 h-6" href="https://www.buymeacoffee.com/stexx" target="_blank">
+          <coffee style="grid-area: logo" class="h-full w-full hover:text-on-primary-hover-500" />
+        </a>
       </Toolbar>
     </template>
 
@@ -123,9 +126,11 @@ import TranscriptTab from '@/transcript/tab/TranscriptTab.vue';
 import { Video } from '@/video/store';
 import RemoveSubtitleTabHeader from '@/subtitle/tab/RemoveSubtitleTabHeader.vue';
 import RemoveSubtitleTab from '@/subtitle/tab/RemoveSubtitleTab.vue';
+import Coffee from '@/toolbar/Coffee.vue';
 
 export default defineComponent({
   components: {
+    Coffee,
     RemoveSubtitleTabHeader,
     RemoveSubtitleTab,
     HeroImageFromSearch,
@@ -208,7 +213,6 @@ export default defineComponent({
 </style>
 
 <style>
-
 :host {
   --action-bar-display: block;
 }

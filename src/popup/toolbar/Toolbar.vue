@@ -4,7 +4,7 @@
       <FontAwesomeIcon icon="chevron-left" class="h-full py-2 pl-1 hover:text-on-primary-hover-500" />
     </a>
     <div v-else>
-      <logo style="grid-area: logo" class="h-full w-full hover:text-on-primary-hover-500 hover:cursor-pointer" @click="redirectHomePage" />
+      <logo style="grid-area: logo" class="h-full w-full hover:text-on-primary-hover-500" />
     </div>
 
     <div style="grid-area: buttons" class="flex justify-end font-header font-medium text-xl">
@@ -28,9 +28,11 @@ import logo from '@/res/logo128.png';
 import FontAwesomeIcon from '@/components/FontAwesomeIcon/FontAwesomeIcon.vue';
 import { useStore as useNavigationStore } from '@/navigation/store';
 import { useStore as useCloseStore } from '@/close/store';
+import Coffee from '@/toolbar/Coffee.vue';
 
 export default defineComponent({
   components: {
+    Coffee,
     FontAwesomeIcon,
     Logo
   },
@@ -54,8 +56,7 @@ export default defineComponent({
     useDraggableArea({ draggableAreaRef });
 
     return {
-      toHome: () => navigationStore.to("HOME", {contentTransitionName: "content-navigate-shallow"}),
-      redirectHomePage: () =>  window.open("https://opensubtitles.com", '_blank'),
+      toHome: () => navigationStore.to('HOME', { contentTransitionName: 'content-navigate-shallow' }),
       logo,
       close: () => closeStore.close(),
       draggableAreaRef
