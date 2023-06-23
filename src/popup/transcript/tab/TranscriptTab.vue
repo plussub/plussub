@@ -8,14 +8,16 @@
           <div>shift + left click - copy text to clipboard</div>
         </div>
       </div>
-      <ToggleMenuButton class='pr-2 pt-2' v-model='toggleMenu' />
-      <ToggleMenu v-show='toggleMenu'>
-        <li>
-          <ToggleMenuSelectEntry v-model='follow' @update:model-value='toggleMenu = false'>
-            <span>Follow</span>
-          </ToggleMenuSelectEntry>
-        </li>
-      </ToggleMenu>
+      <div>
+        <ToggleMenuButton class='pr-2 pt-2' v-model='toggleMenu' />
+        <ToggleMenu v-show='toggleMenu'>
+          <li>
+            <ToggleMenuSelectEntry v-model='follow' @update:model-value='toggleMenu = false'>
+              <span>Follow</span>
+            </ToggleMenuSelectEntry>
+          </li>
+        </ToggleMenu>
+      </div>
     </div>
     <Divider class="w-full bottom-0 border-surface-200" style='display: var(--transcript-control-hint)'></Divider>
     <TranscriptContent
@@ -67,7 +69,7 @@ export default defineComponent({
 
 <style>
 :host{
-  --transcript-control-hint: block;
+  --transcript-control-hint: flex;
   --transcript-content-max-height: 250px
 }
 @media (max-width:600px)  {
