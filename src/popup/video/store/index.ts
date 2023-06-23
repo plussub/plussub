@@ -12,6 +12,7 @@ export interface Video {
   hasSubtitle: boolean;
   origin: string;
   lastTimestamp: string;
+  screenshot: string;
   status: 'none' | 'selected' | 'injected';
 }
 

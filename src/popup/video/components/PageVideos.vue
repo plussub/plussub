@@ -15,9 +15,9 @@
           @click="$emit('select',video)"
         >
           <Divider v-if="index === 0" style="grid-column: 1/3" class="border-surface-200" />
-          <div class="flex flex-col gap-1 h-11 my-2 justify-center" style="grid-column: 2 / 3">
-            <div>Video {{ index + 1 }} ({{ formatTime(video.lastTimestamp, 'hh:mm:ss') }})</div>
-            <div v-if="false" class="text-xs">({{ video.origin }} - {{ video.id }})</div>
+          <div class="grid gap-1 h-11 my-2 justify-center gap-x-4" style="grid-column: 2 / 3; grid-template-columns: auto 1fr">
+            <img :src="video.screenshot" class='h-11' crossorigin="anonymous" style='background-color: black'>
+            <div class='self-center'>Video {{ index + 1 }} ({{ formatTime(video.lastTimestamp, 'hh:mm:ss') }})</div>
           </div>
           <Divider style="grid-column: 1/3" class="border-surface-200" />
         </div>

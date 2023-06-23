@@ -47,6 +47,7 @@ export const init = ({ inputObservable }: Payload): Observable<unknown> => {
       })
     )
   );
+
   const removedVideoElementObservable = videoElementMutationObservable.pipe(
     mergeMap(({ removed }) => from(removed)),
     tap((el) => {
@@ -61,6 +62,26 @@ export const init = ({ inputObservable }: Payload): Observable<unknown> => {
     })
   );
 
+
+
+  const screenshotFn = (() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 768;
+    return (el: HTMLVideoElement) => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        canvas.getContext('2d').drawImage(el, 0, 0, canvas.width, canvas.height);
+        return canvas.toDataURL('image/webp');
+      } catch (e) {
+        console.warn(e);
+        return fallbackScreenshot;
+      }
+    };
+  })();
+
+  const fallbackScreenshot = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=';
   const findVideosInputObservable = inputObservable.pipe(
     filter((e) => e.data.contentScriptInput === 'FIND_VIDEOS_REQUEST'),
     map((e) => ({
@@ -74,12 +95,14 @@ export const init = ({ inputObservable }: Payload): Observable<unknown> => {
             hasSubtitle: hasSubtitle(el),
             origin: window.location.origin,
             lastTimestamp: Math.floor(el.currentTime * 1000),
+            screenshot: screenshotFn(el),
             status: el.dataset[`${EXTENSION_ORIGIN}Status`]
           }
         ])
       )
     })),
-    tap(({ videos, origin, requestId}) => postMessage({
+    tap(({ videos, origin, requestId }) =>
+      postMessage({
         contentScriptOutput: 'FIND_VIDEOS_RESPONSE',
         origin,
         requestId,
