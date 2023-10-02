@@ -18,7 +18,8 @@ export const useStore = defineStore('download', {
           'Content-Type': 'application/json',
           Accept: '*/*',
           'Accept-Encoding': 'gzip, deflate, br',
-          'Api-Key': 'Th2A6DhpAl1kshBZlLqwwfZZd0i7p7Hn'
+          'Api-Key': 'Th2A6DhpAl1kshBZlLqwwfZZd0i7p7Hn',
+          'X-User-Agent': 'plussub'
         }
       }).then((r) => r.json());
 
