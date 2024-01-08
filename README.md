@@ -64,6 +64,4 @@ npm run start:firefox
 
 [Test page with iframes](https://plussub-test-iframe.netlify.app/)
 
-### [Discord](https://discord.gg/sEEeu5r9Nb) 
-![Discord](https://img.shields.io/discord/761820390254706709?color=%235bc0de)
 
