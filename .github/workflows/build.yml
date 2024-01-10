@@ -4,11 +4,6 @@ on:
   push:
   workflow_dispatch:
 
-env:
-  CHROME_APP_ID: lpobdmdfgjokempajoobgfdnhjbjlnpm
-  FIREFOX_WEB_EXT_ID: "{83078104-a00b-45e2-8749-7a10af244653}"
-
-
 jobs:
   build:
     strategy:
