@@ -10,7 +10,7 @@
       </a>
     </div>
     <transition name="slide">
-      <div class="expandable-content" :class="{ show: show }">
+      <div v-if="show" class="expandable-content" :class="{ show: show }">
         <slot name="content" />
       </div>
     </transition>
