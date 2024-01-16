@@ -60,7 +60,7 @@ jobs:
           -T extension.zip
           -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID
         env:
-          APP_ID: ${{ env.CHROME_APP_ID }}
+          APP_ID: ${{ vars.CHROME_APP_ID }}
           ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
       - run: >
           curl -s
@@ -70,7 +70,7 @@ jobs:
           -X POST
           -v https://www.googleapis.com/upload/chromewebstore/v1.1/items/$APP_ID/publish
         env:
-          APP_ID: ${{ env.CHROME_APP_ID }}
+          APP_ID: ${{ vars.CHROME_APP_ID }}
           ACCESS_TOKEN: ${{ fromJson(steps.access_token.outputs.ACCESS_TOKEN).access_token }}
 
 
@@ -89,7 +89,7 @@ jobs:
         env:
           WEB_EXT_API_KEY: ${{ secrets.FIREFOX_JWT_ISSUER }}
           WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
-          WEB_EXT_ID: ${{ env.FIREFOX_WEB_EXT_ID }}
+          WEB_EXT_ID: ${{ vars.FIREFOX_WEB_EXT_ID }}
 
       - run: >
           curl 
@@ -113,7 +113,7 @@ jobs:
       - run: >
           curl 
           -H "Authorization: JWT ${{ steps.firefoxJWT0.outputs.token }}"
-          https://addons.mozilla.org/api/v5/addons/addon/%7B${{ env.FIREFOX_WEB_EXT_ID }}%7D/versions?filter=all_with_unlisted
+          https://addons.mozilla.org/api/v5/addons/addon/%7B${{ vars.FIREFOX_WEB_EXT_ID }}%7D/versions?filter=all_with_unlisted
           -L 
           -o response.json
           -v
@@ -131,7 +131,7 @@ jobs:
       - run: >
           curl
           -H "Authorization: JWT ${{ steps.firefoxJWT1.outputs.token }}"
-          -X PATCH https://addons.mozilla.org/api/v5/addons/addon/%7B${{ env.FIREFOX_WEB_EXT_ID }}%7D/versions/${{ steps.version.outputs.latest }}/
+          -X PATCH https://addons.mozilla.org/api/v5/addons/addon/%7B${{ vars.FIREFOX_WEB_EXT_ID }}%7D/versions/${{ steps.version.outputs.latest }}/
           -F "source=@extension_src.zip"
           -L
           -v
