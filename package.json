@@ -30,7 +30,7 @@
     "@apollo/client": "^3.11.1",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
-    "@plussub/srt-vtt-parser": "^2.0.3",
+    "@plussub/srt-vtt-parser": "^2.0.5",
     "ass-compiler": "^0.1.12",
     "chardet": "^2.0.0",
     "chart.js": "^2.9.4",
